@@ -1,0 +1,116 @@
+start,end,text
+2.056,3.237,My name is Ryder Gwynn.
+3.437,6.541,I'm a neurosurgeon here at Swedish Neuroscience Institute.
+6.741,15.43,And today I'd like to talk about a surgical case where we're performing deep brain stimulation for treatment of essential tremor.
+16.772,22.598,The target that we're gonna be using today is the VIM or ventralis intermedius nucleus of the thalamus.
+37.291,40.494,So here we're preparing the patient for surgery.
+40.514,41.795,We're in the operating room.
+42.016,46.08,We do this surgery with her awake throughout virtually the whole procedure.
+46.18,52.706,We do sedate our patients for fully catheter placement and to apply the head frame.
+53.307,57.671,So here we're putting together the Lex-L head frame that we use for the surgery.
+58.011,65.779,We want to make sure that we have the nose piece properly and both the front and rear bars adjusted properly.
+65.759,72.158,"Now we're injecting some Marcaine in order to numb up the skin, both in the front and the back."
+72.88,73.881,placing the frame.
+73.961,74.922,She's now sedated.
+75.122,78.166,"For this portion of the procedure, we're placing the front pins."
+78.646,88.997,"The rear pins have already been placed, and we want to get the frame as symmetric as possible, oriented along the auriculocanthal line of the head."
+89.037,99.428,"Nowadays, the software is very good at adjusting for pitch, yaw, and roll, so don't have to get it quite as precise as we had to in previous years."
+99.408,112.415,"While they're pretty sedated, we inject the most likely incision site as well as the track that we use to place the distal end of the DBS electrode in order to pick it up for our next surgery."
+112.435,115.02,So the connector will be behind the left ear.
+117.447,122.875,Now we're attaching the Lex-L frame to our aero bed made by Trumpf.
+122.895,127.542,We perform the surgery with her in a completely supine position.
+127.642,137.616,We believe that this helps to prevent CSF leakage as the brain can kind of cork the opening and allow less air to penetrate into the skull.
+137.776,144.366,There are lots of different attachments to check to make sure that the patient is stable prior to scanning.
+149.159,151.923,We perform the whole surgery right in this position.
+152.083,157.47,Here we have the header box on to make sure that we get a proper registration of the Lexile frame.
+188.558,200.042,Now I have selected a trajectory to the left of the Nucleus from the default set of trajectories that come with the Framelink software from Medtronic.
+205.955,208.44,I usually use a distance of
+232.838,243.777,"So for our y-coordinates, we typically use the default, which is 1 quarter the distance of the ACPC from PC."
+331.743,338.943,So now we've got our final Lexile coordinates that we have double checked and written on the board so we can go ahead and start the surgery.
+339.424,347.085,She has had her scalp cleaned and now I'm placing the Y coordinate bars for the Lexile frame.
+347.943,354.035,"These sliders are placed in an unsterile fashion, and the frame itself is unsterile."
+354.496,362.492,"Then we'll place the rings into the unsterile component, but the rings will remain sterile on the OR side."
+363.147,368.092,"Here, we're adjusting the arc to make sure that the arc value is proper."
+368.192,375.018,We also have to check the microdrive from Fred Hare to make sure that it's properly placed on the Lexcel frame.
+375.179,382.125,We want to make sure that all the screws are tight and that the microdrive is set to a target depth.
+382.786,390.133,"And on the Fred Hare microdrive, this is set at 30 when the Lexcel frame is at its default."
+390.113,393.436,So now we're placing the sterile drape.
+393.476,398.761,This is our shower curtain with a sticky portion that goes over the scalp.
+398.941,405.087,We want to make sure that we do not cover the lux cell frame with this because we want to be able to get our rings through.
+405.107,414.836,We do want to make sure that we have room to make the incision and to tunnel the distal end of the electrode behind the left ear.
+415.277,419.04,Now we're just setting the Z depth here.
+419.02,422.964,and placing the arc on the Lux-L frame.
+423.805,427.369,We'll set our ring value as the last piece.
+428.09,431.154,The Lux-L frame is a little bit touchy.
+431.174,433.997,You have to make sure that the rings are set properly.
+434.077,440.885,"And if you've made any mistakes in your coordinates, the arc will not fit smoothly and easily over the rings."
+441.465,446.631,So it's a good thing to double check to make sure that the arc is fitting well on the rings.
+446.729,453.84,Now I've already checked the trajectory once and marked the skin where the cannula will enter through the scalp and through the opening.
+454.361,455.322,Mark that on the skin.
+455.603,460.81,I use a straight incision that is more or less in an AP direction.
+469.784,472.348,Here we're making the incision.
+478.612,486.566,We will want to coil the extra electrode in this subcutaneous subgallial space when we're all finished and ready to close.
+486.766,494.64,I'll also use this periosteal to make a pocket underneath the gallia for the distal end of the electrode.
+497.978,498.739,Here we are again.
+498.799,500.602,The patient is awake for this.
+500.703,504.729,It can be a little bit uncomfortable if you're not pre-injecting with Marcaine.
+504.97,513.304,Now we've created the burr hole with the 14 millimeter bit and just getting the bone remnants off of the dura.
+515.107,518.996,"Next, generally coagulate the dura, try to stop any bleeding."
+519.256,521.341,Now we will place the ring on.
+522.183,525.049,We're using a Abbott device today.
+525.109,528.677,This is placed with two screws that are placed in the skull.
+530.497,534.721,"Now the ring is in place, so we'll open up the dura with an 11 blade."
+535.142,538.365,This is one of the more important parts of the procedure.
+538.885,542.569,You really don't want to cut a cortical vein here.
+542.589,552.859,"It can lead to bleeding and end up having to sacrifice the vein, which can be an important draining vein for the surface of the cerebrum."
+553.68,558.765,And so we're generally very careful opening the dura to avoid any vein laceration.
+559.572,563.28,"Ideally, you want to coagulate the pia over a gyrus."
+563.52,571.838,You don't want to expose the sulcus and open the pia over the sulcus because it will drain a lot more CSF if you open it right over a sulcus.
+572.098,574.864,Now we're placing the cannula.
+576.565,599.232,again you want to pick an entry point for the cannula that's going to go through a gyrus here now we have gotten ready to place the dbs electrode again this is from abbott it's a directional lead so you do have to be careful that you preserve the orientation of the lead as you're placing it generally there is a little mark on the lead that you want to leave anterior
+599.212,606.688,"And so when you place it in the microdrive, you have to make sure that that little marker is anterior prior to deploying the electrode."
+607.129,611.939,Now we're first giving a baseline assessment of the patient's tremor.
+612.601,615.567,Here she's doing a Archimedes spiral.
+615.547,623.778,We often do finger to nose as well and a like a low salute and we do this prior to placing the electrode.
+623.818,636.435,We do this again after placing the electrode but before turning on stimulation and then we test at various levels of stimulation to look for tremor improvement and also to look for any side effects.
+636.896,642.904,The electrode has now been fully deployed and we're about to test with stimulation.
+645.208,649.274,Oftentimes patients are doing six to 10 spirals.
+670.025,676.336,Here the patient's now at one milliamp.
+676.356,682.287,And oftentimes there's a threshold at which suddenly we get a pretty significant improvement.
+688.328,692.513,So now we keep increasing the amplitude of the stimulation.
+692.573,700.041,"Once we get a good clinical benefit in terms of tremor reduction, then we start to look for side effects of stimulation."
+700.101,704.827,The kind of things we look for are mostly speech difficulties.
+710.553,716.481,There's a motor activation from the internal capsule of the tongue and people can get some slurring.
+716.681,726.234,We'll often have them go through some difficult words that require precise enunciation to look for subtle signs of this.
+726.534,739.632,"We might also look for some paresthesias or arm pulling or even some eye deviations, although the most common things are just hand paresthesias and tongue thickening."
+739.747,748.728,"Once we're satisfied that the electrode is in good position, we'll withdraw the cannula and deploy the locking cap here."
+749.069,758.751,"After this, we'll pull out the stylet from the electrode and then pull the electrode out of the microdrive and then put on the final cap."
+758.731,770.885,"I generally mark the electrode right at the locking cap with a pen, just so if there is any movement at a later time, we'll know that that has occurred and be able to fix it."
+771.186,781.498,"So here the final cap is on, and we will then put a cap on the distal end of the lead and bury this in the left parietal region in the subgaleal space."
+781.478,785.464,I'm very careful to deploy this with direct visualization.
+785.504,791.053,"If you end up pulling on the electrode at this stage, you can pull it out of position."
+791.253,794.899,So you have to be very cognizant of the electrode as you're doing this.
+795.299,799.125,"Typically, then I coil the excess electrode around the cap."
+799.466,808.6,"And again, I create a straight incision over the top of the cap so that when we close it, the wire that is coiled is not directly underneath the incision."
+808.58,810.762,Very important to wash copiously.
+810.842,820.391,I always do three rounds of irrigation with antibiotic saline to make sure that we are cleaning the incision as well as possible prior to closure.
+820.731,822.893,This is with Bacitracin irrigation.
+822.913,829.279,I then use 3-0 Vicryl sutures or 2-0 Vicryl sutures in the galea.
+829.579,838.587,"And here you can see, typically use some snaps to hold these while they're being placed and then tie them all at the end after they've been placed."
+838.567,841.151,These are 2-0s in this example here.
+843.035,858.381,"So after the 2-0 layer in the gallia, the final layer is a 4-0 monocryl, which is placed with fairly tight sutures and a couple millimeters width and advancement on each throw."
+858.361,869.396,and after this we'll place glue as a final barrier and this will all absorb on its own so there's nothing to remove in the office afterwards.
+869.797,880.892,I like this closure just in terms of better cosmesis and also it's a very good immediately watertight closure that is quite strong and resistant to breakdown.
+887.17,894.058,"In this case, we've done it after the electrode has been fully deployed because we were happy with our intraoperative testing."
+894.199,901.428,"If we don't see something we like, we might get a CAT scan before deploying the electrode at all just to verify location."
+902.109,908.837,And we would then adjust the electrode after that CAT scan if we felt like it was not in an optimal position.
+908.817,919.809,"After we're satisfied that the CAT scan is accurate and the electrode is in proper position, we then take the patient out of the head frame and bring to recovery."
+920.23,936.428,"And again, the patient has not had any significant anesthesia for a good 45 minutes to an hour at this point and can usually quickly go from recovery to the intensive care unit where she will spend the night and go home the next day."
+1013.763,1016.967,Here are the final contacts and electrode location.
+1018.409,1032.688,"I'll then create a new trajectory that will mark the target point, which is the distal end of the first contact of the electrode."
+1098.876,1104.891,Here it looks like this location is well within that range.
+1113.916,1136.464,Finally you can see here that the electrode ended up slightly more medial and slightly anterior to our intended target but well within the range that we would expect her to have a very good outcome both from a tremor resolution standpoint and in avoiding any
+1136.444,1137.445,side effects.
+1147.415,1163.43,Similarly posterior errors are more likely to produce paresthesias that might not be transient and so posterior and lateral errors tend to be a little bit less well tolerated by patients than anterior or medial errors.
+1163.41,1169.759,So this concludes the demonstration of a left VIM DBS electrode placement.
+1169.979,1188.705,"Here we've used the Abbott electrode but there are three companies including Medtronic, Abbott and Boston Scientific who now have FDA approved systems for DBS and you can look for future videos demonstrating these other companies and other targets in the future."

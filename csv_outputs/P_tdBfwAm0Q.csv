@@ -1,0 +1,12 @@
+start,end,text
+14.95,18.855,Wedge resection is one of the first core surgical procedures to master in thoracic surgery.
+19.336,24.823,"This model aims to train skills in VATS instrument handling, nodule localization, and resection."
+42.805,47.03,"To create the simulated lung nodule, select an appropriate area of the lung to implant the nodule."
+47.731,52.617,Use surgical scissors of your choice to make an incision into the lung parenchyma through the visceral pleura.
+52.968,58.555,Use blunt dissection to dilate the incision to create a pocket the size of a cherry tomato or a small grape.
+67.486,72.092,Apply firm pressure for 2 minutes to ensure adhesion of the simulated lesion with the lung parenchyma.
+72.973,76.337,"Lastly, glue the track closed with the cyanoacrylate glue."
+77.078,80.022,Repeat this process for 6 nodules in the following location.
+92.956,99.047,"First, have the trainees locate and expose each lung nodule with VATS instruments and isolate each nodule in turn."
+100.309,104.676,Resect the target nodule with an endosapler with emphasis on using the appropriate reloads.
+107.373,111.579,Then place the wedge specimen in the plastic bag and retrieve it via the working port.
