@@ -1,3 +1,6 @@
 lemonfm.pth
 vlp_ckpt.pth
 vlp_epoch_*.pt
+ckpt/*
+ckpt.2/*
+vlp_final.pt

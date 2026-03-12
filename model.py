@@ -121,6 +121,17 @@ class VLP(nn.Module):
         logits_per_image = logit_scale * image_features @ text_features.t()
         logits_per_text = logits_per_image.t()
         return logits_per_image, logits_per_text
+    
+    def freeze_encoders_train_projections(self):
+        for p in self.visual.parameters():
+            p.requires_grad = False
+        for p in self.text.backbone.parameters():
+            p.requires_grad = False
+        for p in self.image_projection.parameters():
+            p.requires_grad = True
+        for p in self.text.text_projection.parameters():
+            p.requires_grad = True
+        self.logit_scale.requires_grad = True
 
 
 def count_parameters(model):

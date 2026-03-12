@@ -107,7 +107,7 @@ def train():
 
     CONFIG = {
         "epochs": 20,
-        "learning_rate": 1e-4,
+        "learning_rate": 5e-4,
         "weight_decay": 0.02,
         "adam_betas": (0.9, 0.999),
         "num_workers": int(os.environ.get("NUM_WORKERS", 2)),
@@ -133,17 +133,29 @@ def train():
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
     ).to(device)
 
-    # 冻结视觉 FM
-    for p in model.visual.parameters():
-        p.requires_grad = False
-
+    
+    model.freeze_encoders_train_projections()
     if rank == 0:
         visual_total = sum(p.numel() for p in model.visual.parameters())
         visual_trainable = sum(p.numel() for p in model.visual.parameters() if p.requires_grad)
+
+        text_backbone_total = sum(p.numel() for p in model.text.backbone.parameters())
+        text_backbone_trainable = sum(p.numel() for p in model.text.backbone.parameters() if p.requires_grad)
+
+        text_proj_total = sum(p.numel() for p in model.text.text_projection.parameters())
+        text_proj_trainable = sum(p.numel() for p in model.text.text_projection.parameters() if p.requires_grad)
+
+        image_proj_total = sum(p.numel() for p in model.image_projection.parameters())
+        image_proj_trainable = sum(p.numel() for p in model.image_projection.parameters() if p.requires_grad)
+
         total_params = sum(p.numel() for p in model.parameters())
         trainable_params_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-        print(f"视觉FM已冻结: trainable {visual_trainable}/{visual_total}")
+        print(f"视觉编码器冻结: trainable {visual_trainable}/{visual_total}")
+        print(f"文本backbone冻结: trainable {text_backbone_trainable}/{text_backbone_total}")
+        print(f"文本投影层可训练: trainable {text_proj_trainable}/{text_proj_total}")
+        print(f"图像投影层可训练: trainable {image_proj_trainable}/{image_proj_total}")
+        print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
         print(f"模型总参数量: {total_params:,}")
         print(f"可训练参数量: {trainable_params_num:,}")
 
