@@ -4,3 +4,4 @@ vlp_epoch_*.pt
 ckpt/*
 ckpt.2/*
 vlp_final.pt
+downloaded_video_224_test/*

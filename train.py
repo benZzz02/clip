@@ -122,10 +122,24 @@ def train():
         "max_length": 256,
         "text_model_name": "marcobombieri/surgicberta",
         "vision_pretrained_weights": "lemonfm.pth",
+        "video_root_folder": os.environ.get(
+            "PRETRAIN_VIDEO_ROOT_FOLDER",
+            "/mnt/mydisk/download_youtube_video/downloaded_video",
+        ),
+        "assume_resized_video": os.environ.get(
+            "PRETRAIN_VIDEO_ALREADY_RESIZED",
+            "0",
+        ) == "1",
     }
 
-    MAIN_CSV_PATH = "/mnt/mydisk/CLIP/summary_csv/all_videos.csv"
-    ANNOTATIONS_FOLDER = "/mnt/mydisk/CLIP/csv_outputs"
+    MAIN_CSV_PATH = os.environ.get(
+        "PRETRAIN_MAIN_CSV_PATH",
+        "/mnt/mydisk/CLIP/summary_csv/all_videos.csv",
+    )
+    ANNOTATIONS_FOLDER = os.environ.get(
+        "PRETRAIN_ANNOTATIONS_FOLDER",
+        "/mnt/mydisk/CLIP/csv_outputs",
+    )
 
     if rank == 0:
         print("正在初始化 VLP 模型...")
@@ -160,6 +174,8 @@ def train():
 
     if rank == 0:
         print("正在加载预训练数据集...")
+        print(f"视频目录: {CONFIG['video_root_folder']}")
+        print(f"假设视频已预缩放: {CONFIG['assume_resized_video']}")
 
     train_dataset = PretrainDataset(
         main_csv_path=MAIN_CSV_PATH,
@@ -168,6 +184,8 @@ def train():
         image_size=CONFIG["image_size"],
         max_length=CONFIG["max_length"],
         sample_mode="random",
+        video_root_folder=CONFIG["video_root_folder"],
+        assume_resized_video=CONFIG["assume_resized_video"],
     )
 
     train_sampler = DistributedSampler(
