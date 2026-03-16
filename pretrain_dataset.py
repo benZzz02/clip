@@ -2,84 +2,13 @@
 
 import os
 import random
+import subprocess
 
-import ffmpeg
 import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
-
-
-def decode_video_rgb_frames_ffmpeg(
-    video_path,
-    *,
-    ss=None,
-    t=None,
-    fps=None,
-    size=None,
-    vframes=None,
-    metadata_cache=None,
-):
-    metadata = None
-    if metadata_cache is not None:
-        metadata = metadata_cache.get(video_path)
-
-    if metadata is None:
-        metadata = ffmpeg.probe(video_path)
-        if metadata_cache is not None:
-            metadata_cache[video_path] = metadata
-
-    vstreams = [
-        stream
-        for stream in metadata.get("streams", [])
-        if stream.get("codec_type") == "video"
-    ]
-    if not vstreams:
-        raise ValueError(f"No video stream found in: {video_path}")
-    video_stream = vstreams[0]
-
-    width = int(video_stream["width"])
-    height = int(video_stream["height"])
-    if size is not None:
-        width = int(size)
-        height = int(size)
-
-    input_kwargs = {}
-    if ss is not None:
-        input_kwargs["ss"] = float(ss)
-    if t is not None:
-        input_kwargs["t"] = float(t)
-
-    stream = ffmpeg.input(video_path, **input_kwargs)
-    if fps is not None:
-        stream = stream.filter("fps", fps=float(fps))
-    if size is not None:
-        stream = stream.filter("scale", int(size), int(size))
-
-    output_kwargs = {
-        "format": "rawvideo",
-        "pix_fmt": "rgb24",
-    }
-    if vframes is not None:
-        output_kwargs["vframes"] = int(vframes)
-
-    out, _ = (
-        stream.output("pipe:", **output_kwargs)
-        .run(capture_stdout=True, capture_stderr=True, quiet=True)
-    )
-
-    arr = np.frombuffer(out, np.uint8)
-    if arr.size == 0:
-        return torch.empty((0, height, width, 3), dtype=torch.uint8)
-    if arr.size % (height * width * 3) != 0:
-        raise ValueError(
-            "Decoded byte size is not divisible by H*W*3. "
-            f"Got bytes={arr.size}, H={height}, W={width}."
-        )
-
-    frames = arr.reshape((-1, height, width, 3)).copy()
-    return torch.from_numpy(frames)
 
 
 class PretrainDataset(Dataset):
@@ -114,7 +43,6 @@ class PretrainDataset(Dataset):
         self.max_retry = max_retry
         self.video_root_folder = video_root_folder
         self.assume_resized_video = assume_resized_video
-        self._video_shape_cache = {}
 
         self.transforms = transforms.Compose([
             transforms.Normalize(
@@ -192,24 +120,51 @@ class PretrainDataset(Dataset):
         """
         sample_time = self._sample_timestamp(text_start_time, text_end_time)
 
+        cmd = [
+            "ffmpeg",
+            "-v", "error",
+            "-ss", str(sample_time),
+            "-i", video_path,
+            "-frames:v", "1",
+        ]
+        if not self.assume_resized_video:
+            cmd.extend(["-vf", f"scale={self.image_size}:{self.image_size}"])
+        cmd.extend([
+            "-f", "rawvideo",
+            "-pix_fmt", "rgb24",
+            "pipe:1",
+        ])
+
         try:
-            frames = decode_video_rgb_frames_ffmpeg(
-                video_path,
-                ss=sample_time,
-                size=None if self.assume_resized_video else self.image_size,
-                vframes=1,
-                metadata_cache=self._video_shape_cache,
+            proc = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=self.ffmpeg_timeout,
+                check=False,
             )
+        except subprocess.TimeoutExpired:
+            print(f"[ffmpeg timeout] {video_path}")
+            return None
         except Exception as e:
-            print(f"[ffmpeg decode failed] {video_path} | {e}")
+            print(f"[ffmpeg exception] {video_path} | {e}")
             return None
 
-        if frames.size(0) == 0:
+        if proc.returncode != 0:
+            err = proc.stderr.decode("utf-8", errors="ignore")[:300]
+            print(f"[ffmpeg failed] {video_path} | {err}")
+            return None
+
+        expected_bytes = self.image_size * self.image_size * 3
+        if len(proc.stdout) != expected_bytes:
             print(f"[ffmpeg empty/broken frame] {video_path}")
             return None
 
         try:
-            image = frames[0].permute(2, 0, 1).float() / 255.0
+            image = np.frombuffer(proc.stdout, np.uint8).reshape(
+                self.image_size, self.image_size, 3
+            )
+            image = torch.from_numpy(image.copy()).permute(2, 0, 1).float() / 255.0
             image = self.transforms(image)
             return image
         except Exception as e:

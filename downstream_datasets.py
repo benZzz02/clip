@@ -59,3 +59,99 @@ class Cholec80FrameDataset(Dataset):
             image = torch.zeros(3, 224, 224)
 
         return image, label
+    
+    class CholecT50TripletFrameDataset(Dataset):
+    """
+    labels_root 与 frames_root 分离：
+
+    labels_root/
+      instrument/VID06.txt
+      verb/VID06.txt
+      target/VID06.txt
+      triplet/VID06.txt
+
+    frames_root/VID06/000560.png  (默认；可用模板改)
+    """
+
+    def __init__(
+        self,
+        labels_root: str,
+        frames_root: str,
+        video_id: str,
+        transform=None,
+        strict: bool = True,
+        frame_filename_template: str = "{frame_id:06d}.png",
+        video_subdir: bool = True,
+    ):
+        self.labels_root = labels_root
+        self.frames_root = frames_root
+        self.video_id = video_id
+        self.transform = transform
+        self.strict = strict
+        self.frame_filename_template = frame_filename_template
+        self.video_subdir = video_subdir
+
+        self.triplet_labels = self._load_txt("triplet")
+        self.tool_labels = self._load_txt("instrument")
+        self.verb_labels = self._load_txt("verb")
+        self.target_labels = self._load_txt("target")
+
+        self.n = self._infer_len()
+
+    def _load_txt(self, folder):
+        path = os.path.join(self.labels_root, folder, f"{self.video_id}.txt")
+        if not os.path.exists(path):
+            if self.strict:
+                raise FileNotFoundError(f"Missing label file: {path}")
+            print(f"[WARN] Missing label file: {path}")
+            return None
+        arr = np.loadtxt(path, dtype=np.int32, delimiter=",")
+        if arr.ndim == 1:
+            arr = arr[None, :]
+        return arr
+
+    def _infer_len(self):
+        arrays = [a for a in [self.triplet_labels, self.tool_labels, self.verb_labels, self.target_labels] if a is not None]
+        if not arrays:
+            return 0
+        n = arrays[0].shape[0]
+        if self.strict:
+            for a in arrays[1:]:
+                if a.shape[0] != n:
+                    raise ValueError(f"Row mismatch for {self.video_id}: {n} vs {a.shape[0]}")
+        return n
+
+    def __len__(self):
+        return self.n
+
+    def _img_path(self, frame_id: int) -> str:
+        fname = self.frame_filename_template.format(frame_id=frame_id)
+        if self.video_subdir:
+            return os.path.join(self.frames_root, self.video_id, fname)
+        return os.path.join(self.frames_root, fname)
+
+    def __getitem__(self, idx):
+        base = self.triplet_labels if self.triplet_labels is not None else self.tool_labels
+        frame_id = int(base[idx, 0])
+        img_path = self._img_path(frame_id)
+
+        if os.path.exists(img_path):
+            image = Image.open(img_path).convert("RGB")
+            if self.transform:
+                image = self.transform(image)
+        else:
+            if self.strict:
+                raise FileNotFoundError(img_path)
+            image = torch.zeros(3, 224, 224, dtype=torch.float32)
+
+        def multihot(arr, fallback_dim):
+            if arr is None:
+                return torch.zeros(fallback_dim, dtype=torch.float32)
+            return torch.from_numpy(arr[idx, 1:].astype(np.float32))
+
+        y_i = multihot(self.tool_labels, 6)
+        y_v = multihot(self.verb_labels, 10)
+        y_t = multihot(self.target_labels, 15)
+        y_ivt = multihot(self.triplet_labels, 100)
+
+        return image, (y_i, y_v, y_t, y_ivt)
