@@ -6,3 +6,4 @@ ckpt.2/*
 vlp_final.pt
 downloaded_video_224_test/*
 anno_downstream/*
+eval_outputs/*

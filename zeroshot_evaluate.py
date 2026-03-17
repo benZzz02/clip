@@ -1,88 +1,207 @@
 import argparse
-
-import torch
-import torch.nn.functional as F
-from transformers import AutoTokenizer
-from torchvision import transforms
-from torch.utils.data import DataLoader
-from tqdm import tqdm
-from sklearn.metrics import accuracy_score, classification_report
+import ast
+import json
+import os
 
 import ivtmetrics
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn.functional as F
+from sklearn.metrics import average_precision_score, f1_score
+from torch.utils.data import DataLoader
+from torchvision import transforms
+from tqdm import tqdm
+from transformers import AutoTokenizer
 
 from model import VLP
-from zero_shot_prompts import get_prompt_dict, get_label_names
-from downstream_datasets import Cholec80FrameDataset
-from downstream_datasets.cholect50_triplet import CholecT50TripletFrameDataset
+from downstream_datasets import SurgLaViSingleFrameDataset
 
 
-# =========================
-# 1. 数据集配置字典
-# =========================
 DATASET_CONFIGS = {
     "cholec80_phase": {
-        "prompt_name": "cholec80_phase",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "cholec80_peska/",
-        "video_folder": "/mnt/mydisk/Data/cholec80/cutMargin/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/cholec80/annotations/test.json",
+            "/mnt/mydisk/cholecdata/cholecdata/cholec80/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/cholec80/frame_lists/frames.csv",
+            1,
+            6,
+            "png",
+            "cholec80",
+            "phases",
+        ],
+    },
+    "cholec80_instrument": {
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/cholec80/annotations/instruments_test.json",
+            "/mnt/mydisk/cholecdata/cholecdata/cholec80/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/cholec80/frame_lists/frames.csv",
+            1,
+            6,
+            "png",
+            "cholec80",
+            "instruments",
+        ],
     },
     "bern_bypass70_phase": {
-        "prompt_name": "bern_bypass70_phase",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/MultiBypass140/MultiBypass140/labels/bern/labels_csv/individual/",
-        "video_folder": "/mnt/mydisk/MultiBypass140/BernBypass70/frames/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/bernbypass70/annotations/test.json",
+            "/mnt/mydisk/MultiBypass140/BernBypass70/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/bernbypass70/frame_lists/frames.csv",
+            1,
+            8,
+            "jpg",
+            "bernbypass_test",
+            "phases",
+        ],
     },
     "stras_bypass70_phase": {
-        "prompt_name": "stras_bypass70_phase",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/MultiBypass140/MultiBypass140/labels/strasbourg/labels_csv/individual/",
-        "video_folder": "/mnt/mydisk/MultiBypass140/StrasBypass70/frames/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/strasbypass70/annotations/test.json",
+            "/mnt/mydisk/MultiBypass140/StrasBypass70/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/strasbypass70/frame_lists/frames.csv",
+            1,
+            8,
+            "jpg",
+            "strasbypass_test",
+            "phases",
+        ],
     },
     "grasp_phase": {
-        "prompt_name": "grasp_phase",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/Grasp/annotations/labels/phase/",
-        "video_folder": "/mnt/mydisk/Grasp/frames/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_long-term_test.json",
+            "/mnt/mydisk/Grasp/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            1,
+            5,
+            "jpg",
+            "grasp_test_phases",
+            "phases",
+        ],
     },
     "grasp_step": {
-        "prompt_name": "grasp_step",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/Grasp/annotations/labels/step/",
-        "video_folder": "/mnt/mydisk/Grasp/frames/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_long-term_test.json",
+            "/mnt/mydisk/Grasp/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            1,
+            5,
+            "jpg",
+            "grasp_test_steps",
+            "steps",
+        ],
     },
     "grasp_instrument": {
-        "prompt_name": "grasp_instrument",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/Grasp/annotations/labels/instrument/",
-        "video_folder": "/mnt/mydisk/Grasp/frames/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_short-term_test.json",
+            "/mnt/mydisk/Grasp/frames",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            1,
+            5,
+            "jpg",
+            "grasp_test_instruments",
+            "instruments",
+        ],
     },
     "autolaparo_phase": {
-        "prompt_name": "autolaparo_phase",
-        "dataset_class": Cholec80FrameDataset,
-        "annotation_folder": "/mnt/mydisk/CLIP/auto/",
-        "video_folder": "/mnt/mydisk/DATA-Yui/Dataset/AutoLaparoDataset/AutoLaparo_Task1/frames_cutmargin/",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/autolaparo/annotations/test.json",
+            "/mnt/mydisk/DATA-Yui/Dataset/AutoLaparoDataset/AutoLaparo_Task1/frames_cutmargin",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/autolaparo/frame_lists/frames.csv",
+            1,
+            4,
+            "jpg",
+            "autolaparo",
+            "phases",
+        ],
     },
-
-    # =========================
-    # CholecT50 Triplet（labels 和 frames 分开）
-    # =========================
     "cholect50_triplet": {
-        "prompt_name": None,
-        "dataset_class": CholecT50TripletFrameDataset,
-
-        # TODO: 改成你的真实路径
-        "labels_root": "/path/to/OUT_DIR",            # 包含 instrument/verb/target/triplet 的目录
-        "frames_root": "/path/to/frames_root",        # 真实帧目录根
-
-        "video_id": "VID06",
-
-        # TODO: 如果你帧命名不是 000560.png，改这里
-        "frame_filename_template": "{frame_id:06d}.png",
-        "video_subdir": True,
-
-        # TODO: 改成你的 100 triplet prompt 文件
-        "triplet_prompt_path": "/path/to/triplet_prompt.txt",
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/cholect50/annotations/test.json",
+            "/mnt/mydisk/cholecdata/cholecdata/cholect50/videos",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/cholect50/frame_lists/frames.csv",
+            1,
+            6,
+            "png",
+            "cholect50",
+            "triplet",
+        ],
     },
+    "sarrarp50_action": {
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/annotations/test.json",
+            "/mnt/mydisk/SAR50/test",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/frame_lists/frames.csv",
+            1,
+            9,
+            "png",
+            "sarrarp50",
+            "actions",
+        ],
+    },
+    "sarrarp50": {
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/annotations/test.json",
+            "/mnt/mydisk/SAR50/test",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/frame_lists/frames.csv",
+            1,
+            9,
+            "png",
+            "sarrarp50",
+            "actions",
+        ],
+    },
+        "heichole_action": {
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/heichole/annotations/test.json",
+            "/mnt/mydisk/HeiChole/outputs",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/heichole/frame_lists/frames.csv",
+            1,
+            5,
+            "png",
+            "heichole",
+            "actions",
+        ],
+    },
+    "heichole_instrument": {
+        "dataset_class": SurgLaViSingleFrameDataset,
+        "ann_file": [
+            "/mnt/mydisk/CLIP/anno_downstream/heichole/annotations/instruments_test.json",
+            "/mnt/mydisk/HeiChole/outputs",
+            "video",
+            "/mnt/mydisk/CLIP/anno_downstream/heichole/frame_lists/frames.csv",
+            1,
+            5,
+            "png",
+            "heichole",
+            "instruments",
+        ],
+    },
+
 }
 
 
@@ -108,66 +227,27 @@ def load_model_checkpoint(model, ckpt_path, device):
     return model
 
 
-def build_zero_shot_text_features(model, tokenizer, prompt_dataset_name, device):
-    prompt_dict = get_prompt_dict(prompt_dataset_name)
-    class_names = get_label_names(prompt_dataset_name)
-
-    text_features_list = []
-    with torch.no_grad():
-        print("正在编码文本提示...")
-        for class_name in tqdm(class_names, desc="Encoding prompts"):
-            prompts = [prompt_dict[class_name]]
-
-            tokenized = tokenizer(
-                prompts,
-                padding=True,
-                truncation=True,
-                max_length=256,
-                return_tensors="pt",
-            )
-            tokenized = {k: v.to(device) for k, v in tokenized.items()}
-
-            class_embeddings = model.encode_text(tokenized["input_ids"], tokenized["attention_mask"])
-            class_embeddings = F.normalize(class_embeddings, dim=-1)
-            class_embeddings = class_embeddings.mean(dim=0)
-            text_features_list.append(class_embeddings)
-
-        text_features = torch.stack(text_features_list, dim=0)  # [C, D]
-        text_features = F.normalize(text_features, dim=-1)
-
-    return text_features, class_names
+def convert_to_2d_array(preds):
+    preds = np.asarray(preds, dtype=object)
+    if len(preds) > 0 and isinstance(preds[0], str) and preds[0].strip().startswith("["):
+        return np.array([ast.literal_eval(x) for x in preds], dtype=np.float32)
+    return np.stack(preds)
 
 
-def load_triplet_prompts_from_file(triplet_prompt_path: str):
-    with open(triplet_prompt_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-    prompts = [ln.split(":")[-1].strip().replace(",", " ").replace("_", " ") for ln in lines]
-    return prompts
-
-
-def build_text_features_from_prompts_list(model, tokenizer, prompts, device):
-    text_features_list = []
-    with torch.no_grad():
-        print(f"正在编码 {len(prompts)} 条 prompts ...")
-        for p in tqdm(prompts, desc="Encoding prompts"):
-            tokenized = tokenizer(
-                [p],
-                padding=True,
-                truncation=True,
-                max_length=256,
-                return_tensors="pt",
-            )
-            tokenized = {k: v.to(device) for k, v in tokenized.items()}
-
-            emb = model.encode_text(tokenized["input_ids"], tokenized["attention_mask"])
-            emb = F.normalize(emb, dim=-1)
-            emb = emb.mean(dim=0)
-            text_features_list.append(emb)
-
-        text_features = torch.stack(text_features_list, dim=0)
-        text_features = F.normalize(text_features, dim=-1)
-
-    return text_features
+def to_builtin(obj):
+    if isinstance(obj, dict):
+        return {k: to_builtin(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [to_builtin(v) for v in obj]
+    if isinstance(obj, tuple):
+        return [to_builtin(v) for v in obj]
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, np.floating):
+        return float(obj)
+    if isinstance(obj, np.integer):
+        return int(obj)
+    return obj
 
 
 def build_dataloader(dataset_name, batch_size, num_workers):
@@ -175,30 +255,19 @@ def build_dataloader(dataset_name, batch_size, num_workers):
         raise KeyError(f"Unknown dataset: {dataset_name}")
 
     cfg = DATASET_CONFIGS[dataset_name]
-    dataset_class = cfg["dataset_class"]
 
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 
-    if dataset_name == "cholect50_triplet":
-        dataset = dataset_class(
-            labels_root=cfg["labels_root"],
-            frames_root=cfg["frames_root"],
-            video_id=cfg["video_id"],
-            transform=transform,
-            strict=True,
-            frame_filename_template=cfg.get("frame_filename_template", "{frame_id:06d}.png"),
-            video_subdir=cfg.get("video_subdir", True),
-        )
-    else:
-        dataset = dataset_class(
-            annotation_folder=cfg["annotation_folder"],
-            video_folder=cfg["video_folder"],
-            transform=transform,
-        )
+    dataset = cfg["dataset_class"](
+        ann_file=cfg["ann_file"],
+        transform=transform,
+    )
 
     data_loader = DataLoader(
         dataset,
@@ -210,71 +279,296 @@ def build_dataloader(dataset_name, batch_size, num_workers):
     return data_loader, cfg
 
 
-def evaluate_cholect50_triplet(args, model, tokenizer, data_loader, dataset_cfg, device):
-    i_prompts = ["grapser", "bipolar", "hook", "scissor", "clipper", "irrigator"]
-    v_prompts = ["grasp", "retract", "dissect", "coagulate", "clip", "cut", "aspirate", "irrigate", "pack", "null verb"]
-    t_prompts = [
-        "gallbladder", "cystic plate", "cystic duct", "cystic artery", "cystic pedicle",
-        "blood vessel", "fluid", "abdominal wall cavity", "liver", "adhesion", "omentum",
-        "peritoneum", "gut", "specimen bag", "null target",
-    ]
-    ivt_prompts = load_triplet_prompts_from_file(dataset_cfg["triplet_prompt_path"])
-    if len(ivt_prompts) == 0:
-        raise RuntimeError("triplet_prompt_path 读出来是空的，请检查路径/文件内容。")
+def extract_text_feats(texts, model, tokenizer, device, max_length=256, text_bs=256):
+    text_feats = []
 
-    print("\n构建 CholecT50 text features ...")
-    text_i = build_text_features_from_prompts_list(model, tokenizer, i_prompts, device)
-    text_v = build_text_features_from_prompts_list(model, tokenizer, v_prompts, device)
-    text_t = build_text_features_from_prompts_list(model, tokenizer, t_prompts, device)
-    text_ivt = build_text_features_from_prompts_list(model, tokenizer, ivt_prompts, device)
-
-    mAPi = ivtmetrics.Recognition(len(i_prompts))
-    mAPv = ivtmetrics.Recognition(len(v_prompts))
-    mAPt = ivtmetrics.Recognition(len(t_prompts))
-    mAPivt = ivtmetrics.Recognition(len(ivt_prompts))
-    for m in (mAPi, mAPv, mAPt, mAPivt):
-        m.reset_global()
-        m.reset()
-
-    sigmoid = torch.nn.Sigmoid()
-
-    print("\n开始 CholecT50 triplet 评测（sigmoid + ivtmetrics）...")
     with torch.no_grad():
-        for images, (y_i, y_v, y_t, y_ivt) in tqdm(data_loader, desc="Evaluating CholecT50"):
+        for i in range(0, len(texts), text_bs):
+            batch = texts[i:i + text_bs]
+            tokenized = tokenizer(
+                batch,
+                padding=True,
+                truncation=True,
+                max_length=max_length,
+                return_tensors="pt",
+            )
+            tokenized = {k: v.to(device) for k, v in tokenized.items()}
+
+            feats = model.encode_text(tokenized["input_ids"], tokenized["attention_mask"])
+            feats = F.normalize(feats, dim=-1)
+            text_feats.append(feats)
+
+    return F.normalize(torch.cat(text_feats, dim=0), dim=-1)
+
+
+def format_results(results, preds, labels, video_idxs, frame_idxs):
+    preds = preds.detach().cpu()
+
+    if torch.is_tensor(labels):
+        labels = labels.detach().cpu().tolist()
+    if torch.is_tensor(video_idxs):
+        video_idxs = video_idxs.detach().cpu().tolist()
+    if torch.is_tensor(frame_idxs):
+        frame_idxs = frame_idxs.detach().cpu().tolist()
+
+    for pred, label, video_idx, frame_idx in zip(preds, labels, video_idxs, frame_idxs):
+        results.append(
+            {
+                "video_idx": int(video_idx),
+                "frame_idx": int(frame_idx),
+                "prediction": pred.tolist(),
+                "ground_truth": label,
+            }
+        )
+    return results
+
+
+def inference(data_loader, model, device, text_feats, output_csv):
+    results = []
+
+    with torch.no_grad():
+        for images, labels, video_idxs, frame_idxs in tqdm(data_loader, desc="Evaluating"):
             images = images.to(device, non_blocking=True)
 
             image_features = model.encode_image(images)
             image_features = F.normalize(image_features, dim=-1)
 
-            scale = model.logit_scale.exp()
+            logits = model.logit_scale.exp() * (image_features @ text_feats.t())
+            results = format_results(results, logits, labels, video_idxs, frame_idxs)
 
-            logits_i = scale * (image_features @ text_i.t())
-            logits_v = scale * (image_features @ text_v.t())
-            logits_t = scale * (image_features @ text_t.t())
-            logits_ivt = scale * (image_features @ text_ivt.t())
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(output_csv, index=False)
+    return results_df
 
-            prob_i = sigmoid(logits_i).detach().cpu()
-            prob_v = sigmoid(logits_v).detach().cpu()
-            prob_t = sigmoid(logits_t).detach().cpu()
-            prob_ivt = sigmoid(logits_ivt).detach().cpu()
 
-            mAPi.update(y_i.float().cpu(), prob_i)
-            mAPv.update(y_v.float().cpu(), prob_v)
-            mAPt.update(y_t.float().cpu(), prob_t)
-            mAPivt.update(y_ivt.float().cpu(), prob_ivt)
+def inference_triplet(data_loader, model, device, task_text_feats, output_dir, dataset_name):
+    results = {task: [] for task in task_text_feats}
+    results_df = {}
 
-    for m in (mAPi, mAPv, mAPt, mAPivt):
-        m.video_end()
+    with torch.no_grad():
+        for images, labels, video_idxs, frame_idxs in tqdm(data_loader, desc="Evaluating triplet"):
+            images = images.to(device, non_blocking=True)
 
-    print("\n--- CholecT50 triplet mAP 结果 ---")
-    print("I  :", mAPi.compute_video_AP())
-    print("V  :", mAPv.compute_video_AP())
-    print("T  :", mAPt.compute_video_AP())
-    print("IVT:", mAPivt.compute_video_AP())
+            image_features = model.encode_image(images)
+            image_features = F.normalize(image_features, dim=-1)
+
+            for task, text_feats in task_text_feats.items():
+                logits = model.logit_scale.exp() * (image_features @ text_feats.t())
+                results[task] = format_results(results[task], logits, labels[task], video_idxs, frame_idxs)
+
+    for task, rows in results.items():
+        df = pd.DataFrame(rows)
+        df.to_csv(os.path.join(output_dir, f"predictions_{task}_{dataset_name}.csv"), index=False)
+        results_df[task] = df
+
+    return results_df
+
+
+class WorkflowEvaluator:
+    def __init__(self, phases, prefix=""):
+        self.phases = phases
+        self.prefix = prefix
+        self.num_phases = len(self.phases)
+
+    def calc_accuracy(self, preds, labels):
+        correct = (np.array(preds) == np.array(labels)).astype(int).sum().item()
+        total = len(labels)
+        return correct / total
+
+    def calc_f1(self, preds, labels):
+        fixed_labels = list(range(self.num_phases))
+        f1_class = f1_score(labels, preds, average=None, labels=fixed_labels, zero_division=0)
+        f1_average = f1_score(labels, preds, average="macro", labels=fixed_labels, zero_division=0)
+        return f1_class, f1_average
+
+    def evaluate(self, predictions_df, group_by_video=True):
+        results = {
+            self.prefix: {
+                "accuracy": [],
+                "f1_average": [],
+                "f1_per_class": [],
+                "video_ids": [],
+            }
+        }
+
+        if group_by_video:
+            for video_idx, video_df in predictions_df.groupby("video_idx"):
+                video_df = video_df.sort_values("frame_idx")
+                preds = convert_to_2d_array(video_df["prediction"].values).argmax(axis=1)
+                labels = video_df["ground_truth"].values
+
+                acc = self.calc_accuracy(preds, labels)
+                f1_class, f1_average = self.calc_f1(preds, labels)
+
+                results[self.prefix]["accuracy"].append(acc)
+                results[self.prefix]["f1_average"].append(f1_average)
+                results[self.prefix]["f1_per_class"].append(f1_class)
+                results[self.prefix]["video_ids"].append(video_idx)
+
+        all_preds = convert_to_2d_array(predictions_df["prediction"].values).argmax(axis=1)
+        all_labels = predictions_df["ground_truth"].values
+
+        overall_acc = self.calc_accuracy(all_preds, all_labels)
+        overall_f1_class, overall_f1_average = self.calc_f1(all_preds, all_labels)
+
+        results[self.prefix]["overall_accuracy"] = overall_acc
+        results[self.prefix]["overall_f1_average"] = overall_f1_average
+        results[self.prefix]["overall_f1_per_class"] = overall_f1_class
+        results[self.prefix]["video_avg_accuracy"] = np.mean(results[self.prefix]["accuracy"])
+        results[self.prefix]["video_avg_f1"] = np.mean(results[self.prefix]["f1_average"])
+        results[self.prefix]["video_avg_f1_class"] = np.array(results[self.prefix]["f1_per_class"]).mean(axis=0)
+
+        return results
+
+
+class ToolPresenceEvaluator:
+    def __init__(self, tools, prefix=""):
+        self.tools = tools
+        self.prefix = prefix
+        self.num_classes = len(self.tools)
+
+    def calc_mAP(self, preds, labels):
+        ap = {}
+        for c in range(self.num_classes):
+            ap[c] = average_precision_score(labels[:, c], preds[:, c])
+
+        mAP = np.nanmean(list(ap.values()))
+        ap = list(ap.values())
+        return ap, mAP
+
+    def evaluate(self, predictions_df, group_by_video=True):
+        results = {
+            self.prefix: {
+                "mAP": [],
+                "AP_per_class": [],
+            }
+        }
+
+        if group_by_video:
+            for video_idx, video_df in predictions_df.groupby("video_idx"):
+                video_df = video_df.sort_values("frame_idx")
+                preds = convert_to_2d_array(video_df["prediction"].values)
+                labels = convert_to_2d_array(video_df["ground_truth"].values)
+
+                ap, mAP = self.calc_mAP(preds, labels)
+                results[self.prefix]["mAP"].append(mAP)
+                results[self.prefix]["AP_per_class"].append(ap)
+
+        all_preds = convert_to_2d_array(predictions_df["prediction"].values)
+        all_labels = convert_to_2d_array(predictions_df["ground_truth"].values)
+
+        overall_ap, overall_mAP = self.calc_mAP(all_preds, all_labels)
+        results[self.prefix]["overall_mAP"] = overall_mAP
+        results[self.prefix]["overall_AP_per_class"] = overall_ap
+        results[self.prefix]["video_avg_mAP"] = np.mean(results[self.prefix]["mAP"])
+        results[self.prefix]["video_avg_AP_class"] = np.array(results[self.prefix]["AP_per_class"]).mean(axis=0)
+
+        return results
+
+
+class TripletEvaluator:
+    def __init__(self, prefix=""):
+        self.prefix = prefix
+        self.metrics = {
+            "triplet": ivtmetrics.Recognition(100),
+            "instrument": ivtmetrics.Recognition(6),
+            "verb": ivtmetrics.Recognition(10),
+            "target": ivtmetrics.Recognition(15),
+        }
+
+        for metric in self.metrics.values():
+            metric.reset_global()
+            metric.reset()
+
+    def evaluate(self, predictions_df, group_by_video=True):
+        results = {
+            self.prefix: {
+                "triplet": {},
+                "instrument": {},
+                "verb": {},
+                "target": {},
+            }
+        }
+
+        for task, df in predictions_df.items():
+            for _, video_df in df.groupby("video_idx"):
+                video_df = video_df.sort_values("frame_idx")
+                preds = convert_to_2d_array(video_df["prediction"].values)
+                labels = convert_to_2d_array(video_df["ground_truth"].values)
+                self.metrics[task].update(labels, preds)
+                self.metrics[task].video_end()
+
+        for task, metric in self.metrics.items():
+            results[self.prefix][task] = metric.compute_video_AP(ignore_null=False)
+
+        results[self.prefix]["instrument-target"] = self.metrics["triplet"].compute_video_AP(
+            "it",
+            ignore_null=False,
+        )
+        results[self.prefix]["instrument-verb"] = self.metrics["triplet"].compute_video_AP(
+            "iv",
+            ignore_null=False,
+        )
+
+        return results
+
+
+def evaluation(model, data_loader, tokenizer, device, output_dir):
+    prompts = data_loader.dataset.prompts
+    text_feats = extract_text_feats(prompts, model, tokenizer, device)
+    output_csv = os.path.join(output_dir, f"predictions_{data_loader.dataset.name}.csv")
+    return inference(data_loader, model, device, text_feats, output_csv)
+
+
+def evaluation_triplet(model, data_loader, tokenizer, device, output_dir):
+    task_text_feats = {
+        task_name: extract_text_feats(prompts, model, tokenizer, device)
+        for task_name, prompts in data_loader.dataset.prompts.items()
+    }
+    return inference_triplet(
+        data_loader=data_loader,
+        model=model,
+        device=device,
+        task_text_feats=task_text_feats,
+        output_dir=output_dir,
+        dataset_name=data_loader.dataset.name,
+    )
+
+
+def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix=""):
+    task = data_loader.dataset.task
+
+    if task == "triplet":
+        results_df = evaluation_triplet(
+            model=model,
+            data_loader=data_loader,
+            tokenizer=tokenizer,
+            device=device,
+            output_dir=output_dir,
+        )
+        evaluator = TripletEvaluator(prefix=prefix)
+    else:
+        results_df = evaluation(
+            model=model,
+            data_loader=data_loader,
+            tokenizer=tokenizer,
+            device=device,
+            output_dir=output_dir,
+        )
+
+        if task in ["phases", "steps", "actions"]:
+            evaluator = WorkflowEvaluator(phases=data_loader.dataset.categories, prefix=prefix)
+        elif task == "instruments":
+            evaluator = ToolPresenceEvaluator(tools=data_loader.dataset.categories, prefix=prefix)
+        else:
+            raise ValueError(f"Unsupported task: {task}")
+
+    return evaluator.evaluate(results_df)
 
 
 def evaluate_zero_shot(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    os.makedirs(args.output_dir, exist_ok=True)
 
     print("正在加载模型结构...")
     model = VLP(
@@ -288,65 +582,39 @@ def evaluate_zero_shot(args):
 
     tokenizer = AutoTokenizer.from_pretrained(args.text_model)
 
-    data_loader, dataset_cfg = build_dataloader(
+    data_loader, _ = build_dataloader(
         dataset_name=args.dataset,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
     )
+    data_loader.dataset.name = args.dataset
 
-    if args.dataset == "cholect50_triplet":
-        print(f"\n当前评测数据集: {args.dataset}")
-        print(f"数据集配置: {dataset_cfg}")
-        evaluate_cholect50_triplet(args, model, tokenizer, data_loader, dataset_cfg, device)
-        return
-
-    # 单标签评测
-    text_features, class_names = build_zero_shot_text_features(
+    results = evaluation_wrapper(
         model=model,
+        data_loader=data_loader,
         tokenizer=tokenizer,
-        prompt_dataset_name=dataset_cfg["prompt_name"],
         device=device,
+        output_dir=args.output_dir,
+        prefix=args.dataset,
     )
 
-    print(f"\n当前评测数据集: {args.dataset}")
-    print(f"类别顺序: {class_names}")
-    print(f"数据集配置: {dataset_cfg}")
+    result_path = os.path.join(args.output_dir, f"results_{args.dataset}.json")
+    with open(result_path, "w", encoding="utf-8") as f:
+        json.dump(to_builtin(results), f, ensure_ascii=False, indent=2)
 
-    all_preds = []
-    all_labels = []
-
-    print("\n开始在整个数据集上进行零样本评估...")
-    with torch.no_grad():
-        for images, labels in tqdm(data_loader, desc="Evaluating"):
-            images = images.to(device, non_blocking=True)
-            labels = labels.to(device, non_blocking=True)
-
-            image_features = model.encode_image(images)
-            image_features = F.normalize(image_features, dim=-1)
-
-            logits = model.logit_scale.exp() * image_features @ text_features.t()
-            preds = logits.argmax(dim=1)
-
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
-
-    accuracy = accuracy_score(all_labels, all_preds)
-    report = classification_report(all_labels, all_preds, target_names=class_names, digits=4)
-
-    print("\n--- 零样本测试评估结果 ---")
-    print(f"总准确率 (Overall Accuracy): {accuracy:.4f}")
-    print("\n详细分类报告:")
-    print(report)
+    print(json.dumps(to_builtin(results), ensure_ascii=False, indent=2))
+    print(f"\n结果已保存到: {result_path}")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Zero-shot evaluation for VLP")
-    parser.add_argument("--dataset", type=str, required=True, choices=list(DATASET_CONFIGS.keys()), help="选择测试数据集")
-    parser.add_argument("--ckpt", type=str, required=True, help="模型 checkpoint 路径")
-    parser.add_argument("--text_model", type=str, default="marcobombieri/surgicberta", help="文本编码器/分词器路径或模型名")
-    parser.add_argument("--vision_weights", type=str, default="lemonfm.pth", help="视觉 backbone 初始化权重路径")
-    parser.add_argument("--batch_size", type=int, default=64, help="测试 batch size")
-    parser.add_argument("--num_workers", type=int, default=4, help="DataLoader workers")
+    parser.add_argument("--dataset", type=str, required=True, choices=list(DATASET_CONFIGS.keys()))
+    parser.add_argument("--ckpt", type=str, required=True)
+    parser.add_argument("--text_model", type=str, default="marcobombieri/surgicberta")
+    parser.add_argument("--vision_weights", type=str, default="lemonfm.pth")
+    parser.add_argument("--batch_size", type=int, default=64)
+    parser.add_argument("--num_workers", type=int, default=4)
+    parser.add_argument("--output_dir", type=str, default="./eval_outputs")
     return parser.parse_args()
 
 

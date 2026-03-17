@@ -118,7 +118,7 @@ def train():
         "vision_pretrained_weights": "lemonfm.pth",
         "video_root_folder": os.environ.get(
             "PRETRAIN_VIDEO_ROOT_FOLDER",
-            "/mnt/mydisk/download_youtube_video/downloaded_video",
+            "/mnt/mydisk/CLIP/downloaded_video_224_test",
         ),
         "ffmpeg_timeout": 20,
         "max_retry": 20,

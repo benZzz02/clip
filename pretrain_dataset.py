@@ -29,7 +29,7 @@ class PretrainDataset(Dataset):
         sample_mode="random",      # "random" or "center"
         ffmpeg_timeout=20,         # 单个样本 ffmpeg 最长等待秒数
         max_retry=20,              # 单个 __getitem__ 最多重试次数
-        video_root_folder="/mnt/mydisk/download_youtube_video/downloaded_video",
+        video_root_folder="/mnt/mydisk/CLIP/downloaded_video_224_test",
         assume_resized_video=False,
     ):
         super().__init__()
@@ -107,11 +107,17 @@ class PretrainDataset(Dataset):
         return len(self.samples)
 
     def _sample_timestamp(self, start_time, end_time):
+        # 标注的 end_time 有时会略微超过真实视频时长，避开最末尾一小段
+        safe_end = max(start_time, end_time - 0.5)
+
         if self.sample_mode == "center":
-            return (start_time + end_time) / 2.0
-        if end_time <= start_time:
+            return (start_time + safe_end) / 2.0
+
+        if safe_end <= start_time:
             return start_time
-        return random.uniform(start_time, end_time)
+
+        return random.uniform(start_time, safe_end)
+
 
     def _try_get_image(self, video_path, text_start_time, text_end_time):
         """
