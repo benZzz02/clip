@@ -1,0 +1,83 @@
+start,end,text
+0.395,4.958,A thirty-six-year-old female presented to the ER with two days of abdominal
+5.458,10.442,Her CBC revealed anemia and a CT scan showed thickening of the cecum.
+10.942,13.284,Colonoscopy confirmed a cecal mass.
+13.784,15.885,She was scheduled for a right colectomy.
+16.366,19.788,"The surgeon carefully dissects and removes adhesions from the patient's previous C-section, revealing underlying tissue layers."
+20.288,24.671,"A large lymph node is visible as the surgeon places the ileocolic vessels on stretch, highlighting the anatomical structures in the surgical field."
+25.171,31.154,"The surgeon circumferentially dissects the ileocolic vessels and ligates them using a bipolar device, ensuring clear separation from surrounding tissues."
+31.654,34.756,"The surgeon performs a medial to lateral dissection, progressing through the tissue layers to mobilize the colon."
+35.256,40.239,"The surgeon uses a combination of blunt and sharp dissection techniques to carefully separate and take down the duodenum, revealing the underlying structures."
+40.739,44.181,"The surgeon mobilizes the colon across the hepatic flexure, carefully freeing it from surrounding tissues."
+44.681,46.74,"The surgeon opens the lesser sac, revealing the underlying anatomical structures as part of the colectomy procedure."
+47.24,51.641,"The surgeon encounters the previously performed medial to lateral dissection, revealing the dissected tissue planes and ligated vessels."
+52.141,55.383,"The surgeon takes down the lateral attachments of the right colon, detaching it from the surrounding tissue."
+55.883,61.144,"The surgeon includes the peritoneum in the dissection at this level to ensure an adequate radial margin, visually incorporating the surrounding tissue into the surgical field."
+61.644,66.506,"The surgeon begins dividing the small bowel mesentery at the iliocolic pedicle, using precise dissection techniques to separate the mesenteric tissue."
+67.006,72.805,"The surgeon takes down the few remaining attachments to the ascending colon, completing the dissection of this section."
+73.305,81.528,"The surgeon grasps the terminal ileum and transects it using a laparoscopic powered stapler, visibly separating the ileum from the adjacent bowel."
+82.028,90.271,"The surgeon divides the remaining mesentery of the proximal transverse colon, preparing for the transection of the bowel."
+90.771,99.477,"The surgeon uses a stapler with a thicker reload to divide the colon, ensuring a secure transection of the bowel."
+99.977,107.259,"The surgeon uses a second firing of the stapler to complete the division of the bowel, ensuring full separation of the targeted section."
+107.759,111.36,"The surgeon grasps the resected specimen and positions it above the liver, ensuring it is securely placed away from the surgical field."
+111.86,117.962,"The surgeon completes a total mesocolic dissection, revealing the retroperitoneum beneath the dissected tissue."
+118.462,125.448,"The terminal ileum and transverse colon are visually aligned in an isoparastaltic fashion, indicating preparation for anastomosis."
+125.948,132.032,"The surgeon creates a window on the anti-mesenteric border of the small intestine, revealing the underlying tissue layers."
+132.532,140.417,"The surgeon performs a colotomy approximately ten centimeters distal to the staple line on the transverse colon, creating an opening in the colon wall."
+140.917,145.88,"The surgeon introduces a surgical stapler through the left upper quadrant port, preparing to perform a stapling action within the abdominal cavity."
+146.38,152.053,"The surgeon gently introduces the jaws of the stapler into the colon and small bowel, preparing for anastomosis between these structures."
+152.553,156.295,"The surgeon fires the stapler, creating a common channel between the terminal ileum and the transverse colon, visible at the site of alignment."
+156.795,164.199,"The surgeon fires the stapler again to lengthen the anastomosis, visibly extending the connection between the colon and small bowel."
+164.699,171.062,"The surgeon visually inspects the well-formed common channel, noting the absence of intraluminal bleeding within the colon."
+171.562,177.99,"The assistant port is utilized to align the common enterotomy, ensuring precise positioning of the tissue for the anastomosis."
+178.49,185.454,"The surgeon checks the stapler to confirm complete closure of the defect before firing it, ensuring the anastomosis is secure."
+185.954,192.217,"The surgeon fires the stapler a second time, visibly closing the bowel completely and ensuring the anastomosis is secure."
+192.717,195.458,"The anastomosis is visible, showing a well-formed connection between the bowel segments without signs of bleeding."
+195.958,201.301,"The surgical field is suctioned to clear fluids, allowing for a clear examination of the anastomosis site, which appears intact and well-formed."
+201.801,205.807,The surgeon grasps the resected bowel specimen and carefully maneuvers it down into the pelvic cavity.
+206.307,210.471,A four-centimeter fan and steel incision is made in the abdominal wall for the extraction of the specimen.
+210.971,213.993,"The extracted specimen is displayed, revealing a large mass within the tissue."
+214.493,217.536,Negative pressure wound therapy is standard.
+218.036,224.041,Bowel function returned on post-op day one and she was discharged on post-op day two.
+224.541,229.881,"The video shows the post-operative appearance of the patient's abdomen two weeks after the colectomy, with visible healing of the incision site."
+230.381,232.782,The same technique can be performed robotically.
+232.802,238.426,"The surgeon performs a medial to lateral dissection using a vessel sealer, carefully separating tissue layers in the surgical field."
+238.926,241.828,The surgeon carefully sweeps the duodenum away from the surgical field to prevent injury during the colectomy procedure.
+242.328,247.891,"The surgeon isolates the ileocolic vessels and transects them using a robotic stapler, ensuring precise division of these structures."
+248.391,253.715,"The surgeon uses a robotic instrument to take down the lateral peritoneal attachments in the right lower quadrant, separating these structures from the surrounding tissue."
+254.215,258.848,"The surgeon clears the mesentery from the proximal transverse colon, revealing the underlying anatomical structures."
+259.348,263.109,"The surgeon completes the mobilization of the hepatic flexure, ensuring the colon is freed from its attachments in this region."
+263.609,268.791,"The surgeon transects the mesentery of the terminal ileum, progressing towards the bowel wall, with visible separation of mesenteric tissue from the ileum."
+269.291,274.533,"The surgeon injects endocyanin green into the patient, allowing for visualization of the blood supply to the bowel using fluorescence imaging."
+275.033,279.275,"The surgeon uses a robotic stapler to transect the terminal ileum, visibly separating it from the adjacent bowel segment."
+279.775,285.359,"The surgeon introduces the robotic stapler into the abdomen and transects the transverse colon, completing the division of this section of the bowel."
+285.859,289.862,"The surgeon uses two firings of the stapler to transect the transverse colon, completing the division of this section of the bowel."
+290.362,292.724,"The surgical specimen, consisting of the transected sections of the colon and ileum, is placed above the liver for temporary storage."
+293.224,299.428,"The surgeon positions the terminal ileum in the upper abdomen, aligning it alongside the transverse colon without any visible tension between the two structures."
+299.928,305.192,The surgeon performs a collotomy and removes the anti-mesenteric border of the terminal ileum.
+305.692,309.675,"The robotic stapler is positioned into the terminal ileum, preparing for transection."
+310.175,315.259,"The surgeon utilizes the mobility of the small bowel to position the robotic stapler into the colon, preparing for further surgical intervention."
+315.759,318.581,"The surgeon forms the common channel by aligning the terminal ileum with the transverse colon in the upper abdomen, creating a continuous passage between these structures."
+319.081,324.345,The surgeon uses a second firing of the stapler to lengthen the anastomosis between the terminal ileum and the transverse colon.
+324.845,328.828,"The surgeon carefully removes the instrument from the bowel, following the completion of the stapling process."
+329.328,334.512,"The surgeon, assisted by an assistant, closes the remaining enterotomy using sutures or stapling devices, ensuring the bowel is securely sealed."
+335.012,340.516,"A small amount of tissue is excised during the closure of the anastomosis, with the stapler positioned in the colon."
+341.016,346.579,"The surgeon examines the bowel to confirm that both sides are securely grasped by the jaws of the stapler, ensuring proper alignment for the anastomosis."
+347.079,351.022,"The surgeon completes the closure of the bowel defect with a final firing of the stapler, ensuring the anastomosis is securely sealed."
+351.522,354.143,"The surgeon inspects the anastomosis, which appears widely patent, indicating a successful connection between the bowel segments."
+354.643,359.625,Commercially available incisional wound vacs are now used for all patients.
+360.125,364.927,These dressings are removed by the patients at home one week after surgery.
+365.427,370.829,The patients email a picture to the surgeon and the incision is evaluated.
+371.329,374.796,They return to the office the following week for staple removal.
+375.296,378.198,Ninety-three consecutive cases were reviewed.
+378.698,382.62,All patients carried a diagnosis of colonic neoplasia.
+383.12,387.122,The average lymph node harvest was twenty-three point eighty-six.
+387.622,391.244,The average length of stay was four point one three days.
+391.744,397.467,"In the elective resection group, sixty-four percent of patients were discharged by postoperative day two."
+397.967,401.529,The average operative length was one hundred and fifteen minutes.
+402.029,404.83,The overall complication rate was low.
+405.33,408.831,Two patients required a return to the operating room.
+409.331,413.472,One patient required a washout for an intra-abdominal hematoma.
+413.972,421.894,"The patient with the anastomotic leak required a laparotomy with resection of the anastomosis, abdominal washout, and endeliostomy."
+422.394,429.729,This patient's prolonged hospitalization significantly increased the length of stay in this small sample size.
+430.229,439.867,Future research will include comparing the outcomes of patients receiving an intracorporeal anastomosis to those who received an extracorporeal anastomosis.

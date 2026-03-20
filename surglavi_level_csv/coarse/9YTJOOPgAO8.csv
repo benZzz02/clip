@@ -1,0 +1,4 @@
+start,end,text
+8.412,42.216,"The robotic arms perform a relay exercise: Arm one and three open a colored gate, arm two retrieves a block, arm one and three open another gate, and arm two places the block into its mold. The gates are partially opened to avoid excessive force penalties."
+42.716,76.141,"Arm number two picks up the colored block and positions it near the subsequent gate, then wrists the instrument downwards to prevent collision with arm three. The gates are opened, and the camera is adjusted to view the mold for block placement."
+76.641,84.648,"Key concepts to focus on during this exercise are haptic feedback, clutching, and avoiding instrument collisions."

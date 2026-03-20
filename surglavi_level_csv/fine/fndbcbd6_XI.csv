@@ -1,0 +1,44 @@
+start,end,text
+0.898,7.8,This is a robotic Roux-en-Y gastric bypass being performed on the da Vinci SI system.
+8.3,16.003,This is a forty-five-year-old female patient with morbid obesity and diabetes requiring insulin.
+16.503,59.399,"The surgeon begins the gastric bypass procedure by mobilizing and dissecting the angle of His, using robotic instruments to carefully separate the tissue in this area."
+59.899,71.829,"The surgeon opens the pars flaccida using blunt dissection, exposing the lesser curvature of the stomach's summit."
+72.329,81.043,"The surgeon gains access to the posterior area to begin dissection, likely around the lesser curvature or related structures."
+81.543,85.766,"The surgeon performs blunt dissection in the area of the lesser curvature, using gentle manipulation to separate tissue layers."
+86.266,140.284,The surgeon uses electrocautery to address adhesions that are visible during the dissection process.
+140.784,179.978,"The surgeon creates a window for dissection and places an Endo GIA 60 vascular load to divide the mesentery along the lesser curvature, taking care to avoid stapling the gastric body."
+180.478,239.664,"The surgeon performs further dissections to create a window to the angle of His, which has been previously dissected, focusing on separating tissue layers along the lesser curvature."
+240.164,257.675,"After creating a posterior window behind the stomach, the surgeon introduces an EndoGIA-XX green load for further surgical steps."
+257.916,265.121,"The surgeon uses an Echelon stapler to further manipulate or divide tissue, likely in the context of the ongoing gastric bypass procedure."
+265.621,270.719,"The surgeon divides the stomach transversely using a surgical stapler, completing the separation along the previously dissected area."
+271.219,374.85,for the birth fire.
+375.35,434.501,"The surgeon uses a sixty green load stapler to vertically dissect and ligate the gastric pouch, completing its formation."
+435.001,603.891,"The surgeon uses an additional staple fire to complete the gastric pouch transaction, following the initial one to two staple fires."
+604.391,615.528,The completed gastric pouch is visible as the surgeon elevates the omentum and transverse colon to identify the ligament of Treitz.
+616.028,689.995,"The surgeon uses a ligature device to divide adhesions between the omentum and the lower abdomen, separating these structures."
+690.495,861.106,"The surgeon uses the ligature to split the omentum, reducing tension on the Roux limbs."
+861.606,876.65,"The surgeon identifies the ligament of Treitz by elevating the omentum and transverse colon, revealing the anatomical landmark necessary for the gastric bypass procedure."
+877.15,898.694,"The surgeon measures and brings up approximately fifty centimeters of bowel to the gastric pouch, preparing for the next step in the gastric bypass procedure."
+899.194,923.753,The surgeon assesses the tension on the bowel limb and considers extending the bowel length to fifty-five to sixty centimeters to alleviate any tension.
+924.253,951.892,"The surgeon uses the third arm to stabilize the Roux limb while switching the instruments in the right and left hands to 5mm needle drivers, preparing for precise suturing."
+952.392,966.296,"The surgeon prepares to use a 13-inch dyed 2-0 Vicryl suture for the gastrojejunal anastomosis, indicating the start of suturing between the gastric pouch and the jejunum."
+966.796,984.442,"The surgeon runs a continuous suture along the entire posterior row of the gastro-digital anastomosis, which will also serve as the anterior row once the interior row is sutured."
+984.942,1056.462,"The surgeon adjusts the liver retractor at the bedside, inadvertently creating a small perforation in the left lobe of the liver, which is then tamponaded using the retractor."
+1056.962,1088.412,"The surgeon uses a thirteen-inch, 2-0 varical suture, leaving a tail after tying the suture to secure it to the anterior row for the final stitching."
+1088.912,1384.1,"The surgeon continues to run a suture along the posterior row of the staple line, using a needle driver to precisely place stitches."
+1384.6,1394.082,The surgeon exchanges a needle driver for Bentham Bob scissors with quartering after completing the posterior row of sutures along the staple line.
+1394.582,1435.491,"The anesthesiologist inserts a bougie into the gastric pouch, a step typically performed during the gastric bypass procedure."
+1435.991,1463.706,"The surgeon uses electrocautery to create a gastrotomy, approximately 1.5 centimeters in size, at the location of the bougie in the gastric pouch."
+1464.206,1504.126,"The surgeon creates an aneurotomy in the small bowel, initially making it very small to prevent excessive dilation."
+1504.626,1661.553,"The surgeon switches back to using a needle driver to place an undyed, two-hole vial suture into the abdomen. Two six-inch sutures are tied together to create a double-ended suture, intended for the inner row of anastomoses. The assistant attempts to tie the suture ends together, facing some difficulty in keeping them secured."
+1662.053,1867.967,"The surgeon uses a double-ended, 2-0 undyed vicryl suture, starting at the posterior corner. The suture is run posteriorly first, with the other end brought around anteriorly, ensuring the tails are not excessively long to avoid confusion."
+1868.467,2091.2,"The surgeon begins suturing the inner row anteriorly, inserting the bougie through the anastomosis into the small bowel to prevent backwalling of the sutures during the sewing process."
+2091.7,2331.5,"The surgeon brings the initial suture around the anterior aspect of the anastomosis, forming the outer layer. The suture is extended across the anterior of the anastomosis until it reaches the initial tail, where it is secured."
+2332,2387.24,"The surgeon uses an EndoGIA-A-Sixty stapler to divide the small bowel close to the completed anastomosis, leaving a half to one centimeter apparent limb. The stapler fires without a seam guard, and there is no candy cane left on the bypass."
+2387.74,2452.908,"The surgeon measures the length of the roux limb, counting between 130 and 150 centimeters, which is typically done for patients with diabetes on insulin."
+2453.408,2779.167,"The surgeon identifies the site for the digital anastomosis and sutures the two ends of the small bowel together using a 2-0 silk suture. Mobile enterotomies are created with a ligature, followed by a stapled side-to-side anastomosis."
+2779.667,3058.113,"The surgeon encloses the common enterotomy using a running 2-0 Vicryl suture, ensuring the closure of the opening created during the anastomosis."
+3058.613,3117.483,"The surgeon closes the mesentery defect using a silk suture, ensuring the crotch of the defect is securely identified and closed. A laparotide plate is visible at the end of the defect, measuring approximately seven inches in length."
+3117.983,3257.303,"The surgeon begins closing the mesentery defect at the crotch using a running suture technique, ensuring the defect is securely sealed."
+3257.803,3277.899,"The laparotri device is positioned to secure the surgical site, and all remaining needles are carefully removed from the abdomen, marking the completion of the gastric bypass procedure."
+3278.399,3308.868,"The surgeon performs an upper endoscopy and a leak test to verify the integrity of the anastomosis. Robotic arms are used to occlude the Roux limb, ensuring proper intubation of the gastric pouch for an accurate leak test."

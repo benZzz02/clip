@@ -1,0 +1,33 @@
+start,end,text
+1.047,6.011,This is an IMAS educational video of robotic cholecystectomy.
+6.211,17.359,"Robotic cholecystectomy is done with the help of Da Vinci SI high definition surgical system, commonly known as a surgical robot."
+17.859,21.221,The surgical robot consists of three main parts.
+21.622,27.853,First one is the master console on which the surgeon sits and performs the surgery.
+28.353,47.591,"The patient cart of the surgical robot is shown with robotic arms docked to the ports in the patient's body. The robotic arms carry surgical instruments, and the sterile interface is maintained by camera arm drapes and instrument arm drapes."
+48.091,58.299,The third component is the vision card in which the assistants can see whatsoever surgery is going on inside the body with the help of a two-dimensional screen.
+58.799,64.083,"For robotic cholecystectomy, three ports are used for"
+64.583,92.657,"The robotic camera port is inserted two centimeters above the umbilicus, aligning with the target anatomy, the gallbladder, located in the right hypochondrium. The patient cart's center column is positioned in a straight line with the camera port for optimal visualization."
+93.157,114.395,"The patient cart is positioned from the right shoulder of the patient. Robotic arm one is placed in the left hypochondrium just below the left costal margin using an 8mm metallic Da Vinci port with a blunt obturator, under visual guidance."
+114.895,120.537,in the right umbilical region or right flank depending on the body habitus of the patient.
+121.037,126.318,The R-I and R-II should be at least eight centimeters away from the camera port.
+126.718,133.52,"The insufflated abdomen is visible after pneumoperitoneum creation, with the camera port inserted above the umbilicus."
+134.02,141.388,It is important to adhere to these distances so as to avoid external arm clashing in between the bulky robotic arms.
+141.829,149.838,"The surgeon inserts a 5mm trocar, designated as the third assistant or retraction port, into the right flank of the patient."
+150.338,154.138,As we have already described the patient cart is coming from the
+154.638,160.343,right shoulder of the patient and the vision cart is kept towards the left shoulder of the patient.
+160.843,172.313,"The robotic cart is docked to the established ports in the insufflated abdomen, allowing the surgeon to begin the procedure from the master console."
+172.813,180.845,"The assistant uses the retraction port to pull the gallbladder fundus towards the right diaphragm, facilitating exposure of the surgical field."
+181.345,196.368,"The surgeon utilizes an endorhist hook in robotic arm one and fenestrated bipolar forceps in robotic arm two, manipulating these instruments within the surgical field."
+196.868,209.662,These endorhist instruments provide seven degrees of freedom which means that they provide two additional degrees of freedom
+210.162,216.748,in comparison to laparoscopy.
+217.248,238.506,"The robotic hook is demonstrated being used as a right angle dissector, cutting instrument, and dissecting instrument, showcasing its versatility and range of motion during the procedure."
+239.006,248.329,as compared to laparoscopic hook which is usually not used for dissecting in these areas.
+248.829,266.985,"The surgeon completes the anterior and posterior dissection, creating a window behind the cystic duct. The critical view of safety is achieved, revealing the dissected cystic artery, cystic duct, and the liver surface."
+267.485,278.832,"The surgeon uses endoristed instruments to dissect the gallbladder, achieving the critical view of safety with precise manipulation."
+279.332,291.6,"The surgeon uses a hemolog clip applier, an endoristed instrument, to apply clips to the cystic duct and artery, preparing to divide these structures."
+292.1,296.405,"The three-dimensional high definition stereoscopic vision, which is"
+296.905,308.658,being seen by the surgeon is unparalleled in any other technology applied to medical science.
+309.158,328.588,"The surgeon uses routine laparoscopic scissors to divide the cystic duct and artery, preparing to dissect the gallbladder from the liver surface."
+329.088,358.913,the precision of this surgery is magnified because of a much much better vision and surgeon can see even the minutest details which were never seen with the naked eye or even in laparoscopy
+359.413,372.977,"All this job requires a trained patient side assistant who can change the instruments well, who can do the retraction and he can dock and undock the robot."
+373.477,383.919,"The gallbladder is placed into an endobag and retrieved through the umbilical trocar. The robot is undocked, and a 5mm scope is inserted through the left hypochondrial trocar for visualization."

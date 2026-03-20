@@ -1,0 +1,27 @@
+start,end,text
+0.723,15.166,"Hello everyone, this is Roxen Liu back with a demonstration of image inversion. I'm going to show two cases where I find that image inversion really helps with facilitating the defect closure."
+15.246,22.347,"The surgeon performs an ETEP procedure with a right-sided approach, revealing a visible suprapubic defect."
+22.847,30.271,"The surgeon's right hand approaches the suprapubic defect at an almost perpendicular angle, which may complicate the suturing process."
+30.771,44.042,"The surgeon's left hand maneuvers with ample space, approaching the defect more parallel compared to the right hand, which faces difficulty due to its perpendicular angle."
+44.542,55.41,"The surgeon swaps the positions of the left and right instruments, followed by rotating the camera to adjust the view for better access to the surgical site."
+55.91,73.731,"manually and right now it's looking at the wrong location so I'm going to use the touchpad to flip the image. I've also reassigned the instruments on the touchpad so that if you look at the bottom screen, two and four are flipped."
+74.231,81.736,"The surgeon uses their right hand, previously the left hand, to suture the suprapubic defect with improved ease due to their right-handedness."
+81.736,98.627,"The surgeon adjusts the angle of the suturing instrument to improve access for suturing, aiming for a technique similar to closing a laparotomy incision."
+98.888,107.466,"It's very natural, very intuitive. And I think it really speeds up suturing."
+107.866,124.142,"If I were to try to close this defect right side up, I would be struggling and my suture line would not be as clean. I think my bites would not be as precise and I would have trouble taking bites of that."
+124.642,141.895,"The surgeon uses a fenestrated bipolar instrument to take precise bites of both the fascia and the hernia sac, demonstrating careful manipulation of the tissue."
+142.395,162.28,"So I use this technique quite often when I have a either suprapubic or ventral hernia, I'm sorry, suprapubic or subxiphoid defect when I'm lateral docked. So this scenario comes up quite often with these long midline labrodomy defects."
+162.78,184.983,This lady had a total length of about twenty something centimeter in terms of the entire length of her incisional hernia. And that's a perfect case for lateral docking ETAP.
+185.483,198.539,"The surgeon completes suturing the incisional hernia defect, bringing the tissue edges together neatly. The scope is rotated back to the right side up position, and surgical instruments are reassigned for further procedures."
+198.84,209.524,The surgeon measures the space within the surgical field and places a mesh implant over the defect area.
+210.024,220.253,"The surgeon is docked on the patient's right side, addressing a lower abdominal defect similar to previous scenarios."
+220.753,244.91,"The surgical view shows a defect on the ipsilateral side, with the right linea alba positioned close to the surgeon's right hand, which is oriented perpendicularly, presenting a challenge for suturing the linea alba."
+245.41,262.777,"The surgeon swaps the surgical instruments and manually rotates the camera upside down, then taps the touchpad to flip the image orientation."
+262.837,276.898,And you can see two and four were reassigned so that the master controllers control the opposite instrument before I image invert it.
+277.398,298.437,"And if you want detailed instructions on how to do this, you can go to my YouTube site and search Dr. Roxan Liu to find my YouTube site and search image inversion and you'll see a detailed instruction on how to do this on the XI robot."
+298.937,312.482,"The surgeon uses the right hand to suture both edges of the defect, taking solid bites of the left and right linea alba."
+312.982,335.482,"The surgeon inserts the needle perpendicular to the tissue, taking a solid bite to suture the midline hernia sac or attenuated fascial tissue, effectively imbricating the sac."
+335.982,367.104,"In the inverted image view, the anterior rectus sheath on the left side of the screen is retracted laterally, exposing the rectus muscle. The surgeon peels back the rectus muscle to grasp the anterior sheath more easily."
+367.604,389.145,"Once you get used to doing this, it takes about maybe thirty seconds to swap your instruments, invert the image and reassign your instruments. So it doesn't take very long to image invert, but it probably saves me Good five minutes for suturing."
+389.645,399.532,So I think it's well worth the trouble to image invert and perform this maneuver. So this midline is closed.
+399.572,432.869,"The surgeon manually rotates the camera to a right-side-up orientation and uses the touchpad to reassign instruments, switching positions at the bottom of the screen. The master controllers now control the right and left hands normally. The surgeon measures the floor of the surgical site and prepares to place the mesh."

@@ -1,0 +1,43 @@
+start,end,text
+2.272,12.535,"In recent years, imaging and three-D virtual models have paved the way towards the knowledge of surgical anatomy."
+13.035,18.437,"In the urological field, the greatest advantage has been found in the field of nephron sparing surgery."
+18.937,28.326,"In particular, the newest generation algorithms implemented three-D models are able to identify arterial vascular perfusion volumes within the renal parenchyma."
+28.826,34.811,This allowed highly precision selective clamping and minimization of procedure-related ischemic damage.
+35.311,45.76,"Given the usefulness of this new generation of models, other surgical settings have been explored, such as renal artery aneurysm repair, where knowledge of vascular anatomy is equally crucial."
+46.26,54.952,"Renal artery aneurysm is a rare entity, which in general consensus must be surgically treated when its diameter crosses two centimeters."
+55.452,66.681,"The surgical approach may range from endovascular to ex vivo surgery, depending on the aneurysm location, even if in many cases its anatomical complexity requires a tailored approach."
+67.181,73.109,"In this setting, an extended knowledge of the patient's vascular anatomy can make the difference for a successful procedure."
+73.609,83.477,This video shows the planning and intraoperative management of a right renal prepyellic artery aneurysm treated with robotic assisted surgery with the aid of the technology.
+83.977,88.501,The case presented is a thirty-five years old female without comorbidities.
+89.001,98.805,She underwent ultrasound and CT scan identifying a multifocal aneurysm of the prepyellic right renal artery located at the level of the renal sinus.
+99.305,101.586,"A 3D reconstruction of the right kidney and its vascular anatomy is displayed, highlighting the multifocal aneurysm of the prepyellic right renal artery at the renal sinus."
+102.006,111.509,"The renal pedicle is visualized, showing a main artery that divides into three second-order arteries and four third-order branches entering the renal sinus."
+111.969,120.012,"The video shows the dilated prepialic branch of the right renal artery in its sinusal portion, revealing a double aneurysm formation."
+120.512,126.221,This latter also showed an arteriovenous shunt with an inferior polar venous branch.
+126.721,140.224,"On the basis of the information provided by the CT scan and implemented with mathematical algorithms, a new generation model was produced, identifying five different perfusion volumes, of which only one was vascularized by the aneurysmatic artery."
+140.704,143.544,Several vascular management strategies were therefore planned.
+144.044,153.873,"The surgeon clamps the entire prepyellic branch, visually excluding three perfusion volumes in the lower half of the kidney, and proceeds with the closure of the arteriovenous shunt."
+154.373,168.045,"The surgeon clamps the third-order aneurysmatic prepyellic branch before its division into fourth-order arteries, effectively devascularizing two mesorenal perfusion volumes while sparing the lower pole of the kidney."
+168.545,177.538,"The surgeon clamps the artery downstream of the fourth-order branch, effectively devascularizing only the kidney volume supplied by the aneurysmatic vessel."
+178.038,185.24,"The surgeon carefully removes the aneurysmatic sac, ensuring preservation of the surrounding renal structures, which are visibly intact and unaffected by the excision."
+185.74,192.922,The outline of the kidney and the renal pedicle are visible beneath the parietal peritoneum layer.
+193.422,199.9,"The surgeon incises the peritoneum, revealing the vena cava, along with the main renal vein and artery."
+200.4,203.623,"The surgeon suspends the third-order aneurysmatic prepyellic branch and the downstream artery on vessel loops, preparing for further vascular manipulation."
+204.123,211.049,"The surgeon exposes the branches of the vascular pedicle and the parenchymal surface of the kidney by proceeding in a centrifugal direction, revealing the intricate vascular and tissue structures."
+211.549,219.555,"The surgeon identifies the inferior segmental polar branch as the first vessel, followed by the exposure of the prepyellic branch and its associated aneurysms."
+219.975,226.422,"The surgeon isolates the vascular shunt between the aneurysms and the inferior polar venous branch, visible within the surgical field."
+226.922,234.548,"The surgeon clamps the prepyellic branch upstream of the aneurysm using a bulldog clamp, resulting in the rapid emptying of the vessel."
+235.048,240.132,This strategy was chosen following the second option planned after a three-D virtual model visualization.
+240.472,252.007,"After the injection of indocyanine green (ICG), the surgeon observes persistent vascular flow at the lower and upper poles of the organ. Early turbulent venous backflow is visible at the level of the inferior renal vein."
+252.507,259.413,The surgeon uses superficial cautery to demarcate the ischemic mesorenal portion of the organ following selective clamping.
+259.913,301.552,"The surgeon clips the arteriovenous shunt with a hemlock clip and dissects it, excluding the vein from the aneurysmatic cavity. The cavity is opened and progressively dissected from the renal sinus."
+302.052,319.223,"The surgeon places an additional hemo-lock on the prepialic artery, just below the origin of the fourth-order branch that supplies the upper portion of the mesorenal region."
+319.723,365.441,"The surgeon repairs a single calyx violation using a 3-0 PDS suture after removing the aneurysmatic sac. The free margin of the renal sinus is sutured with PDS, and biocin is secured with hemolox clips."
+365.941,374.328,"The surgeon removes the bulldog clamp from the renal artery, reassessing the renal parenchyma and confirming a visible reduction in the ischemic region on the renal surface."
+374.808,382.794,"The surgeon observes a mild kinking of the prepyellic branch at the clamping site, indicating a possible vascular spasm."
+383.135,398.232,"The surgeon gently dabs the prepyellic artery with gauze soaked in two percent lidocaine, resulting in a visible physiological distension of the artery."
+398.732,401.553,No intraoperative nor postoperative complications were recorded.
+401.853,404.955,The patient was discharged on the fourth postoperative day.
+405.455,408.376,A three-month follow-up renal function was conserved.
+408.876,416.819,Last generation of virtual models represent a new technology for the management of complex vascular anatomies with high risk of surgical complications.
+417.319,429.398,"With their help, a much more detailed planning of the vessel management strategy and interpretive assistance during all the phases of the procedure is possible, with the goal to minimize interpretive risks while maximizing the functional results."

@@ -16,6 +16,7 @@ from torch.cuda.amp import autocast, GradScaler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
+import swanlab
 
 from model import VLP
 from pretrain_dataset import PretrainDataset
@@ -45,13 +46,8 @@ def concat_all_gather(tensor: torch.Tensor):
 
 
 def clip_contrastive_loss(model, images, input_ids, attention_mask):
-    """
-    DDP 下的 CLIP-style 对比损失：
-    - 本卡 image_features 与全局 text_features 做 CE
-    - 本卡 text_features 与全局 image_features 做 CE
-    """
-    image_features = model.module.encode_image(images)                 # [B, D]
-    text_features = model.module.encode_text(input_ids, attention_mask)  # [B, D]
+    image_features = model.module.encode_image(images)
+    text_features = model.module.encode_text(input_ids, attention_mask)
 
     rank = dist.get_rank()
     batch_size = image_features.size(0)
@@ -59,12 +55,11 @@ def clip_contrastive_loss(model, images, input_ids, attention_mask):
     gathered_image = concat_all_gather(image_features.detach())
     gathered_text = concat_all_gather(text_features.detach())
 
-    # 保留本卡梯度
     gathered_image[rank] = image_features
     gathered_text[rank] = text_features
 
-    all_image_features = torch.cat(gathered_image, dim=0)   # [B*W, D]
-    all_text_features = torch.cat(gathered_text, dim=0)     # [B*W, D]
+    all_image_features = torch.cat(gathered_image, dim=0)
+    all_text_features = torch.cat(gathered_text, dim=0)
 
     logit_scale = model.module.logit_scale.exp()
 
@@ -107,7 +102,7 @@ def train():
 
     CONFIG = {
         "epochs": 20,
-        "learning_rate": 5e-4,
+        "learning_rate": 1e-4,
         "weight_decay": 0.02,
         "adam_betas": (0.9, 0.999),
         "num_workers": int(os.environ.get("NUM_WORKERS", 2)),
@@ -120,21 +115,22 @@ def train():
             "PRETRAIN_VIDEO_ROOT_FOLDER",
             "/mnt/mydisk/CLIP/downloaded_video_224_test",
         ),
-        "ffmpeg_timeout": 20,
-        "max_retry": 20,
+        "ffmpeg_timeout": 10,
+        "max_retry": 5,
         "assume_resized_video": os.environ.get(
             "PRETRAIN_VIDEO_ALREADY_RESIZED",
             "0",
         ) == "1",
+        "num_frames": int(os.environ.get("NUM_FRAMES", 4)),
     }
 
     MAIN_CSV_PATH = os.environ.get(
         "PRETRAIN_MAIN_CSV_PATH",
-        "/mnt/mydisk/CLIP/summary_csv/all_videos.csv",
+        "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv",
     )
     ANNOTATIONS_FOLDER = os.environ.get(
         "PRETRAIN_ANNOTATIONS_FOLDER",
-        "/mnt/mydisk/CLIP/csv_outputs",
+        "/mnt/mydisk/CLIP/surglavi_level_csv/fine",
     )
 
     if rank == 0:
@@ -144,10 +140,12 @@ def train():
         embed_dim=CONFIG["embed_dim"],
         text_model_name=CONFIG["text_model_name"],
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
+        num_frames=CONFIG["num_frames"],
     ).to(device)
 
-    
     model.freeze_encoders_train_projections()
+    model.set_frozen_modules_eval()
+
     if rank == 0:
         visual_total = sum(p.numel() for p in model.visual.parameters())
         visual_trainable = sum(p.numel() for p in model.visual.parameters() if p.requires_grad)
@@ -158,8 +156,14 @@ def train():
         text_proj_total = sum(p.numel() for p in model.text.text_projection.parameters())
         text_proj_trainable = sum(p.numel() for p in model.text.text_projection.parameters() if p.requires_grad)
 
-        image_proj_total = sum(p.numel() for p in model.image_projection.parameters())
-        image_proj_trainable = sum(p.numel() for p in model.image_projection.parameters() if p.requires_grad)
+        video_proj_total = sum(p.numel() for p in model.video_projection.parameters())
+        video_proj_trainable = sum(p.numel() for p in model.video_projection.parameters() if p.requires_grad)
+
+        frame_pool_total = 0
+        frame_pool_trainable = 0
+        if model.frame_pool is not None:
+            frame_pool_total = sum(p.numel() for p in model.frame_pool.parameters())
+            frame_pool_trainable = sum(p.numel() for p in model.frame_pool.parameters() if p.requires_grad)
 
         total_params = sum(p.numel() for p in model.parameters())
         trainable_params_num = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -167,10 +171,12 @@ def train():
         print(f"视觉编码器冻结: trainable {visual_trainable}/{visual_total}")
         print(f"文本backbone冻结: trainable {text_backbone_trainable}/{text_backbone_total}")
         print(f"文本投影层可训练: trainable {text_proj_trainable}/{text_proj_total}")
-        print(f"图像投影层可训练: trainable {image_proj_trainable}/{image_proj_total}")
+        print(f"视频投影层可训练: trainable {video_proj_trainable}/{video_proj_total}")
+        print(f"帧池化模块可训练: trainable {frame_pool_trainable}/{frame_pool_total}")
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
         print(f"模型总参数量: {total_params:,}")
         print(f"可训练参数量: {trainable_params_num:,}")
+        print(f"帧池化模块：{model.frame_pool}")
 
     if os.environ.get("USE_COMPILE", "0") == "1":
         try:
@@ -198,6 +204,7 @@ def train():
         print("正在加载预训练数据集...")
         print(f"视频目录: {CONFIG['video_root_folder']}")
         print(f"假设视频已预缩放: {CONFIG['assume_resized_video']}")
+        print(f"每个样本抽帧数: {CONFIG['num_frames']}")
 
     train_dataset = PretrainDataset(
         main_csv_path=MAIN_CSV_PATH,
@@ -210,6 +217,7 @@ def train():
         max_retry=CONFIG["max_retry"],
         video_root_folder=CONFIG["video_root_folder"],
         assume_resized_video=CONFIG["assume_resized_video"],
+        num_frames=CONFIG["num_frames"],
     )
 
     train_sampler = DistributedSampler(
@@ -243,8 +251,61 @@ def train():
     scheduler = CosineAnnealingLR(optimizer, T_max=total_update_steps)
 
     writer = None
+    swanlab_run = None
     if rank == 0:
         log_dir = os.environ.get("TB_LOGDIR", "runs/VLP_frozen_vis")
+
+        swanlab_config = {
+            "epochs": CONFIG["epochs"],
+            "learning_rate": CONFIG["learning_rate"],
+            "weight_decay": CONFIG["weight_decay"],
+            "adam_betas": list(CONFIG["adam_betas"]),
+            "num_workers": CONFIG["num_workers"],
+            "embed_dim": CONFIG["embed_dim"],
+            "image_size": CONFIG["image_size"],
+            "max_length": CONFIG["max_length"],
+            "text_model_name": CONFIG["text_model_name"],
+            "vision_pretrained_weights": CONFIG["vision_pretrained_weights"],
+            "video_root_folder": CONFIG["video_root_folder"],
+            "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],
+            "max_retry": CONFIG["max_retry"],
+            "assume_resized_video": CONFIG["assume_resized_video"],
+            "num_frames": CONFIG["num_frames"],
+            "per_gpu_batch_size": PER_GPU_BATCH_SIZE,
+            "accum_steps": ACCUM_STEPS,
+            "world_size": world_size,
+            "main_csv_path": MAIN_CSV_PATH,
+            "annotations_folder": ANNOTATIONS_FOLDER,
+            "resume_from_checkpoint": args.resume_from_checkpoint,
+            "tb_logdir": log_dir,
+        }
+
+        swanlab_kwargs = {
+            "project": os.environ.get("SWANLAB_PROJECT", "CLIP"),
+            "experiment_name": os.environ.get("SWANLAB_EXPERIMENT_NAME", "VLP_frozen_vis"),
+            "config": swanlab_config,
+            "logdir": os.environ.get("SWANLAB_LOGDIR", "swanlog/VLP_frozen_vis"),
+        }
+
+        swanlab_workspace = os.environ.get("SWANLAB_WORKSPACE")
+        if swanlab_workspace:
+            swanlab_kwargs["workspace"] = swanlab_workspace
+
+        swanlab_mode = os.environ.get("SWANLAB_MODE")
+        if swanlab_mode:
+            swanlab_kwargs["mode"] = swanlab_mode
+
+        swanlab_run_id = os.environ.get("SWANLAB_RUN_ID")
+        if swanlab_run_id:
+            swanlab_kwargs["id"] = swanlab_run_id
+
+        swanlab_resume = os.environ.get("SWANLAB_RESUME")
+        if swanlab_resume:
+            swanlab_kwargs["resume"] = swanlab_resume
+
+        swanlab_run = swanlab.init(**swanlab_kwargs)
+        swanlab.sync_tensorboard_torch()
+
         writer = SummaryWriter(log_dir=log_dir)
 
     start_epoch = 0
@@ -270,10 +331,11 @@ def train():
 
     for epoch in range(start_epoch, CONFIG["epochs"]):
         train_sampler.set_epoch(epoch)
+        model.module.set_frozen_modules_eval()
 
         progress_bar = tqdm(
             train_loader,
-            desc=f"Epoch {epoch+1}/{CONFIG['epochs']} [GPU {rank}]",
+            desc=f"Epoch {epoch + 1}/{CONFIG['epochs']} [GPU {rank}]",
             position=rank,
             disable=(rank != 0),
         )
@@ -338,7 +400,7 @@ def train():
 
         if rank == 0:
             print(
-                f"Epoch {epoch+1} 完成。最后记录损失: "
+                f"Epoch {epoch + 1} 完成。最后记录损失: "
                 f"{last_loss_value if last_loss_value is not None else 'N/A'}"
             )
 
@@ -349,7 +411,7 @@ def train():
                 "scheduler_state_dict": scheduler.state_dict(),
                 "global_step": global_step,
             }
-            torch.save(checkpoint_data, f"vlp_epoch_{epoch+1}.pt")
+            torch.save(checkpoint_data, f"vlp_epoch_{epoch + 1}.pt")
 
             if writer is not None:
                 writer.flush()
@@ -367,6 +429,9 @@ def train():
 
         if writer is not None:
             writer.close()
+
+        if swanlab_run is not None:
+            swanlab.finish()
 
     cleanup_ddp()
 

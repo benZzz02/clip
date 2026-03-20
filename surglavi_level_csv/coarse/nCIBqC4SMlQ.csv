@@ -1,0 +1,3 @@
+start,end,text
+0.812,70.821,"The robotic system uses three arms to perform a relay task: the left arm grabs the bottom door handle, the right arm grabs the top door handle, and the middle arm picks up color-coded shapes. The arms are coordinated to avoid collisions, and the shapes are grasped vertically to facilitate placement in designated receptacles within panels."
+71.321,131.263,"The surgeon uses three robotic arms to place a blue piece into its designated receptacle, then grabs a green shape with the middle arm. The green shape is returned to its original receptacle on the far right, requiring careful coordination and camera adjustments to prevent collisions. The middle and right arms are swapped multiple times to achieve optimal positioning for safe placement."

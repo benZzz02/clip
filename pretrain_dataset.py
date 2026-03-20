@@ -2,21 +2,21 @@
 
 import os
 import random
-import subprocess
 
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
+from decord import VideoReader, cpu
 from torch.utils.data import Dataset
-from torchvision import transforms
 
 
 class PretrainDataset(Dataset):
     """
     图文预训练数据集：
-    - 从视频中抽一帧
-    - 返回 image, input_ids, attention_mask
-    - 遇到坏视频 / ffmpeg 卡住时自动跳过并重采样
+    - 从视频区间中抽单帧或多帧
+    - 返回 image/frames, input_ids, attention_mask
+    - 用 decord 在线取帧，避免每帧启动一次 ffmpeg 子进程
     """
 
     def __init__(
@@ -27,10 +27,11 @@ class PretrainDataset(Dataset):
         image_size=224,
         max_length=256,
         sample_mode="random",      # "random" or "center"
-        ffmpeg_timeout=20,         # 单个样本 ffmpeg 最长等待秒数
-        max_retry=20,              # 单个 __getitem__ 最多重试次数
+        ffmpeg_timeout=20,         # 兼容旧接口，当前 decord 版不使用
+        max_retry=20,
         video_root_folder="/mnt/mydisk/CLIP/downloaded_video_224_test",
-        assume_resized_video=False,
+        assume_resized_video=False,  # 兼容旧接口，当前仅作保留
+        num_frames=1,
     ):
         super().__init__()
         self.main_df = pd.read_csv(main_csv_path)
@@ -43,13 +44,10 @@ class PretrainDataset(Dataset):
         self.max_retry = max_retry
         self.video_root_folder = video_root_folder
         self.assume_resized_video = assume_resized_video
+        self.num_frames = max(1, int(num_frames))
 
-        self.transforms = transforms.Compose([
-            transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            ),
-        ])
+        self.pixel_mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32).view(1, 3, 1, 1)
+        self.pixel_std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32).view(1, 3, 1, 1)
 
         self.samples = self._prepare_samples()
 
@@ -106,75 +104,118 @@ class PretrainDataset(Dataset):
     def __len__(self):
         return len(self.samples)
 
-    def _sample_timestamp(self, start_time, end_time):
-        # 标注的 end_time 有时会略微超过真实视频时长，避开最末尾一小段
-        safe_end = max(start_time, end_time - 0.5)
+    def _sample_timestamps(self, start_time, end_time, video_duration):
+        if video_duration is not None and video_duration > 0:
+            start_time = max(0.0, min(float(start_time), video_duration))
+            end_time = max(start_time, min(float(end_time), video_duration))
 
-        if self.sample_mode == "center":
-            return (start_time + safe_end) / 2.0
+        safe_end = end_time
+        if video_duration is not None and video_duration > 0:
+            safe_end = min(end_time, max(0.0, video_duration - 1e-3))
 
         if safe_end <= start_time:
-            return start_time
+            return [start_time for _ in range(self.num_frames)]
 
-        return random.uniform(start_time, safe_end)
+        if self.num_frames == 1:
+            if self.sample_mode == "center":
+                return [(start_time + safe_end) / 2.0]
+            return [random.uniform(start_time, safe_end)]
 
+        segment_edges = np.linspace(start_time, safe_end, self.num_frames + 1)
 
-    def _try_get_image(self, video_path, text_start_time, text_end_time):
-        """
-        成功返回 [3, H, W] tensor
-        失败返回 None
-        """
-        sample_time = self._sample_timestamp(text_start_time, text_end_time)
+        if self.sample_mode == "center":
+            return [
+                float((segment_edges[i] + segment_edges[i + 1]) / 2.0)
+                for i in range(self.num_frames)
+            ]
 
-        cmd = [
-            "ffmpeg",
-            "-v", "error",
-            "-ss", str(sample_time),
-            "-i", video_path,
-            "-frames:v", "1",
-        ]
-        if not self.assume_resized_video:
-            cmd.extend(["-vf", f"scale={self.image_size}:{self.image_size}"])
-        cmd.extend([
-            "-f", "rawvideo",
-            "-pix_fmt", "rgb24",
-            "pipe:1",
-        ])
+        timestamps = []
+        for i in range(self.num_frames):
+            left = float(segment_edges[i])
+            right = float(segment_edges[i + 1])
+
+            if right <= left:
+                timestamps.append(left)
+            else:
+                timestamps.append(random.uniform(left, right))
+
+        return timestamps
+
+    def _timestamps_to_frame_indices(self, timestamps, fps, num_video_frames, video_duration):
+        if num_video_frames <= 0:
+            return None
+
+        max_frame_idx = num_video_frames - 1
+        frame_indices = []
+
+        for ts in timestamps:
+            ts = max(0.0, float(ts))
+            if video_duration is not None and video_duration > 0:
+                ts = min(ts, video_duration)
+
+            frame_idx = int(round(ts * fps))
+            frame_idx = min(max(frame_idx, 0), max_frame_idx)
+            frame_indices.append(frame_idx)
+
+        return frame_indices
+
+    def _postprocess_frames(self, frames_np):
+        # frames_np: [T, H, W, 3], RGB uint8
+        frames = torch.from_numpy(frames_np).permute(0, 3, 1, 2).float() / 255.0  # [T, 3, H, W]
+
+        if frames.shape[-2:] != (self.image_size, self.image_size):
+            frames = F.interpolate(
+                frames,
+                size=(self.image_size, self.image_size),
+                mode="bilinear",
+                align_corners=False,
+            )
+
+        frames = (frames - self.pixel_mean) / self.pixel_std
+
+        if self.num_frames == 1:
+            return frames[0]
+        return frames
+
+    def _try_get_images(self, video_path, text_start_time, text_end_time):
+        try:
+            vr = VideoReader(video_path, ctx=cpu(0))
+        except Exception as e:
+            print(f"[decord open failed] {video_path} | {e}")
+            return None
 
         try:
-            proc = subprocess.run(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                timeout=self.ffmpeg_timeout,
-                check=False,
+            num_video_frames = len(vr)
+            if num_video_frames <= 0:
+                print(f"[decord empty video] {video_path}")
+                return None
+
+            fps = float(vr.get_avg_fps())
+            if not np.isfinite(fps) or fps <= 0:
+                fps = 30.0
+
+            video_duration = max(num_video_frames - 1, 0) / fps
+
+            timestamps = self._sample_timestamps(
+                text_start_time,
+                text_end_time,
+                video_duration=video_duration,
             )
-        except subprocess.TimeoutExpired:
-            print(f"[ffmpeg timeout] {video_path}")
-            return None
-        except Exception as e:
-            print(f"[ffmpeg exception] {video_path} | {e}")
-            return None
 
-        if proc.returncode != 0:
-            err = proc.stderr.decode("utf-8", errors="ignore")[:300]
-            print(f"[ffmpeg failed] {video_path} | {err}")
-            return None
-
-        expected_bytes = self.image_size * self.image_size * 3
-        if len(proc.stdout) != expected_bytes:
-            print(f"[ffmpeg empty/broken frame] {video_path}")
-            return None
-
-        try:
-            image = np.frombuffer(proc.stdout, np.uint8).reshape(
-                self.image_size, self.image_size, 3
+            frame_indices = self._timestamps_to_frame_indices(
+                timestamps,
+                fps=fps,
+                num_video_frames=num_video_frames,
+                video_duration=video_duration,
             )
-            image = torch.from_numpy(image.copy()).permute(2, 0, 1).float() / 255.0
-            image = self.transforms(image)
-            return image
+            if frame_indices is None:
+                return None
+
+            frames_np = vr.get_batch(frame_indices).asnumpy()
+            return self._postprocess_frames(frames_np)
+
         except Exception as e:
-            print(f"[frame decode failed] {video_path} | {e}")
+            print(f"[decord decode failed] {video_path} | {e}")
             return None
 
     def _build_text(self, caption):
@@ -190,32 +231,31 @@ class PretrainDataset(Dataset):
         return input_ids, attention_mask
 
     def __getitem__(self, idx):
-        # 失败就随机重采样，保证永远返回合法样本
         for _ in range(self.max_retry):
             item = self.samples[idx]
 
-            image = self._try_get_image(
+            images = self._try_get_images(
                 item["video_path"],
                 item["start_time"],
                 item["end_time"],
             )
 
-            if image is not None:
+            if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
-                return image, input_ids, attention_mask
+                return images, input_ids, attention_mask
 
             idx = random.randint(0, len(self.samples) - 1)
 
-        # 兜底：一直找直到成功
         while True:
             idx = random.randint(0, len(self.samples) - 1)
             item = self.samples[idx]
 
-            image = self._try_get_image(
+            images = self._try_get_images(
                 item["video_path"],
                 item["start_time"],
                 item["end_time"],
             )
-            if image is not None:
+
+            if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
-                return image, input_ids, attention_mask
+                return images, input_ids, attention_mask

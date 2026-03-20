@@ -1,0 +1,37 @@
+start,end,text
+9.01,21.938,Up to six percent of patients harboring renal cell carcinoma have a neoplastic venous thrombus at diagnosis. Literature evidences suggest a beneficial impact of surgery in such category of patients.
+22.438,30.123,The surgical method selected depends on the level of tumor thrombus and the grade of occlusion of the inferior vena cava.
+30.623,47.695,"In the last years, rapid assisted thrombectomy has been reported with promising perioperative results. To improve the tumor thrombus identification and management, some ancillary technologies have been introduced, like introvertive ultrasound."
+48.195,68.127,"Among the new imaging technologies developed to assist the surgeon during robotic procedures for renal cancer, three-D virtual models have been introduced, demonstrating a great impact in driving the decision-making process during the intervention, especially when superimposed over the real anatomy in an augmented reality setting."
+68.627,77.812,"However, their role in robotic surgery for renal tumors with renal vein or vena cava thrombi has never been explored."
+78.312,93.24,The aim of the study is to explore the safety and feasibility of a three-D augmented reality guidance during robot-assisted radical nephrectomy for renal tumors with neoplastic thrombus in the renal vein and inferior vena cava.
+93.74,99.075,The following video will show the case of a sixty-three years old female.
+99.575,116.15,"After a single episode of gross hematuria, the ultrasound revealed a right renal tumor. CT scan confirmed the presence of a seventy millimeter right renal mass with a thirty millimeter tumor thrombus growing into the inferior vena cava."
+116.65,122.123,A robot assisted radical nephrectomy with robotic thrombectomy was planned.
+122.623,133.025,The preoperative imaging assessment was completed with a three-D virtual reconstruction to plan the surgical strategy and to drive the surgeon during the intervention.
+133.525,142.407,"The surgeon isolates the renal loge and identifies the inferior vena cava, proceeding with dissection around the vessel."
+142.907,162.877,The surgeon identifies the main renal artery and applies Hemolock clips to occlude the blood flow to the kidney.
+163.377,173.584,The surgeon clips several lumbar veins to safely manage the inferior vena cava during the procedure.
+174.084,181.249,"The surgeon places two vessel loops around the completely dissected inferior vena cava and right renal vein, securing these structures for further manipulation."
+181.749,191.26,"The surgeon uses the DaVinci Surgical Console's TilePro technology to overlay a 3D virtual model onto the real-time anatomy, enhancing visualization during the procedure."
+191.76,197.287,"An assistant uses a three-dimensional mouse to perform hand-assisted overlapping of the virtual model onto the real anatomy, enhancing the visualization of the surgical field."
+197.787,218.205,"The augmented reality technology is used to selectively hide elements of the three-D virtual model, revealing the kidney parenchyma and caval wall, enhancing the visualization of the thrombus extension into the inferior vena cava."
+218.705,235.069,"The surgeon fine-tunes the vessel loops around the inferior vena cava, using information from a virtual model overlap. The caval blood flow is then interrupted by tightening the loops and securing them with hemo-locks."
+235.569,241.631,"The surgeon performs a cavotomy, beginning at the anterior face of the ostium where it connects with the renal vein."
+242.131,246.635,"The surgeon identifies the tumor thrombus located beneath the thin venous wall, visible within the surgical field."
+247.135,259.141,"The surgeon makes an incision in the vena cava, allowing the thrombus to emerge from the caval lumen, which is then gently removed."
+259.641,290.266,"Following the removal of the thrombus, the surgeon sutures the caval wall using a continuous 4-0 suture, securing it with a lapra tie."
+290.766,296.595,"The surgeon removes the vessel loops, allowing the venous return to be restored in the inferior vena cava."
+297.095,307.245,"The surgeon completes the radical nephrectomy, removing the kidney and surrounding tissue as part of the procedure."
+307.745,321.333,"Overall, five patients harboring renal cell carcinoma with tumor thrombi in the renal vein or inferior vena cava up to level one underwent a three-D virtual model augmented reality guided robot-assisted radical nephrectomy."
+321.833,325.386,Median age was seventy-four years old.
+325.886,330.87,Mean CT lesion size was seventy five point six millimeters.
+331.37,337.174,Tumor thrombus level was zero in three cases and one in two cases.
+337.674,347.041,Mean operative time was one hundred and twenty three minutes whilst inferior vena cava clamping time was nine point four minutes.
+347.541,353.527,Mean estimated blood loss was seven hundred and fifty milliliters.
+354.027,358.651,The mean length of stay was seven days.
+359.151,365.757,"No intraoperative complications were recorded, whilst only two postoperative minor complications were found."
+366.257,369.28,Pathological examination confirmed clinical evidence.
+369.78,377.667,A clear cell carcinoma staged PT-IIIa and PT-IIIb was found in three and two cases respectively.
+378.167,390.166,"The overlay of virtual models over the operative field in real time allowed to perform an augmented reality surgery, increasing the surgeon's awareness of the tumor thrombus level."
+390.666,409.623,"In conclusion, this study shows how the use of three-D virtual models, even in case of extreme surgeries such as for a robot-assisted radical nephrectomy with venous neoplastic thrombus, can allow to plan the most effective surgical strategy and to guide the surgeon during the procedure without risk of intraoperative complications."

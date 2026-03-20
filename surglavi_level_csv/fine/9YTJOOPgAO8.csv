@@ -1,0 +1,10 @@
+start,end,text
+1.05,8.412,This exercise is three arm relay number one.
+8.912,32.312,"Arm one and three open the colored gate, while arm two retrieves the block. Arm one and three then open the subsequent gate, and arm two places the block within its mold."
+32.812,37.994,"To minimize penalties, do not open the gates completely with arm number one or three."
+38.494,42.216,This will result in an excessive force penalty.
+42.716,51.56,"Arm number two picks up the colored block and positions it near the subsequent gate, then wrists the instrument downwards for improved efficiency."
+52.06,56.584,This will also prevent a collision between arm two and three.
+57.084,66.052,The robotic arms open the gates while the block is parked with arm number two. The camera is adjusted to provide a view of the mold where the block will be placed.
+66.552,76.141,Adjusting the camera beforehand often requires a second readjustment when placing the block.
+76.641,84.648,"Key concepts to focus on during this exercise are haptic feedback, clutching, and avoiding instrument collisions."

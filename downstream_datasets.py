@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from bisect import bisect_left
 from collections import defaultdict
 
 import numpy as np
@@ -80,9 +81,6 @@ def load_image_lists(file, data_root, labels):
 
     frame_paths = [frame_paths[i] for i in range(len(frame_paths))]
     return frame_paths, video_idx_to_name
-
-
-
 def _category_name(item):
     if "name" in item:
         return item["name"]
@@ -256,10 +254,11 @@ class SurgLaViSingleFrameDataset(Dataset):
             labels[self._video_idx_to_name[i]]
             for i in range(len(self._image_paths))
         ]
-
+        
         if self.name == "heichole":
             filtered_labels = []
             for video_idx in range(len(self.labels)):
+                self._image_paths[video_idx] = {frame_num: image_path for frame_num, image_path in self._image_paths[video_idx].items() if os.path.exists(image_path)}
                 kept = {}
                 for frame_num, label in self.labels[video_idx].items():
                     image_path = self._image_paths[video_idx].get(frame_num)
@@ -267,7 +266,7 @@ class SurgLaViSingleFrameDataset(Dataset):
                         kept[frame_num] = label
                 filtered_labels.append(kept)
             self.labels = filtered_labels
-
+            
         self._keyframe_indices, _ = get_keyframe_data(self.labels)
         self.num_examples = len(self._keyframe_indices)
 
@@ -316,7 +315,9 @@ class SurgLaViSingleFrameDataset(Dataset):
             raise KeyError(f"Frame {frame_num} of video {video_name} not found in frame list.")
 
         image_path = self._image_paths[video_idx][frame_num]
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+
         if self.transform is not None:
             image = self.transform(image)
 
@@ -333,6 +334,91 @@ class SurgLaViSingleFrameDataset(Dataset):
 
         return (
             image,
+            label,
+            torch.tensor(video_num, dtype=torch.long),
+            torch.tensor(int(frame_num), dtype=torch.long),
+        )
+
+
+class SurgLaViClipDataset(SurgLaViSingleFrameDataset):
+    def __init__(self, ann_file, transform=None, num_frames=4, frame_stride=1):
+        super().__init__(ann_file=ann_file, transform=transform)
+        self.num_frames = max(1, int(num_frames))
+        self.frame_stride = max(1, int(frame_stride))
+
+    def _load_frame_tensor(self, image_path):
+        with Image.open(image_path) as img:
+            image = img.convert("RGB")
+
+        if self.transform is not None:
+            image = self.transform(image)
+        else:
+            image = torch.from_numpy(np.array(image)).permute(2, 0, 1).float() / 255.0
+        return image
+
+    def _nearest_available_frame_num(self, available_frame_nums, target_frame_num):
+        pos = bisect_left(available_frame_nums, target_frame_num)
+
+        if pos <= 0:
+            return available_frame_nums[0]
+        if pos >= len(available_frame_nums):
+            return available_frame_nums[-1]
+
+        left_num = available_frame_nums[pos - 1]
+        right_num = available_frame_nums[pos]
+
+        if abs(left_num - target_frame_num) <= abs(right_num - target_frame_num):
+            return left_num
+        return right_num
+
+    def _get_clip_frame_nums(self, video_idx, center_frame_num):
+        available_frame_nums = sorted(self._image_paths[video_idx].keys())
+
+        left_count = self.num_frames // 2
+        right_count = self.num_frames - left_count - 1
+
+        offsets = list(range(-left_count, right_count + 1))
+        target_frame_nums = [
+            center_frame_num + offset * self.frame_stride
+            for offset in offsets
+        ]
+
+        clip_frame_nums = [
+            self._nearest_available_frame_num(available_frame_nums, target_frame_num)
+            for target_frame_num in target_frame_nums
+        ]
+        return clip_frame_nums
+
+    def __getitem__(self, idx):
+        video_idx, _, frame_num, _ = self._keyframe_indices[idx]
+        video_name = self._video_idx_to_name[video_idx]
+        video_num = self._get_video_number(video_name, video_idx)
+
+        if frame_num not in self._image_paths[video_idx]:
+            raise KeyError(f"Frame {frame_num} of video {video_name} not found in frame list.")
+
+        clip_frame_nums = self._get_clip_frame_nums(video_idx, frame_num)
+
+        frames = []
+        for clip_frame_num in clip_frame_nums:
+            image_path = self._image_paths[video_idx][clip_frame_num]
+            frames.append(self._load_frame_tensor(image_path))
+
+        images = torch.stack(frames, dim=0)
+
+        raw_label = self.labels[video_idx][frame_num]
+
+        if self.task in ["phases", "steps", "actions"]:
+            label = self._convert_single_label(raw_label)
+        elif self.task == "instruments":
+            label = self._convert_instrument_label(raw_label)
+        elif self.task == "triplet":
+            label = self._convert_triplet_label(raw_label)
+        else:
+            raise ValueError(f"Unsupported task: {self.task}")
+
+        return (
+            images,
             label,
             torch.tensor(video_num, dtype=torch.long),
             torch.tensor(int(frame_num), dtype=torch.long),

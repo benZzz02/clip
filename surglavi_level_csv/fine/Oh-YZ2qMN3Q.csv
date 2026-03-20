@@ -1,0 +1,57 @@
+start,end,text
+0.871,3.232,Pegboard two. This is under ender wrist one.
+3.672,12.055,"Since this is your first exercise, I wanted you to start off with pegboard one, just to make sure you have a good understanding of how the camera moves."
+12.555,15.317,Moving the camera in robotics is a three-step process.
+15.817,21.839,"First, you move your arms to the point of interest, but keeping them within the range of the screen."
+22.339,29.912,"Secondly, you engage the foot pedal, keeping your foot on it, and then you pull yourself closer."
+30.412,34.695,"So here you'll hear the foot pedal, you don't really have to look at the video."
+35.195,38.398,"When you're pulling back, you do the opposite, you push yourself away."
+38.898,45.243,"So here, hands move in, you engage the foot pedal, you move yourself in."
+45.743,47.465,And then you push yourself out.
+47.965,51.708,"Hands move in, hit the foot pedal, pull yourself in."
+52.208,56.831,"And then hit the foot pedal, pull yourself away."
+57.331,61.533,And so on and so forth.
+62.033,66.795,"For those of you using the robot for the first time, I will do this exercise just a few times."
+66.835,71.678,You don't have to train to proficiency before moving over to bag board two.
+72.178,85.38,You'll always get a score sheet at the end of every task and we'll go into details of explicitly what each metric measures and what it means and how you can improve yourself at the end of each task assigned to you.
+85.88,100.424,Now we move over to pegboard two which is also an ender wrist one and basically it's the same exercise as pegboard one but there are multiple levels in the vertical plane while at the same time using the ender wrist to pick up the rings off the pegs.
+100.924,106.555,So same basics for camera navigation that you would move your arms towards the flashing peg
+107.055,118.96,"The surgeon uses the tips of the instrument on the flashing left arm to slide a ring off the peg, then hands it over to the other flashing arm before returning to the horizontal peg."
+119.02,123.061,Now realize how I twist my fingers so that the ring aligns with the peg.
+123.561,131.492,The pegs here are also at three different levels to teach you to move efficiently while navigating the camera.
+131.992,139.236,"The left arm of the surgical robot twists its fingers to lay a ring onto a peg, demonstrating precise control and manipulation."
+139.736,152.363,"The surgeon uses the tips of the robotic instruments to gently grasp the ring, transferring it from the left arm to the right arm while simultaneously releasing it with the left arm."
+152.863,156.556,This prevents the ring from getting caught on the instrument tip.
+157.056,162.387,"The robotic arms move in a coordinated fashion, synchronized with the foot pedal, demonstrating precise control and manipulation of the instruments."
+162.887,166.144,"The surgeon moves both robotic arms in unison, demonstrating coordinated manipulation of the surgical instruments."
+166.644,170.447,without moving the instruments out of the range of the camera's view.
+170.947,179.592,"One of the last things I want to stress on is always keeping your forearms on the armrest because that offers the best stability, especially when using the ender wrist."
+180.092,188.757,"One of the things you see me doing here is pushing up to kind of get an overview of where the flashing ring is, so that shortens my distance to travel to that ring."
+189.257,201.447,And that's usually common with the rings all the way up on the third level there.
+201.947,208.713,So I thought it might be a good idea to show you some potential pitfalls that people have had while I was training them on this task.
+209.213,215.259,So the first one was an ideal demonstration while this might show some mistakes that you might run into.
+215.759,219.762,One of the most common ones is pulling the ring off the peg forcefully.
+220.143,221.584,"The left robotic arm turns red, indicating a potential error or alert in the system."
+221.764,223.646,That denotes excessive instrument force.
+224.066,228.967,"The video demonstrates the correct technique of sliding a ring off a peg, highlighting the motion required to avoid excessive force."
+229.467,236.289,"The second one here is a prime example of poor economy of motion, where you're moving into multiple directions before going to your target."
+236.789,240.95,"It would have been easier if you went straight up, found out where your target was, and then went straight to it."
+241.45,245.43,The latter will give you a better economy of motion score.
+245.93,252.837,"Another one I commonly see is when the peg is close by, you tend to overreach rather than navigate the camera to it."
+253.337,260.981,"While some people would prefer to do that, it's ideal to get as close as you can to the target to decrease the likelihood of dropping the ring."
+261.481,263.282,The last one is the handoff.
+263.782,268.984,Here you tend to be hung up with the arm that's holding the ring and you don't let go fast enough.
+269.484,279.868,The idea is that you hand it over to the other arm while letting go the left arm here at the same time.
+280.368,283.453,The last one is picking up the ring with the wrong flashing arm.
+283.953,289.299,I've seen a lot of people get overwhelmed sometimes with this task and just picking it up with the wrong arm.
+289.62,300.382,All you need to do is do an extra pass which would generally lengthen your time but it's not a grave mistake.
+300.882,306.866,"This is one of the tasks that you have to train to proficiency, and the expert proficiency levels have been posted to our page."
+307.366,312.269,"Since this is a task that we will train to proficiency, I wanted to go over the metrics real quick."
+312.769,315.99,"So first thing, forget about time and economy of motion."
+316.291,318.452,Those are the last things you're going to correct.
+318.952,326.682,"The first green ticks you should start to see are in the instrument drops, the instruments out of view, and the instrument collisions."
+327.182,330.764,then you will start to find an improvement in economy of motion.
+331.264,345.851,"If you persist to be below economy of motion after those, you should think of more efficient straight lines to move into, like the tips that I told you in the exercise or in the video that you should get an overview off where the rings are before moving in."
+346.351,352.574,"And finally, if all that shows green ticks, then you should start moving a little bit"
+353.065,355.368,quickly in order to lessen your time.
+355.728,361.955,If you start concentrating on time early on in the task you will drop all other metrics right from the beginning.

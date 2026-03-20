@@ -1,0 +1,6 @@
+start,end,text
+8.412,32.312,"Arm one and three open the colored gate, while arm two retrieves the block. Arm one and three then open the subsequent gate, allowing arm two to place the block within its mold."
+32.812,42.216,"To minimize penalties, do not open the gates completely with arm number one or three. This will result in an excessive force penalty."
+42.716,56.584,"Arm number two picks up the colored block and positions it near the subsequent gate, then wrists the instrument downwards to prevent a collision with arm number three."
+57.084,76.141,The robotic arms open the gates after parking the colored block with arm number two. The camera view is adjusted to visualize the mold where the block will be placed.
+76.641,84.648,"Key concepts to focus on during this exercise are haptic feedback, clutching, and avoiding instrument collisions."

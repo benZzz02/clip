@@ -1,0 +1,12 @@
+start,end,text
+0.812,19.726,Three-arm relay two is a harder iteration of three-arm relay one in which you are required to open color-coded panels using two arms and with the third arm grab a color-coded shape which is designated for placement in a successive panel.
+20.226,28.597,Sticking with the same coordinated movements for each successive panel will build in muscle memory and allow you to navigate this exercise.
+29.097,38.91,"The robotic system uses the left arm to grab the bottom door handle, the furthest right arm to grab the top door handle, and the middle arm to grasp the color-coded shapes."
+39.41,50.253,"The lateral arms are positioned to avoid collisions with the middle arm, facilitating optimal grabbing of color-coded shapes."
+50.753,64.977,"The robotic arms maneuver to grab the stem of the color-coded shapes with a vertical orientation, carefully placing them into panels with depth to avoid excessive force or collisions."
+65.477,70.821,This will make placing the shapes in their designated receptacles as easy as possible.
+71.321,88.539,"The surgeon coordinates the three robotic arms, continuously adjusting the camera and making small movements to prevent collisions and maintain all elements within the field of view."
+89.039,98.981,"The robotic arms place a blue piece into its designated receptacle, then grab a green shape to return it to its original receptacle on the far right."
+99.001,102.882,"And in order to do this, we have to relay the arms back."
+103.382,118.867,"The surgeon swaps the middle and right robotic arms multiple times, adjusting the camera to achieve an optimal position for safely placing the green piece back into its designated receptacle."
+119.367,131.263,"Success on this exercise requires avoiding excessive force or pulling with the arms as you open the doors, using small movements in your relay and swap, and keeping all three instruments in your field of view."

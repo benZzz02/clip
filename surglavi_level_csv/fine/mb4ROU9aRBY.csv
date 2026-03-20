@@ -1,0 +1,15 @@
+start,end,text
+0.872,9.22,Energy Pedals II is a harder iteration of Energy Pedals I. You will be given the same format and field of view as the first exercise.
+9.64,17.276,"However, you will require much more coordination with the left and right arm and their corresponding foot pedals."
+17.776,26.54,The field of view displays an object consisting of three parts: two barbell-shaped portions and a central sphere.
+27.04,40.904,"The surgeon prepares to perform bipolar coagulation on the two barbell-shaped objects, while simultaneously executing monopolar coagulation or cutting on the central sphere, as per the instructions displayed."
+41.404,51.812,"The location of the objects are presented at random, and the orientation of the object once it reaches its final destination also varies."
+52.312,66.723,This will force you to use your wrist articulation skills to best orient your grasper to grab the barbell portions and position the tips of your scissors so as they are only touching the sphere when applying electrocautery.
+67.223,72.727,"The surgeon applies electrocautery to the object, causing visible smoke to emanate from it, and the object gradually changes color to green."
+73.227,80.023,"The surgeon releases the foot pedal and applies electrocautery to the next part of the object, which consists of two barbell portions and a center sphere."
+80.523,90.872,"As mentioned in energy pedals one, we want to draw attention to the interface, which allows you to orient yourself with your foot position and which pedal you are hovering over."
+91.252,97.498,"The interface displays the surgeon's right foot positioned over the left coagulation pedal, which is being pressed."
+97.998,104.655,The interface visually shifts to indicate the surgeon is pressing the right coagulation pedal.
+105.155,113.74,"It may take a few tries to get comfortable adapting to the interface and using the right foot pedals, but ultimately that is the goal of this exercise."
+114.18,120.643,Looking down to see where the location of your foot is in relation to the foot pedals is suboptimal.
+121.143,129.728,"Penalties on this exercise can be incurred when over-quaterizing an area, pressing the wrong foot pedal, and instrument collisions."

@@ -1,0 +1,13 @@
+start,end,text
+0.892,10.759,"C-spikes II follows a similar format to C-spikes I, but now requires a surgeon to remove incorrect rings from the cones and place them on the correct color cone."
+11.259,15.763,The ring color and cone orientations change each time you attempt this exercise.
+15.803,19.386,So trying to memorize or stick with a pattern is not helpful.
+19.886,26.191,"The surgeon begins with the black cone, removing an incorrect ring, which is visually identified as a red ring."
+26.691,34.32,"The surgeon moves towards the red cone to correctly place the ring, ensuring it matches the cone's color."
+34.82,49.552,This process will continue with alternating left and right arm as to which one is picking up the ring and which one is placing down the correct ring.
+50.052,63.146,"The blue ring is passed to the left robotic arm, which then removes the incorrect ring from behind the blue cone. The right arm approaches the cone without causing any collisions."
+63.646,71.775,It should be noted that cone collisions of any sort require a pretty heavy penalty and can minimize your score.
+72.275,87.42,And so taking the extra steps to prevent the arm from hitting any unnecessary cones is the best way to score well in this exercise.
+87.92,106.045,"The robotic system switches to using the right arm to access the incorrect ring on the pink cone, positioning it at the periphery to avoid collisions while grasping the ring."
+106.545,118.253,"The surgeon carefully removes the incorrect ring from the green cone using the robotic arm, ensuring not to collide with the adjacent brown cone to avoid penalties."
+118.753,126.018,"As mentioned before, success in this exercise comes from minimizing collisions and having good efficiency between the coordination of the left and right arm."

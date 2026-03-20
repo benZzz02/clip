@@ -8,8 +8,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 
-DEFAULT_SRC_ROOT = "/mnt/mydisk/download_youtube_video/downloaded_video"
-DEFAULT_ANNOTATIONS_FOLDER = "/mnt/mydisk/VATS_audio/transcripted_audio_peskavlp_style_valid"
+DEFAULT_SRC_ROOT = "/mnt/mydisk/download_youtube_video/downloaded_video_surglavi"
+DEFAULT_ANNOTATIONS_FOLDER = "/mnt/mydisk/CLIP/surglavi_level_csv/coarse"
 
 
 def parse_args():

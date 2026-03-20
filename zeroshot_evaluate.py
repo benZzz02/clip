@@ -15,7 +15,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer
 
 from model import VLP
-from downstream_datasets import SurgLaViSingleFrameDataset
+from downstream_datasets import SurgLaViSingleFrameDataset, SurgLaViClipDataset
 
 
 DATASET_CONFIGS = {
@@ -173,7 +173,7 @@ DATASET_CONFIGS = {
             "actions",
         ],
     },
-        "heichole_action": {
+    "heichole_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
             "/mnt/mydisk/CLIP/anno_downstream/heichole/annotations/test.json",
@@ -201,7 +201,6 @@ DATASET_CONFIGS = {
             "instruments",
         ],
     },
-
 }
 
 
@@ -250,7 +249,7 @@ def to_builtin(obj):
     return obj
 
 
-def build_dataloader(dataset_name, batch_size, num_workers):
+def build_dataloader(dataset_name, batch_size, num_workers, num_frames=1, frame_stride=1):
     if dataset_name not in DATASET_CONFIGS:
         raise KeyError(f"Unknown dataset: {dataset_name}")
 
@@ -264,10 +263,20 @@ def build_dataloader(dataset_name, batch_size, num_workers):
         ]
     )
 
-    dataset = cfg["dataset_class"](
-        ann_file=cfg["ann_file"],
-        transform=transform,
-    )
+    if num_frames > 1:
+        dataset = SurgLaViClipDataset(
+            ann_file=cfg["ann_file"],
+            transform=transform,
+            num_frames=num_frames,
+            frame_stride=frame_stride,
+        )
+        print(f"Using clip dataset: num_frames={num_frames}, frame_stride={frame_stride}")
+    else:
+        dataset = cfg["dataset_class"](
+            ann_file=cfg["ann_file"],
+            transform=transform,
+        )
+        print("Using single-frame dataset")
 
     data_loader = DataLoader(
         dataset,
@@ -323,11 +332,30 @@ def format_results(results, preds, labels, video_idxs, frame_idxs):
     return results
 
 
-def inference(data_loader, model, device, text_feats, output_csv):
+def _check_batch_shape(images, expected_num_frames):
+    if expected_num_frames > 1:
+        if images.ndim != 5:
+            raise ValueError(
+                f"Expected multi-frame input [B, T, C, H, W] for num_frames={expected_num_frames}, "
+                f"got shape {tuple(images.shape)}"
+            )
+        if images.size(1) != expected_num_frames:
+            raise ValueError(
+                f"Expected T={expected_num_frames}, got input shape {tuple(images.shape)}"
+            )
+    else:
+        if images.ndim != 4:
+            raise ValueError(
+                f"Expected single-frame input [B, C, H, W], got shape {tuple(images.shape)}"
+            )
+
+
+def inference(data_loader, model, device, text_feats, output_csv, expected_num_frames=1):
     results = []
 
     with torch.no_grad():
         for images, labels, video_idxs, frame_idxs in tqdm(data_loader, desc="Evaluating"):
+            _check_batch_shape(images, expected_num_frames)
             images = images.to(device, non_blocking=True)
 
             image_features = model.encode_image(images)
@@ -341,12 +369,21 @@ def inference(data_loader, model, device, text_feats, output_csv):
     return results_df
 
 
-def inference_triplet(data_loader, model, device, task_text_feats, output_dir, dataset_name):
+def inference_triplet(
+    data_loader,
+    model,
+    device,
+    task_text_feats,
+    output_dir,
+    dataset_name,
+    expected_num_frames=1,
+):
     results = {task: [] for task in task_text_feats}
     results_df = {}
 
     with torch.no_grad():
         for images, labels, video_idxs, frame_idxs in tqdm(data_loader, desc="Evaluating triplet"):
+            _check_batch_shape(images, expected_num_frames)
             images = images.to(device, non_blocking=True)
 
             image_features = model.encode_image(images)
@@ -513,14 +550,21 @@ class TripletEvaluator:
         return results
 
 
-def evaluation(model, data_loader, tokenizer, device, output_dir):
+def evaluation(model, data_loader, tokenizer, device, output_dir, expected_num_frames=1):
     prompts = data_loader.dataset.prompts
     text_feats = extract_text_feats(prompts, model, tokenizer, device)
     output_csv = os.path.join(output_dir, f"predictions_{data_loader.dataset.name}.csv")
-    return inference(data_loader, model, device, text_feats, output_csv)
+    return inference(
+        data_loader,
+        model,
+        device,
+        text_feats,
+        output_csv,
+        expected_num_frames=expected_num_frames,
+    )
 
 
-def evaluation_triplet(model, data_loader, tokenizer, device, output_dir):
+def evaluation_triplet(model, data_loader, tokenizer, device, output_dir, expected_num_frames=1):
     task_text_feats = {
         task_name: extract_text_feats(prompts, model, tokenizer, device)
         for task_name, prompts in data_loader.dataset.prompts.items()
@@ -532,10 +576,11 @@ def evaluation_triplet(model, data_loader, tokenizer, device, output_dir):
         task_text_feats=task_text_feats,
         output_dir=output_dir,
         dataset_name=data_loader.dataset.name,
+        expected_num_frames=expected_num_frames,
     )
 
 
-def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix=""):
+def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix="", expected_num_frames=1):
     task = data_loader.dataset.task
 
     if task == "triplet":
@@ -545,6 +590,7 @@ def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix
             tokenizer=tokenizer,
             device=device,
             output_dir=output_dir,
+            expected_num_frames=expected_num_frames,
         )
         evaluator = TripletEvaluator(prefix=prefix)
     else:
@@ -554,6 +600,7 @@ def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix
             tokenizer=tokenizer,
             device=device,
             output_dir=output_dir,
+            expected_num_frames=expected_num_frames,
         )
 
         if task in ["phases", "steps", "actions"]:
@@ -569,12 +616,15 @@ def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix
 def evaluate_zero_shot(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     os.makedirs(args.output_dir, exist_ok=True)
-
     print("正在加载模型结构...")
     model = VLP(
         embed_dim=512,
         text_model_name=args.text_model,
         vision_pretrained_weights=args.vision_weights,
+        num_frames=args.num_frames,
+        temporal_num_layers=args.temporal_layers,
+        temporal_num_heads=args.temporal_heads,
+        temporal_dropout=args.temporal_dropout,
     ).to(device)
 
     model = load_model_checkpoint(model, args.ckpt, device)
@@ -586,6 +636,8 @@ def evaluate_zero_shot(args):
         dataset_name=args.dataset,
         batch_size=args.batch_size,
         num_workers=args.num_workers,
+        num_frames=args.num_frames,
+        frame_stride=args.frame_stride,
     )
     data_loader.dataset.name = args.dataset
 
@@ -596,6 +648,7 @@ def evaluate_zero_shot(args):
         device=device,
         output_dir=args.output_dir,
         prefix=args.dataset,
+        expected_num_frames=args.num_frames,
     )
 
     result_path = os.path.join(args.output_dir, f"results_{args.dataset}.json")
@@ -615,6 +668,11 @@ def parse_args():
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--output_dir", type=str, default="./eval_outputs")
+    parser.add_argument("--num_frames", type=int, default=4)
+    parser.add_argument("--frame_stride", type=int, default=1)
+    parser.add_argument("--temporal_layers", type=int, default=2)
+    parser.add_argument("--temporal_heads", type=int, default=8)
+    parser.add_argument("--temporal_dropout", type=float, default=0.1)
     return parser.parse_args()
 
 
