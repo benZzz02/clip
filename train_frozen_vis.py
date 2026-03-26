@@ -1,5 +1,3 @@
-# train_frozen_vis.py
-
 import os
 import math
 import argparse
@@ -8,7 +6,7 @@ import contextlib
 import torch
 import torch.nn.functional as F
 import torch.distributed as dist
-from torch.utils.data import DataLoader, DistributedSampler
+from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -16,10 +14,15 @@ from torch.cuda.amp import autocast, GradScaler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
-import swanlab
+
+try:
+    import swanlab
+except ImportError:
+    swanlab = None
 
 from model import VLP
 from pretrain_dataset import PretrainDataset
+from mixed_level_batch_sampler import DistributedMixedLevelBatchSampler
 
 
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
@@ -43,6 +46,188 @@ def concat_all_gather(tensor: torch.Tensor):
     gathered = [torch.zeros_like(tensor) for _ in range(world_size)]
     dist.all_gather(gathered, tensor)
     return gathered
+
+
+def _unwrap_state_io_module(module):
+    while hasattr(module, "_orig_mod"):
+        module = module._orig_mod
+    return module
+
+
+def _normalize_state_dict_keys(state_dict):
+    normalized = {}
+    for key, value in state_dict.items():
+        while key.startswith("module.") or key.startswith("_orig_mod."):
+            if key.startswith("module."):
+                key = key[len("module."):]
+            if key.startswith("_orig_mod."):
+                key = key[len("_orig_mod."):]
+        normalized[key] = value
+    return normalized
+
+
+def _export_plain_state_dict_from_ddp(model):
+    return _unwrap_state_io_module(model.module).state_dict()
+
+
+def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
+    target_module = _unwrap_state_io_module(module)
+    normalized_state_dict = _normalize_state_dict_keys(state_dict)
+    msg = target_module.load_state_dict(normalized_state_dict, strict=False)
+
+    if msg.missing_keys or msg.unexpected_keys:
+        raise RuntimeError(
+            f"{source} 与当前模型不匹配。\n"
+            f"Missing keys: {msg.missing_keys}\n"
+            f"Unexpected keys: {msg.unexpected_keys}"
+        )
+
+    return msg
+
+
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    v = v.lower()
+    if v in {"1", "true", "t", "yes", "y"}:
+        return True
+    if v in {"0", "false", "f", "no", "n"}:
+        return False
+    raise argparse.ArgumentTypeError(f"Invalid boolean value: {v}")
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="VLP Frozen-Visual DDP Training")
+
+    parser.add_argument("--resume_from_checkpoint", type=str, default=None)
+
+    parser.add_argument("--epochs", type=int, default=20)
+    parser.add_argument("--learning_rate", type=float, default=1e-5)
+    parser.add_argument("--weight_decay", type=float, default=0.02)
+    parser.add_argument("--adam_beta1", type=float, default=0.9)
+    parser.add_argument("--adam_beta2", type=float, default=0.999)
+
+    parser.add_argument(
+        "--per_gpu_batch_size",
+        type=int,
+        default=int(os.environ.get("PER_GPU_BATCH_SIZE", 16)),
+    )
+    parser.add_argument(
+        "--accum_steps",
+        type=int,
+        default=int(os.environ.get("ACCUM_STEPS", 1)),
+    )
+    parser.add_argument(
+        "--num_workers",
+        type=int,
+        default=int(os.environ.get("NUM_WORKERS", 2)),
+    )
+
+    parser.add_argument("--embed_dim", type=int, default=512)
+    parser.add_argument("--image_size", type=int, default=224)
+    parser.add_argument("--max_length", type=int, default=256)
+    parser.add_argument(
+        "--num_frames",
+        type=int,
+        default=int(os.environ.get("NUM_FRAMES", 4)),
+    )
+
+    parser.add_argument("--text_model_name", type=str, default="marcobombieri/surgicberta")
+    parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
+
+    parser.add_argument(
+        "--video_root_folder",
+        type=str,
+        default=os.environ.get(
+            "PRETRAIN_VIDEO_ROOT_FOLDER",
+            "/mnt/mydisk/CLIP/downloaded_video_224_test",
+        ),
+    )
+    parser.add_argument("--ffmpeg_timeout", type=int, default=10)
+    parser.add_argument("--max_retry", type=int, default=5)
+    parser.add_argument(
+        "--assume_resized_video",
+        type=str2bool,
+        default=os.environ.get("PRETRAIN_VIDEO_ALREADY_RESIZED", "0") == "1",
+    )
+
+    parser.add_argument(
+        "--main_csv_path",
+        type=str,
+        default=os.environ.get(
+            "PRETRAIN_MAIN_CSV_PATH",
+            "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv",
+        ),
+    )
+    parser.add_argument(
+        "--annotations_folder",
+        type=str,
+        default=os.environ.get(
+            "PRETRAIN_ANNOTATIONS_FOLDER",
+            "/mnt/mydisk/CLIP/surglavi_level_csv/fine",
+        ),
+    )
+    parser.add_argument("--annotations_root", type=str, default=None)
+    parser.add_argument(
+        "--annotation_levels",
+        type=str,
+        default=None,
+        help="Comma-separated levels, e.g. coarse,mid,fine",
+    )
+    parser.add_argument(
+        "--level_mix",
+        type=str,
+        default="concat",
+        choices=["concat", "balanced"],
+    )
+    parser.add_argument(
+        "--level_batch_sizes",
+        type=str,
+        default="fine:80,mid:32,coarse:16",
+        help="Per-rank batch composition, e.g. fine:80,mid:32,coarse:16",
+    )
+
+    parser.add_argument(
+        "--samples_cache_dir",
+        type=str,
+        default="/mnt/mydisk/CLIP/.cache/pretrain_samples",
+    )
+    parser.add_argument(
+        "--use_samples_cache",
+        type=str2bool,
+        default=True,
+    )
+    parser.add_argument(
+        "--rebuild_samples_cache",
+        type=str2bool,
+        default=False,
+    )
+    parser.add_argument(
+        "--samples_cache_version",
+        type=str,
+        default="v1",
+    )
+
+    parser.add_argument(
+        "--use_swanlab",
+        type=str2bool,
+        default=os.environ.get("USE_SWANLAB", "1") == "1",
+    )
+
+    return parser.parse_args()
+
+
+def parse_level_batch_sizes(spec: str):
+    out = {}
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        level, count = item.split(":")
+        out[level.strip()] = int(count.strip())
+    if not out:
+        raise ValueError("level_batch_sizes is empty")
+    return out
 
 
 def clip_contrastive_loss(model, images, input_ids, attention_mask):
@@ -74,9 +259,7 @@ def clip_contrastive_loss(model, images, input_ids, attention_mask):
 
 
 def train():
-    parser = argparse.ArgumentParser(description="VLP Frozen-Visual DDP Training")
-    parser.add_argument("--resume_from_checkpoint", type=str, default=None)
-    args = parser.parse_args()
+    args = parse_args()
 
     rank = setup_ddp()
     world_size = dist.get_world_size()
@@ -97,41 +280,45 @@ def train():
     )
     scaler = GradScaler(enabled=(amp_dtype == torch.float16))
 
-    PER_GPU_BATCH_SIZE = int(os.environ.get("PER_GPU_BATCH_SIZE", 16))
-    ACCUM_STEPS = int(os.environ.get("ACCUM_STEPS", 1))
+    PER_GPU_BATCH_SIZE = args.per_gpu_batch_size
+    ACCUM_STEPS = args.accum_steps
+    USE_SWANLAB = args.use_swanlab
+    LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
+
+    if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
+        raise ValueError(
+            f"Sum of level_batch_sizes must equal per_gpu_batch_size. "
+            f"Got {sum(LEVEL_BATCH_SIZES.values())} vs {PER_GPU_BATCH_SIZE}"
+        )
 
     CONFIG = {
-        "epochs": 20,
-        "learning_rate": 1e-4,
-        "weight_decay": 0.02,
-        "adam_betas": (0.9, 0.999),
-        "num_workers": int(os.environ.get("NUM_WORKERS", 2)),
-        "embed_dim": 512,
-        "image_size": 224,
-        "max_length": 256,
-        "text_model_name": "marcobombieri/surgicberta",
-        "vision_pretrained_weights": "lemonfm.pth",
-        "video_root_folder": os.environ.get(
-            "PRETRAIN_VIDEO_ROOT_FOLDER",
-            "/mnt/mydisk/CLIP/downloaded_video_224_test",
-        ),
-        "ffmpeg_timeout": 10,
-        "max_retry": 5,
-        "assume_resized_video": os.environ.get(
-            "PRETRAIN_VIDEO_ALREADY_RESIZED",
-            "0",
-        ) == "1",
-        "num_frames": int(os.environ.get("NUM_FRAMES", 4)),
+        "epochs": args.epochs,
+        "learning_rate": args.learning_rate,
+        "weight_decay": args.weight_decay,
+        "adam_betas": (args.adam_beta1, args.adam_beta2),
+        "num_workers": args.num_workers,
+        "embed_dim": args.embed_dim,
+        "image_size": args.image_size,
+        "max_length": args.max_length,
+        "text_model_name": args.text_model_name,
+        "vision_pretrained_weights": args.vision_pretrained_weights,
+        "video_root_folder": args.video_root_folder,
+        "ffmpeg_timeout": args.ffmpeg_timeout,
+        "max_retry": args.max_retry,
+        "assume_resized_video": args.assume_resized_video,
+        "num_frames": args.num_frames,
+        "annotations_root": args.annotations_root,
+        "annotation_levels": args.annotation_levels,
+        "level_mix": args.level_mix,
+        "level_batch_sizes": LEVEL_BATCH_SIZES,
+        "samples_cache_dir": args.samples_cache_dir,
+        "use_samples_cache": args.use_samples_cache,
+        "rebuild_samples_cache": args.rebuild_samples_cache,
+        "samples_cache_version": args.samples_cache_version,
     }
 
-    MAIN_CSV_PATH = os.environ.get(
-        "PRETRAIN_MAIN_CSV_PATH",
-        "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv",
-    )
-    ANNOTATIONS_FOLDER = os.environ.get(
-        "PRETRAIN_ANNOTATIONS_FOLDER",
-        "/mnt/mydisk/CLIP/surglavi_level_csv/fine",
-    )
+    MAIN_CSV_PATH = args.main_csv_path
+    ANNOTATIONS_FOLDER = args.annotations_folder
 
     if rank == 0:
         print("正在初始化 VLP 模型...")
@@ -205,10 +392,24 @@ def train():
         print(f"视频目录: {CONFIG['video_root_folder']}")
         print(f"假设视频已预缩放: {CONFIG['assume_resized_video']}")
         print(f"每个样本抽帧数: {CONFIG['num_frames']}")
+        if args.annotations_root:
+            print(f"标注根目录: {args.annotations_root}")
+            print(f"标注层级: {args.annotation_levels}")
+            print(f"层级混合方式: {args.level_mix}")
+        else:
+            print(f"标注目录: {ANNOTATIONS_FOLDER}")
+        print(f"batch层级配比: {LEVEL_BATCH_SIZES}")
+        print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
+        print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
+        print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
+        print(f"samples_cache_version: {CONFIG['samples_cache_version']}")
 
     train_dataset = PretrainDataset(
         main_csv_path=MAIN_CSV_PATH,
-        annotations_folder=ANNOTATIONS_FOLDER,
+        annotations_folder=ANNOTATIONS_FOLDER if not args.annotations_root else None,
+        annotations_root=args.annotations_root,
+        annotation_levels=args.annotation_levels,
+        level_mix=args.level_mix,
         tokenizer=tokenizer,
         image_size=CONFIG["image_size"],
         max_length=CONFIG["max_length"],
@@ -218,25 +419,37 @@ def train():
         video_root_folder=CONFIG["video_root_folder"],
         assume_resized_video=CONFIG["assume_resized_video"],
         num_frames=CONFIG["num_frames"],
+        samples_cache_dir=CONFIG["samples_cache_dir"],
+        use_samples_cache=CONFIG["use_samples_cache"],
+        rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
+        samples_cache_version=CONFIG["samples_cache_version"],
     )
 
-    train_sampler = DistributedSampler(
+    train_sampler = DistributedMixedLevelBatchSampler(
         train_dataset,
+        batch_size=PER_GPU_BATCH_SIZE,
+        level_batch_sizes=LEVEL_BATCH_SIZES,
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
+        seed=42,
+        drop_last=True,
     )
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=PER_GPU_BATCH_SIZE,
+        batch_sampler=train_sampler,
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
-        drop_last=True,
-        sampler=train_sampler,
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
     )
+
+    num_batches = len(train_loader)
+    if num_batches == 0:
+        raise ValueError(
+            "train_loader is empty. Check dataset size, batch size, level_batch_sizes, and drop_last settings."
+        )
 
     trainable_params = [p for p in model.parameters() if p.requires_grad]
 
@@ -247,66 +460,78 @@ def train():
         weight_decay=CONFIG["weight_decay"],
     )
 
-    total_update_steps = math.ceil(len(train_loader) / ACCUM_STEPS) * CONFIG["epochs"]
-    scheduler = CosineAnnealingLR(optimizer, T_max=total_update_steps)
+    updates_per_epoch = math.ceil(num_batches / ACCUM_STEPS)
+    total_update_steps = updates_per_epoch * CONFIG["epochs"]
+    scheduler = CosineAnnealingLR(optimizer, T_max=max(1, total_update_steps))
 
     writer = None
     swanlab_run = None
     if rank == 0:
         log_dir = os.environ.get("TB_LOGDIR", "runs/VLP_frozen_vis")
-
-        swanlab_config = {
-            "epochs": CONFIG["epochs"],
-            "learning_rate": CONFIG["learning_rate"],
-            "weight_decay": CONFIG["weight_decay"],
-            "adam_betas": list(CONFIG["adam_betas"]),
-            "num_workers": CONFIG["num_workers"],
-            "embed_dim": CONFIG["embed_dim"],
-            "image_size": CONFIG["image_size"],
-            "max_length": CONFIG["max_length"],
-            "text_model_name": CONFIG["text_model_name"],
-            "vision_pretrained_weights": CONFIG["vision_pretrained_weights"],
-            "video_root_folder": CONFIG["video_root_folder"],
-            "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],
-            "max_retry": CONFIG["max_retry"],
-            "assume_resized_video": CONFIG["assume_resized_video"],
-            "num_frames": CONFIG["num_frames"],
-            "per_gpu_batch_size": PER_GPU_BATCH_SIZE,
-            "accum_steps": ACCUM_STEPS,
-            "world_size": world_size,
-            "main_csv_path": MAIN_CSV_PATH,
-            "annotations_folder": ANNOTATIONS_FOLDER,
-            "resume_from_checkpoint": args.resume_from_checkpoint,
-            "tb_logdir": log_dir,
-        }
-
-        swanlab_kwargs = {
-            "project": os.environ.get("SWANLAB_PROJECT", "CLIP"),
-            "experiment_name": os.environ.get("SWANLAB_EXPERIMENT_NAME", "VLP_frozen_vis"),
-            "config": swanlab_config,
-            "logdir": os.environ.get("SWANLAB_LOGDIR", "swanlog/VLP_frozen_vis"),
-        }
-
-        swanlab_workspace = os.environ.get("SWANLAB_WORKSPACE")
-        if swanlab_workspace:
-            swanlab_kwargs["workspace"] = swanlab_workspace
-
-        swanlab_mode = os.environ.get("SWANLAB_MODE")
-        if swanlab_mode:
-            swanlab_kwargs["mode"] = swanlab_mode
-
-        swanlab_run_id = os.environ.get("SWANLAB_RUN_ID")
-        if swanlab_run_id:
-            swanlab_kwargs["id"] = swanlab_run_id
-
-        swanlab_resume = os.environ.get("SWANLAB_RESUME")
-        if swanlab_resume:
-            swanlab_kwargs["resume"] = swanlab_resume
-
-        swanlab_run = swanlab.init(**swanlab_kwargs)
-        swanlab.sync_tensorboard_torch()
-
         writer = SummaryWriter(log_dir=log_dir)
+
+        if USE_SWANLAB:
+            if swanlab is None:
+                print("swanlab 未安装，跳过 SwanLab 日志。")
+            else:
+                swanlab_config = {
+                    "epochs": CONFIG["epochs"],
+                    "learning_rate": CONFIG["learning_rate"],
+                    "weight_decay": CONFIG["weight_decay"],
+                    "adam_betas": list(CONFIG["adam_betas"]),
+                    "num_workers": CONFIG["num_workers"],
+                    "embed_dim": CONFIG["embed_dim"],
+                    "image_size": CONFIG["image_size"],
+                    "max_length": CONFIG["max_length"],
+                    "text_model_name": CONFIG["text_model_name"],
+                    "vision_pretrained_weights": CONFIG["vision_pretrained_weights"],
+                    "video_root_folder": CONFIG["video_root_folder"],
+                    "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],
+                    "max_retry": CONFIG["max_retry"],
+                    "assume_resized_video": CONFIG["assume_resized_video"],
+                    "num_frames": CONFIG["num_frames"],
+                    "per_gpu_batch_size": PER_GPU_BATCH_SIZE,
+                    "accum_steps": ACCUM_STEPS,
+                    "world_size": world_size,
+                    "main_csv_path": MAIN_CSV_PATH,
+                    "annotations_folder": ANNOTATIONS_FOLDER,
+                    "annotations_root": args.annotations_root,
+                    "annotation_levels": args.annotation_levels,
+                    "level_mix": args.level_mix,
+                    "level_batch_sizes": args.level_batch_sizes,
+                    "samples_cache_dir": args.samples_cache_dir,
+                    "use_samples_cache": args.use_samples_cache,
+                    "rebuild_samples_cache": args.rebuild_samples_cache,
+                    "samples_cache_version": args.samples_cache_version,
+                    "resume_from_checkpoint": args.resume_from_checkpoint,
+                    "tb_logdir": log_dir,
+                }
+
+                swanlab_kwargs = {
+                    "project": os.environ.get("SWANLAB_PROJECT", "CLIP"),
+                    "experiment_name": os.environ.get("SWANLAB_EXPERIMENT_NAME", "VLP_frozen_vis"),
+                    "config": swanlab_config,
+                    "logdir": os.environ.get("SWANLAB_LOGDIR", "swanlog/VLP_frozen_vis"),
+                }
+
+                swanlab_workspace = os.environ.get("SWANLAB_WORKSPACE")
+                if swanlab_workspace:
+                    swanlab_kwargs["workspace"] = swanlab_workspace
+
+                swanlab_mode = os.environ.get("SWANLAB_MODE")
+                if swanlab_mode:
+                    swanlab_kwargs["mode"] = swanlab_mode
+
+                swanlab_run_id = os.environ.get("SWANLAB_RUN_ID")
+                if swanlab_run_id:
+                    swanlab_kwargs["id"] = swanlab_run_id
+
+                swanlab_resume = os.environ.get("SWANLAB_RESUME")
+                if swanlab_resume:
+                    swanlab_kwargs["resume"] = swanlab_resume
+
+                swanlab_run = swanlab.init(**swanlab_kwargs)
+                swanlab.sync_tensorboard_torch()
 
     start_epoch = 0
     global_step = 0
@@ -317,11 +542,19 @@ def train():
 
         checkpoint = torch.load(args.resume_from_checkpoint, map_location=device)
 
-        model.module.load_state_dict(checkpoint["model_state_dict"], strict=False)
+        _load_normalized_state_dict(
+            model.module,
+            checkpoint["model_state_dict"],
+            source=args.resume_from_checkpoint,
+        )
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
         start_epoch = checkpoint["epoch"]
         global_step = checkpoint["global_step"]
+
+        scaler_state_dict = checkpoint.get("scaler_state_dict")
+        if scaler_state_dict is not None and scaler.is_enabled():
+            scaler.load_state_dict(scaler_state_dict)
 
         if rank == 0:
             print(f"恢复成功，将从 epoch {start_epoch + 1} 开始。")
@@ -331,7 +564,7 @@ def train():
 
     for epoch in range(start_epoch, CONFIG["epochs"]):
         train_sampler.set_epoch(epoch)
-        model.module.set_frozen_modules_eval()
+        _unwrap_state_io_module(model.module).set_frozen_modules_eval()
 
         progress_bar = tqdm(
             train_loader,
@@ -341,30 +574,32 @@ def train():
         )
 
         optimizer.zero_grad(set_to_none=True)
-        step = 0
         last_loss_value = None
+        accum_loss_sum = torch.zeros((), device=device)
 
-        for batch in progress_bar:
+        for step, batch in enumerate(progress_bar):
             images, input_ids, attention_mask = [b.to(device, non_blocking=True) for b in batch]
 
-            sync_ctx = (
-                model.no_sync()
-                if ((step + 1) % ACCUM_STEPS != 0)
-                else contextlib.nullcontext()
-            )
+            micro_step = (step % ACCUM_STEPS) + 1
+            is_last_batch = (step + 1) == num_batches
+            current_accum_steps = micro_step if (is_last_batch and micro_step != ACCUM_STEPS) else ACCUM_STEPS
+            should_update = (micro_step == ACCUM_STEPS) or is_last_batch
+
+            sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
 
             with sync_ctx:
                 with autocast(dtype=amp_dtype):
-                    loss = clip_contrastive_loss(model, images, input_ids, attention_mask)
-                    loss = loss / ACCUM_STEPS
+                    raw_loss = clip_contrastive_loss(model, images, input_ids, attention_mask)
+                    loss = raw_loss / current_accum_steps
 
                 if scaler.is_enabled():
                     scaler.scale(loss).backward()
                 else:
                     loss.backward()
 
-            did_step = False
-            if (step + 1) % ACCUM_STEPS == 0:
+            accum_loss_sum += raw_loss.detach()
+
+            if should_update:
                 if scaler.is_enabled():
                     scaler.step(optimizer)
                     scaler.update()
@@ -373,14 +608,13 @@ def train():
 
                 optimizer.zero_grad(set_to_none=True)
                 scheduler.step()
-                did_step = True
 
-            if did_step:
-                full_loss = (loss.detach() * ACCUM_STEPS).to(device)
-                loss_log = full_loss.clone()
+                window_loss = accum_loss_sum / current_accum_steps
+                loss_log = window_loss.clone()
                 dist.all_reduce(loss_log, op=dist.ReduceOp.SUM)
                 loss_avg = loss_log.item() / world_size
                 last_loss_value = loss_avg
+                accum_loss_sum.zero_()
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
@@ -391,12 +625,11 @@ def train():
 
             if rank == 0:
                 progress_bar.set_postfix(
-                    loss=(loss.item() * ACCUM_STEPS),
+                    loss=raw_loss.item(),
                     lr=scheduler.get_last_lr()[0],
                 )
 
             del images, input_ids, attention_mask
-            step += 1
 
         if rank == 0:
             print(
@@ -406,10 +639,11 @@ def train():
 
             checkpoint_data = {
                 "epoch": epoch + 1,
-                "model_state_dict": model.module.state_dict(),
+                "model_state_dict": _export_plain_state_dict_from_ddp(model),
                 "optimizer_state_dict": optimizer.state_dict(),
                 "scheduler_state_dict": scheduler.state_dict(),
                 "global_step": global_step,
+                "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
             }
             torch.save(checkpoint_data, f"vlp_epoch_{epoch + 1}.pt")
 
@@ -420,10 +654,11 @@ def train():
         print("训练完成。")
         final_checkpoint_data = {
             "epoch": CONFIG["epochs"],
-            "model_state_dict": model.module.state_dict(),
+            "model_state_dict": _export_plain_state_dict_from_ddp(model),
             "optimizer_state_dict": optimizer.state_dict(),
             "scheduler_state_dict": scheduler.state_dict(),
             "global_step": global_step,
+            "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
         }
         torch.save(final_checkpoint_data, "vlp_final.pt")
 

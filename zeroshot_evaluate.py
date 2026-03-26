@@ -145,7 +145,7 @@ DATASET_CONFIGS = {
             "triplet",
         ],
     },
-    "sarrarp50_action": {
+    "sarrarp50_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
             "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/annotations/test.json",
@@ -156,21 +156,7 @@ DATASET_CONFIGS = {
             9,
             "png",
             "sarrarp50",
-            "actions",
-        ],
-    },
-    "sarrarp50": {
-        "dataset_class": SurgLaViSingleFrameDataset,
-        "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/annotations/test.json",
-            "/mnt/mydisk/SAR50/test",
-            "video",
-            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/frame_lists/frames.csv",
-            1,
-            9,
-            "png",
-            "sarrarp50",
-            "actions",
+            "phases",
         ],
     },
     "heichole_phase": {
@@ -184,7 +170,7 @@ DATASET_CONFIGS = {
             5,
             "png",
             "heichole",
-            "actions",
+            "phases",
         ],
     },
     "heichole_instrument": {
@@ -218,11 +204,41 @@ def load_model_checkpoint(model, ckpt_path, device):
         state_dict = ckpt
         print("检测到纯 state_dict 格式")
 
-    state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+    normalized_state_dict = {}
+    for key, value in state_dict.items():
+        while key.startswith("module.") or key.startswith("_orig_mod."):
+            if key.startswith("module."):
+                key = key[len("module."):]
+            if key.startswith("_orig_mod."):
+                key = key[len("_orig_mod."):]
+        normalized_state_dict[key] = value
 
-    msg = model.load_state_dict(state_dict, strict=False)
+    if getattr(model, "frame_pool", None) is None:
+        ignored_keys = sorted(
+            key for key in normalized_state_dict if key.startswith("frame_pool.")
+        )
+        if ignored_keys:
+            print(
+                "当前模型为单帧模式，忽略 checkpoint 中的多帧专用参数:",
+                ignored_keys,
+            )
+            normalized_state_dict = {
+                key: value
+                for key, value in normalized_state_dict.items()
+                if key not in ignored_keys
+            }
+
+    msg = model.load_state_dict(normalized_state_dict, strict=False)
     print("Missing keys:", msg.missing_keys)
     print("Unexpected keys:", msg.unexpected_keys)
+
+    if msg.missing_keys or msg.unexpected_keys:
+        raise RuntimeError(
+            f"Checkpoint 与当前模型不匹配。\n"
+            f"Missing keys: {msg.missing_keys}\n"
+            f"Unexpected keys: {msg.unexpected_keys}"
+        )
+
     return model
 
 
@@ -618,7 +634,7 @@ def evaluate_zero_shot(args):
     os.makedirs(args.output_dir, exist_ok=True)
     print("正在加载模型结构...")
     model = VLP(
-        embed_dim=512,
+        embed_dim=args.embed_dim,
         text_model_name=args.text_model,
         vision_pretrained_weights=args.vision_weights,
         num_frames=args.num_frames,
@@ -668,6 +684,7 @@ def parse_args():
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--output_dir", type=str, default="./eval_outputs")
+    parser.add_argument("--embed_dim", type=int, default=512)
     parser.add_argument("--num_frames", type=int, default=4)
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--temporal_layers", type=int, default=2)

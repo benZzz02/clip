@@ -1,0 +1,11 @@
+Task,Our Overall,Paper SurgCLIP (beta),Delta vs Paper
+Cholec80 Phase,44.47 / 32.59,57.98 / 39.42,-13.51 Acc / -6.83 F1
+AutoLaparo Phase,38.68 / 32.78,55.72 / 45.95,-17.04 Acc / -13.17 F1
+StrasBypass70 Phase,33.74 / 18.20,31.24 / 26.05,+2.50 Acc / -7.85 F1
+BernBypass70 Phase,42.17 / 19.91,18.30 / 15.06,+23.87 Acc / +4.85 F1
+GraSP Phase,20.31 / 15.08,34.77 / 27.98,-14.46 Acc / -12.90 F1
+GraSP Step,5.49 / 4.29,14.15 / 11.14,-8.66 Acc / -6.85 F1
+SARRARP50 Action,3.22 / 3.04,13.94 / 7.62,-10.72 Acc / -4.58 F1
+CholeT50 mAP,3.90,4.17,-0.27
+Cholec80 Tool mAP,33.33,36.77,-3.44
+GraSP Tool mAP,41.71,43.06,-1.35

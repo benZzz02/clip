@@ -1,7 +1,6 @@
 import json
 import os
 import re
-from bisect import bisect_left
 from collections import defaultdict
 
 import numpy as np
@@ -81,6 +80,8 @@ def load_image_lists(file, data_root, labels):
 
     frame_paths = [frame_paths[i] for i in range(len(frame_paths))]
     return frame_paths, video_idx_to_name
+
+
 def _category_name(item):
     if "name" in item:
         return item["name"]
@@ -128,12 +129,30 @@ def parse_annotations(filename, task):
         label_key = "instruments"
 
     elif task == "actions":
-        category_key = "actions_categories" if "actions_categories" in data else "phases_categories"
+        if "actions_categories" in data:
+            category_key = "actions_categories"
+        elif "phases_categories" in data:
+            category_key = "phases_categories"
+        else:
+            raise KeyError(
+                f"Task '{task}' requires 'actions_categories' or 'phases_categories' in {filename}"
+            )
+
         categories = [_category_name(x) for x in data[category_key]]
         prompts = [_category_prompt(x) for x in data[category_key]]
 
+        if not data["annotations"]:
+            raise ValueError(f"No annotations found in {filename}")
+
         sample_ann = data["annotations"][0]
-        label_key = "actions" if "actions" in sample_ann else "phases"
+        if "actions" in sample_ann:
+            label_key = "actions"
+        elif "phases" in sample_ann:
+            label_key = "phases"
+        else:
+            raise KeyError(
+                f"Task '{task}' requires 'actions' or 'phases' labels in {filename}"
+            )
 
     else:
         categories = [_category_name(x) for x in data[f"{task}_categories"]]
@@ -254,11 +273,15 @@ class SurgLaViSingleFrameDataset(Dataset):
             labels[self._video_idx_to_name[i]]
             for i in range(len(self._image_paths))
         ]
-        
+
         if self.name == "heichole":
             filtered_labels = []
             for video_idx in range(len(self.labels)):
-                self._image_paths[video_idx] = {frame_num: image_path for frame_num, image_path in self._image_paths[video_idx].items() if os.path.exists(image_path)}
+                self._image_paths[video_idx] = {
+                    frame_num: image_path
+                    for frame_num, image_path in self._image_paths[video_idx].items()
+                    if os.path.exists(image_path)
+                }
                 kept = {}
                 for frame_num, label in self.labels[video_idx].items():
                     image_path = self._image_paths[video_idx].get(frame_num)
@@ -266,7 +289,7 @@ class SurgLaViSingleFrameDataset(Dataset):
                         kept[frame_num] = label
                 filtered_labels.append(kept)
             self.labels = filtered_labels
-            
+
         self._keyframe_indices, _ = get_keyframe_data(self.labels)
         self.num_examples = len(self._keyframe_indices)
 
@@ -344,7 +367,10 @@ class SurgLaViClipDataset(SurgLaViSingleFrameDataset):
     def __init__(self, ann_file, transform=None, num_frames=4, frame_stride=1):
         super().__init__(ann_file=ann_file, transform=transform)
         self.num_frames = max(1, int(num_frames))
-        self.frame_stride = max(1, int(frame_stride))
+        self.frame_stride = max(
+            1,
+            int(frame_stride if frame_stride is not None else self.sample_rate),
+        )
 
     def _load_frame_tensor(self, image_path):
         with Image.open(image_path) as img:
@@ -356,38 +382,30 @@ class SurgLaViClipDataset(SurgLaViSingleFrameDataset):
             image = torch.from_numpy(np.array(image)).permute(2, 0, 1).float() / 255.0
         return image
 
-    def _nearest_available_frame_num(self, available_frame_nums, target_frame_num):
-        pos = bisect_left(available_frame_nums, target_frame_num)
+    def _get_clip_index_sequence(self, center_idx, num_available):
+        if num_available <= 0:
+            raise ValueError("No frames available for clip sampling.")
 
-        if pos <= 0:
-            return available_frame_nums[0]
-        if pos >= len(available_frame_nums):
-            return available_frame_nums[-1]
+        start_offset = -(self.num_frames // 2)
+        offsets = range(start_offset, start_offset + self.num_frames)
+        max_idx = num_available - 1
 
-        left_num = available_frame_nums[pos - 1]
-        right_num = available_frame_nums[pos]
-
-        if abs(left_num - target_frame_num) <= abs(right_num - target_frame_num):
-            return left_num
-        return right_num
+        return [
+            min(max(center_idx + offset * self.frame_stride, 0), max_idx)
+            for offset in offsets
+        ]
 
     def _get_clip_frame_nums(self, video_idx, center_frame_num):
         available_frame_nums = sorted(self._image_paths[video_idx].keys())
 
-        left_count = self.num_frames // 2
-        right_count = self.num_frames - left_count - 1
+        if center_frame_num not in self._image_paths[video_idx]:
+            raise KeyError(
+                f"Center frame {center_frame_num} of video_idx={video_idx} not found."
+            )
 
-        offsets = list(range(-left_count, right_count + 1))
-        target_frame_nums = [
-            center_frame_num + offset * self.frame_stride
-            for offset in offsets
-        ]
-
-        clip_frame_nums = [
-            self._nearest_available_frame_num(available_frame_nums, target_frame_num)
-            for target_frame_num in target_frame_nums
-        ]
-        return clip_frame_nums
+        center_idx = available_frame_nums.index(center_frame_num)
+        index_seq = self._get_clip_index_sequence(center_idx, len(available_frame_nums))
+        return [available_frame_nums[idx] for idx in index_seq]
 
     def __getitem__(self, idx):
         video_idx, _, frame_num, _ = self._keyframe_indices[idx]

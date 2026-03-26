@@ -1,14 +1,14 @@
 # pretrain_dataset.py
 
-import os
 import random
 
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn.functional as F
 from decord import VideoReader, cpu
 from torch.utils.data import Dataset
+
+from pretrain_manifest_cache import load_or_build_pretrain_samples
 
 
 class PretrainDataset(Dataset):
@@ -17,6 +17,8 @@ class PretrainDataset(Dataset):
     - 从视频区间中抽单帧或多帧
     - 返回 image/frames, input_ids, attention_mask
     - 用 decord 在线取帧，避免每帧启动一次 ffmpeg 子进程
+    - 支持单层级目录，或 coarse/mid/fine 多层级混合输入
+    - 支持将样本清单缓存到磁盘，避免每次启动都重复扫描标注 CSV
     """
 
     def __init__(
@@ -26,16 +28,30 @@ class PretrainDataset(Dataset):
         tokenizer,
         image_size=224,
         max_length=256,
-        sample_mode="random",      # "random" or "center"
-        ffmpeg_timeout=20,         # 兼容旧接口，当前 decord 版不使用
+        sample_mode="random",
+        ffmpeg_timeout=20,
         max_retry=20,
         video_root_folder="/mnt/mydisk/CLIP/downloaded_video_224_test",
-        assume_resized_video=False,  # 兼容旧接口，当前仅作保留
+        assume_resized_video=False,
         num_frames=1,
+        annotations_root=None,
+        annotation_levels=None,
+        level_mix="concat",
+        level_seed=42,
+        samples_cache_dir="/mnt/mydisk/CLIP/.cache/pretrain_samples",
+        use_samples_cache=True,
+        rebuild_samples_cache=False,
+        samples_cache_version="v1",
     ):
         super().__init__()
-        self.main_df = pd.read_csv(main_csv_path)
+
+        self.main_csv_path = main_csv_path
         self.annotations_folder = annotations_folder
+        self.annotations_root = annotations_root
+        self.annotation_levels = annotation_levels
+        self.level_mix = level_mix
+        self.level_seed = int(level_seed)
+
         self.tokenizer = tokenizer
         self.image_size = image_size
         self.max_length = max_length
@@ -46,60 +62,31 @@ class PretrainDataset(Dataset):
         self.assume_resized_video = assume_resized_video
         self.num_frames = max(1, int(num_frames))
 
-        self.pixel_mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32).view(1, 3, 1, 1)
-        self.pixel_std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32).view(1, 3, 1, 1)
+        self.samples_cache_dir = samples_cache_dir
+        self.use_samples_cache = bool(use_samples_cache)
+        self.rebuild_samples_cache = bool(rebuild_samples_cache)
+        self.samples_cache_version = str(samples_cache_version)
 
-        self.samples = self._prepare_samples()
+        self.pixel_mean = torch.tensor(
+            [0.485, 0.456, 0.406], dtype=torch.float32
+        ).view(1, 3, 1, 1)
+        self.pixel_std = torch.tensor(
+            [0.229, 0.224, 0.225], dtype=torch.float32
+        ).view(1, 3, 1, 1)
 
-    def _prepare_samples(self):
-        print("正在准备图文预训练数据...")
-
-        samples_list = []
-
-        for _, row in self.main_df.iterrows():
-            relative_video_path = row["video_path"]
-            video_filename = os.path.basename(relative_video_path)
-            full_video_path = os.path.join(self.video_root_folder, video_filename)
-
-            annotation_csv_path = os.path.join(
-                self.annotations_folder,
-                f"{os.path.splitext(video_filename)[0]}.csv"
-            )
-
-            if not os.path.exists(annotation_csv_path):
-                continue
-
-            try:
-                ann_df = pd.read_csv(annotation_csv_path)
-
-                for _, ann_row in ann_df.iterrows():
-                    start_time = ann_row["start"]
-                    end_time = ann_row["end"]
-                    caption = ann_row["text"]
-
-                    if not isinstance(caption, str):
-                        continue
-                    if pd.isna(start_time) or pd.isna(end_time):
-                        continue
-
-                    start_time = float(start_time)
-                    end_time = float(end_time)
-
-                    if end_time <= start_time:
-                        continue
-
-                    samples_list.append({
-                        "video_path": full_video_path,
-                        "caption": caption,
-                        "start_time": start_time,
-                        "end_time": end_time,
-                    })
-
-            except Exception as e:
-                print(f"处理标注文件 {annotation_csv_path} 时出错: {e}")
-
-        print(f"数据准备完成。共找到 {len(samples_list)} 个有效的图文样本。")
-        return samples_list
+        self.samples = load_or_build_pretrain_samples(
+            main_csv_path=self.main_csv_path,
+            video_root_folder=self.video_root_folder,
+            annotations_folder=self.annotations_folder,
+            annotations_root=self.annotations_root,
+            annotation_levels=self.annotation_levels,
+            level_mix=self.level_mix,
+            level_seed=self.level_seed,
+            samples_cache_dir=self.samples_cache_dir,
+            use_samples_cache=self.use_samples_cache,
+            rebuild_samples_cache=self.rebuild_samples_cache,
+            samples_cache_version=self.samples_cache_version,
+        )
 
     def __len__(self):
         return len(self.samples)
@@ -160,8 +147,7 @@ class PretrainDataset(Dataset):
         return frame_indices
 
     def _postprocess_frames(self, frames_np):
-        # frames_np: [T, H, W, 3], RGB uint8
-        frames = torch.from_numpy(frames_np).permute(0, 3, 1, 2).float() / 255.0  # [T, 3, H, W]
+        frames = torch.from_numpy(frames_np).permute(0, 3, 1, 2).float() / 255.0
 
         if frames.shape[-2:] != (self.image_size, self.image_size):
             frames = F.interpolate(
@@ -231,6 +217,8 @@ class PretrainDataset(Dataset):
         return input_ids, attention_mask
 
     def __getitem__(self, idx):
+        last_error = None
+
         for _ in range(self.max_retry):
             item = self.samples[idx]
 
@@ -244,10 +232,14 @@ class PretrainDataset(Dataset):
                 input_ids, attention_mask = self._build_text(item["caption"])
                 return images, input_ids, attention_mask
 
+            last_error = (
+                f"video={item['video_path']}, "
+                f"start={item['start_time']}, end={item['end_time']}"
+            )
             idx = random.randint(0, len(self.samples) - 1)
 
+        retry_count = self.max_retry
         while True:
-            idx = random.randint(0, len(self.samples) - 1)
             item = self.samples[idx]
 
             images = self._try_get_images(
@@ -259,3 +251,16 @@ class PretrainDataset(Dataset):
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 return images, input_ids, attention_mask
+
+            retry_count += 1
+            if retry_count % 100 == 0:
+                print(
+                    "PretrainDataset is still skipping bad samples after "
+                    f"{retry_count} retries. Last sample: {last_error}"
+                )
+
+            last_error = (
+                f"video={item['video_path']}, "
+                f"start={item['start_time']}, end={item['end_time']}"
+            )
+            idx = random.randint(0, len(self.samples) - 1)
