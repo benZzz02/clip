@@ -283,7 +283,7 @@ def load_or_build_pretrain_samples(
     annotation_levels=None,
     level_mix="concat",
     level_seed=42,
-    samples_cache_dir="/mnt/mydisk/CLIP/.cache/pretrain_samples",
+    samples_cache_dir=".cache/pretrain_samples",
     use_samples_cache=True,
     rebuild_samples_cache=False,
     samples_cache_version="v1",

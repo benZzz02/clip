@@ -535,7 +535,10 @@ def train():
 
     start_epoch = 0
     global_step = 0
-
+    save_prefix = os.environ.get("SAVE_PREFIX", "")
+    save_dir = os.path.dirname(save_prefix)
+    if save_dir:
+        os.makedirs(save_dir, exist_ok=True)
     if args.resume_from_checkpoint and os.path.isfile(args.resume_from_checkpoint):
         if rank == 0:
             print(f"正在从检查点恢复训练: {args.resume_from_checkpoint}")

@@ -4,10 +4,10 @@ set -euo pipefail
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate vllm
 
-CKPT="/mnt/mydisk/CLIP/vlp_epoch_40.pt"
+CKPT="/mnt/mydisk/CLIP/vlp_epoch_50.pt"
 VISION_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
 TEXT_MODEL="marcobombieri/surgicberta"
-OUTPUT_DIR="./eval_outputs10"
+OUTPUT_DIR="./eval_outputs11"
 CUDA_DEVICE=1
 
 EMBED_DIM=256

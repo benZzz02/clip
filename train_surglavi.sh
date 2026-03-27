@@ -1,0 +1,26 @@
+CUDA_VISIBLE_DEVICES=0,1,2 TORCH_DISTRIBUTED_DEBUG=DETAIL TORCH_SHOW_CPP_STACKTRACES=1 SWANLAB_EXPERIMENT_NAME="8frame_hier_batchmix_cache" \
+torchrun --standalone --nproc_per_node=3 train_surglavi_ddp.py \
+  --epochs 50 \
+  --learning_rate 5e-5 \
+  --weight_decay 0.02 \
+  --adam_beta1 0.9 \
+  --adam_beta2 0.999 \
+  --per_gpu_batch_size 16 \
+  --accum_steps 6 \
+  --num_workers 16 \
+  --image_size 224 \
+  --max_length 256 \
+  --num_frames 8 \
+  --tokenizer_name "bert-base-uncased" \
+  --surgclip_model_name "SurgCLIP-B" \
+  --video_root_folder "downloaded_video_224_test" \
+  --assume_resized_video 1 \
+  --main_csv_path "surglavi_level_csv/all_video.csv" \
+  --annotations_root "surglavi_level_csv" \
+  --annotation_levels "coarse,mid,fine" \
+  --level_mix "concat" \
+  --sample_mode "center" \
+  --save_dir "/data/surglavi_checkpoint/surglavi_16frame_run1" \
+  --save_every 5 \
+  --save_name "final.pt" \
+  --resume_from_checkpoint "/data/surglavi_checkpoint/surglavi_16frame_run1/surglavi_epoch_10.pt"

@@ -1,8 +1,11 @@
 import os
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torchvision
 from transformers import AutoModel
+
+from surgclip.surgclip.models.timesformer.timesformer import Block
 
 
 def build_LemonFM(pretrained_weights="lemonfm.pth"):
@@ -32,7 +35,7 @@ def build_LemonFM(pretrained_weights="lemonfm.pth"):
     first_key = next(iter(state_dict))
     assert torch.equal(
         net.state_dict()[first_key].cpu(),
-        state_dict[first_key].cpu()
+        state_dict[first_key].cpu(),
     ), f"Local checkpoint not actually loaded for key: {first_key}"
 
     print(f"Verified local checkpoint loaded into model for key: {first_key}")
@@ -74,28 +77,113 @@ class SurgicBERTaTextEncoder(nn.Module):
         return text_features
 
 
-class FrameAttentionPool(nn.Module):
-    def __init__(self, feature_dim):
-        super().__init__()
-        self.score = nn.Linear(feature_dim, 1)
-        self.norm = nn.LayerNorm(feature_dim)
+class TimeSformerStyleTemporalPool(nn.Module):
+    """
+    Temporal head for frame-level features [B, T, D].
 
-    def forward(self, frame_features: torch.Tensor):
+    This keeps the ConvNeXt image encoder, but replaces the old frame attention
+    pooling with a lightweight TimeSformer-style transformer head over frame tokens.
+    """
+
+    def __init__(
+        self,
+        frame_dim,
+        hidden_dim=768,
+        num_frames=8,
+        depth=2,
+        num_heads=12,
+        mlp_ratio=4.0,
+        dropout=0.1,
+        attn_drop=0.0,
+        drop_path=0.1,
+        use_cls_token=True,
+    ):
+        super().__init__()
+
+        self.frame_dim = frame_dim
+        self.hidden_dim = hidden_dim
+        self.num_frames = max(1, int(num_frames))
+        self.use_cls_token = bool(use_cls_token)
+
+        self.input_norm = nn.LayerNorm(frame_dim)
+        self.input_proj = (
+            nn.Identity()
+            if frame_dim == hidden_dim
+            else nn.Linear(frame_dim, hidden_dim, bias=False)
+        )
+
+        self.cls_token = (
+            nn.Parameter(torch.zeros(1, 1, hidden_dim))
+            if self.use_cls_token
+            else None
+        )
+        self.time_embed = nn.Parameter(torch.zeros(1, self.num_frames, hidden_dim))
+        self.pos_drop = nn.Dropout(dropout)
+
+        dpr = torch.linspace(0, drop_path, depth).tolist()
+        self.blocks = nn.ModuleList(
+            [
+                Block(
+                    dim=hidden_dim,
+                    num_heads=num_heads,
+                    mlp_ratio=mlp_ratio,
+                    qkv_bias=True,
+                    drop=dropout,
+                    attn_drop=attn_drop,
+                    drop_path=dpr[i],
+                    norm_layer=nn.LayerNorm,
+                    attention_type="joint_space_time",
+                    gradient_checkpointing=False,
+                )
+                for i in range(depth)
+            ]
+        )
+        self.norm = nn.LayerNorm(hidden_dim)
+
+        nn.init.normal_(self.time_embed, std=0.02)
+        if self.cls_token is not None:
+            nn.init.normal_(self.cls_token, std=0.02)
+
+    def _resize_time_embed(self, t):
+        if t == self.time_embed.size(1):
+            return self.time_embed
+
+        time_embed = self.time_embed.transpose(1, 2)  # [1, D, T0]
+        time_embed = F.interpolate(time_embed, size=t, mode="nearest")
+        return time_embed.transpose(1, 2)  # [1, T, D]
+
+    def forward(self, frame_features):
         if frame_features.ndim != 3:
             raise ValueError(
                 f"Expected frame_features shape [B, T, D], got {tuple(frame_features.shape)}"
             )
 
-        scores = self.score(frame_features).squeeze(-1)   # [B, T]
-        weights = torch.softmax(scores, dim=1)            # [B, T]
+        b, t, _ = frame_features.shape
 
-        weighted = (weights.unsqueeze(-1) * frame_features).sum(dim=1)  # [B, D]
-        mean_feat = frame_features.mean(dim=1)                           # [B, D]
+        x = self.input_norm(frame_features)
+        x = self.input_proj(x)
+        x = x + self._resize_time_embed(t)
 
-        # 用 mean pooling 做残差，避免 gate 一开始就学成极端单帧选择
-        fused = 0.5 * weighted + 0.5 * mean_feat
-        fused = self.norm(fused)
-        return fused
+        if self.cls_token is not None:
+            cls = self.cls_token.expand(b, -1, -1)
+            x = torch.cat([cls, x], dim=1)
+
+        x = self.pos_drop(x)
+
+        # Reuse TimeSformer blocks as frame-token self-attention blocks.
+        # With W=1 and attention_type="joint_space_time", this behaves like a
+        # standard transformer over the sequence [cls, frame_1, ..., frame_T].
+        for blk in self.blocks:
+            x = blk(x, B=b, T=t, W=1)
+
+        x = self.norm(x)
+
+        if self.cls_token is not None:
+            pooled = 0.5 * x[:, 0] + 0.5 * x[:, 1:].mean(dim=1)
+        else:
+            pooled = x.mean(dim=1)
+
+        return pooled
 
 
 class VLP(nn.Module):
@@ -106,8 +194,9 @@ class VLP(nn.Module):
         vision_pretrained_weights="lemonfm.pth",
         num_frames=4,
         temporal_num_layers=2,
-        temporal_num_heads=8,
+        temporal_num_heads=12,
         temporal_dropout=0.1,
+        temporal_hidden_dim=768,
     ):
         super().__init__()
 
@@ -120,19 +209,32 @@ class VLP(nn.Module):
         self.visual_dim = self.visual.output_dim
         self.embed_dim = embed_dim
         self.num_frames = max(1, int(num_frames))
+        self.temporal_hidden_dim = int(temporal_hidden_dim)
 
         self.frame_pool = None
         if self.num_frames > 1:
-            self.frame_pool = FrameAttentionPool(self.visual_dim)
+            self.frame_pool = TimeSformerStyleTemporalPool(
+                frame_dim=self.visual_dim,
+                hidden_dim=self.temporal_hidden_dim,
+                num_frames=self.num_frames,
+                depth=temporal_num_layers,
+                num_heads=temporal_num_heads,
+                mlp_ratio=4.0,
+                dropout=temporal_dropout,
+                attn_drop=0.0,
+                drop_path=0.1,
+                use_cls_token=True,
+            )
 
+        pooled_dim = self.temporal_hidden_dim if self.frame_pool is not None else self.visual_dim
         self.video_projection = nn.Linear(
-            self.visual_dim,
+            pooled_dim,
             embed_dim,
             bias=False,
         )
 
         self.logit_scale = nn.Parameter(torch.log(torch.tensor(1 / 0.07)))
-        nn.init.normal_(self.video_projection.weight, std=self.visual_dim ** -0.5)
+        nn.init.normal_(self.video_projection.weight, std=pooled_dim ** -0.5)
 
     def _prepare_image_input(self, image: torch.Tensor):
         if image.ndim == 4:
@@ -152,7 +254,7 @@ class VLP(nn.Module):
         frame_features = self.visual(flat_image)
         frame_features = frame_features.reshape(batch_size, num_frames, self.visual_dim)
 
-        if self.frame_pool is not None:
+        if self.frame_pool is not None and num_frames > 1:
             video_hidden = self.frame_pool(frame_features)
         else:
             video_hidden = frame_features.mean(dim=1)
@@ -221,11 +323,15 @@ def print_model_info(model):
     print("Visual Encoder   : LemonFM (ConvNeXt-Large)")
     print(f"Text Encoder     : {model.text.__class__.__name__}")
     print(f"Visual Dim       : {model.visual_dim}")
+    print(f"Temporal Hidden  : {getattr(model, 'temporal_hidden_dim', model.visual_dim)}")
     print(
         f"Video Projection : "
         f"{model.video_projection.in_features} -> {model.video_projection.out_features}"
     )
-    print(f"Frame Pool       : {'enabled' if model.frame_pool is not None else 'disabled'}")
+    print(
+        "Frame Pool       : "
+        f"{'TimeSformer-style temporal pool' if model.frame_pool is not None else 'disabled'}"
+    )
     print("Logit Scale      : learnable scalar")
     print("-" * 80)
     print(f"Total params     : {total:,}")
@@ -242,13 +348,14 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     model = VLP(
-        embed_dim=512,
+        embed_dim=256,
         text_model_name="marcobombieri/surgicberta",
         vision_pretrained_weights="lemonfm.pth",
-        num_frames=4,
+        num_frames=8,
         temporal_num_layers=2,
-        temporal_num_heads=8,
+        temporal_num_heads=12,
         temporal_dropout=0.1,
+        temporal_hidden_dim=768,
     ).to(device)
 
     print_model_info(model)
