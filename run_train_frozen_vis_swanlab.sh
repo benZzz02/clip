@@ -75,4 +75,5 @@
       --use_samples_cache "$USE_SAMPLES_CACHE" \
       --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
       --samples_cache_version "$SAMPLES_CACHE_VERSION" \
-      --use_swanlab "$USE_SWANLAB"
+      --use_swanlab "$USE_SWANLAB" \
+      --resume_from_checkpoint "/mnt/mydisk/CLIP/vlp_epoch_4.pt"

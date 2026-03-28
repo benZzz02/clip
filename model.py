@@ -281,12 +281,27 @@ class VLP(nn.Module):
         return logits_per_image, logits_per_text
 
     def freeze_encoders_train_projections(self):
+        # 1. 先全部冻结
         for p in self.visual.parameters():
             p.requires_grad = False
 
         for p in self.text.backbone.parameters():
             p.requires_grad = False
 
+        # 2. 视觉侧：放开最后一个 stage
+        for p in self.visual.features[7].parameters():
+            p.requires_grad = True
+
+        # 这个 LayerNorm 很小，但紧跟视觉输出，建议一起放开
+        for p in self.visual.classifier[0].parameters():
+            p.requires_grad = True
+
+        # 3. 文本侧：放开最后两层
+        for layer in self.text.backbone.encoder.layer[-2:]:
+            for p in layer.parameters():
+                p.requires_grad = True
+
+        # 4. 头部继续训练
         if self.frame_pool is not None:
             for p in self.frame_pool.parameters():
                 p.requires_grad = True
@@ -300,9 +315,16 @@ class VLP(nn.Module):
         self.logit_scale.requires_grad = True
 
     def set_frozen_modules_eval(self):
+        # 先把整块 frozen 部分设成 eval
         self.visual.eval()
         self.text.backbone.eval()
 
+        # 再把允许微调的部分切回 train
+        self.visual.features[7].train()
+        self.visual.classifier[0].train()
+
+        for layer in self.text.backbone.encoder.layer[-2:]:
+            layer.train()
 
 def count_parameters(model):
     total = sum(p.numel() for p in model.parameters())

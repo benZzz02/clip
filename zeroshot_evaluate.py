@@ -18,14 +18,18 @@ from model import VLP
 from downstream_datasets import SurgLaViSingleFrameDataset, SurgLaViClipDataset
 
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DATA_ROOT = os.path.dirname(PROJECT_ROOT)
+
+
 DATASET_CONFIGS = {
     "cholec80_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/cholec80/annotations/test.json",
-            "/mnt/mydisk/cholecdata/cholecdata/cholec80/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholec80/annotations/test.json"),
+            os.path.join(DATA_ROOT, "cholecdata/cholecdata/cholec80/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/cholec80/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholec80/frame_lists/frames.csv"),
             1,
             6,
             "png",
@@ -36,10 +40,10 @@ DATASET_CONFIGS = {
     "cholec80_instrument": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/cholec80/annotations/instruments_test.json",
-            "/mnt/mydisk/cholecdata/cholecdata/cholec80/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholec80/annotations/instruments_test.json"),
+            os.path.join(DATA_ROOT, "cholecdata/cholecdata/cholec80/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/cholec80/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholec80/frame_lists/frames.csv"),
             1,
             6,
             "png",
@@ -50,10 +54,10 @@ DATASET_CONFIGS = {
     "bern_bypass70_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/bernbypass70/annotations/test.json",
-            "/mnt/mydisk/MultiBypass140/BernBypass70/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/bernbypass70/annotations/test.json"),
+            os.path.join(DATA_ROOT, "MultiBypass140/BernBypass70/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/bernbypass70/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/bernbypass70/frame_lists/frames.csv"),
             1,
             8,
             "jpg",
@@ -64,10 +68,10 @@ DATASET_CONFIGS = {
     "stras_bypass70_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/strasbypass70/annotations/test.json",
-            "/mnt/mydisk/MultiBypass140/StrasBypass70/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/strasbypass70/annotations/test.json"),
+            os.path.join(DATA_ROOT, "MultiBypass140/StrasBypass70/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/strasbypass70/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/strasbypass70/frame_lists/frames.csv"),
             1,
             8,
             "jpg",
@@ -78,10 +82,10 @@ DATASET_CONFIGS = {
     "grasp_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_long-term_test.json",
-            "/mnt/mydisk/Grasp/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/annotations/grasp_long-term_test.json"),
+            os.path.join(DATA_ROOT, "Grasp/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/frame_lists/frames.csv"),
             1,
             5,
             "jpg",
@@ -92,10 +96,10 @@ DATASET_CONFIGS = {
     "grasp_step": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_long-term_test.json",
-            "/mnt/mydisk/Grasp/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/annotations/grasp_long-term_test.json"),
+            os.path.join(DATA_ROOT, "Grasp/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/frame_lists/frames.csv"),
             1,
             5,
             "jpg",
@@ -106,10 +110,10 @@ DATASET_CONFIGS = {
     "grasp_instrument": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/annotations/grasp_short-term_test.json",
-            "/mnt/mydisk/Grasp/frames",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/annotations/grasp_short-term_test.json"),
+            os.path.join(DATA_ROOT, "Grasp/frames"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/grasp/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/grasp/frame_lists/frames.csv"),
             1,
             5,
             "jpg",
@@ -120,10 +124,10 @@ DATASET_CONFIGS = {
     "autolaparo_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/autolaparo/annotations/test.json",
-            "/mnt/mydisk/DATA-Yui/Dataset/AutoLaparoDataset/AutoLaparo_Task1/frames_cutmargin",
+            os.path.join(PROJECT_ROOT, "anno_downstream/autolaparo/annotations/test.json"),
+            os.path.join(DATA_ROOT, "DATA-Yui/Dataset/AutoLaparoDataset/AutoLaparo_Task1/frames_cutmargin"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/autolaparo/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/autolaparo/frame_lists/frames.csv"),
             1,
             4,
             "jpg",
@@ -134,10 +138,10 @@ DATASET_CONFIGS = {
     "cholect50_triplet": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/cholect50/annotations/test.json",
-            "/mnt/mydisk/cholecdata/cholecdata/cholect50/videos",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholect50/annotations/test.json"),
+            os.path.join(DATA_ROOT, "cholecdata/cholecdata/cholect50/videos"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/cholect50/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/cholect50/frame_lists/frames.csv"),
             1,
             6,
             "png",
@@ -148,10 +152,10 @@ DATASET_CONFIGS = {
     "sarrarp50_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/annotations/test.json",
-            "/mnt/mydisk/SAR50/test",
+            os.path.join(PROJECT_ROOT, "anno_downstream/sarrarp50/annotations/test.json"),
+            os.path.join(DATA_ROOT, "SAR50/test"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/sarrarp50/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/sarrarp50/frame_lists/frames.csv"),
             1,
             9,
             "png",
@@ -162,10 +166,10 @@ DATASET_CONFIGS = {
     "heichole_phase": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/heichole/annotations/test.json",
-            "/mnt/mydisk/HeiChole/outputs",
+            os.path.join(PROJECT_ROOT, "anno_downstream/heichole/annotations/test.json"),
+            os.path.join(DATA_ROOT, "HeiChole/outputs"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/heichole/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/heichole/frame_lists/frames.csv"),
             1,
             5,
             "png",
@@ -176,10 +180,10 @@ DATASET_CONFIGS = {
     "heichole_instrument": {
         "dataset_class": SurgLaViSingleFrameDataset,
         "ann_file": [
-            "/mnt/mydisk/CLIP/anno_downstream/heichole/annotations/instruments_test.json",
-            "/mnt/mydisk/HeiChole/outputs",
+            os.path.join(PROJECT_ROOT, "anno_downstream/heichole/annotations/instruments_test.json"),
+            os.path.join(DATA_ROOT, "HeiChole/outputs"),
             "video",
-            "/mnt/mydisk/CLIP/anno_downstream/heichole/frame_lists/frames.csv",
+            os.path.join(PROJECT_ROOT, "anno_downstream/heichole/frame_lists/frames.csv"),
             1,
             5,
             "png",
