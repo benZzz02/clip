@@ -117,6 +117,15 @@ def str2bool(v):
     raise argparse.ArgumentTypeError(f"Invalid boolean value: {v}")
 
 
+def parse_float_list(spec: str, expected_len: int = None):
+    values = [float(x.strip()) for x in spec.split(",") if x.strip()]
+    if expected_len is not None and len(values) != expected_len:
+        raise argparse.ArgumentTypeError(
+            f"Expected {expected_len} comma-separated floats, got {len(values)} from: {spec}"
+        )
+    return tuple(values)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="VLP Frozen-Visual DDP Training")
 
@@ -233,6 +242,53 @@ def parse_args():
         "--use_swanlab",
         type=str2bool,
         default=os.environ.get("USE_SWANLAB", "1") == "1",
+    )
+    parser.add_argument("--local_temperature", type=float, default=0.07)
+    parser.add_argument("--local_topk_frames", type=int, default=2)
+    parser.add_argument("--local_topk_tokens", type=int, default=4)
+    parser.add_argument("--teacher_mix", type=float, default=0.5)
+    parser.add_argument("--confidence_floor", type=float, default=0.2)
+    parser.add_argument(
+        "--level_frame_temperatures",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(0.6, 0.9, 1.2),
+        help="Comma-separated fine,mid,coarse frame temperatures",
+    )
+    parser.add_argument(
+        "--level_token_temperatures",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(0.6, 0.85, 1.1),
+        help="Comma-separated fine,mid,coarse token temperatures",
+    )
+    parser.add_argument(
+        "--level_conf_floors",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(0.2, 0.35, 0.5),
+        help="Comma-separated fine,mid,coarse confidence floors",
+    )
+    parser.add_argument(
+        "--level_loss_weights",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(1.0, 0.8, 0.6),
+        help="Comma-separated fine,mid,coarse loss weights",
+    )
+    parser.add_argument(
+        "--level_frame_entropy_targets",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(0.25, 0.5, 0.8),
+        help="Comma-separated fine,mid,coarse target frame entropies",
+    )
+    parser.add_argument(
+        "--level_token_entropy_targets",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=(0.2, 0.4, 0.65),
+        help="Comma-separated fine,mid,coarse target token entropies",
+    )
+    parser.add_argument(
+        "--entropy_weight",
+        type=float,
+        default=0.1,
+        help="Weight for level-aware entropy regularization",
     )
 
     return parser.parse_args()
@@ -411,6 +467,18 @@ def train():
         "use_samples_cache": args.use_samples_cache,
         "rebuild_samples_cache": args.rebuild_samples_cache,
         "samples_cache_version": args.samples_cache_version,
+        "local_temperature": args.local_temperature,
+        "local_topk_frames": args.local_topk_frames,
+        "local_topk_tokens": args.local_topk_tokens,
+        "teacher_mix": args.teacher_mix,
+        "confidence_floor": args.confidence_floor,
+        "level_frame_temperatures": args.level_frame_temperatures,
+        "level_token_temperatures": args.level_token_temperatures,
+        "level_conf_floors": args.level_conf_floors,
+        "level_loss_weights": args.level_loss_weights,
+        "level_frame_entropy_targets": args.level_frame_entropy_targets,
+        "level_token_entropy_targets": args.level_token_entropy_targets,
+        "entropy_weight": args.entropy_weight,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -424,6 +492,17 @@ def train():
         text_model_name=CONFIG["text_model_name"],
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
         num_frames=CONFIG["num_frames"],
+        local_temperature=CONFIG["local_temperature"],
+        local_topk_frames=CONFIG["local_topk_frames"],
+        local_topk_tokens=CONFIG["local_topk_tokens"],
+        teacher_mix=CONFIG["teacher_mix"],
+        confidence_floor=CONFIG["confidence_floor"],
+        level_frame_temperatures=CONFIG["level_frame_temperatures"],
+        level_token_temperatures=CONFIG["level_token_temperatures"],
+        level_conf_floors=CONFIG["level_conf_floors"],
+        level_loss_weights=CONFIG["level_loss_weights"],
+        level_frame_entropy_targets=CONFIG["level_frame_entropy_targets"],
+        level_token_entropy_targets=CONFIG["level_token_entropy_targets"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -495,6 +574,17 @@ def train():
         else:
             print(f"标注目录: {ANNOTATIONS_FOLDER}")
         print(f"batch层级配比: {LEVEL_BATCH_SIZES}")
+        print(f"local_temperature: {CONFIG['local_temperature']}")
+        print(f"local_topk_frames/tokens: {CONFIG['local_topk_frames']}/{CONFIG['local_topk_tokens']}")
+        print(f"teacher_mix: {CONFIG['teacher_mix']}")
+        print(f"confidence_floor: {CONFIG['confidence_floor']}")
+        print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
+        print(f"level_token_temperatures: {CONFIG['level_token_temperatures']}")
+        print(f"level_conf_floors: {CONFIG['level_conf_floors']}")
+        print(f"level_loss_weights: {CONFIG['level_loss_weights']}")
+        print(f"level_frame_entropy_targets: {CONFIG['level_frame_entropy_targets']}")
+        print(f"level_token_entropy_targets: {CONFIG['level_token_entropy_targets']}")
+        print(f"entropy_weight: {CONFIG['entropy_weight']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -695,6 +785,7 @@ def train():
                         input_ids,
                         attention_mask,
                         level_ids,
+                        entropy_weight=CONFIG["entropy_weight"],
                     )
                     loss = raw_loss / current_accum_steps
 
