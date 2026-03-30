@@ -75,11 +75,32 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
     normalized_state_dict = _normalize_state_dict_keys(state_dict)
     msg = target_module.load_state_dict(normalized_state_dict, strict=False)
 
-    if msg.missing_keys or msg.unexpected_keys:
+    allowed_missing_prefixes = (
+        "frame_local_projection.",
+        "token_local_projection.",
+        "frame_score_head.",
+        "token_score_head.",
+        "video_gate_head.",
+        "text_gate_head.",
+    )
+
+    disallowed_missing = [
+        key for key in msg.missing_keys
+        if not key.startswith(allowed_missing_prefixes)
+    ]
+
+    if disallowed_missing or msg.unexpected_keys:
         raise RuntimeError(
             f"{source} 与当前模型不匹配。\n"
             f"Missing keys: {msg.missing_keys}\n"
             f"Unexpected keys: {msg.unexpected_keys}"
+        )
+
+    if msg.missing_keys and dist.get_rank() == 0:
+        print(
+            f"{source} 缺少新方法模块参数，将使用当前随机初始化继续训练: "
+            f"{msg.missing_keys}",
+            flush=True,
         )
 
     return msg
@@ -230,9 +251,13 @@ def parse_level_batch_sizes(spec: str):
     return out
 
 
-def clip_contrastive_loss(model, images, input_ids, attention_mask):
-    image_features = model.module.encode_image(images)
-    text_features = model.module.encode_text(input_ids, attention_mask)
+def clip_contrastive_loss(model, images, input_ids, attention_mask, level_ids, entropy_weight=0.1):
+    image_features, text_features, pair_weights, entropy_regularization = model.module.encode_training_pair(
+        image=images,
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        level_ids=level_ids,
+    )
 
     rank = dist.get_rank()
     batch_size = image_features.size(0)
@@ -253,9 +278,15 @@ def clip_contrastive_loss(model, images, input_ids, attention_mask):
 
     labels = torch.arange(batch_size, device=images.device) + rank * batch_size
 
-    loss_i = F.cross_entropy(logits_per_image, labels)
-    loss_t = F.cross_entropy(logits_per_text, labels)
-    return (loss_i + loss_t) / 2.0
+    loss_i = F.cross_entropy(logits_per_image, labels, reduction="none")
+    loss_t = F.cross_entropy(logits_per_text, labels, reduction="none")
+
+    pair_weights = pair_weights / pair_weights.mean().clamp(min=1e-6)
+    contrastive_loss = (
+        (pair_weights * loss_i).sum() + (pair_weights * loss_t).sum()
+    ) / (2.0 * pair_weights.sum().clamp(min=1e-6))
+
+    return contrastive_loss + entropy_weight * entropy_regularization
 
 
 def train():
@@ -419,6 +450,7 @@ def train():
         video_root_folder=CONFIG["video_root_folder"],
         assume_resized_video=CONFIG["assume_resized_video"],
         num_frames=CONFIG["num_frames"],
+        return_level_id=True,
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
@@ -581,7 +613,7 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images, input_ids, attention_mask = [b.to(device, non_blocking=True) for b in batch]
+            images, input_ids, attention_mask, level_ids = [b.to(device, non_blocking=True) for b in batch]
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -592,7 +624,13 @@ def train():
 
             with sync_ctx:
                 with autocast(dtype=amp_dtype):
-                    raw_loss = clip_contrastive_loss(model, images, input_ids, attention_mask)
+                    raw_loss = clip_contrastive_loss(
+                        model,
+                        images,
+                        input_ids,
+                        attention_mask,
+                        level_ids,
+                    )
                     loss = raw_loss / current_accum_steps
 
                 if scaler.is_enabled():
@@ -632,7 +670,7 @@ def train():
                     lr=scheduler.get_last_lr()[0],
                 )
 
-            del images, input_ids, attention_mask
+            del images, input_ids, attention_mask, level_ids
 
         if rank == 0:
             print(

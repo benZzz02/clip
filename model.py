@@ -53,8 +53,8 @@ class SurgicBERTaTextEncoder(nn.Module):
             add_pooling_layer=False,
         )
 
-        hidden_size = self.backbone.config.hidden_size
-        self.text_projection = nn.Linear(hidden_size, embed_dim, bias=False)
+        self.hidden_size = self.backbone.config.hidden_size
+        self.text_projection = nn.Linear(self.hidden_size, embed_dim, bias=False)
 
     @staticmethod
     def mean_pooling(last_hidden_state, attention_mask):
@@ -63,17 +63,23 @@ class SurgicBERTaTextEncoder(nn.Module):
         denom = mask.sum(dim=1).clamp(min=1e-6)
         return summed / denom
 
-    def forward(self, input_ids, attention_mask):
+    def project(self, pooled_hidden):
+        return self.text_projection(pooled_hidden)
+
+    def forward(self, input_ids, attention_mask, return_hidden=False):
         outputs = self.backbone(
             input_ids=input_ids,
             attention_mask=attention_mask,
             return_dict=True,
         )
-        text_features = self.mean_pooling(
-            outputs.last_hidden_state,
+        token_hidden = outputs.last_hidden_state
+        pooled_hidden = self.mean_pooling(
+            token_hidden,
             attention_mask,
         )
-        text_features = self.text_projection(text_features)
+        text_features = self.project(pooled_hidden)
+        if return_hidden:
+            return text_features, token_hidden, pooled_hidden
         return text_features
 
 
@@ -152,7 +158,7 @@ class TimeSformerStyleTemporalPool(nn.Module):
         time_embed = F.interpolate(time_embed, size=t, mode="nearest")
         return time_embed.transpose(1, 2)  # [1, T, D]
 
-    def forward(self, frame_features):
+    def forward(self, frame_features, return_tokens=False):
         if frame_features.ndim != 3:
             raise ValueError(
                 f"Expected frame_features shape [B, T, D], got {tuple(frame_features.shape)}"
@@ -179,10 +185,14 @@ class TimeSformerStyleTemporalPool(nn.Module):
         x = self.norm(x)
 
         if self.cls_token is not None:
-            pooled = 0.5 * x[:, 0] + 0.5 * x[:, 1:].mean(dim=1)
+            frame_tokens = x[:, 1:]
+            pooled = 0.5 * x[:, 0] + 0.5 * frame_tokens.mean(dim=1)
         else:
+            frame_tokens = x
             pooled = x.mean(dim=1)
 
+        if return_tokens:
+            return pooled, frame_tokens
         return pooled
 
 
@@ -197,6 +207,17 @@ class VLP(nn.Module):
         temporal_num_heads=12,
         temporal_dropout=0.1,
         temporal_hidden_dim=768,
+        local_temperature=0.07,
+        local_topk_frames=2,
+        local_topk_tokens=4,
+        teacher_mix=0.5,
+        confidence_floor=0.2,
+        level_frame_temperatures=(0.6, 0.9, 1.2),
+        level_token_temperatures=(0.6, 0.85, 1.1),
+        level_conf_floors=(0.2, 0.35, 0.5),
+        level_loss_weights=(1.0, 0.8, 0.6),
+        level_frame_entropy_targets=(0.25, 0.5, 0.8),
+        level_token_entropy_targets=(0.2, 0.4, 0.65),
     ):
         super().__init__()
 
@@ -210,6 +231,11 @@ class VLP(nn.Module):
         self.embed_dim = embed_dim
         self.num_frames = max(1, int(num_frames))
         self.temporal_hidden_dim = int(temporal_hidden_dim)
+        self.local_temperature = float(local_temperature)
+        self.local_topk_frames = max(1, int(local_topk_frames))
+        self.local_topk_tokens = max(1, int(local_topk_tokens))
+        self.teacher_mix = float(teacher_mix)
+        self.confidence_floor = float(confidence_floor)
 
         self.frame_pool = None
         if self.num_frames > 1:
@@ -227,14 +253,80 @@ class VLP(nn.Module):
             )
 
         pooled_dim = self.temporal_hidden_dim if self.frame_pool is not None else self.visual_dim
+        self.frame_token_dim = pooled_dim
         self.video_projection = nn.Linear(
             pooled_dim,
             embed_dim,
             bias=False,
         )
+        self.frame_local_projection = nn.Linear(self.frame_token_dim, embed_dim, bias=False)
+        self.token_local_projection = nn.Linear(self.text.hidden_size, embed_dim, bias=False)
+        self.frame_score_head = nn.Sequential(
+            nn.LayerNorm(self.frame_token_dim),
+            nn.Linear(self.frame_token_dim, max(self.frame_token_dim // 2, 1)),
+            nn.GELU(),
+            nn.Linear(max(self.frame_token_dim // 2, 1), 1),
+        )
+        self.token_score_head = nn.Sequential(
+            nn.LayerNorm(self.text.hidden_size),
+            nn.Linear(self.text.hidden_size, max(self.text.hidden_size // 2, 1)),
+            nn.GELU(),
+            nn.Linear(max(self.text.hidden_size // 2, 1), 1),
+        )
+        self.video_gate_head = nn.Sequential(
+            nn.LayerNorm(embed_dim * 2),
+            nn.Linear(embed_dim * 2, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, 1),
+        )
+        self.text_gate_head = nn.Sequential(
+            nn.LayerNorm(embed_dim * 2),
+            nn.Linear(embed_dim * 2, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, 1),
+        )
 
         self.logit_scale = nn.Parameter(torch.log(torch.tensor(1 / 0.07)))
         nn.init.normal_(self.video_projection.weight, std=pooled_dim ** -0.5)
+        nn.init.normal_(self.frame_local_projection.weight, std=embed_dim ** -0.5)
+        nn.init.normal_(self.token_local_projection.weight, std=embed_dim ** -0.5)
+
+        self.register_buffer(
+            "level_frame_temperatures",
+            torch.tensor(level_frame_temperatures, dtype=torch.float32),
+            persistent=False,
+        )
+        self.register_buffer(
+            "level_token_temperatures",
+            torch.tensor(level_token_temperatures, dtype=torch.float32),
+            persistent=False,
+        )
+        self.register_buffer(
+            "level_conf_floors",
+            torch.tensor(level_conf_floors, dtype=torch.float32),
+            persistent=False,
+        )
+        self.register_buffer(
+            "level_loss_weights",
+            torch.tensor(level_loss_weights, dtype=torch.float32),
+            persistent=False,
+        )
+        self.register_buffer(
+            "level_frame_entropy_targets",
+            torch.tensor(level_frame_entropy_targets, dtype=torch.float32),
+            persistent=False,
+        )
+        self.register_buffer(
+            "level_token_entropy_targets",
+            torch.tensor(level_token_entropy_targets, dtype=torch.float32),
+            persistent=False,
+        )
+
+        self.last_frame_weights = None
+        self.last_token_weights = None
+        self.last_pair_confidence = None
+        self.last_pair_weights = None
+        self.last_entropy_regularization = None
 
     def _prepare_image_input(self, image: torch.Tensor):
         if image.ndim == 4:
@@ -245,7 +337,86 @@ class VLP(nn.Module):
             )
         return image
 
-    def encode_image(self, image: torch.Tensor):
+    def _get_level_values(self, level_ids, values, default_value, batch_size, device, dtype):
+        if level_ids is None:
+            return torch.full((batch_size,), float(default_value), device=device, dtype=dtype)
+
+        level_ids = level_ids.to(device=device, dtype=torch.long).clamp(min=0, max=len(values) - 1)
+        return values.to(device=device, dtype=dtype)[level_ids]
+
+    def _masked_logsumexp(self, scores, mask, dim):
+        if mask is None:
+            return torch.logsumexp(scores, dim=dim)
+        masked_scores = scores.masked_fill(~mask, -1e4)
+        return torch.logsumexp(masked_scores, dim=dim)
+
+    def _normalize_scores(self, scores, mask=None, topk=None, temperatures=1.0):
+        if not torch.is_tensor(temperatures):
+            temperatures = torch.full(
+                (scores.size(0),),
+                float(temperatures),
+                device=scores.device,
+                dtype=scores.dtype,
+            )
+        temperatures = temperatures.to(device=scores.device, dtype=scores.dtype).clamp(min=1e-4)
+        scaled_scores = scores / temperatures.unsqueeze(-1)
+
+        if mask is None:
+            mask = torch.ones_like(scores, dtype=torch.bool)
+        else:
+            mask = mask.to(device=scores.device, dtype=torch.bool)
+
+        scaled_scores = scaled_scores.masked_fill(~mask, -1e4)
+
+        if topk is not None and 0 < int(topk) < scores.size(-1):
+            k = min(int(topk), scores.size(-1))
+            topk_idx = scaled_scores.topk(k=k, dim=-1).indices
+            topk_mask = torch.zeros_like(mask)
+            topk_mask.scatter_(1, topk_idx, True)
+            mask = mask & topk_mask
+            scaled_scores = scaled_scores.masked_fill(~mask, -1e4)
+
+        weights = F.softmax(scaled_scores, dim=-1)
+        weights = weights * mask.to(dtype=weights.dtype)
+        weights = weights / weights.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        return weights
+
+    def _topk_mean(self, scores, topk, mask=None):
+        if mask is not None:
+            scores = scores.masked_fill(~mask, -1e4)
+        k = min(int(topk), scores.size(-1))
+        values = scores.topk(k=k, dim=-1).values
+        if mask is not None:
+            valid_counts = mask.sum(dim=-1).clamp(min=1)
+            denom = valid_counts.clamp(max=k).to(dtype=scores.dtype)
+        else:
+            denom = torch.full(
+                (scores.size(0),),
+                float(k),
+                device=scores.device,
+                dtype=scores.dtype,
+            )
+        return values.sum(dim=-1) / denom
+
+    def _normalized_entropy(self, weights, mask=None):
+        if mask is not None:
+            weights = weights * mask.to(dtype=weights.dtype)
+            weights = weights / weights.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+            valid_count = mask.sum(dim=-1).clamp(min=2).to(dtype=weights.dtype)
+            norm = torch.log(valid_count)
+        else:
+            norm = torch.log(
+                torch.full(
+                    (weights.size(0),),
+                    float(max(weights.size(-1), 2)),
+                    device=weights.device,
+                    dtype=weights.dtype,
+                )
+            )
+        entropy = -(weights.clamp(min=1e-8).log() * weights).sum(dim=-1)
+        return entropy / norm.clamp(min=1e-6)
+
+    def _encode_image_tokens(self, image: torch.Tensor):
         image = self._prepare_image_input(image)
 
         batch_size, num_frames, channels, height, width = image.shape
@@ -255,29 +426,288 @@ class VLP(nn.Module):
         frame_features = frame_features.reshape(batch_size, num_frames, self.visual_dim)
 
         if self.frame_pool is not None and num_frames > 1:
-            video_hidden = self.frame_pool(frame_features)
+            video_global_hidden, frame_tokens = self.frame_pool(frame_features, return_tokens=True)
         else:
-            video_hidden = frame_features.mean(dim=1)
+            video_global_hidden = frame_features.mean(dim=1)
+            frame_tokens = frame_features
 
-        video_features = self.video_projection(video_hidden)
-        video_features = video_features / video_features.norm(dim=-1, keepdim=True)
-        return video_features
+        return video_global_hidden, frame_tokens
 
-    def encode_text(self, input_ids: torch.Tensor, attention_mask: torch.Tensor):
-        x = self.text(
+    def _compute_teacher_signals(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+        batch_size = frame_tokens.size(0)
+        dtype = frame_tokens.dtype
+        device = frame_tokens.device
+        token_mask = attention_mask.bool()
+
+        frame_local = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
+        token_local = F.normalize(self.token_local_projection(token_hidden), dim=-1)
+        alignment = torch.matmul(frame_local, token_local.transpose(1, 2)) / self.local_temperature
+
+        frame_scores = self._masked_logsumexp(
+            alignment,
+            token_mask.unsqueeze(1),
+            dim=-1,
+        )
+        token_scores = self._masked_logsumexp(
+            alignment,
+            token_mask.unsqueeze(1),
+            dim=1,
+        )
+
+        frame_temps = self._get_level_values(
+            level_ids,
+            self.level_frame_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+        token_temps = self._get_level_values(
+            level_ids,
+            self.level_token_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+        conf_floor = self._get_level_values(
+            level_ids,
+            self.level_conf_floors,
+            self.confidence_floor,
+            batch_size,
+            device,
+            dtype,
+        )
+
+        frame_teacher = self._normalize_scores(
+            frame_scores,
+            topk=self.local_topk_frames,
+            temperatures=frame_temps,
+        )
+        token_teacher = self._normalize_scores(
+            token_scores,
+            mask=token_mask,
+            topk=self.local_topk_tokens,
+            temperatures=token_temps,
+        )
+
+        frame_peak = self._topk_mean(frame_scores, self.local_topk_frames)
+        token_peak = self._topk_mean(token_scores, self.local_topk_tokens, mask=token_mask)
+        confidence = torch.sigmoid(0.5 * (frame_peak + token_peak))
+        confidence = conf_floor + (1.0 - conf_floor) * confidence.detach()
+
+        return frame_teacher.detach(), token_teacher.detach(), confidence
+
+    def _compute_student_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+        batch_size = frame_tokens.size(0)
+        dtype = frame_tokens.dtype
+        device = frame_tokens.device
+        token_mask = attention_mask.bool()
+
+        frame_scores = self.frame_score_head(frame_tokens).squeeze(-1)
+        token_scores = self.token_score_head(token_hidden).squeeze(-1)
+
+        frame_temps = self._get_level_values(
+            level_ids,
+            self.level_frame_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+        token_temps = self._get_level_values(
+            level_ids,
+            self.level_token_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+
+        frame_weights = self._normalize_scores(
+            frame_scores,
+            topk=self.local_topk_frames,
+            temperatures=frame_temps,
+        )
+        token_weights = self._normalize_scores(
+            token_scores,
+            mask=token_mask,
+            topk=self.local_topk_tokens,
+            temperatures=token_temps,
+        )
+        return frame_weights, token_weights
+
+    def _fuse_video_features(self, video_global_hidden, frame_tokens, frame_weights):
+        video_local_hidden = torch.sum(frame_weights.unsqueeze(-1) * frame_tokens, dim=1)
+        video_global = self.video_projection(video_global_hidden)
+        video_local = self.video_projection(video_local_hidden)
+        video_gate = torch.sigmoid(
+            self.video_gate_head(torch.cat([video_local, video_global], dim=-1))
+        )
+        video_fused = video_gate * video_local + (1.0 - video_gate) * video_global
+        return F.normalize(video_fused, dim=-1)
+
+    def _fuse_text_features(self, text_global_hidden, token_hidden, token_weights):
+        text_local_hidden = torch.sum(token_weights.unsqueeze(-1) * token_hidden, dim=1)
+        text_global = self.text.project(text_global_hidden)
+        text_local = self.text.project(text_local_hidden)
+        text_gate = torch.sigmoid(
+            self.text_gate_head(torch.cat([text_local, text_global], dim=-1))
+        )
+        text_fused = text_gate * text_local + (1.0 - text_gate) * text_global
+        return F.normalize(text_fused, dim=-1)
+
+    def _compute_entropy_regularization(self, frame_weights, token_weights, attention_mask, level_ids=None):
+        batch_size = frame_weights.size(0)
+        dtype = frame_weights.dtype
+        device = frame_weights.device
+        token_mask = attention_mask.bool()
+
+        frame_entropy = self._normalized_entropy(frame_weights)
+        token_entropy = self._normalized_entropy(token_weights, mask=token_mask)
+
+        frame_targets = self._get_level_values(
+            level_ids,
+            self.level_frame_entropy_targets,
+            0.5,
+            batch_size,
+            device,
+            dtype,
+        )
+        token_targets = self._get_level_values(
+            level_ids,
+            self.level_token_entropy_targets,
+            0.5,
+            batch_size,
+            device,
+            dtype,
+        )
+
+        return ((frame_entropy - frame_targets) ** 2 + (token_entropy - token_targets) ** 2).mean()
+
+    def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None):
+        video_global_hidden, frame_tokens = self._encode_image_tokens(image)
+        _, token_hidden, text_global_hidden = self.text(
             input_ids=input_ids,
             attention_mask=attention_mask,
+            return_hidden=True,
         )
-        x = x / x.norm(dim=-1, keepdim=True)
-        return x
 
-    def forward(self, image, input_ids, attention_mask):
-        image_features = self.encode_image(image)
-        text_features = self.encode_text(input_ids, attention_mask)
+        frame_student, token_student = self._compute_student_weights(
+            frame_tokens=frame_tokens,
+            token_hidden=token_hidden,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+        )
+
+        if self.training:
+            frame_teacher, token_teacher, pair_confidence = self._compute_teacher_signals(
+                frame_tokens=frame_tokens,
+                token_hidden=token_hidden,
+                attention_mask=attention_mask,
+                level_ids=level_ids,
+            )
+            frame_weights = (1.0 - self.teacher_mix) * frame_student + self.teacher_mix * frame_teacher
+            token_weights = (1.0 - self.teacher_mix) * token_student + self.teacher_mix * token_teacher
+        else:
+            frame_weights = frame_student
+            token_weights = token_student
+            pair_confidence = torch.ones(
+                frame_tokens.size(0),
+                device=frame_tokens.device,
+                dtype=frame_tokens.dtype,
+            )
+
+        image_features = self._fuse_video_features(
+            video_global_hidden=video_global_hidden,
+            frame_tokens=frame_tokens,
+            frame_weights=frame_weights,
+        )
+        text_features = self._fuse_text_features(
+            text_global_hidden=text_global_hidden,
+            token_hidden=token_hidden,
+            token_weights=token_weights,
+        )
+
+        level_loss_weights = self._get_level_values(
+            level_ids,
+            self.level_loss_weights,
+            1.0,
+            frame_tokens.size(0),
+            frame_tokens.device,
+            frame_tokens.dtype,
+        )
+        pair_weights = (pair_confidence * level_loss_weights).detach()
+        entropy_regularization = self._compute_entropy_regularization(
+            frame_weights=frame_weights,
+            token_weights=token_weights,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+        )
+
+        self.last_frame_weights = frame_weights.detach()
+        self.last_token_weights = token_weights.detach()
+        self.last_pair_confidence = pair_confidence.detach()
+        self.last_pair_weights = pair_weights.detach()
+        self.last_entropy_regularization = entropy_regularization.detach()
+
+        return image_features, text_features, pair_weights, entropy_regularization
+
+    def encode_image(self, image: torch.Tensor, level_ids: torch.Tensor = None):
+        video_global_hidden, frame_tokens = self._encode_image_tokens(image)
+        dummy_token_hidden = frame_tokens.new_zeros(frame_tokens.size(0), 1, self.text.hidden_size)
+        dummy_mask = torch.ones(frame_tokens.size(0), 1, device=frame_tokens.device, dtype=torch.long)
+        frame_weights, _ = self._compute_student_weights(
+            frame_tokens=frame_tokens,
+            token_hidden=dummy_token_hidden,
+            attention_mask=dummy_mask,
+            level_ids=level_ids,
+        )
+        video_features = self._fuse_video_features(video_global_hidden, frame_tokens, frame_weights)
+        self.last_frame_weights = frame_weights.detach()
+        return video_features
+
+    def encode_text(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        level_ids: torch.Tensor = None,
+    ):
+        _, token_hidden, text_global_hidden = self.text(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            return_hidden=True,
+        )
+        dummy_frame_tokens = token_hidden.new_zeros(token_hidden.size(0), 1, self.frame_token_dim)
+        _, token_weights = self._compute_student_weights(
+            frame_tokens=dummy_frame_tokens,
+            token_hidden=token_hidden,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+        )
+        text_features = self._fuse_text_features(text_global_hidden, token_hidden, token_weights)
+        self.last_token_weights = token_weights.detach()
+        return text_features
+
+    def forward(self, image, input_ids, attention_mask, level_ids=None):
+        image_features, text_features, pair_weights, _ = self.encode_training_pair(
+            image=image,
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+        )
 
         logit_scale = self.logit_scale.exp()
-        logits_per_image = logit_scale * image_features @ text_features.t()
-        logits_per_text = logits_per_image.t()
+        base_logits = logit_scale * image_features @ text_features.t()
+
+        if self.training:
+            confidence_scale = pair_weights.unsqueeze(1)
+            logits_per_image = confidence_scale * base_logits
+            logits_per_text = confidence_scale * base_logits.t()
+        else:
+            logits_per_image = base_logits
+            logits_per_text = base_logits.t()
+
         return logits_per_image, logits_per_text
 
     def freeze_encoders_train_projections(self):
@@ -307,6 +737,24 @@ class VLP(nn.Module):
                 p.requires_grad = True
 
         for p in self.video_projection.parameters():
+            p.requires_grad = True
+
+        for p in self.frame_local_projection.parameters():
+            p.requires_grad = True
+
+        for p in self.token_local_projection.parameters():
+            p.requires_grad = True
+
+        for p in self.frame_score_head.parameters():
+            p.requires_grad = True
+
+        for p in self.token_score_head.parameters():
+            p.requires_grad = True
+
+        for p in self.video_gate_head.parameters():
+            p.requires_grad = True
+
+        for p in self.text_gate_head.parameters():
             p.requires_grad = True
 
         for p in self.text.text_projection.parameters():

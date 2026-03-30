@@ -13,6 +13,12 @@ from pretrain_manifest_cache import load_or_build_pretrain_samples
 
 class PretrainDataset(Dataset):
     """
+
+    LEVEL_TO_ID = {
+        "fine": 0,
+        "mid": 1,
+        "coarse": 2,
+    }
     图文预训练数据集：
     - 从视频区间中抽单帧或多帧
     - 返回 image/frames, input_ids, attention_mask
@@ -38,6 +44,7 @@ class PretrainDataset(Dataset):
         annotation_levels=None,
         level_mix="concat",
         level_seed=42,
+        return_level_id=False,
         samples_cache_dir=".cache/pretrain_samples",
         use_samples_cache=True,
         rebuild_samples_cache=False,
@@ -51,6 +58,7 @@ class PretrainDataset(Dataset):
         self.annotation_levels = annotation_levels
         self.level_mix = level_mix
         self.level_seed = int(level_seed)
+        self.return_level_id = bool(return_level_id)
 
         self.tokenizer = tokenizer
         self.image_size = image_size
@@ -230,6 +238,9 @@ class PretrainDataset(Dataset):
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
+                level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+                if self.return_level_id:
+                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
                 return images, input_ids, attention_mask
 
             last_error = (
@@ -250,6 +261,9 @@ class PretrainDataset(Dataset):
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
+                level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+                if self.return_level_id:
+                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
                 return images, input_ids, attention_mask
 
             retry_count += 1

@@ -692,7 +692,7 @@ def parse_args():
     parser.add_argument("--num_frames", type=int, default=4)
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--temporal_layers", type=int, default=2)
-    parser.add_argument("--temporal_heads", type=int, default=8)
+    parser.add_argument("--temporal_heads", type=int, default=12)
     parser.add_argument("--temporal_dropout", type=float, default=0.1)
     return parser.parse_args()
 
