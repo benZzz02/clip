@@ -251,6 +251,70 @@ def parse_level_batch_sizes(spec: str):
     return out
 
 
+LEVEL_NAME_BY_ID = {
+    0: "fine",
+    1: "mid",
+    2: "coarse",
+}
+
+
+def _reduce_mean_tensor(value: torch.Tensor):
+    value = value.detach().float()
+    dist.all_reduce(value, op=dist.ReduceOp.SUM)
+    value /= dist.get_world_size()
+    return value
+
+
+def _collect_debug_stats(model_module, level_ids):
+    debug_sources = {
+        "pair_confidence": model_module.last_pair_confidence,
+        "pair_weight": model_module.last_pair_weights,
+        "frame_entropy": model_module.last_frame_entropy,
+        "token_entropy": model_module.last_token_entropy,
+        "frame_peak": model_module.last_frame_peak,
+        "token_peak": model_module.last_token_peak,
+        "video_gate": model_module.last_video_gate,
+        "text_gate": model_module.last_text_gate,
+    }
+
+    available = {
+        name: value.detach().float().reshape(-1)
+        for name, value in debug_sources.items()
+        if value is not None
+    }
+    if not available:
+        return {}
+
+    level_ids = level_ids.detach().reshape(-1)
+    level_ids = level_ids.to(device=next(iter(available.values())).device, dtype=torch.long)
+
+    stats = {}
+    for name, values in available.items():
+        total = values.sum()
+        count = torch.tensor(float(values.numel()), device=values.device)
+        dist.all_reduce(total, op=dist.ReduceOp.SUM)
+        dist.all_reduce(count, op=dist.ReduceOp.SUM)
+        stats[name] = (total / count.clamp(min=1.0)).item()
+
+        for level_id, level_name in LEVEL_NAME_BY_ID.items():
+            mask = level_ids == level_id
+            if mask.any():
+                level_total = values[mask].sum()
+                level_count = torch.tensor(float(mask.sum().item()), device=values.device)
+            else:
+                level_total = torch.zeros((), device=values.device)
+                level_count = torch.zeros((), device=values.device)
+
+            dist.all_reduce(level_total, op=dist.ReduceOp.SUM)
+            dist.all_reduce(level_count, op=dist.ReduceOp.SUM)
+            if level_count.item() > 0:
+                stats[f"{level_name}/{name}"] = (
+                    level_total / level_count.clamp(min=1.0)
+                ).item()
+
+    return stats
+
+
 def clip_contrastive_loss(model, images, input_ids, attention_mask, level_ids, entropy_weight=0.1):
     image_features, text_features, pair_weights, entropy_regularization = model.module.encode_training_pair(
         image=images,
@@ -315,6 +379,7 @@ def train():
     ACCUM_STEPS = args.accum_steps
     USE_SWANLAB = args.use_swanlab
     LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
+    DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
 
     if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
         raise ValueError(
@@ -656,19 +721,52 @@ def train():
                 loss_avg = loss_log.item() / world_size
                 last_loss_value = loss_avg
                 accum_loss_sum.zero_()
+                debug_stats = _collect_debug_stats(_unwrap_state_io_module(model.module), level_ids)
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
                     writer.add_scalar("train/lr", scheduler.get_last_lr()[0], global_step)
                     writer.add_scalar("train/epoch", epoch + 1, global_step)
+                    for stat_name, stat_value in debug_stats.items():
+                        writer.add_scalar(f"debug/{stat_name}", stat_value, global_step)
 
                 global_step += 1
 
             if rank == 0:
-                progress_bar.set_postfix(
-                    loss=raw_loss.item(),
-                    lr=scheduler.get_last_lr()[0],
-                )
+                postfix = {
+                    "loss": f"{raw_loss.item():.4f}",
+                    "lr": f"{scheduler.get_last_lr()[0]:.2e}",
+                }
+                if should_update:
+                    if "pair_confidence" in debug_stats:
+                        postfix["conf"] = f"{debug_stats['pair_confidence']:.3f}"
+                    if "frame_entropy" in debug_stats:
+                        postfix["fH"] = f"{debug_stats['frame_entropy']:.3f}"
+                    if "token_entropy" in debug_stats:
+                        postfix["tH"] = f"{debug_stats['token_entropy']:.3f}"
+                progress_bar.set_postfix(**postfix)
+
+                if should_update and DEBUG_LOG_INTERVAL > 0 and global_step % DEBUG_LOG_INTERVAL == 0:
+                    debug_parts = []
+                    for level_name in ("fine", "mid", "coarse"):
+                        frame_key = f"{level_name}/frame_entropy"
+                        token_key = f"{level_name}/token_entropy"
+                        conf_key = f"{level_name}/pair_confidence"
+                        if frame_key in debug_stats and token_key in debug_stats and conf_key in debug_stats:
+                            debug_parts.append(
+                                f"{level_name}: conf={debug_stats[conf_key]:.3f}, "
+                                f"fH={debug_stats[frame_key]:.3f}, "
+                                f"tH={debug_stats[token_key]:.3f}"
+                            )
+                    if "video_gate" in debug_stats and "text_gate" in debug_stats:
+                        debug_parts.append(
+                            f"gates: v={debug_stats['video_gate']:.3f}, t={debug_stats['text_gate']:.3f}"
+                        )
+                    if debug_parts:
+                        print(
+                            f"[debug step {global_step}] " + " | ".join(debug_parts),
+                            flush=True,
+                        )
 
             del images, input_ids, attention_mask, level_ids
 

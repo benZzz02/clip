@@ -327,6 +327,12 @@ class VLP(nn.Module):
         self.last_pair_confidence = None
         self.last_pair_weights = None
         self.last_entropy_regularization = None
+        self.last_frame_entropy = None
+        self.last_token_entropy = None
+        self.last_video_gate = None
+        self.last_text_gate = None
+        self.last_frame_peak = None
+        self.last_token_peak = None
 
     def _prepare_image_input(self, image: torch.Tensor):
         if image.ndim == 4:
@@ -545,6 +551,7 @@ class VLP(nn.Module):
             self.video_gate_head(torch.cat([video_local, video_global], dim=-1))
         )
         video_fused = video_gate * video_local + (1.0 - video_gate) * video_global
+        self.last_video_gate = video_gate.detach().squeeze(-1)
         return F.normalize(video_fused, dim=-1)
 
     def _fuse_text_features(self, text_global_hidden, token_hidden, token_weights):
@@ -555,6 +562,7 @@ class VLP(nn.Module):
             self.text_gate_head(torch.cat([text_local, text_global], dim=-1))
         )
         text_fused = text_gate * text_local + (1.0 - text_gate) * text_global
+        self.last_text_gate = text_gate.detach().squeeze(-1)
         return F.normalize(text_fused, dim=-1)
 
     def _compute_entropy_regularization(self, frame_weights, token_weights, attention_mask, level_ids=None):
@@ -583,7 +591,8 @@ class VLP(nn.Module):
             dtype,
         )
 
-        return ((frame_entropy - frame_targets) ** 2 + (token_entropy - token_targets) ** 2).mean()
+        entropy_regularization = ((frame_entropy - frame_targets) ** 2 + (token_entropy - token_targets) ** 2).mean()
+        return entropy_regularization, frame_entropy, token_entropy
 
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None):
         video_global_hidden, frame_tokens = self._encode_image_tokens(image)
@@ -638,7 +647,7 @@ class VLP(nn.Module):
             frame_tokens.dtype,
         )
         pair_weights = (pair_confidence * level_loss_weights).detach()
-        entropy_regularization = self._compute_entropy_regularization(
+        entropy_regularization, frame_entropy, token_entropy = self._compute_entropy_regularization(
             frame_weights=frame_weights,
             token_weights=token_weights,
             attention_mask=attention_mask,
@@ -650,6 +659,10 @@ class VLP(nn.Module):
         self.last_pair_confidence = pair_confidence.detach()
         self.last_pair_weights = pair_weights.detach()
         self.last_entropy_regularization = entropy_regularization.detach()
+        self.last_frame_entropy = frame_entropy.detach()
+        self.last_token_entropy = token_entropy.detach()
+        self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+        self.last_token_peak = token_weights.max(dim=-1).values.detach()
 
         return image_features, text_features, pair_weights, entropy_regularization
 
