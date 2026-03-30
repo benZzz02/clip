@@ -13,7 +13,7 @@
   NUM_FRAMES=8
 
   EPOCHS=50
-  LEARNING_RATE=5e-5
+  LEARNING_RATE=1e-4
   WEIGHT_DECAY=0.02
   ADAM_BETA1=0.9
   ADAM_BETA2=0.999
@@ -76,4 +76,3 @@
       --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
       --samples_cache_version "$SAMPLES_CACHE_VERSION" \
       --use_swanlab "$USE_SWANLAB" \
-      --resume_from_checkpoint "/mnt/mydisk/CLIP/vlp_epoch_4.pt"
