@@ -333,6 +333,7 @@ class VLP(nn.Module):
         self.last_text_gate = None
         self.last_frame_peak = None
         self.last_token_peak = None
+        self.last_distill_regularization = None
 
     def _prepare_image_input(self, image: torch.Tensor):
         if image.ndim == 4:
@@ -355,6 +356,19 @@ class VLP(nn.Module):
             return torch.logsumexp(scores, dim=dim)
         masked_scores = scores.masked_fill(~mask, -1e4)
         return torch.logsumexp(masked_scores, dim=dim)
+
+    def _masked_max(self, scores, mask, dim):
+        if mask is None:
+            return scores.max(dim=dim).values
+        masked_scores = scores.masked_fill(~mask, -1e4)
+        return masked_scores.max(dim=dim).values
+
+    def _masked_mean(self, scores, mask, dim):
+        if mask is None:
+            return scores.mean(dim=dim)
+        masked_scores = scores * mask.to(dtype=scores.dtype)
+        denom = mask.sum(dim=dim).clamp(min=1).to(dtype=scores.dtype)
+        return masked_scores.sum(dim=dim) / denom
 
     def _normalize_scores(self, scores, mask=None, topk=None, temperatures=1.0):
         if not torch.is_tensor(temperatures):
@@ -386,6 +400,27 @@ class VLP(nn.Module):
         weights = weights * mask.to(dtype=weights.dtype)
         weights = weights / weights.sum(dim=-1, keepdim=True).clamp(min=1e-6)
         return weights
+
+    def _sparsify_weights(self, weights, topk=None, mask=None):
+        if topk is None or int(topk) <= 0 or int(topk) >= weights.size(-1):
+            if mask is not None:
+                weights = weights * mask.to(dtype=weights.dtype)
+                weights = weights / weights.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+            return weights
+
+        k = min(int(topk), weights.size(-1))
+        if mask is None:
+            mask = torch.ones_like(weights, dtype=torch.bool)
+        else:
+            mask = mask.to(device=weights.device, dtype=torch.bool)
+
+        masked_weights = weights.masked_fill(~mask, -1.0)
+        topk_idx = masked_weights.topk(k=k, dim=-1).indices
+        topk_mask = torch.zeros_like(mask)
+        topk_mask.scatter_(1, topk_idx, True)
+        sparse = weights * (mask & topk_mask).to(dtype=weights.dtype)
+        sparse = sparse / sparse.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        return sparse
 
     def _topk_mean(self, scores, topk, mask=None):
         if mask is not None:
@@ -447,15 +482,16 @@ class VLP(nn.Module):
 
         frame_local = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
         token_local = F.normalize(self.token_local_projection(token_hidden), dim=-1)
-        alignment = torch.matmul(frame_local, token_local.transpose(1, 2)) / self.local_temperature
+        raw_alignment = torch.matmul(frame_local, token_local.transpose(1, 2))
+        scaled_alignment = raw_alignment / self.local_temperature
 
-        frame_scores = self._masked_logsumexp(
-            alignment,
+        frame_scores = self._masked_max(
+            scaled_alignment,
             token_mask.unsqueeze(1),
             dim=-1,
         )
-        token_scores = self._masked_logsumexp(
-            alignment,
+        token_scores = self._masked_max(
+            scaled_alignment,
             token_mask.unsqueeze(1),
             dim=1,
         )
@@ -487,19 +523,40 @@ class VLP(nn.Module):
 
         frame_teacher = self._normalize_scores(
             frame_scores,
-            topk=self.local_topk_frames,
             temperatures=frame_temps,
         )
         token_teacher = self._normalize_scores(
             token_scores,
             mask=token_mask,
-            topk=self.local_topk_tokens,
             temperatures=token_temps,
         )
 
-        frame_peak = self._topk_mean(frame_scores, self.local_topk_frames)
-        token_peak = self._topk_mean(token_scores, self.local_topk_tokens, mask=token_mask)
-        confidence = torch.sigmoid(0.5 * (frame_peak + token_peak))
+        frame_best = self._masked_max(
+            raw_alignment,
+            token_mask.unsqueeze(1),
+            dim=-1,
+        )
+        frame_mean = self._masked_mean(
+            raw_alignment,
+            token_mask.unsqueeze(1),
+            dim=-1,
+        )
+        token_best = self._masked_max(
+            raw_alignment,
+            token_mask.unsqueeze(1),
+            dim=1,
+        )
+        token_mean = self._masked_mean(
+            raw_alignment,
+            token_mask.unsqueeze(1),
+            dim=1,
+        )
+
+        frame_margin = F.relu(frame_best - frame_mean)
+        token_margin = F.relu(token_best - token_mean)
+        frame_peak = self._topk_mean(frame_margin, self.local_topk_frames)
+        token_peak = self._topk_mean(token_margin, self.local_topk_tokens, mask=token_mask)
+        confidence = ((frame_peak + token_peak) / 2.0 / 0.35).clamp(min=0.0, max=1.0)
         confidence = conf_floor + (1.0 - conf_floor) * confidence.detach()
 
         return frame_teacher.detach(), token_teacher.detach(), confidence
@@ -532,16 +589,43 @@ class VLP(nn.Module):
 
         frame_weights = self._normalize_scores(
             frame_scores,
-            topk=self.local_topk_frames,
             temperatures=frame_temps,
         )
         token_weights = self._normalize_scores(
             token_scores,
             mask=token_mask,
-            topk=self.local_topk_tokens,
             temperatures=token_temps,
         )
         return frame_weights, token_weights
+
+    def _compute_distillation_regularization(
+        self,
+        frame_student,
+        frame_teacher,
+        token_student,
+        token_teacher,
+        attention_mask,
+    ):
+        token_mask = attention_mask.bool()
+
+        frame_kl = (
+            frame_teacher
+            * (
+                frame_teacher.clamp(min=1e-8).log()
+                - frame_student.clamp(min=1e-8).log()
+            )
+        ).sum(dim=-1)
+
+        token_kl = (
+            token_teacher
+            * (
+                token_teacher.clamp(min=1e-8).log()
+                - token_student.clamp(min=1e-8).log()
+            )
+        )
+        token_kl = (token_kl * token_mask.to(dtype=token_kl.dtype)).sum(dim=-1)
+
+        return 0.5 * (frame_kl.mean() + token_kl.mean())
 
     def _fuse_video_features(self, video_global_hidden, frame_tokens, frame_weights):
         video_local_hidden = torch.sum(frame_weights.unsqueeze(-1) * frame_tokens, dim=1)
@@ -608,6 +692,7 @@ class VLP(nn.Module):
             attention_mask=attention_mask,
             level_ids=level_ids,
         )
+        token_mask = attention_mask.bool()
 
         if self.training:
             frame_teacher, token_teacher, pair_confidence = self._compute_teacher_signals(
@@ -616,26 +701,44 @@ class VLP(nn.Module):
                 attention_mask=attention_mask,
                 level_ids=level_ids,
             )
-            frame_weights = (1.0 - self.teacher_mix) * frame_student + self.teacher_mix * frame_teacher
-            token_weights = (1.0 - self.teacher_mix) * token_student + self.teacher_mix * token_teacher
+            frame_dense_weights = (1.0 - self.teacher_mix) * frame_student + self.teacher_mix * frame_teacher
+            token_dense_weights = (1.0 - self.teacher_mix) * token_student + self.teacher_mix * token_teacher
+            distill_regularization = self._compute_distillation_regularization(
+                frame_student=frame_student,
+                frame_teacher=frame_teacher,
+                token_student=token_student,
+                token_teacher=token_teacher,
+                attention_mask=attention_mask,
+            )
         else:
-            frame_weights = frame_student
-            token_weights = token_student
+            frame_dense_weights = frame_student
+            token_dense_weights = token_student
             pair_confidence = torch.ones(
                 frame_tokens.size(0),
                 device=frame_tokens.device,
                 dtype=frame_tokens.dtype,
             )
+            distill_regularization = frame_tokens.new_zeros(())
+
+        frame_sparse_weights = self._sparsify_weights(
+            frame_dense_weights,
+            topk=self.local_topk_frames,
+        )
+        token_sparse_weights = self._sparsify_weights(
+            token_dense_weights,
+            topk=self.local_topk_tokens,
+            mask=token_mask,
+        )
 
         image_features = self._fuse_video_features(
             video_global_hidden=video_global_hidden,
             frame_tokens=frame_tokens,
-            frame_weights=frame_weights,
+            frame_weights=frame_sparse_weights,
         )
         text_features = self._fuse_text_features(
             text_global_hidden=text_global_hidden,
             token_hidden=token_hidden,
-            token_weights=token_weights,
+            token_weights=token_sparse_weights,
         )
 
         level_loss_weights = self._get_level_values(
@@ -648,23 +751,30 @@ class VLP(nn.Module):
         )
         pair_weights = (pair_confidence * level_loss_weights).detach()
         entropy_regularization, frame_entropy, token_entropy = self._compute_entropy_regularization(
-            frame_weights=frame_weights,
-            token_weights=token_weights,
+            frame_weights=frame_dense_weights,
+            token_weights=token_dense_weights,
             attention_mask=attention_mask,
             level_ids=level_ids,
         )
 
-        self.last_frame_weights = frame_weights.detach()
-        self.last_token_weights = token_weights.detach()
+        self.last_frame_weights = frame_dense_weights.detach()
+        self.last_token_weights = token_dense_weights.detach()
         self.last_pair_confidence = pair_confidence.detach()
         self.last_pair_weights = pair_weights.detach()
         self.last_entropy_regularization = entropy_regularization.detach()
+        self.last_distill_regularization = distill_regularization.detach()
         self.last_frame_entropy = frame_entropy.detach()
         self.last_token_entropy = token_entropy.detach()
-        self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
-        self.last_token_peak = token_weights.max(dim=-1).values.detach()
+        self.last_frame_peak = frame_dense_weights.max(dim=-1).values.detach()
+        self.last_token_peak = token_dense_weights.max(dim=-1).values.detach()
 
-        return image_features, text_features, pair_weights, entropy_regularization
+        return (
+            image_features,
+            text_features,
+            pair_weights,
+            entropy_regularization,
+            distill_regularization,
+        )
 
     def encode_image(self, image: torch.Tensor, level_ids: torch.Tensor = None):
         video_global_hidden, frame_tokens = self._encode_image_tokens(image)
@@ -676,8 +786,13 @@ class VLP(nn.Module):
             attention_mask=dummy_mask,
             level_ids=level_ids,
         )
-        video_features = self._fuse_video_features(video_global_hidden, frame_tokens, frame_weights)
+        frame_sparse_weights = self._sparsify_weights(
+            frame_weights,
+            topk=self.local_topk_frames,
+        )
+        video_features = self._fuse_video_features(video_global_hidden, frame_tokens, frame_sparse_weights)
         self.last_frame_weights = frame_weights.detach()
+        self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
         return video_features
 
     def encode_text(
@@ -698,12 +813,18 @@ class VLP(nn.Module):
             attention_mask=attention_mask,
             level_ids=level_ids,
         )
-        text_features = self._fuse_text_features(text_global_hidden, token_hidden, token_weights)
+        token_sparse_weights = self._sparsify_weights(
+            token_weights,
+            topk=self.local_topk_tokens,
+            mask=attention_mask.bool(),
+        )
+        text_features = self._fuse_text_features(text_global_hidden, token_hidden, token_sparse_weights)
         self.last_token_weights = token_weights.detach()
+        self.last_token_peak = token_weights.max(dim=-1).values.detach()
         return text_features
 
     def forward(self, image, input_ids, attention_mask, level_ids=None):
-        image_features, text_features, pair_weights, _ = self.encode_training_pair(
+        image_features, text_features, pair_weights, _, _ = self.encode_training_pair(
             image=image,
             input_ids=input_ids,
             attention_mask=attention_mask,

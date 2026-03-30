@@ -290,6 +290,12 @@ def parse_args():
         default=0.1,
         help="Weight for level-aware entropy regularization",
     )
+    parser.add_argument(
+        "--distill_weight",
+        type=float,
+        default=0.1,
+        help="Weight for teacher-to-student evidence distillation",
+    )
 
     return parser.parse_args()
 
@@ -331,6 +337,7 @@ def _collect_debug_stats(model_module, level_ids):
         "token_peak": model_module.last_token_peak,
         "video_gate": model_module.last_video_gate,
         "text_gate": model_module.last_text_gate,
+        "distill_regularization": model_module.last_distill_regularization,
     }
 
     available = {
@@ -352,6 +359,9 @@ def _collect_debug_stats(model_module, level_ids):
         dist.all_reduce(count, op=dist.ReduceOp.SUM)
         stats[name] = (total / count.clamp(min=1.0)).item()
 
+        if values.numel() != level_ids.numel():
+            continue
+
         for level_id, level_name in LEVEL_NAME_BY_ID.items():
             mask = level_ids == level_id
             if mask.any():
@@ -371,8 +381,16 @@ def _collect_debug_stats(model_module, level_ids):
     return stats
 
 
-def clip_contrastive_loss(model, images, input_ids, attention_mask, level_ids, entropy_weight=0.1):
-    image_features, text_features, pair_weights, entropy_regularization = model.module.encode_training_pair(
+def clip_contrastive_loss(
+    model,
+    images,
+    input_ids,
+    attention_mask,
+    level_ids,
+    entropy_weight=0.1,
+    distill_weight=0.1,
+):
+    image_features, text_features, pair_weights, entropy_regularization, distill_regularization = model.module.encode_training_pair(
         image=images,
         input_ids=input_ids,
         attention_mask=attention_mask,
@@ -406,7 +424,11 @@ def clip_contrastive_loss(model, images, input_ids, attention_mask, level_ids, e
         (pair_weights * loss_i).sum() + (pair_weights * loss_t).sum()
     ) / (2.0 * pair_weights.sum().clamp(min=1e-6))
 
-    return contrastive_loss + entropy_weight * entropy_regularization
+    return (
+        contrastive_loss
+        + entropy_weight * entropy_regularization
+        + distill_weight * distill_regularization
+    )
 
 
 def train():
@@ -479,6 +501,7 @@ def train():
         "level_frame_entropy_targets": args.level_frame_entropy_targets,
         "level_token_entropy_targets": args.level_token_entropy_targets,
         "entropy_weight": args.entropy_weight,
+        "distill_weight": args.distill_weight,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -585,6 +608,7 @@ def train():
         print(f"level_frame_entropy_targets: {CONFIG['level_frame_entropy_targets']}")
         print(f"level_token_entropy_targets: {CONFIG['level_token_entropy_targets']}")
         print(f"entropy_weight: {CONFIG['entropy_weight']}")
+        print(f"distill_weight: {CONFIG['distill_weight']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -690,6 +714,8 @@ def train():
                     "use_samples_cache": args.use_samples_cache,
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
+                    "entropy_weight": args.entropy_weight,
+                    "distill_weight": args.distill_weight,
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
                 }
@@ -786,6 +812,7 @@ def train():
                         attention_mask,
                         level_ids,
                         entropy_weight=CONFIG["entropy_weight"],
+                        distill_weight=CONFIG["distill_weight"],
                     )
                     loss = raw_loss / current_accum_steps
 
@@ -835,6 +862,8 @@ def train():
                         postfix["fH"] = f"{debug_stats['frame_entropy']:.3f}"
                     if "token_entropy" in debug_stats:
                         postfix["tH"] = f"{debug_stats['token_entropy']:.3f}"
+                    if "distill_regularization" in debug_stats:
+                        postfix["dist"] = f"{debug_stats['distill_regularization']:.3f}"
                 progress_bar.set_postfix(**postfix)
 
                 if should_update and DEBUG_LOG_INTERVAL > 0 and global_step % DEBUG_LOG_INTERVAL == 0:
@@ -852,6 +881,10 @@ def train():
                     if "video_gate" in debug_stats and "text_gate" in debug_stats:
                         debug_parts.append(
                             f"gates: v={debug_stats['video_gate']:.3f}, t={debug_stats['text_gate']:.3f}"
+                        )
+                    if "distill_regularization" in debug_stats:
+                        debug_parts.append(
+                            f"distill={debug_stats['distill_regularization']:.3f}"
                         )
                     if debug_parts:
                         print(
