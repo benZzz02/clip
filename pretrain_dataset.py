@@ -12,13 +12,13 @@ from pretrain_manifest_cache import load_or_build_pretrain_samples
 
 
 class PretrainDataset(Dataset):
-    """
-
     LEVEL_TO_ID = {
         "fine": 0,
         "mid": 1,
         "coarse": 2,
     }
+
+    """
     图文预训练数据集：
     - 从视频区间中抽单帧或多帧
     - 返回 image/frames, input_ids, attention_mask
