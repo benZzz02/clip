@@ -77,10 +77,12 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
 
     allowed_missing_prefixes = (
         "frame_local_projection.",
-        "token_local_projection.",
         "frame_score_head.",
-        "token_score_head.",
         "video_gate_head.",
+    )
+    allowed_unexpected_prefixes = (
+        "token_local_projection.",
+        "token_score_head.",
         "text_gate_head.",
     )
 
@@ -88,8 +90,12 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         key for key in msg.missing_keys
         if not key.startswith(allowed_missing_prefixes)
     ]
+    disallowed_unexpected = [
+        key for key in msg.unexpected_keys
+        if not key.startswith(allowed_unexpected_prefixes)
+    ]
 
-    if disallowed_missing or msg.unexpected_keys:
+    if disallowed_missing or disallowed_unexpected:
         raise RuntimeError(
             f"{source} 与当前模型不匹配。\n"
             f"Missing keys: {msg.missing_keys}\n"
@@ -330,13 +336,9 @@ def _reduce_mean_tensor(value: torch.Tensor):
 def _collect_debug_stats(model_module, level_ids):
     debug_sources = {
         "pair_confidence": model_module.last_pair_confidence,
-        "pair_weight": model_module.last_pair_weights,
         "frame_entropy": model_module.last_frame_entropy,
-        "token_entropy": model_module.last_token_entropy,
         "frame_peak": model_module.last_frame_peak,
-        "token_peak": model_module.last_token_peak,
         "video_gate": model_module.last_video_gate,
-        "text_gate": model_module.last_text_gate,
         "distill_regularization": model_module.last_distill_regularization,
     }
 
@@ -387,10 +389,9 @@ def clip_contrastive_loss(
     input_ids,
     attention_mask,
     level_ids,
-    entropy_weight=0.1,
     distill_weight=0.1,
 ):
-    image_features, text_features, pair_weights, entropy_regularization, distill_regularization = model.module.encode_training_pair(
+    image_features, text_features, distill_regularization = model.module.encode_training_pair(
         image=images,
         input_ids=input_ids,
         attention_mask=attention_mask,
@@ -416,19 +417,11 @@ def clip_contrastive_loss(
 
     labels = torch.arange(batch_size, device=images.device) + rank * batch_size
 
-    loss_i = F.cross_entropy(logits_per_image, labels, reduction="none")
-    loss_t = F.cross_entropy(logits_per_text, labels, reduction="none")
+    loss_i = F.cross_entropy(logits_per_image, labels)
+    loss_t = F.cross_entropy(logits_per_text, labels)
+    contrastive_loss = 0.5 * (loss_i + loss_t)
 
-    pair_weights = pair_weights / pair_weights.mean().clamp(min=1e-6)
-    contrastive_loss = (
-        (pair_weights * loss_i).sum() + (pair_weights * loss_t).sum()
-    ) / (2.0 * pair_weights.sum().clamp(min=1e-6))
-
-    return (
-        contrastive_loss
-        + entropy_weight * entropy_regularization
-        + distill_weight * distill_regularization
-    )
+    return contrastive_loss + distill_weight * distill_regularization
 
 
 def train():
@@ -491,16 +484,8 @@ def train():
         "samples_cache_version": args.samples_cache_version,
         "local_temperature": args.local_temperature,
         "local_topk_frames": args.local_topk_frames,
-        "local_topk_tokens": args.local_topk_tokens,
         "teacher_mix": args.teacher_mix,
-        "confidence_floor": args.confidence_floor,
         "level_frame_temperatures": args.level_frame_temperatures,
-        "level_token_temperatures": args.level_token_temperatures,
-        "level_conf_floors": args.level_conf_floors,
-        "level_loss_weights": args.level_loss_weights,
-        "level_frame_entropy_targets": args.level_frame_entropy_targets,
-        "level_token_entropy_targets": args.level_token_entropy_targets,
-        "entropy_weight": args.entropy_weight,
         "distill_weight": args.distill_weight,
     }
 
@@ -517,15 +502,8 @@ def train():
         num_frames=CONFIG["num_frames"],
         local_temperature=CONFIG["local_temperature"],
         local_topk_frames=CONFIG["local_topk_frames"],
-        local_topk_tokens=CONFIG["local_topk_tokens"],
         teacher_mix=CONFIG["teacher_mix"],
-        confidence_floor=CONFIG["confidence_floor"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
-        level_token_temperatures=CONFIG["level_token_temperatures"],
-        level_conf_floors=CONFIG["level_conf_floors"],
-        level_loss_weights=CONFIG["level_loss_weights"],
-        level_frame_entropy_targets=CONFIG["level_frame_entropy_targets"],
-        level_token_entropy_targets=CONFIG["level_token_entropy_targets"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -598,16 +576,9 @@ def train():
             print(f"标注目录: {ANNOTATIONS_FOLDER}")
         print(f"batch层级配比: {LEVEL_BATCH_SIZES}")
         print(f"local_temperature: {CONFIG['local_temperature']}")
-        print(f"local_topk_frames/tokens: {CONFIG['local_topk_frames']}/{CONFIG['local_topk_tokens']}")
+        print(f"local_topk_frames: {CONFIG['local_topk_frames']}")
         print(f"teacher_mix: {CONFIG['teacher_mix']}")
-        print(f"confidence_floor: {CONFIG['confidence_floor']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
-        print(f"level_token_temperatures: {CONFIG['level_token_temperatures']}")
-        print(f"level_conf_floors: {CONFIG['level_conf_floors']}")
-        print(f"level_loss_weights: {CONFIG['level_loss_weights']}")
-        print(f"level_frame_entropy_targets: {CONFIG['level_frame_entropy_targets']}")
-        print(f"level_token_entropy_targets: {CONFIG['level_token_entropy_targets']}")
-        print(f"entropy_weight: {CONFIG['entropy_weight']}")
         print(f"distill_weight: {CONFIG['distill_weight']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
@@ -714,7 +685,6 @@ def train():
                     "use_samples_cache": args.use_samples_cache,
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
-                    "entropy_weight": args.entropy_weight,
                     "distill_weight": args.distill_weight,
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
@@ -811,7 +781,6 @@ def train():
                         input_ids,
                         attention_mask,
                         level_ids,
-                        entropy_weight=CONFIG["entropy_weight"],
                         distill_weight=CONFIG["distill_weight"],
                     )
                     loss = raw_loss / current_accum_steps
@@ -860,8 +829,6 @@ def train():
                         postfix["conf"] = f"{debug_stats['pair_confidence']:.3f}"
                     if "frame_entropy" in debug_stats:
                         postfix["fH"] = f"{debug_stats['frame_entropy']:.3f}"
-                    if "token_entropy" in debug_stats:
-                        postfix["tH"] = f"{debug_stats['token_entropy']:.3f}"
                     if "distill_regularization" in debug_stats:
                         postfix["dist"] = f"{debug_stats['distill_regularization']:.3f}"
                 progress_bar.set_postfix(**postfix)
@@ -870,17 +837,15 @@ def train():
                     debug_parts = []
                     for level_name in ("fine", "mid", "coarse"):
                         frame_key = f"{level_name}/frame_entropy"
-                        token_key = f"{level_name}/token_entropy"
                         conf_key = f"{level_name}/pair_confidence"
-                        if frame_key in debug_stats and token_key in debug_stats and conf_key in debug_stats:
+                        if frame_key in debug_stats and conf_key in debug_stats:
                             debug_parts.append(
                                 f"{level_name}: conf={debug_stats[conf_key]:.3f}, "
-                                f"fH={debug_stats[frame_key]:.3f}, "
-                                f"tH={debug_stats[token_key]:.3f}"
+                                f"fH={debug_stats[frame_key]:.3f}"
                             )
-                    if "video_gate" in debug_stats and "text_gate" in debug_stats:
+                    if "video_gate" in debug_stats:
                         debug_parts.append(
-                            f"gates: v={debug_stats['video_gate']:.3f}, t={debug_stats['text_gate']:.3f}"
+                            f"v_gate={debug_stats['video_gate']:.3f}"
                         )
                     if "distill_regularization" in debug_stats:
                         debug_parts.append(
