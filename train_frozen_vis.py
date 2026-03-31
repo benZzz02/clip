@@ -722,6 +722,14 @@ def train():
     save_dir = os.path.dirname(save_prefix)
     if save_dir:
         os.makedirs(save_dir, exist_ok=True)
+
+    def _build_ckpt_path(filename: str) -> str:
+        if not save_prefix:
+            return filename
+        if save_prefix.endswith(os.sep):
+            return os.path.join(save_prefix, filename)
+        return f"{save_prefix}{filename}"
+
     if args.resume_from_checkpoint and os.path.isfile(args.resume_from_checkpoint):
         if rank == 0:
             print(f"正在从检查点恢复训练: {args.resume_from_checkpoint}")
@@ -873,7 +881,9 @@ def train():
                 "global_step": global_step,
                 "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
             }
-            torch.save(checkpoint_data, f"vlp_epoch_{epoch + 1}.pt")
+            epoch_ckpt_path = _build_ckpt_path(f"vlp_epoch_{epoch + 1}.pt")
+            torch.save(checkpoint_data, epoch_ckpt_path)
+            print(f"已保存检查点: {epoch_ckpt_path}")
 
             if writer is not None:
                 writer.flush()
@@ -888,7 +898,9 @@ def train():
             "global_step": global_step,
             "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
         }
-        torch.save(final_checkpoint_data, "vlp_final.pt")
+        final_ckpt_path = _build_ckpt_path("vlp_final.pt")
+        torch.save(final_checkpoint_data, final_ckpt_path)
+        print(f"已保存最终检查点: {final_ckpt_path}")
 
         if writer is not None:
             writer.close()
