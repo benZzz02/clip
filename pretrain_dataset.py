@@ -140,13 +140,48 @@ class PretrainDataset(Dataset):
 
         return timestamps
 
-    def _expand_window(self, start_time, end_time):
+    def _expand_window(self, start_time, end_time, video_duration=None, expand_ratio=None):
         start_time = float(start_time)
         end_time = float(end_time)
+        ratio = self.expanded_window_ratio if expand_ratio is None else max(1.0, float(expand_ratio))
+
+        if end_time < start_time:
+            start_time, end_time = end_time, start_time
+
+        if video_duration is not None and video_duration > 0:
+            video_duration = float(video_duration)
+            start_time = min(max(start_time, 0.0), video_duration)
+            end_time = min(max(end_time, start_time), video_duration)
+
+        base_duration = max(end_time - start_time, 1e-3)
+        target_duration = base_duration * ratio
         center = 0.5 * (start_time + end_time)
-        duration = max(end_time - start_time, 1e-3)
-        expanded_half = 0.5 * duration * self.expanded_window_ratio
-        return center - expanded_half, center + expanded_half
+
+        expanded_start = center - 0.5 * target_duration
+        expanded_end = center + 0.5 * target_duration
+
+        if video_duration is not None and video_duration > 0:
+            if target_duration >= video_duration:
+                return 0.0, video_duration
+
+            if expanded_start < 0.0:
+                expanded_end -= expanded_start
+                expanded_start = 0.0
+
+            if expanded_end > video_duration:
+                expanded_start -= (expanded_end - video_duration)
+                expanded_end = video_duration
+
+            expanded_start = max(0.0, expanded_start)
+            expanded_end = min(video_duration, expanded_end)
+
+        if expanded_end <= expanded_start:
+            expanded_end = expanded_start + base_duration
+            if video_duration is not None and video_duration > 0:
+                expanded_end = min(expanded_end, video_duration)
+                expanded_start = max(0.0, expanded_end - base_duration)
+
+        return expanded_start, expanded_end
 
     def _timestamps_to_frame_indices(self, timestamps, fps, num_video_frames, video_duration):
         if num_video_frames <= 0:
@@ -183,7 +218,7 @@ class PretrainDataset(Dataset):
             return frames[0]
         return frames
 
-    def _try_get_images(self, video_path, text_start_time, text_end_time):
+    def _try_get_images(self, video_path, text_start_time, text_end_time, expand_ratio=1.0):
         try:
             vr = VideoReader(video_path, ctx=cpu(0))
         except Exception as e:
@@ -201,6 +236,14 @@ class PretrainDataset(Dataset):
                 fps = 30.0
 
             video_duration = max(num_video_frames - 1, 0) / fps
+
+            if float(expand_ratio) > 1.0:
+                text_start_time, text_end_time = self._expand_window(
+                    text_start_time,
+                    text_end_time,
+                    video_duration=video_duration,
+                    expand_ratio=expand_ratio,
+                )
 
             timestamps = self._sample_timestamps(
                 text_start_time,
@@ -246,20 +289,18 @@ class PretrainDataset(Dataset):
                 item["video_path"],
                 item["start_time"],
                 item["end_time"],
+                expand_ratio=1.0,
             )
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
                 if self.return_expanded_frames:
-                    expanded_start, expanded_end = self._expand_window(
-                        item["start_time"],
-                        item["end_time"],
-                    )
                     expanded_images = self._try_get_images(
                         item["video_path"],
-                        expanded_start,
-                        expanded_end,
+                        item["start_time"],
+                        item["end_time"],
+                        expand_ratio=self.expanded_window_ratio,
                     )
                     if expanded_images is None:
                         expanded_images = images
@@ -291,20 +332,18 @@ class PretrainDataset(Dataset):
                 item["video_path"],
                 item["start_time"],
                 item["end_time"],
+                expand_ratio=1.0,
             )
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
                 if self.return_expanded_frames:
-                    expanded_start, expanded_end = self._expand_window(
-                        item["start_time"],
-                        item["end_time"],
-                    )
                     expanded_images = self._try_get_images(
                         item["video_path"],
-                        expanded_start,
-                        expanded_end,
+                        item["start_time"],
+                        item["end_time"],
+                        expand_ratio=self.expanded_window_ratio,
                     )
                     if expanded_images is None:
                         expanded_images = images
