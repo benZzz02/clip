@@ -45,6 +45,8 @@ class PretrainDataset(Dataset):
         level_mix="concat",
         level_seed=42,
         return_level_id=False,
+        return_expanded_frames=False,
+        expanded_window_ratio=2.0,
         samples_cache_dir=".cache/pretrain_samples",
         use_samples_cache=True,
         rebuild_samples_cache=False,
@@ -59,6 +61,8 @@ class PretrainDataset(Dataset):
         self.level_mix = level_mix
         self.level_seed = int(level_seed)
         self.return_level_id = bool(return_level_id)
+        self.return_expanded_frames = bool(return_expanded_frames)
+        self.expanded_window_ratio = max(1.0, float(expanded_window_ratio))
 
         self.tokenizer = tokenizer
         self.image_size = image_size
@@ -135,6 +139,14 @@ class PretrainDataset(Dataset):
                 timestamps.append(random.uniform(left, right))
 
         return timestamps
+
+    def _expand_window(self, start_time, end_time):
+        start_time = float(start_time)
+        end_time = float(end_time)
+        center = 0.5 * (start_time + end_time)
+        duration = max(end_time - start_time, 1e-3)
+        expanded_half = 0.5 * duration * self.expanded_window_ratio
+        return center - expanded_half, center + expanded_half
 
     def _timestamps_to_frame_indices(self, timestamps, fps, num_video_frames, video_duration):
         if num_video_frames <= 0:
@@ -239,8 +251,30 @@ class PretrainDataset(Dataset):
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+                if self.return_expanded_frames:
+                    expanded_start, expanded_end = self._expand_window(
+                        item["start_time"],
+                        item["end_time"],
+                    )
+                    expanded_images = self._try_get_images(
+                        item["video_path"],
+                        expanded_start,
+                        expanded_end,
+                    )
+                    if expanded_images is None:
+                        expanded_images = images
                 if self.return_level_id:
+                    if self.return_expanded_frames:
+                        return (
+                            images,
+                            expanded_images,
+                            input_ids,
+                            attention_mask,
+                            torch.tensor(level_id, dtype=torch.long),
+                        )
                     return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+                if self.return_expanded_frames:
+                    return images, expanded_images, input_ids, attention_mask
                 return images, input_ids, attention_mask
 
             last_error = (
@@ -262,8 +296,30 @@ class PretrainDataset(Dataset):
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+                if self.return_expanded_frames:
+                    expanded_start, expanded_end = self._expand_window(
+                        item["start_time"],
+                        item["end_time"],
+                    )
+                    expanded_images = self._try_get_images(
+                        item["video_path"],
+                        expanded_start,
+                        expanded_end,
+                    )
+                    if expanded_images is None:
+                        expanded_images = images
                 if self.return_level_id:
+                    if self.return_expanded_frames:
+                        return (
+                            images,
+                            expanded_images,
+                            input_ids,
+                            attention_mask,
+                            torch.tensor(level_id, dtype=torch.long),
+                        )
                     return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+                if self.return_expanded_frames:
+                    return images, expanded_images, input_ids, attention_mask
                 return images, input_ids, attention_mask
 
             retry_count += 1

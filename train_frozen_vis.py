@@ -84,6 +84,8 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "token_local_projection.",
         "token_score_head.",
         "text_gate_head.",
+        "frame_score_head.",
+        "video_gate_head.",
     )
 
     disallowed_missing = [
@@ -250,10 +252,6 @@ def parse_args():
         default=os.environ.get("USE_SWANLAB", "1") == "1",
     )
     parser.add_argument("--local_temperature", type=float, default=0.07)
-    parser.add_argument("--local_topk_frames", type=int, default=2)
-    parser.add_argument("--local_topk_tokens", type=int, default=4)
-    parser.add_argument("--teacher_mix", type=float, default=0.5)
-    parser.add_argument("--confidence_floor", type=float, default=0.2)
     parser.add_argument(
         "--level_frame_temperatures",
         type=lambda s: parse_float_list(s, expected_len=3),
@@ -261,46 +259,16 @@ def parse_args():
         help="Comma-separated fine,mid,coarse frame temperatures",
     )
     parser.add_argument(
-        "--level_token_temperatures",
-        type=lambda s: parse_float_list(s, expected_len=3),
-        default=(0.6, 0.85, 1.1),
-        help="Comma-separated fine,mid,coarse token temperatures",
-    )
-    parser.add_argument(
-        "--level_conf_floors",
-        type=lambda s: parse_float_list(s, expected_len=3),
-        default=(0.2, 0.35, 0.5),
-        help="Comma-separated fine,mid,coarse confidence floors",
-    )
-    parser.add_argument(
-        "--level_loss_weights",
-        type=lambda s: parse_float_list(s, expected_len=3),
-        default=(1.0, 0.8, 0.6),
-        help="Comma-separated fine,mid,coarse loss weights",
-    )
-    parser.add_argument(
-        "--level_frame_entropy_targets",
-        type=lambda s: parse_float_list(s, expected_len=3),
-        default=(0.25, 0.5, 0.8),
-        help="Comma-separated fine,mid,coarse target frame entropies",
-    )
-    parser.add_argument(
-        "--level_token_entropy_targets",
-        type=lambda s: parse_float_list(s, expected_len=3),
-        default=(0.2, 0.4, 0.65),
-        help="Comma-separated fine,mid,coarse target token entropies",
-    )
-    parser.add_argument(
-        "--entropy_weight",
+        "--train_window_expand_ratio",
         type=float,
-        default=0.1,
-        help="Weight for level-aware entropy regularization",
+        default=2.0,
+        help="Expand the annotated training interval by this ratio for train-time soft frame selection",
     )
     parser.add_argument(
-        "--distill_weight",
+        "--selection_loss_weight",
         type=float,
-        default=0.1,
-        help="Weight for teacher-to-student evidence distillation",
+        default=0.5,
+        help="Weight for the train-time expanded-window selection contrastive loss",
     )
 
     return parser.parse_args()
@@ -338,8 +306,6 @@ def _collect_debug_stats(model_module, level_ids):
         "pair_confidence": model_module.last_pair_confidence,
         "frame_entropy": model_module.last_frame_entropy,
         "frame_peak": model_module.last_frame_peak,
-        "video_gate": model_module.last_video_gate,
-        "distill_regularization": model_module.last_distill_regularization,
     }
 
     available = {
@@ -386,42 +352,46 @@ def _collect_debug_stats(model_module, level_ids):
 def clip_contrastive_loss(
     model,
     images,
+    selection_images,
     input_ids,
     attention_mask,
     level_ids,
-    distill_weight=0.1,
+    selection_loss_weight=0.5,
 ):
-    image_features, text_features, distill_regularization = model.module.encode_training_pair(
+    image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=images,
         input_ids=input_ids,
         attention_mask=attention_mask,
         level_ids=level_ids,
+        selection_image=selection_images,
     )
-
     rank = dist.get_rank()
     batch_size = image_features.size(0)
-
-    gathered_image = concat_all_gather(image_features.detach())
-    gathered_text = concat_all_gather(text_features.detach())
-
-    gathered_image[rank] = image_features
-    gathered_text[rank] = text_features
-
-    all_image_features = torch.cat(gathered_image, dim=0)
-    all_text_features = torch.cat(gathered_text, dim=0)
-
     logit_scale = model.module.logit_scale.exp()
-
-    logits_per_image = logit_scale * image_features @ all_text_features.t()
-    logits_per_text = logit_scale * text_features @ all_image_features.t()
-
     labels = torch.arange(batch_size, device=images.device) + rank * batch_size
 
-    loss_i = F.cross_entropy(logits_per_image, labels)
-    loss_t = F.cross_entropy(logits_per_text, labels)
-    contrastive_loss = 0.5 * (loss_i + loss_t)
+    def _symmetric_contrastive(image_feats, text_feats):
+        gathered_image = concat_all_gather(image_feats.detach())
+        gathered_text = concat_all_gather(text_feats.detach())
 
-    return contrastive_loss + distill_weight * distill_regularization
+        gathered_image[rank] = image_feats
+        gathered_text[rank] = text_feats
+
+        all_image_features = torch.cat(gathered_image, dim=0)
+        all_text_features = torch.cat(gathered_text, dim=0)
+
+        logits_per_image = logit_scale * image_feats @ all_text_features.t()
+        logits_per_text = logit_scale * text_feats @ all_image_features.t()
+        loss_i = F.cross_entropy(logits_per_image, labels)
+        loss_t = F.cross_entropy(logits_per_text, labels)
+        return 0.5 * (loss_i + loss_t)
+
+    base_loss = _symmetric_contrastive(image_features, text_features)
+    if selected_image_features is None:
+        return base_loss
+
+    selection_loss = _symmetric_contrastive(selected_image_features, text_features)
+    return base_loss + selection_loss_weight * selection_loss
 
 
 def train():
@@ -483,10 +453,9 @@ def train():
         "rebuild_samples_cache": args.rebuild_samples_cache,
         "samples_cache_version": args.samples_cache_version,
         "local_temperature": args.local_temperature,
-        "local_topk_frames": args.local_topk_frames,
-        "teacher_mix": args.teacher_mix,
         "level_frame_temperatures": args.level_frame_temperatures,
-        "distill_weight": args.distill_weight,
+        "train_window_expand_ratio": args.train_window_expand_ratio,
+        "selection_loss_weight": args.selection_loss_weight,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -501,8 +470,6 @@ def train():
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
         num_frames=CONFIG["num_frames"],
         local_temperature=CONFIG["local_temperature"],
-        local_topk_frames=CONFIG["local_topk_frames"],
-        teacher_mix=CONFIG["teacher_mix"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
     ).to(device)
 
@@ -576,10 +543,9 @@ def train():
             print(f"标注目录: {ANNOTATIONS_FOLDER}")
         print(f"batch层级配比: {LEVEL_BATCH_SIZES}")
         print(f"local_temperature: {CONFIG['local_temperature']}")
-        print(f"local_topk_frames: {CONFIG['local_topk_frames']}")
-        print(f"teacher_mix: {CONFIG['teacher_mix']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
-        print(f"distill_weight: {CONFIG['distill_weight']}")
+        print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
+        print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -601,6 +567,8 @@ def train():
         assume_resized_video=CONFIG["assume_resized_video"],
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
+        return_expanded_frames=True,
+        expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
@@ -685,7 +653,8 @@ def train():
                     "use_samples_cache": args.use_samples_cache,
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
-                    "distill_weight": args.distill_weight,
+                    "train_window_expand_ratio": args.train_window_expand_ratio,
+                    "selection_loss_weight": args.selection_loss_weight,
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
                 }
@@ -772,7 +741,9 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images, input_ids, attention_mask, level_ids = [b.to(device, non_blocking=True) for b in batch]
+            images, selection_images, input_ids, attention_mask, level_ids = [
+                b.to(device, non_blocking=True) for b in batch
+            ]
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -786,10 +757,11 @@ def train():
                     raw_loss = clip_contrastive_loss(
                         model,
                         images,
+                        selection_images,
                         input_ids,
                         attention_mask,
                         level_ids,
-                        distill_weight=CONFIG["distill_weight"],
+                        selection_loss_weight=CONFIG["selection_loss_weight"],
                     )
                     loss = raw_loss / current_accum_steps
 
@@ -837,8 +809,6 @@ def train():
                         postfix["conf"] = f"{debug_stats['pair_confidence']:.3f}"
                     if "frame_entropy" in debug_stats:
                         postfix["fH"] = f"{debug_stats['frame_entropy']:.3f}"
-                    if "distill_regularization" in debug_stats:
-                        postfix["dist"] = f"{debug_stats['distill_regularization']:.3f}"
                 progress_bar.set_postfix(**postfix)
 
                 if should_update and DEBUG_LOG_INTERVAL > 0 and global_step % DEBUG_LOG_INTERVAL == 0:
@@ -851,14 +821,6 @@ def train():
                                 f"{level_name}: conf={debug_stats[conf_key]:.3f}, "
                                 f"fH={debug_stats[frame_key]:.3f}"
                             )
-                    if "video_gate" in debug_stats:
-                        debug_parts.append(
-                            f"v_gate={debug_stats['video_gate']:.3f}"
-                        )
-                    if "distill_regularization" in debug_stats:
-                        debug_parts.append(
-                            f"distill={debug_stats['distill_regularization']:.3f}"
-                        )
                     if debug_parts:
                         print(
                             f"[debug step {global_step}] " + " | ".join(debug_parts),
