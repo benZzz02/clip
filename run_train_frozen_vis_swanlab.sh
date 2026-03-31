@@ -1,79 +1,119 @@
-  #!/usr/bin/env bash
-  set -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
-  source ~/miniconda3/etc/profile.d/conda.sh
-  conda activate vllm
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate vllm
 
-  NPROC=2
-  EXP_NAME="convnext_timesformer_head_8f"
+EXP_NAME="${EXP_NAME:-video_local_evidence_core_8f}"
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
+IFS=',' read -r -a CUDA_DEVICES <<< "$CUDA_VISIBLE_DEVICES"
+NPROC="${NPROC:-${#CUDA_DEVICES[@]}}"
 
-  PER_GPU_BATCH_SIZE=128
-  ACCUM_STEPS=1
-  NUM_WORKERS=10
-  NUM_FRAMES=8
+if [[ "$NPROC" -ne "${#CUDA_DEVICES[@]}" ]]; then
+  echo "NPROC ($NPROC) must match the number of visible GPUs (${#CUDA_DEVICES[@]} from CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES)." >&2
+  exit 1
+fi
 
-  EPOCHS=50
-  LEARNING_RATE=5e-5
-  WEIGHT_DECAY=0.02
-  ADAM_BETA1=0.9
-  ADAM_BETA2=0.999
+PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
+ACCUM_STEPS="${ACCUM_STEPS:-1}"
+NUM_WORKERS="${NUM_WORKERS:-6}"
+NUM_FRAMES="${NUM_FRAMES:-8}"
 
-  EMBED_DIM=256
-  IMAGE_SIZE=224
-  MAX_LENGTH=256
+EPOCHS="${EPOCHS:-50}"
+LEARNING_RATE="${LEARNING_RATE:-5e-5}"
+WEIGHT_DECAY="${WEIGHT_DECAY:-0.02}"
+ADAM_BETA1="${ADAM_BETA1:-0.9}"
+ADAM_BETA2="${ADAM_BETA2:-0.999}"
 
-  FFMPEG_TIMEOUT=10
-  MAX_RETRY=5
-  ASSUME_RESIZED_VIDEO=true
-  USE_SWANLAB=true
+EMBED_DIM="${EMBED_DIM:-256}"
+IMAGE_SIZE="${IMAGE_SIZE:-224}"
+MAX_LENGTH="${MAX_LENGTH:-256}"
 
-  TEXT_MODEL_NAME="marcobombieri/surgicberta"
-  VISION_PRETRAINED_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
-  VIDEO_ROOT_FOLDER="/mnt/mydisk/CLIP/downloaded_video_224_test"
-  MAIN_CSV_PATH="/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv"
+FFMPEG_TIMEOUT="${FFMPEG_TIMEOUT:-10}"
+MAX_RETRY="${MAX_RETRY:-5}"
+ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
+USE_SWANLAB="${USE_SWANLAB:-true}"
 
-  ANNOTATIONS_ROOT="/mnt/mydisk/CLIP/surglavi_level_csv"
-  ANNOTATION_LEVELS="coarse,mid,fine"
-  LEVEL_MIX="concat"
-  LEVEL_BATCH_SIZES="fine:80,mid:32,coarse:16"
+TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
+VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-/mnt/mydisk/CLIP/lemonfm.pth}"
+VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-/mnt/mydisk/CLIP/downloaded_video_224_test}"
+MAIN_CSV_PATH="${MAIN_CSV_PATH:-/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv}"
 
-  SAMPLES_CACHE_DIR="/mnt/mydisk/CLIP/.cache/pretrain_samples"
-  USE_SAMPLES_CACHE=true
-  REBUILD_SAMPLES_CACHE=false
-  SAMPLES_CACHE_VERSION="v1"
+ANNOTATIONS_ROOT="${ANNOTATIONS_ROOT:-/mnt/mydisk/CLIP/surglavi_level_csv}"
+ANNOTATION_LEVELS="${ANNOTATION_LEVELS:-coarse,mid,fine}"
+LEVEL_MIX="${LEVEL_MIX:-concat}"
+LEVEL_BATCH_SIZES="${LEVEL_BATCH_SIZES:-fine:80,mid:32,coarse:16}"
 
-  export CUDA_VISIBLE_DEVICES=0,1
-  export TORCH_DISTRIBUTED_DEBUG=DETAIL
-  export TORCH_SHOW_CPP_STACKTRACES=1
-  export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
+SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-/mnt/mydisk/CLIP/.cache/pretrain_samples}"
+USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
+REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
+SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
 
-  torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \
-      --epochs "$EPOCHS" \
-      --learning_rate "$LEARNING_RATE" \
-      --weight_decay "$WEIGHT_DECAY" \
-      --adam_beta1 "$ADAM_BETA1" \
-      --adam_beta2 "$ADAM_BETA2" \
-      --per_gpu_batch_size "$PER_GPU_BATCH_SIZE" \
-      --accum_steps "$ACCUM_STEPS" \
-      --num_workers "$NUM_WORKERS" \
-      --embed_dim "$EMBED_DIM" \
-      --image_size "$IMAGE_SIZE" \
-      --max_length "$MAX_LENGTH" \
-      --num_frames "$NUM_FRAMES" \
-      --text_model_name "$TEXT_MODEL_NAME" \
-      --vision_pretrained_weights "$VISION_PRETRAINED_WEIGHTS" \
-      --video_root_folder "$VIDEO_ROOT_FOLDER" \
-      --ffmpeg_timeout "$FFMPEG_TIMEOUT" \
-      --max_retry "$MAX_RETRY" \
-      --assume_resized_video "$ASSUME_RESIZED_VIDEO" \
-      --main_csv_path "$MAIN_CSV_PATH" \
-      --annotations_root "$ANNOTATIONS_ROOT" \
-      --annotation_levels "$ANNOTATION_LEVELS" \
-      --level_mix "$LEVEL_MIX" \
-      --level_batch_sizes "$LEVEL_BATCH_SIZES" \
-      --samples_cache_dir "$SAMPLES_CACHE_DIR" \
-      --use_samples_cache "$USE_SAMPLES_CACHE" \
-      --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
-      --samples_cache_version "$SAMPLES_CACHE_VERSION" \
-      --use_swanlab "$USE_SWANLAB" \
-      --resume_from_checkpoint "/mnt/mydisk/CLIP/vlp_epoch_4.pt"
+LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
+LOCAL_TOPK_FRAMES="${LOCAL_TOPK_FRAMES:-2}"
+TEACHER_MIX="${TEACHER_MIX:-0.5}"
+LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
+DISTILL_WEIGHT="${DISTILL_WEIGHT:-0.1}"
+
+RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-/mnt/mydisk/CLIP/vlp_epoch_4.pt}"
+
+SAVE_ROOT="${SAVE_ROOT:-/mnt/mydisk/CLIP/outputs}"
+SAVE_PREFIX="${SAVE_PREFIX:-${SAVE_ROOT}/${EXP_NAME}/}"
+TB_LOGDIR="${TB_LOGDIR:-runs/${EXP_NAME}}"
+SWANLAB_LOGDIR="${SWANLAB_LOGDIR:-swanlog/${EXP_NAME}}"
+
+mkdir -p "$SAVE_PREFIX" "$TB_LOGDIR" "$SWANLAB_LOGDIR"
+
+export CUDA_VISIBLE_DEVICES
+export TORCH_DISTRIBUTED_DEBUG="${TORCH_DISTRIBUTED_DEBUG:-DETAIL}"
+export TORCH_SHOW_CPP_STACKTRACES="${TORCH_SHOW_CPP_STACKTRACES:-1}"
+export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
+export SWANLAB_LOGDIR
+export TB_LOGDIR
+export SAVE_PREFIX
+
+TRAIN_CMD=(
+  torchrun
+  --standalone
+  --nproc_per_node="$NPROC"
+  train_frozen_vis.py
+  --epochs "$EPOCHS"
+  --learning_rate "$LEARNING_RATE"
+  --weight_decay "$WEIGHT_DECAY"
+  --adam_beta1 "$ADAM_BETA1"
+  --adam_beta2 "$ADAM_BETA2"
+  --per_gpu_batch_size "$PER_GPU_BATCH_SIZE"
+  --accum_steps "$ACCUM_STEPS"
+  --num_workers "$NUM_WORKERS"
+  --embed_dim "$EMBED_DIM"
+  --image_size "$IMAGE_SIZE"
+  --max_length "$MAX_LENGTH"
+  --num_frames "$NUM_FRAMES"
+  --text_model_name "$TEXT_MODEL_NAME"
+  --vision_pretrained_weights "$VISION_PRETRAINED_WEIGHTS"
+  --video_root_folder "$VIDEO_ROOT_FOLDER"
+  --ffmpeg_timeout "$FFMPEG_TIMEOUT"
+  --max_retry "$MAX_RETRY"
+  --assume_resized_video "$ASSUME_RESIZED_VIDEO"
+  --main_csv_path "$MAIN_CSV_PATH"
+  --annotations_root "$ANNOTATIONS_ROOT"
+  --annotation_levels "$ANNOTATION_LEVELS"
+  --level_mix "$LEVEL_MIX"
+  --level_batch_sizes "$LEVEL_BATCH_SIZES"
+  --samples_cache_dir "$SAMPLES_CACHE_DIR"
+  --use_samples_cache "$USE_SAMPLES_CACHE"
+  --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE"
+  --samples_cache_version "$SAMPLES_CACHE_VERSION"
+  --use_swanlab "$USE_SWANLAB"
+  --local_temperature "$LOCAL_TEMPERATURE"
+  --local_topk_frames "$LOCAL_TOPK_FRAMES"
+  --teacher_mix "$TEACHER_MIX"
+  --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
+  --distill_weight "$DISTILL_WEIGHT"
+)
+
+if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
+  TRAIN_CMD+=(--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT")
+fi
+
+"${TRAIN_CMD[@]}"
