@@ -469,7 +469,11 @@ class VLP(nn.Module):
         return F.normalize(self.text.project(text_global_hidden), dim=-1)
 
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
-        video_global_hidden, _ = self._encode_image_tokens(image)
+        source_image = selection_image if (self.training and selection_image is not None) else image
+        if source_image is None:
+            raise ValueError("encode_training_pair requires image or selection_image.")
+
+        video_global_hidden, frame_tokens = self._encode_image_tokens(source_image)
         _, token_hidden, text_global_hidden = self.text(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -480,15 +484,14 @@ class VLP(nn.Module):
         selected_image_features = None
 
         if self.training and selection_image is not None:
-            _, selection_frame_tokens = self._encode_image_tokens(selection_image)
             frame_weights, pair_confidence = self._compute_frame_selection_weights(
-                frame_tokens=selection_frame_tokens,
+                frame_tokens=frame_tokens,
                 token_hidden=token_hidden,
                 attention_mask=attention_mask,
                 level_ids=level_ids,
             )
             selected_image_features = self._project_selected_video(
-                selection_frame_tokens,
+                frame_tokens,
                 frame_weights,
             )
             frame_entropy = self._normalized_entropy(frame_weights)

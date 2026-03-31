@@ -367,8 +367,9 @@ def clip_contrastive_loss(
     )
     rank = dist.get_rank()
     batch_size = image_features.size(0)
+    device = image_features.device
     logit_scale = model.module.logit_scale.exp()
-    labels = torch.arange(batch_size, device=images.device) + rank * batch_size
+    labels = torch.arange(batch_size, device=device) + rank * batch_size
 
     def _symmetric_contrastive(image_feats, text_feats):
         gathered_image = concat_all_gather(image_feats.detach())
@@ -741,9 +742,12 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images, selection_images, input_ids, attention_mask, level_ids = [
-                b.to(device, non_blocking=True) for b in batch
-            ]
+            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            selection_images = selection_images_cpu.to(device, non_blocking=True)
+            images = None
+            input_ids = input_ids.to(device, non_blocking=True)
+            attention_mask = attention_mask.to(device, non_blocking=True)
+            level_ids = level_ids.to(device, non_blocking=True)
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches

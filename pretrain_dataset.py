@@ -285,25 +285,37 @@ class PretrainDataset(Dataset):
         for _ in range(self.max_retry):
             item = self.samples[idx]
 
-            images = self._try_get_images(
-                item["video_path"],
-                item["start_time"],
-                item["end_time"],
-                expand_ratio=1.0,
-            )
+            expanded_images = None
+            if self.return_expanded_frames:
+                expanded_images = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=self.expanded_window_ratio,
+                )
+                if expanded_images is None:
+                    images = self._try_get_images(
+                        item["video_path"],
+                        item["start_time"],
+                        item["end_time"],
+                        expand_ratio=1.0,
+                    )
+                    expanded_images = images
+                else:
+                    images = expanded_images
+            else:
+                images = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=1.0,
+                )
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
                 if self.return_expanded_frames:
-                    expanded_images = self._try_get_images(
-                        item["video_path"],
-                        item["start_time"],
-                        item["end_time"],
-                        expand_ratio=self.expanded_window_ratio,
-                    )
-                    if expanded_images is None:
-                        expanded_images = images
+                    expanded_images = images
                 if self.return_level_id:
                     if self.return_expanded_frames:
                         return (
@@ -328,25 +340,37 @@ class PretrainDataset(Dataset):
         while True:
             item = self.samples[idx]
 
-            images = self._try_get_images(
-                item["video_path"],
-                item["start_time"],
-                item["end_time"],
-                expand_ratio=1.0,
-            )
+            expanded_images = None
+            if self.return_expanded_frames:
+                expanded_images = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=self.expanded_window_ratio,
+                )
+                if expanded_images is None:
+                    images = self._try_get_images(
+                        item["video_path"],
+                        item["start_time"],
+                        item["end_time"],
+                        expand_ratio=1.0,
+                    )
+                    expanded_images = images
+                else:
+                    images = expanded_images
+            else:
+                images = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=1.0,
+                )
 
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
                 if self.return_expanded_frames:
-                    expanded_images = self._try_get_images(
-                        item["video_path"],
-                        item["start_time"],
-                        item["end_time"],
-                        expand_ratio=self.expanded_window_ratio,
-                    )
-                    if expanded_images is None:
-                        expanded_images = images
+                    expanded_images = images
                 if self.return_level_id:
                     if self.return_expanded_frames:
                         return (
