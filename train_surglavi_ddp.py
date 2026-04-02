@@ -360,7 +360,7 @@ def train():
         pass
 
     amp_dtype = torch.bfloat16 if getattr(torch.cuda, "is_bf16_supported", lambda: False)() else torch.float16
-    scaler = GradScaler(enabled=(amp_dtype == torch.float16))
+    scaler = torch.amp.GradScaler("cuda", enabled=(amp_dtype == torch.float16))
 
     if rank == 0:
         print(f"[rank0] world_size={world_size} num_frames={args.num_frames} per_gpu_batch_size={args.per_gpu_batch_size} amp_dtype={amp_dtype}")
@@ -438,7 +438,7 @@ def train():
     )
 
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
-    model = SurgCLIPAdapter(surgclip_core).to(device)
+    model = SurgCLIPAdapter(surgclip_core)
     finetune_info = configure_finetuning(
         model,
         finetune_mode=args.finetune_mode,
@@ -447,6 +447,7 @@ def train():
         lora_dropout=args.lora_dropout,
         lora_targets=parse_comma_separated_list(args.lora_targets),
     )
+    model = model.to(device)
 
     total_params, trainable_params = count_parameters(model)
 
@@ -466,8 +467,9 @@ def train():
         bucket_cap_mb=int(os.environ.get("DDP_BUCKET_MB", 64)),
     )
 
+    trainable_params = [param for param in model.parameters() if param.requires_grad]
     optimizer = AdamW(
-        model.parameters(),
+        trainable_params,
         lr=args.learning_rate,
         betas=(args.adam_beta1, args.adam_beta2),
         weight_decay=args.weight_decay,
