@@ -120,7 +120,7 @@ def apply_lora_to_linear_layers(module: nn.Module, target_substrings, rank: int,
 
 
 def configure_finetuning(
-    model: SurgCLIPAdapter,
+    model: "SurgCLIPAdapter",
     finetune_mode: str,
     lora_rank: int,
     lora_alpha: float,
