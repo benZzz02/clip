@@ -449,7 +449,7 @@ def train():
     )
     model = model.to(device)
 
-    total_params, trainable_params = count_parameters(model)
+    total_params, trainable_param_count = count_parameters(model)
 
     if os.environ.get("USE_COMPILE", "0") == "1":
         try:
@@ -483,7 +483,7 @@ def train():
     if rank == 0:
         os.makedirs(args.save_dir, exist_ok=True)
         print(f"[rank0] finetune_mode={args.finetune_mode}")
-        print(f"[rank0] trainable_params={trainable_params:,}/{total_params:,}")
+        print(f"[rank0] trainable_params={trainable_param_count:,}/{total_params:,}")
         if finetune_info["replaced_modules"]:
             print(f"[rank0] lora_wrapped_modules={len(finetune_info['replaced_modules'])}")
             preview = finetune_info["replaced_modules"][:10]
