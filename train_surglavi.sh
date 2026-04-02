@@ -8,8 +8,8 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
-NPROC=1
-EXP_NAME="surglavi_lora_single128"
+NPROC=3
+EXP_NAME="surglavi_lora_3gpu_bs128"
 
 PER_GPU_BATCH_SIZE=128
 ACCUM_STEPS=1
@@ -36,6 +36,10 @@ ANNOTATIONS_ROOT="/data/nfs_data/CLIP/surglavi_level_csv"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
 SAMPLE_MODE="center"
+SAMPLES_CACHE_DIR="/data/nfs_data/CLIP/.cache/pretrain_samples"
+USE_SAMPLES_CACHE=true
+REBUILD_SAMPLES_CACHE=true
+SAMPLES_CACHE_VERSION="nfs_v1"
 
 FINETUNE_MODE="lora"
 LORA_RANK=8
@@ -50,7 +54,7 @@ SAVE_NAME="final.pt"
 TB_LOGDIR="runs/${EXP_NAME}"
 RESUME_FROM_CHECKPOINT=""
 
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=0,1,2
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
@@ -80,6 +84,10 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --annotation_levels "$ANNOTATION_LEVELS" \
     --level_mix "$LEVEL_MIX" \
     --sample_mode "$SAMPLE_MODE" \
+    --samples_cache_dir "$SAMPLES_CACHE_DIR" \
+    --use_samples_cache "$USE_SAMPLES_CACHE" \
+    --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
+    --samples_cache_version "$SAMPLES_CACHE_VERSION" \
     --save_dir "$SAVE_DIR" \
     --save_every "$SAVE_EVERY" \
     --save_name "$SAVE_NAME" \
