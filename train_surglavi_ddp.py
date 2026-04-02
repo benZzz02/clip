@@ -306,6 +306,18 @@ def parse_args():
     p.add_argument("--level_seed", type=int, default=int(os.environ.get("PRETRAIN_LEVEL_SEED", 42)))
     p.add_argument("--sample_mode", type=str, default=os.environ.get("PRETRAIN_SAMPLE_MODE", "random"),
                    choices=("random", "center"))
+    p.add_argument("--samples_cache_dir", type=str, default=os.environ.get("SAMPLES_CACHE_DIR", ".cache/pretrain_samples"))
+    p.add_argument(
+        "--use_samples_cache",
+        type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
+        default=os.environ.get("USE_SAMPLES_CACHE", "1").lower() in {"1", "true", "t", "yes", "y"},
+    )
+    p.add_argument(
+        "--rebuild_samples_cache",
+        type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
+        default=os.environ.get("REBUILD_SAMPLES_CACHE", "0").lower() in {"1", "true", "t", "yes", "y"},
+    )
+    p.add_argument("--samples_cache_version", type=str, default=os.environ.get("SAMPLES_CACHE_VERSION", "v1"))
 
     # tokenizer: 用于 caption -> input_ids/attention_mask，同时对齐 SurgCLIP 文本编码器权重
     p.add_argument("--tokenizer_name", type=str, default=os.environ.get("TOKENIZER_NAME", "bert-base-uncased"))
@@ -368,6 +380,9 @@ def train():
         print(f"[rank0] surgclip_model_name={args.surgclip_model_name} tokenizer_name={args.tokenizer_name}")
         print(f"[rank0] seed={args.seed}")
         print(f"[rank0] gradient_checkpointing={args.gradient_checkpointing}")
+        print(f"[rank0] video_root_folder={args.video_root_folder}")
+        print(f"[rank0] main_csv_path={args.main_csv_path}")
+        print(f"[rank0] samples_cache_dir={args.samples_cache_dir} use_samples_cache={args.use_samples_cache} rebuild_samples_cache={args.rebuild_samples_cache} samples_cache_version={args.samples_cache_version}")
         if args.annotations_root:
             levels = args.annotation_levels if args.annotation_levels else "coarse,mid,fine"
             print(f"[rank0] annotations_root={args.annotations_root} annotation_levels={levels} level_mix={args.level_mix} sample_mode={args.sample_mode}")
@@ -391,6 +406,10 @@ def train():
         annotation_levels=(args.annotation_levels or None),
         level_mix=args.level_mix,
         level_seed=args.level_seed,
+        samples_cache_dir=args.samples_cache_dir,
+        use_samples_cache=args.use_samples_cache,
+        rebuild_samples_cache=args.rebuild_samples_cache,
+        samples_cache_version=args.samples_cache_version,
     )
 
     train_sampler = DistributedSampler(
