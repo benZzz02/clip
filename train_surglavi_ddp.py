@@ -1,10 +1,15 @@
 import os
+import sys
+import json
 import math
+import random
 import argparse
 import contextlib
 from types import SimpleNamespace
 
+import numpy as np
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
@@ -36,6 +41,125 @@ def setup_ddp():
 def cleanup_ddp():
     if dist.is_initialized():
         dist.destroy_process_group()
+
+
+def seed_everything(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def build_worker_init_fn(base_seed: int, rank: int):
+    def _worker_init_fn(worker_id: int):
+        worker_seed = base_seed + rank * 1000 + worker_id
+        random.seed(worker_seed)
+        np.random.seed(worker_seed)
+        torch.manual_seed(worker_seed)
+
+    return _worker_init_fn
+
+
+class LoRALinear(nn.Module):
+    def __init__(self, base_layer: nn.Linear, rank: int, alpha: float, dropout: float):
+        super().__init__()
+        if rank <= 0:
+            raise ValueError(f"LoRA rank must be positive, got {rank}")
+
+        self.in_features = base_layer.in_features
+        self.out_features = base_layer.out_features
+        self.rank = int(rank)
+        self.scale = float(alpha) / float(rank)
+        self.dropout = nn.Dropout(float(dropout)) if dropout > 0 else nn.Identity()
+
+        self.weight = nn.Parameter(base_layer.weight.detach().clone(), requires_grad=False)
+        if base_layer.bias is not None:
+            self.bias = nn.Parameter(base_layer.bias.detach().clone(), requires_grad=False)
+        else:
+            self.bias = None
+
+        self.lora_A = nn.Parameter(torch.empty(self.rank, self.in_features))
+        self.lora_B = nn.Parameter(torch.zeros(self.out_features, self.rank))
+        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        base_out = F.linear(x, self.weight, self.bias)
+        lora_hidden = F.linear(self.dropout(x), self.lora_A, bias=None)
+        lora_out = F.linear(lora_hidden, self.lora_B, bias=None)
+        return base_out + self.scale * lora_out
+
+
+def parse_comma_separated_list(spec: str):
+    return [item.strip() for item in spec.split(",") if item.strip()]
+
+
+def freeze_module_parameters(module: nn.Module):
+    for param in module.parameters():
+        param.requires_grad = False
+
+
+def apply_lora_to_linear_layers(module: nn.Module, target_substrings, rank: int, alpha: float, dropout: float, prefix: str = ""):
+    replaced = []
+    for child_name, child in list(module.named_children()):
+        full_name = f"{prefix}.{child_name}" if prefix else child_name
+        if isinstance(child, nn.Linear) and any(pattern in full_name for pattern in target_substrings):
+            setattr(module, child_name, LoRALinear(child, rank=rank, alpha=alpha, dropout=dropout))
+            replaced.append(full_name)
+            continue
+        replaced.extend(
+            apply_lora_to_linear_layers(
+                child,
+                target_substrings=target_substrings,
+                rank=rank,
+                alpha=alpha,
+                dropout=dropout,
+                prefix=full_name,
+            )
+        )
+    return replaced
+
+
+def configure_finetuning(
+    model: SurgCLIPAdapter,
+    finetune_mode: str,
+    lora_rank: int,
+    lora_alpha: float,
+    lora_dropout: float,
+    lora_targets,
+):
+    finetune_mode = finetune_mode.lower()
+    if finetune_mode not in {"full", "lora"}:
+        raise ValueError(f"Unsupported finetune_mode: {finetune_mode}")
+
+    if finetune_mode == "full":
+        return {"mode": "full", "replaced_modules": []}
+
+    freeze_module_parameters(model)
+    replaced = apply_lora_to_linear_layers(
+        model,
+        target_substrings=lora_targets,
+        rank=lora_rank,
+        alpha=lora_alpha,
+        dropout=lora_dropout,
+    )
+    if not replaced:
+        raise RuntimeError(f"No linear layers matched LoRA targets: {lora_targets}")
+
+    model.surgclip.vision_proj.weight.requires_grad = True
+    if model.surgclip.vision_proj.bias is not None:
+        model.surgclip.vision_proj.bias.requires_grad = True
+    model.surgclip.text_proj.weight.requires_grad = True
+    if model.surgclip.text_proj.bias is not None:
+        model.surgclip.text_proj.bias.requires_grad = True
+    model.logit_scale.requires_grad = True
+
+    return {"mode": "lora", "replaced_modules": replaced}
+
+
+def count_parameters(module: nn.Module):
+    total = sum(param.numel() for param in module.parameters())
+    trainable = sum(param.numel() for param in module.parameters() if param.requires_grad)
+    return total, trainable
 
 
 def collate_fn_skip_corrupted(batch):
@@ -194,6 +318,26 @@ def parse_args():
     p.add_argument("--save_every", type=int, default=int(os.environ.get("SAVE_EVERY", 0)),
                    help="Save checkpoint every N epochs. 0 = only save final.")
     p.add_argument("--save_name", type=str, default=os.environ.get("SAVE_NAME", "surglavi_final.pt"))
+    p.add_argument("--seed", type=int, default=int(os.environ.get("SEED", 42)))
+    p.add_argument("--finetune_mode", type=str, default=os.environ.get("FINETUNE_MODE", "lora"),
+                   choices=("full", "lora"))
+    p.add_argument("--lora_rank", type=int, default=int(os.environ.get("LORA_RANK", 8)))
+    p.add_argument("--lora_alpha", type=float, default=float(os.environ.get("LORA_ALPHA", 16)))
+    p.add_argument("--lora_dropout", type=float, default=float(os.environ.get("LORA_DROPOUT", 0.05)))
+    p.add_argument(
+        "--gradient_checkpointing",
+        type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
+        default=os.environ.get("GRADIENT_CHECKPOINTING", "1").lower() in {"1", "true", "t", "yes", "y"},
+    )
+    p.add_argument(
+        "--lora_targets",
+        type=str,
+        default=os.environ.get(
+            "LORA_TARGETS",
+            "text_encoder.encoder.layer.,vision_encoder.model.blocks."
+        ),
+        help="Comma-separated substrings used to select Linear layers for LoRA wrapping.",
+    )
 
     return p.parse_args()
 
@@ -204,6 +348,7 @@ def train():
     rank = setup_ddp()
     world_size = dist.get_world_size()
     device = torch.device("cuda", rank)
+    seed_everything(args.seed + rank)
 
     # perf
     torch.backends.cuda.matmul.allow_tf32 = True
@@ -221,6 +366,8 @@ def train():
         print(f"[rank0] world_size={world_size} num_frames={args.num_frames} per_gpu_batch_size={args.per_gpu_batch_size} amp_dtype={amp_dtype}")
         print(f"[rank0] save_dir={args.save_dir} save_every={args.save_every} save_name={args.save_name}")
         print(f"[rank0] surgclip_model_name={args.surgclip_model_name} tokenizer_name={args.tokenizer_name}")
+        print(f"[rank0] seed={args.seed}")
+        print(f"[rank0] gradient_checkpointing={args.gradient_checkpointing}")
         if args.annotations_root:
             levels = args.annotation_levels if args.annotation_levels else "coarse,mid,fine"
             print(f"[rank0] annotations_root={args.annotations_root} annotation_levels={levels} level_mix={args.level_mix} sample_mode={args.sample_mode}")
@@ -251,6 +398,7 @@ def train():
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
+        seed=args.seed,
     )
 
     train_loader = DataLoader(
@@ -263,6 +411,7 @@ def train():
         collate_fn=collate_fn_skip_corrupted,
         persistent_workers=(args.num_workers > 0),
         prefetch_factor=2 if args.num_workers > 0 else None,
+        worker_init_fn=build_worker_init_fn(args.seed, rank),
     )
 
     config = get_config(
@@ -284,11 +433,22 @@ def train():
                     "pretrained": args.tokenizer_name,
                 },
             },
+            "gradient_checkpointing": bool(args.gradient_checkpointing),
         },
     )
 
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
     model = SurgCLIPAdapter(surgclip_core).to(device)
+    finetune_info = configure_finetuning(
+        model,
+        finetune_mode=args.finetune_mode,
+        lora_rank=args.lora_rank,
+        lora_alpha=args.lora_alpha,
+        lora_dropout=args.lora_dropout,
+        lora_targets=parse_comma_separated_list(args.lora_targets),
+    )
+
+    total_params, trainable_params = count_parameters(model)
 
     if os.environ.get("USE_COMPILE", "0") == "1":
         try:
@@ -320,6 +480,19 @@ def train():
 
     if rank == 0:
         os.makedirs(args.save_dir, exist_ok=True)
+        print(f"[rank0] finetune_mode={args.finetune_mode}")
+        print(f"[rank0] trainable_params={trainable_params:,}/{total_params:,}")
+        if finetune_info["replaced_modules"]:
+            print(f"[rank0] lora_wrapped_modules={len(finetune_info['replaced_modules'])}")
+            preview = finetune_info["replaced_modules"][:10]
+            print(f"[rank0] lora_preview={preview}")
+        with open(os.path.join(args.save_dir, "train_args.json"), "w", encoding="utf-8") as f:
+            json.dump(vars(args), f, ensure_ascii=False, indent=2)
+        with open(os.path.join(args.save_dir, "train_command.txt"), "w", encoding="utf-8") as f:
+            f.write("python " + " ".join(sys.argv) + "\n")
+            f.write(f"cwd={os.getcwd()}\n")
+            f.write(f"CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES', '')}\n")
+            f.write(f"TB_LOGDIR={os.environ.get('TB_LOGDIR', '')}\n")
 
     start_epoch = 0
     global_step = 0
