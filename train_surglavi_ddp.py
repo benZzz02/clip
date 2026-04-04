@@ -788,14 +788,14 @@ def train():
 
             if len(batch) == 5:
                 images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
-                images = images_cpu.to(device, non_blocking=True)
+                images = None
                 selection_images = selection_images_cpu.to(device, non_blocking=True)
                 input_ids = input_ids.to(device, non_blocking=True)
                 attention_mask = attention_mask.to(device, non_blocking=True)
                 level_ids = level_ids.to(device, non_blocking=True)
             elif len(batch) == 4:
                 images_cpu, selection_images_cpu, input_ids, attention_mask = batch
-                images = images_cpu.to(device, non_blocking=True)
+                images = None
                 selection_images = selection_images_cpu.to(device, non_blocking=True)
                 input_ids = input_ids.to(device, non_blocking=True)
                 attention_mask = attention_mask.to(device, non_blocking=True)
