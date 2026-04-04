@@ -9,9 +9,9 @@ fi
 set -u
 
 NPROC=3
-EXP_NAME="surglavi_lora_3gpu_bs128"
+EXP_NAME="surglavi_lora_3gpu_bs100"
 
-PER_GPU_BATCH_SIZE=128
+PER_GPU_BATCH_SIZE=100
 ACCUM_STEPS=1
 NUM_WORKERS=8
 NUM_FRAMES=8

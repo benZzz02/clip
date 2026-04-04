@@ -8,7 +8,7 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
-CKPT="${CKPT:-/data/surglavi_checkpoint/surglavi_16frame_run1/surglavi_epoch_50.pt}"
+CKPT="${CKPT:-/data/nfs_data/CLIP/surglavi_checkpoint/surglavi_lora_3gpu_bs100/surglavi_epoch_50.pt}"
 OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_surglavi}"
 CUDA_DEVICE="${CUDA_DEVICE:-1}"
 
