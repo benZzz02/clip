@@ -196,7 +196,22 @@ def load_model_checkpoint(model, ckpt_path, device):
     print("Missing keys:", msg.missing_keys)
     print("Unexpected keys:", msg.unexpected_keys)
 
-    if msg.missing_keys or msg.unexpected_keys:
+    allowed_missing_prefixes = (
+        "frame_local_projection.",
+    )
+    allowed_unexpected_prefixes = (
+        "frame_local_projection.",
+    )
+    disallowed_missing = [
+        key for key in msg.missing_keys
+        if not key.startswith(allowed_missing_prefixes)
+    ]
+    disallowed_unexpected = [
+        key for key in msg.unexpected_keys
+        if not key.startswith(allowed_unexpected_prefixes)
+    ]
+
+    if disallowed_missing or disallowed_unexpected:
         raise RuntimeError(
             f"Checkpoint 与当前模型不匹配。\n"
             f"Missing keys: {msg.missing_keys}\n"

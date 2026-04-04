@@ -36,6 +36,7 @@ ANNOTATIONS_ROOT="/data/nfs_data/CLIP/surglavi_level_csv"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
 SAMPLE_MODE="center"
+LEVEL_BATCH_SIZES="fine:52,mid:32,coarse:16"
 SAMPLES_CACHE_DIR="/data/nfs_data/CLIP/.cache/pretrain_samples"
 USE_SAMPLES_CACHE=true
 REBUILD_SAMPLES_CACHE=true
@@ -47,8 +48,12 @@ LORA_ALPHA=16
 LORA_DROPOUT=0.05
 LORA_TARGETS="text_encoder.encoder.layer.,vision_encoder.model.blocks."
 GRADIENT_CHECKPOINTING=1
+LOCAL_TEMPERATURE=0.15
+LEVEL_FRAME_TEMPERATURES="0.35,0.8,1.6"
+TRAIN_WINDOW_EXPAND_RATIO=1.5
+SELECTION_LOSS_WEIGHT=0.5
 
-SAVE_DIR="/data/nfs_data/CLIP/surglavi_checkpoint/${EXP_NAME}"
+SAVE_DIR="/data/surglavi_checkpoint/${EXP_NAME}"
 SAVE_EVERY=5
 SAVE_NAME="final.pt"
 TB_LOGDIR="runs/${EXP_NAME}"
@@ -83,6 +88,7 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --annotations_root "$ANNOTATIONS_ROOT" \
     --annotation_levels "$ANNOTATION_LEVELS" \
     --level_mix "$LEVEL_MIX" \
+    --level_batch_sizes "$LEVEL_BATCH_SIZES" \
     --sample_mode "$SAMPLE_MODE" \
     --samples_cache_dir "$SAMPLES_CACHE_DIR" \
     --use_samples_cache "$USE_SAMPLES_CACHE" \
@@ -98,4 +104,8 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --lora_dropout "$LORA_DROPOUT" \
     --gradient_checkpointing "$GRADIENT_CHECKPOINTING" \
     --lora_targets "$LORA_TARGETS" \
+    --local_temperature "$LOCAL_TEMPERATURE" \
+    --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
+    --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
+    --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
     ${RESUME_FROM_CHECKPOINT:+--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT"}

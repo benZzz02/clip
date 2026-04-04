@@ -21,6 +21,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+from mixed_level_batch_sampler import DistributedMixedLevelBatchSampler
 from pretrain_dataset import PretrainDataset
 
 # 你复制 surgclip/ 到仓库根目录后，这个 import 才会生效
@@ -151,6 +152,9 @@ def configure_finetuning(
     model.surgclip.text_proj.weight.requires_grad = True
     if model.surgclip.text_proj.bias is not None:
         model.surgclip.text_proj.bias.requires_grad = True
+    model.frame_local_projection.weight.requires_grad = True
+    if model.frame_local_projection.bias is not None:
+        model.frame_local_projection.bias.requires_grad = True
     model.logit_scale.requires_grad = True
 
     return {"mode": "lora", "replaced_modules": replaced}
@@ -160,6 +164,28 @@ def count_parameters(module: nn.Module):
     total = sum(param.numel() for param in module.parameters())
     trainable = sum(param.numel() for param in module.parameters() if param.requires_grad)
     return total, trainable
+
+
+def parse_float_list(spec: str, expected_len: int = None):
+    values = [float(x.strip()) for x in spec.split(",") if x.strip()]
+    if expected_len is not None and len(values) != expected_len:
+        raise argparse.ArgumentTypeError(
+            f"Expected {expected_len} comma-separated floats, got {len(values)} from: {spec}"
+        )
+    return tuple(values)
+
+
+def parse_level_batch_sizes(spec: str):
+    out = {}
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        level, count = item.split(":")
+        out[level.strip()] = int(count.strip())
+    if not out:
+        raise ValueError("level_batch_sizes is empty")
+    return out
 
 
 def collate_fn_skip_corrupted(batch):
@@ -189,6 +215,13 @@ class SurgCLIPAdapter(torch.nn.Module):
     def __init__(self, surgclip_model: SurgCLIP):
         super().__init__()
         self.surgclip = surgclip_model
+        self.frame_local_projection = nn.Linear(self.surgclip.embed_dim, self.surgclip.embed_dim, bias=False)
+        self.local_temperature = 0.15
+        self.register_buffer(
+            "level_frame_temperatures",
+            torch.tensor((0.35, 0.8, 1.6), dtype=torch.float32),
+            persistent=False,
+        )
 
         # SurgCLIP 内部是 temp 参数（用于除法）
         # 为了兼容你现有 loss 写法，我们引入 logit_scale，并强制 temp = 1/logit_scale
@@ -197,6 +230,15 @@ class SurgCLIPAdapter(torch.nn.Module):
             init_temp = float(self.surgclip.temp.detach().cpu().item())
             init_logit_scale = math.log(1.0 / max(init_temp, 1e-6))
         self.logit_scale = torch.nn.Parameter(torch.tensor(init_logit_scale, dtype=torch.float32))
+        self.last_frame_weights = None
+        self.last_pair_confidence = None
+        self.last_frame_entropy = None
+        self.last_frame_peak = None
+
+    def configure_window_denoise(self, local_temperature: float, level_frame_temperatures):
+        self.local_temperature = float(local_temperature)
+        temps = torch.tensor(level_frame_temperatures, dtype=torch.float32, device=self.level_frame_temperatures.device)
+        self.level_frame_temperatures = temps
 
     def _sync_temp_from_logit_scale(self):
         # temp = 1 / exp(logit_scale)
@@ -241,31 +283,173 @@ class SurgCLIPAdapter(torch.nn.Module):
         feats = F.normalize(feats, dim=-1)
         return feats
 
+    def _get_level_values(self, level_ids, values, default_value, batch_size, device, dtype):
+        if level_ids is None:
+            return torch.full((batch_size,), float(default_value), device=device, dtype=dtype)
+        level_ids = level_ids.to(device=device, dtype=torch.long).clamp(min=0, max=len(values) - 1)
+        return values.to(device=device, dtype=dtype)[level_ids]
 
-def clip_contrastive_loss(model, images, input_ids, attention_mask):
-    image_features = model.module.encode_image(images)  # [B, D]
-    text_features = model.module.encode_text(input_ids, attention_mask)  # [B, D]
+    def _masked_max(self, scores, mask, dim):
+        if mask is None:
+            return scores.max(dim=dim).values
+        masked_scores = scores.masked_fill(~mask, -1e4)
+        return masked_scores.max(dim=dim).values
 
+    def _masked_mean(self, scores, mask, dim):
+        if mask is None:
+            return scores.mean(dim=dim)
+        masked_scores = scores * mask.to(dtype=scores.dtype)
+        denom = mask.sum(dim=dim).clamp(min=1).to(dtype=scores.dtype)
+        return masked_scores.sum(dim=dim) / denom
+
+    def _normalize_scores(self, scores, temperatures=1.0):
+        if not torch.is_tensor(temperatures):
+            temperatures = torch.full(
+                (scores.size(0),),
+                float(temperatures),
+                device=scores.device,
+                dtype=scores.dtype,
+            )
+        temperatures = temperatures.to(device=scores.device, dtype=scores.dtype).clamp(min=1e-4)
+        scaled_scores = scores / temperatures.unsqueeze(-1)
+        weights = F.softmax(scaled_scores, dim=-1)
+        return weights / weights.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+
+    def _normalized_entropy(self, weights):
+        norm = torch.log(
+            torch.full(
+                (weights.size(0),),
+                float(max(weights.size(-1), 2)),
+                device=weights.device,
+                dtype=weights.dtype,
+            )
+        )
+        entropy = -(weights.clamp(min=1e-8).log() * weights).sum(dim=-1)
+        return entropy / norm.clamp(min=1e-6)
+
+    def _project_video_global(self, pooled_vision: torch.Tensor) -> torch.Tensor:
+        if pooled_vision.ndim == 3:
+            pooled_vision = pooled_vision.mean(dim=1)
+        feats = self.surgclip.vision_proj(pooled_vision)
+        return F.normalize(feats, dim=-1)
+
+    def _project_selected_video(self, pooled_vision: torch.Tensor, frame_weights: torch.Tensor) -> torch.Tensor:
+        if pooled_vision.ndim != 3:
+            return self._project_video_global(pooled_vision)
+        selected_hidden = torch.sum(frame_weights.unsqueeze(-1) * pooled_vision, dim=1)
+        feats = self.surgclip.vision_proj(selected_hidden)
+        return F.normalize(feats, dim=-1)
+
+    def _compute_frame_selection_weights(self, pooled_vision, text_embeds, attention_mask, level_ids=None):
+        if pooled_vision.ndim != 3:
+            batch_size = pooled_vision.size(0)
+            frame_weights = torch.ones(batch_size, 1, device=pooled_vision.device, dtype=pooled_vision.dtype)
+            confidence = torch.ones(batch_size, device=pooled_vision.device, dtype=pooled_vision.dtype)
+            return frame_weights, confidence
+
+        batch_size = pooled_vision.size(0)
+        dtype = pooled_vision.dtype
+        device = pooled_vision.device
+        token_mask = attention_mask.bool()
+
+        frame_local = F.normalize(self.frame_local_projection(self.surgclip.vision_proj(pooled_vision)), dim=-1)
+        token_local = F.normalize(self.surgclip.text_proj(text_embeds), dim=-1)
+        raw_alignment = torch.matmul(frame_local, token_local.transpose(1, 2))
+        scaled_alignment = raw_alignment / max(self.local_temperature, 1e-4)
+
+        frame_scores = self._masked_max(
+            scaled_alignment,
+            token_mask.unsqueeze(1),
+            dim=-1,
+        )
+        frame_temps = self._get_level_values(
+            level_ids,
+            self.level_frame_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+        frame_weights = self._normalize_scores(frame_scores, temperatures=frame_temps)
+
+        frame_best = self._masked_max(raw_alignment, token_mask.unsqueeze(1), dim=-1)
+        frame_mean = self._masked_mean(raw_alignment, token_mask.unsqueeze(1), dim=-1)
+        frame_margin = F.relu(frame_best - frame_mean)
+        confidence = (frame_margin.mean(dim=-1) / 0.35).clamp(min=0.0, max=1.0)
+        return frame_weights, confidence.detach()
+
+    def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
+        self._sync_temp_from_logit_scale()
+
+        source_image = selection_image if (self.training and selection_image is not None) else image
+        if source_image is None:
+            raise ValueError("encode_training_pair requires image or selection_image.")
+
+        text = SimpleNamespace(input_ids=input_ids, attention_mask=attention_mask)
+        text_embeds, pooled_text = self.surgclip.encode_text(text)
+        _, pooled_vision = self.surgclip.encode_vision(source_image)
+
+        image_features = self._project_video_global(pooled_vision)
+        text_features = F.normalize(self.surgclip.text_proj(pooled_text), dim=-1)
+        selected_image_features = None
+
+        if self.training and selection_image is not None:
+            frame_weights, pair_confidence = self._compute_frame_selection_weights(
+                pooled_vision=pooled_vision,
+                text_embeds=text_embeds,
+                attention_mask=attention_mask,
+                level_ids=level_ids,
+            )
+            selected_image_features = self._project_selected_video(pooled_vision, frame_weights)
+            frame_entropy = self._normalized_entropy(frame_weights)
+            self.last_frame_weights = frame_weights.detach()
+            self.last_pair_confidence = pair_confidence.detach()
+            self.last_frame_entropy = frame_entropy.detach()
+            self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+        else:
+            self.last_frame_weights = None
+            self.last_pair_confidence = None
+            self.last_frame_entropy = None
+            self.last_frame_peak = None
+
+        return image_features, selected_image_features, text_features
+
+
+def clip_contrastive_loss(model, images, selection_images, input_ids, attention_mask, level_ids, selection_loss_weight=0.5):
     rank = dist.get_rank()
+    image_features, selected_image_features, text_features = model.module.encode_training_pair(
+        image=images,
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        level_ids=level_ids,
+        selection_image=selection_images,
+    )
     batch_size = image_features.size(0)
-
-    gathered_image = concat_all_gather(image_features.detach())
-    gathered_text = concat_all_gather(text_features.detach())
-
-    gathered_image[rank] = image_features
-    gathered_text[rank] = text_features
-
-    all_image_features = torch.cat(gathered_image, dim=0)  # [B*W, D]
-    all_text_features = torch.cat(gathered_text, dim=0)    # [B*W, D]
-
+    device = image_features.device
     logit_scale = model.module.logit_scale.exp()
-    logits_per_image = logit_scale * image_features @ all_text_features.t()
-    logits_per_text = logit_scale * text_features @ all_image_features.t()
+    labels = torch.arange(batch_size, device=device) + rank * batch_size
 
-    labels = torch.arange(batch_size, device=images.device) + rank * batch_size
-    loss_i = F.cross_entropy(logits_per_image, labels)
-    loss_t = F.cross_entropy(logits_per_text, labels)
-    return (loss_i + loss_t) / 2.0
+    def _symmetric_contrastive(image_feats, text_feats):
+        gathered_image = concat_all_gather(image_feats.detach())
+        gathered_text = concat_all_gather(text_feats.detach())
+
+        gathered_image[rank] = image_feats
+        gathered_text[rank] = text_feats
+
+        all_image_features = torch.cat(gathered_image, dim=0)
+        all_text_features = torch.cat(gathered_text, dim=0)
+
+        logits_per_image = logit_scale * image_feats @ all_text_features.t()
+        logits_per_text = logit_scale * text_feats @ all_image_features.t()
+        loss_i = F.cross_entropy(logits_per_image, labels)
+        loss_t = F.cross_entropy(logits_per_text, labels)
+        return 0.5 * (loss_i + loss_t)
+
+    base_loss = _symmetric_contrastive(image_features, text_features)
+    if selected_image_features is None:
+        return base_loss
+    selection_loss = _symmetric_contrastive(selected_image_features, text_features)
+    return base_loss + selection_loss_weight * selection_loss
 
 
 def parse_args():
@@ -304,6 +488,7 @@ def parse_args():
     p.add_argument("--level_mix", type=str, default=os.environ.get("PRETRAIN_LEVEL_MIX", "concat"),
                    choices=("concat", "balanced"))
     p.add_argument("--level_seed", type=int, default=int(os.environ.get("PRETRAIN_LEVEL_SEED", 42)))
+    p.add_argument("--level_batch_sizes", type=str, default=os.environ.get("LEVEL_BATCH_SIZES", "fine:80,mid:32,coarse:16"))
     p.add_argument("--sample_mode", type=str, default=os.environ.get("PRETRAIN_SAMPLE_MODE", "random"),
                    choices=("random", "center"))
     p.add_argument("--samples_cache_dir", type=str, default=os.environ.get("SAMPLES_CACHE_DIR", ".cache/pretrain_samples"))
@@ -350,6 +535,14 @@ def parse_args():
         ),
         help="Comma-separated substrings used to select Linear layers for LoRA wrapping.",
     )
+    p.add_argument("--local_temperature", type=float, default=float(os.environ.get("LOCAL_TEMPERATURE", 0.15)))
+    p.add_argument(
+        "--level_frame_temperatures",
+        type=lambda s: parse_float_list(s, expected_len=3),
+        default=parse_float_list(os.environ.get("LEVEL_FRAME_TEMPERATURES", "0.35,0.8,1.6"), expected_len=3),
+    )
+    p.add_argument("--train_window_expand_ratio", type=float, default=float(os.environ.get("TRAIN_WINDOW_EXPAND_RATIO", 1.5)))
+    p.add_argument("--selection_loss_weight", type=float, default=float(os.environ.get("SELECTION_LOSS_WEIGHT", 0.5)))
 
     return p.parse_args()
 
@@ -383,9 +576,11 @@ def train():
         print(f"[rank0] video_root_folder={args.video_root_folder}")
         print(f"[rank0] main_csv_path={args.main_csv_path}")
         print(f"[rank0] samples_cache_dir={args.samples_cache_dir} use_samples_cache={args.use_samples_cache} rebuild_samples_cache={args.rebuild_samples_cache} samples_cache_version={args.samples_cache_version}")
+        print(f"[rank0] local_temperature={args.local_temperature} level_frame_temperatures={args.level_frame_temperatures}")
+        print(f"[rank0] train_window_expand_ratio={args.train_window_expand_ratio} selection_loss_weight={args.selection_loss_weight}")
         if args.annotations_root:
             levels = args.annotation_levels if args.annotation_levels else "coarse,mid,fine"
-            print(f"[rank0] annotations_root={args.annotations_root} annotation_levels={levels} level_mix={args.level_mix} sample_mode={args.sample_mode}")
+            print(f"[rank0] annotations_root={args.annotations_root} annotation_levels={levels} level_mix={args.level_mix} sample_mode={args.sample_mode} level_batch_sizes={args.level_batch_sizes}")
         else:
             print(f"[rank0] annotations_folder={args.annotations_folder} sample_mode={args.sample_mode}")
 
@@ -406,32 +601,63 @@ def train():
         annotation_levels=(args.annotation_levels or None),
         level_mix=args.level_mix,
         level_seed=args.level_seed,
+        return_level_id=bool(args.annotations_root or args.annotation_levels),
+        return_expanded_frames=True,
+        expanded_window_ratio=args.train_window_expand_ratio,
         samples_cache_dir=args.samples_cache_dir,
         use_samples_cache=args.use_samples_cache,
         rebuild_samples_cache=args.rebuild_samples_cache,
         samples_cache_version=args.samples_cache_version,
     )
 
-    train_sampler = DistributedSampler(
-        train_dataset,
-        num_replicas=world_size,
-        rank=rank,
-        shuffle=True,
-        seed=args.seed,
-    )
-
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=args.per_gpu_batch_size,
-        num_workers=args.num_workers,
-        pin_memory=True,
-        drop_last=True,
-        sampler=train_sampler,
-        collate_fn=collate_fn_skip_corrupted,
-        persistent_workers=(args.num_workers > 0),
-        prefetch_factor=2 if args.num_workers > 0 else None,
-        worker_init_fn=build_worker_init_fn(args.seed, rank),
-    )
+    use_mixed_level_batches = bool(args.annotations_root or args.annotation_levels)
+    if use_mixed_level_batches:
+        level_batch_sizes = parse_level_batch_sizes(args.level_batch_sizes)
+        if sum(level_batch_sizes.values()) != args.per_gpu_batch_size:
+            raise ValueError(
+                f"Sum of level_batch_sizes must equal per_gpu_batch_size. "
+                f"Got {sum(level_batch_sizes.values())} vs {args.per_gpu_batch_size}"
+            )
+        train_sampler = DistributedMixedLevelBatchSampler(
+            train_dataset,
+            batch_size=args.per_gpu_batch_size,
+            level_batch_sizes=level_batch_sizes,
+            num_replicas=world_size,
+            rank=rank,
+            shuffle=True,
+            seed=args.seed,
+            drop_last=True,
+        )
+        train_loader = DataLoader(
+            train_dataset,
+            batch_sampler=train_sampler,
+            num_workers=args.num_workers,
+            pin_memory=True,
+            collate_fn=collate_fn_skip_corrupted,
+            persistent_workers=(args.num_workers > 0),
+            prefetch_factor=2 if args.num_workers > 0 else None,
+            worker_init_fn=build_worker_init_fn(args.seed, rank),
+        )
+    else:
+        train_sampler = DistributedSampler(
+            train_dataset,
+            num_replicas=world_size,
+            rank=rank,
+            shuffle=True,
+            seed=args.seed,
+        )
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=args.per_gpu_batch_size,
+            num_workers=args.num_workers,
+            pin_memory=True,
+            drop_last=True,
+            sampler=train_sampler,
+            collate_fn=collate_fn_skip_corrupted,
+            persistent_workers=(args.num_workers > 0),
+            prefetch_factor=2 if args.num_workers > 0 else None,
+            worker_init_fn=build_worker_init_fn(args.seed, rank),
+        )
 
     config = get_config(
         args.surgclip_model_name,
@@ -458,6 +684,10 @@ def train():
 
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
     model = SurgCLIPAdapter(surgclip_core)
+    model.configure_window_denoise(
+        local_temperature=args.local_temperature,
+        level_frame_temperatures=args.level_frame_temperatures,
+    )
     finetune_info = configure_finetuning(
         model,
         finetune_mode=args.finetune_mode,
@@ -507,6 +737,8 @@ def train():
             print(f"[rank0] lora_wrapped_modules={len(finetune_info['replaced_modules'])}")
             preview = finetune_info["replaced_modules"][:10]
             print(f"[rank0] lora_preview={preview}")
+        if use_mixed_level_batches:
+            print(f"[rank0] mixed_level_batches={args.level_batch_sizes}")
         with open(os.path.join(args.save_dir, "train_args.json"), "w", encoding="utf-8") as f:
             json.dump(vars(args), f, ensure_ascii=False, indent=2)
         with open(os.path.join(args.save_dir, "train_command.txt"), "w", encoding="utf-8") as f:
@@ -554,17 +786,42 @@ def train():
             if batch is None:
                 continue
 
-            images, input_ids, attention_mask = [b.to(device, non_blocking=True) for b in batch]
+            if len(batch) == 5:
+                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+                images = images_cpu.to(device, non_blocking=True)
+                selection_images = selection_images_cpu.to(device, non_blocking=True)
+                input_ids = input_ids.to(device, non_blocking=True)
+                attention_mask = attention_mask.to(device, non_blocking=True)
+                level_ids = level_ids.to(device, non_blocking=True)
+            elif len(batch) == 4:
+                images_cpu, selection_images_cpu, input_ids, attention_mask = batch
+                images = images_cpu.to(device, non_blocking=True)
+                selection_images = selection_images_cpu.to(device, non_blocking=True)
+                input_ids = input_ids.to(device, non_blocking=True)
+                attention_mask = attention_mask.to(device, non_blocking=True)
+                level_ids = None
+            else:
+                raise ValueError(f"Unexpected batch length: {len(batch)}")
 
             micro_step = (step % args.accum_steps) + 1
-            should_update = (micro_step == args.accum_steps)
+            is_last_batch = (step + 1) == len(train_loader)
+            should_update = (micro_step == args.accum_steps) or is_last_batch
 
             sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
 
             with sync_ctx:
                 with autocast(dtype=amp_dtype):
-                    raw_loss = clip_contrastive_loss(model, images, input_ids, attention_mask)
-                    loss = raw_loss / args.accum_steps
+                    raw_loss = clip_contrastive_loss(
+                        model,
+                        images,
+                        selection_images,
+                        input_ids,
+                        attention_mask,
+                        level_ids,
+                        selection_loss_weight=args.selection_loss_weight,
+                    )
+                    current_accum_steps = micro_step if (is_last_batch and micro_step != args.accum_steps) else args.accum_steps
+                    loss = raw_loss / current_accum_steps
 
                 if scaler.is_enabled():
                     scaler.scale(loss).backward()
