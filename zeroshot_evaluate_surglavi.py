@@ -5,6 +5,7 @@ import os
 from types import SimpleNamespace
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer
 
@@ -16,6 +17,65 @@ from zeroshot_evaluate import (
     evaluation_wrapper,
     to_builtin,
 )
+
+
+class LoRALinear(nn.Module):
+    def __init__(self, base_layer: nn.Linear, rank: int, alpha: float, dropout: float):
+        super().__init__()
+        if rank <= 0:
+            raise ValueError(f"LoRA rank must be positive, got {rank}")
+
+        self.in_features = base_layer.in_features
+        self.out_features = base_layer.out_features
+        self.rank = int(rank)
+        self.scale = float(alpha) / float(rank)
+        self.dropout = nn.Dropout(float(dropout)) if dropout > 0 else nn.Identity()
+
+        self.weight = nn.Parameter(base_layer.weight.detach().clone(), requires_grad=False)
+        if base_layer.bias is not None:
+            self.bias = nn.Parameter(base_layer.bias.detach().clone(), requires_grad=False)
+        else:
+            self.bias = None
+
+        self.lora_A = nn.Parameter(torch.empty(self.rank, self.in_features))
+        self.lora_B = nn.Parameter(torch.zeros(self.out_features, self.rank))
+        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        base_out = F.linear(x, self.weight, self.bias)
+        lora_hidden = F.linear(self.dropout(x), self.lora_A, bias=None)
+        lora_out = F.linear(lora_hidden, self.lora_B, bias=None)
+        return base_out + self.scale * lora_out
+
+
+def parse_comma_separated_list(spec: str):
+    return [item.strip() for item in spec.split(",") if item.strip()]
+
+
+def freeze_module_parameters(module: nn.Module):
+    for param in module.parameters():
+        param.requires_grad = False
+
+
+def apply_lora_to_linear_layers(module: nn.Module, target_substrings, rank: int, alpha: float, dropout: float, prefix: str = ""):
+    replaced = []
+    for child_name, child in list(module.named_children()):
+        full_name = f"{prefix}.{child_name}" if prefix else child_name
+        if isinstance(child, nn.Linear) and any(pattern in full_name for pattern in target_substrings):
+            setattr(module, child_name, LoRALinear(child, rank=rank, alpha=alpha, dropout=dropout))
+            replaced.append(full_name)
+            continue
+        replaced.extend(
+            apply_lora_to_linear_layers(
+                child,
+                target_substrings=target_substrings,
+                rank=rank,
+                alpha=alpha,
+                dropout=dropout,
+                prefix=full_name,
+            )
+        )
+    return replaced
 
 
 class SurgCLIPAdapter(torch.nn.Module):
@@ -77,6 +137,36 @@ class SurgCLIPAdapter(torch.nn.Module):
         feats = self.surgclip.text_proj(pooled)
         feats = F.normalize(feats, dim=-1)
         return feats
+
+
+def configure_finetuning(model: "SurgCLIPAdapter", args):
+    finetune_mode = args.finetune_mode.lower()
+    if finetune_mode not in {"full", "lora"}:
+        raise ValueError(f"Unsupported finetune_mode: {finetune_mode}")
+
+    if finetune_mode == "full":
+        return {"mode": "full", "replaced_modules": []}
+
+    freeze_module_parameters(model)
+    replaced = apply_lora_to_linear_layers(
+        model,
+        target_substrings=parse_comma_separated_list(args.lora_targets),
+        rank=args.lora_rank,
+        alpha=args.lora_alpha,
+        dropout=args.lora_dropout,
+    )
+    if not replaced:
+        raise RuntimeError(f"No linear layers matched LoRA targets: {args.lora_targets}")
+
+    model.surgclip.vision_proj.weight.requires_grad = True
+    if model.surgclip.vision_proj.bias is not None:
+        model.surgclip.vision_proj.bias.requires_grad = True
+    model.surgclip.text_proj.weight.requires_grad = True
+    if model.surgclip.text_proj.bias is not None:
+        model.surgclip.text_proj.bias.requires_grad = True
+    model.logit_scale.requires_grad = True
+
+    return {"mode": "lora", "replaced_modules": replaced}
 
 
 def load_model_checkpoint(model, ckpt_path, device):
@@ -142,8 +232,13 @@ def build_model(args, tokenizer, device):
     )
 
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=False)
-    model = SurgCLIPAdapter(surgclip_core).to(device)
+    model = SurgCLIPAdapter(surgclip_core)
+    finetune_info = configure_finetuning(model, args)
+    model = model.to(device)
     model = load_model_checkpoint(model, args.ckpt, device)
+    print(f"评测模型 finetune_mode: {args.finetune_mode}")
+    if finetune_info["replaced_modules"]:
+        print(f"评测模型 LoRA modules: {len(finetune_info['replaced_modules'])}")
     model.eval()
     return model
 
@@ -197,6 +292,18 @@ def parse_args():
     parser.add_argument("--model_num_frames", type=int, default=None)
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--image_size", type=int, default=224)
+    parser.add_argument("--finetune_mode", type=str, default=os.environ.get("FINETUNE_MODE", "lora"), choices=("full", "lora"))
+    parser.add_argument("--lora_rank", type=int, default=int(os.environ.get("LORA_RANK", 8)))
+    parser.add_argument("--lora_alpha", type=float, default=float(os.environ.get("LORA_ALPHA", 16)))
+    parser.add_argument("--lora_dropout", type=float, default=float(os.environ.get("LORA_DROPOUT", 0.05)))
+    parser.add_argument(
+        "--lora_targets",
+        type=str,
+        default=os.environ.get(
+            "LORA_TARGETS",
+            "text_encoder.encoder.layer.,vision_encoder.model.blocks."
+        ),
+    )
     return parser.parse_args()
 
 

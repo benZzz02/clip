@@ -21,6 +21,11 @@ FRAME_STRIDE="${FRAME_STRIDE:-1}"
 BATCH_SIZE="${BATCH_SIZE:-64}"
 NUM_WORKERS="${NUM_WORKERS:-4}"
 IMAGE_SIZE="${IMAGE_SIZE:-224}"
+FINETUNE_MODE="${FINETUNE_MODE:-lora}"
+LORA_RANK="${LORA_RANK:-8}"
+LORA_ALPHA="${LORA_ALPHA:-16}"
+LORA_DROPOUT="${LORA_DROPOUT:-0.05}"
+LORA_TARGETS="${LORA_TARGETS:-text_encoder.encoder.layer.,vision_encoder.model.blocks.}"
 
 mkdir -p "$OUTPUT_DIR"
 
@@ -43,5 +48,10 @@ do
     --model_num_frames "$MODEL_NUM_FRAMES" \
     --frame_stride "$FRAME_STRIDE" \
     --image_size "$IMAGE_SIZE" \
+    --finetune_mode "$FINETUNE_MODE" \
+    --lora_rank "$LORA_RANK" \
+    --lora_alpha "$LORA_ALPHA" \
+    --lora_dropout "$LORA_DROPOUT" \
+    --lora_targets "$LORA_TARGETS" \
     --output_dir "$OUTPUT_DIR"
 done
