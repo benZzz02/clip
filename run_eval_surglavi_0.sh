@@ -14,6 +14,7 @@ CUDA_DEVICE="${CUDA_DEVICE:-0}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
 TOKENIZER_NAME="${TOKENIZER_NAME:-bert-base-uncased}"
+DATA_ROOT="${DATA_ROOT:-/data/nfs_data/CLIP}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
 MODEL_NUM_FRAMES="${MODEL_NUM_FRAMES:-8}"
@@ -37,7 +38,7 @@ for ds in \
 do
   echo "Evaluating dataset: $ds"
 
-  CUDA_VISIBLE_DEVICES="$CUDA_DEVICE" python zeroshot_evaluate_surglavi.py \
+  CUDA_VISIBLE_DEVICES="$CUDA_DEVICE" DATA_ROOT="$DATA_ROOT" python zeroshot_evaluate_surglavi.py \
     --dataset "$ds" \
     --ckpt "$CKPT" \
     --surgclip_model_name "$SURGCLIP_MODEL_NAME" \

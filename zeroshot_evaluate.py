@@ -19,7 +19,7 @@ from downstream_datasets import SurgLaViSingleFrameDataset, SurgLaViClipDataset
 
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-DATA_ROOT = os.path.dirname(PROJECT_ROOT)
+DATA_ROOT = os.environ.get("DATA_ROOT", os.path.dirname(PROJECT_ROOT))
 
 
 DATASET_CONFIGS = {
