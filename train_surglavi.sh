@@ -11,7 +11,7 @@ set -u
 NPROC=3
 EXP_NAME="surglavi_lora_3gpu_bs100"
 
-PER_GPU_BATCH_SIZE=100
+PER_GPU_BATCH_SIZE=32
 ACCUM_STEPS=1
 NUM_WORKERS=8
 NUM_FRAMES=8
@@ -36,7 +36,7 @@ ANNOTATIONS_ROOT="/data/nfs_data/CLIP/surglavi_level_csv"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
 SAMPLE_MODE="center"
-LEVEL_BATCH_SIZES="fine:52,mid:32,coarse:16"
+LEVEL_BATCH_SIZES="fine:16,mid:10,coarse:6"
 SAMPLES_CACHE_DIR="/data/nfs_data/CLIP/.cache/pretrain_samples"
 USE_SAMPLES_CACHE=true
 REBUILD_SAMPLES_CACHE=true
