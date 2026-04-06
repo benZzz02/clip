@@ -5,10 +5,12 @@ ckpt*
 vlp_final.pt
 downloaded_video_224_test
 anno_downstream/*
-eval_outputs*
+eval_*
 surglavi_beta.db
 csv_outputs
 anno_downstream
 auto
 cholec80_peska
 CholecT50
+outputs
+.cache

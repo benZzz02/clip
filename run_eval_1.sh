@@ -4,15 +4,15 @@ set -euo pipefail
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate vllm
 
-CKPT="/mnt/mydisk/CLIP/vlp_epoch_30.pt"
+CKPT="/mnt/mydisk/CLIP/outputs/train_window_denoise_8f_run2/vlp_epoch_30.pt"
 VISION_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
 TEXT_MODEL="marcobombieri/surgicberta"
-OUTPUT_DIR="./eval_outputs12"
-CUDA_DEVICE=1
+OUTPUT_DIR="./eval_4.3_epoch_30"
+CUDA_DEVICE=3
 
 EMBED_DIM=256
 BATCH_SIZE=32
-NUM_WORKERS=8
+NUM_WORKERS=6
 NUM_FRAMES=8
 FRAME_STRIDE=1
 TEMPORAL_LAYERS=2
@@ -42,5 +42,6 @@ do
     --temporal_layers "$TEMPORAL_LAYERS" \
     --temporal_heads "$TEMPORAL_HEADS" \
     --temporal_dropout "$TEMPORAL_DROPOUT" \
-    --output_dir "$OUTPUT_DIR"
+    --output_dir "$OUTPUT_DIR" \
+
 done

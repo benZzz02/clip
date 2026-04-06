@@ -1,0 +1,36 @@
+date_group,directory,result_json_count,status,notes
+3.31,eval_3.31_epoch_5,12,complete,full 12-task result set
+3.31,eval_3.31_epoch_20,2,incomplete,only Cholec80 Phase and BernBypass70 Phase
+3.31,eval_3.31_epoch_25,12,complete,full 12-task result set
+3.31,eval_3.31_epoch_30,12,complete,full 12-task result set
+3.31,eval_3.31_epoch_40,12,complete,full 12-task result set
+3.31,eval_3.31_epoch_50,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_5,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_10,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_15,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_25,6,incomplete,partial result set only
+4.2,eval_4.2_epoch_30,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_40,12,complete,full 12-task result set
+4.2,eval_4.2_epoch_50,12,complete,full 12-task result set
+4.3,eval_4.3_epoch_10,12,complete,full 12-task result set
+4.3,eval_4.3_epoch_20,12,complete,full 12-task result set
+4.3,eval_4.3_epoch_30,12,complete,full 12-task result set
+4.3,eval_4.3_epoch_40,12,complete,full 12-task result set
+4.3,eval_4.3_epoch_50,12,complete,full 12-task result set
+undated,eval_outputs,12,complete,full 12-task result set
+undated,eval_outputs2,11,incomplete,missing one task
+undated,eval_outputs3,11,incomplete,missing one task
+undated,eval_outputs4,12,complete,full 12-task result set
+undated,eval_outputs5,12,complete,full 12-task result set
+undated,eval_outputs6,13,complete,full result set plus one extra task
+undated,eval_outputs7,12,complete,full 12-task result set
+undated,eval_outputs8,12,complete,full 12-task result set
+undated,eval_outputs9,12,complete,full 12-task result set
+undated,eval_outputs9.5,12,complete,full 12-task result set
+undated,eval_outputs10,12,complete,full 12-task result set
+undated,eval_outputs11,12,complete,full 12-task result set
+undated,eval_outputs12,12,complete,full 12-task result set
+undated,eval_outputs13,12,complete,full 12-task result set
+undated,eval_outputs14,12,complete,full 12-task result set
+undated,eval_outputs15,12,complete,full 12-task result set
+undated,eval_outputs_surglavi,12,complete,full 12-task result set
