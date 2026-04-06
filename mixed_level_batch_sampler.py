@@ -78,12 +78,22 @@ class DistributedMixedLevelBatchSampler(Sampler):
             return 0
         return 1 + (n - 1 - self.rank) // self.num_replicas
 
+    def _min_rank_shard_len(self, n):
+        """Return the smallest number of samples any rank receives for a level."""
+        if self.num_replicas <= 0:
+            return 0
+        min_rank = self.num_replicas - 1
+        if min_rank >= n:
+            return 0
+        return 1 + (n - 1 - min_rank) // self.num_replicas
+
     def _num_batches_for_rank(self):
         per_level_batches = []
         for level, take_n in self.level_batch_sizes.items():
             if take_n <= 0:
                 continue
-            rank_level_count = self._rank_shard_len(len(self.level_to_indices[level]))
+            # Use the minimum per-level shard count so every rank can run the same number of batches.
+            rank_level_count = self._min_rank_shard_len(len(self.level_to_indices[level]))
             if self.drop_last:
                 per_level_batches.append(rank_level_count // take_n)
             else:
@@ -160,4 +170,3 @@ class DistributedMixedLevelBatchSampler(Sampler):
                 batch_rng.shuffle(batch)
 
             yield batch
-
