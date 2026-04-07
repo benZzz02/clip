@@ -2,6 +2,7 @@ import os
 import math
 import argparse
 import contextlib
+import time
 
 import torch
 import torch.nn.functional as F
@@ -10,7 +11,7 @@ from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.cuda.amp import autocast, GradScaler
+from torch.cuda.amp import GradScaler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
@@ -299,6 +300,24 @@ def parse_level_batch_sizes(spec: str):
     return out
 
 
+def collate_fn_expanded_frames_only(batch):
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) != 5:
+            raise ValueError(
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids)."
+            )
+        _, selection_images, input_ids, attention_mask, level_ids = item
+        compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+
+    if not compact_batch:
+        return None
+
+    return torch.utils.data.dataloader.default_collate(compact_batch)
+
+
 LEVEL_NAME_BY_ID = {
     0: "fine",
     1: "mid",
@@ -363,7 +382,6 @@ def _collect_debug_stats(model_module, level_ids):
 
 def clip_contrastive_loss(
     model,
-    images,
     selection_images,
     input_ids,
     attention_mask,
@@ -372,7 +390,7 @@ def clip_contrastive_loss(
     htg_loss_weight=0.0,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
-        image=images,
+        image=selection_images,
         input_ids=input_ids,
         attention_mask=attention_mask,
         level_ids=level_ids,
@@ -465,6 +483,7 @@ def train():
     USE_SWANLAB = args.use_swanlab
     LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
     DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
+    PERF_LOG_INTERVAL = int(os.environ.get("PERF_LOG_INTERVAL", DEBUG_LOG_INTERVAL))
 
     if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
         raise ValueError(
@@ -638,6 +657,7 @@ def train():
         batch_sampler=train_sampler,
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
+        collate_fn=collate_fn_expanded_frames_only,
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
     )
@@ -786,11 +806,19 @@ def train():
         optimizer.zero_grad(set_to_none=True)
         last_loss_value = None
         accum_loss_sum = torch.zeros((), device=device)
+        accum_data_time_sum = 0.0
+        accum_step_time_sum = 0.0
+        batch_fetch_start = time.perf_counter()
 
         for step, batch in enumerate(progress_bar):
-            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            data_time = time.perf_counter() - batch_fetch_start
+            if batch is None:
+                batch_fetch_start = time.perf_counter()
+                continue
+
+            step_start = time.perf_counter()
+            selection_images_cpu, input_ids, attention_mask, level_ids = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
-            images = None
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
@@ -803,10 +831,9 @@ def train():
             sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
 
             with sync_ctx:
-                with autocast(dtype=amp_dtype):
+                with torch.amp.autocast("cuda", dtype=amp_dtype):
                     raw_loss = clip_contrastive_loss(
                         model,
-                        images,
                         selection_images,
                         input_ids,
                         attention_mask,
@@ -822,6 +849,9 @@ def train():
                     loss.backward()
 
             accum_loss_sum += raw_loss.detach()
+            step_time = time.perf_counter() - step_start
+            accum_data_time_sum += data_time
+            accum_step_time_sum += step_time
 
             if should_update:
                 if scaler.is_enabled():
@@ -839,12 +869,22 @@ def train():
                 loss_avg = loss_log.item() / world_size
                 last_loss_value = loss_avg
                 accum_loss_sum.zero_()
+                data_time_avg = _reduce_mean_tensor(
+                    torch.tensor(accum_data_time_sum / current_accum_steps, device=device)
+                ).item()
+                step_time_avg = _reduce_mean_tensor(
+                    torch.tensor(accum_step_time_sum / current_accum_steps, device=device)
+                ).item()
+                accum_data_time_sum = 0.0
+                accum_step_time_sum = 0.0
                 debug_stats = _collect_debug_stats(_unwrap_state_io_module(model.module), level_ids)
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
                     writer.add_scalar("train/lr", scheduler.get_last_lr()[0], global_step)
                     writer.add_scalar("train/epoch", epoch + 1, global_step)
+                    writer.add_scalar("perf/data_time", data_time_avg, global_step)
+                    writer.add_scalar("perf/step_time", step_time_avg, global_step)
                     for stat_name, stat_value in debug_stats.items():
                         writer.add_scalar(f"debug/{stat_name}", stat_value, global_step)
 
@@ -854,6 +894,8 @@ def train():
                 postfix = {
                     "loss": f"{raw_loss.item():.4f}",
                     "lr": f"{scheduler.get_last_lr()[0]:.2e}",
+                    "data": f"{data_time:.2f}s",
+                    "step": f"{step_time:.2f}s",
                 }
                 if should_update:
                     if "pair_confidence" in debug_stats:
@@ -877,8 +919,14 @@ def train():
                             f"[debug step {global_step}] " + " | ".join(debug_parts),
                             flush=True,
                         )
+                if should_update and PERF_LOG_INTERVAL > 0 and global_step % PERF_LOG_INTERVAL == 0:
+                    print(
+                        f"[perf step {global_step}] data={data_time_avg:.2f}s | step={step_time_avg:.2f}s",
+                        flush=True,
+                    )
 
-            del images, input_ids, attention_mask, level_ids
+            del input_ids, attention_mask, level_ids
+            batch_fetch_start = time.perf_counter()
 
         if rank == 0:
             print(
