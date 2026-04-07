@@ -477,6 +477,16 @@ class VLP(nn.Module):
         fine_attention_mask = fine_texts["attention_mask"]
         actual_counts = fine_texts.get("actual_count")
         
+        if actual_counts is not None:
+            has_valid = False
+            for b in range(frame_tokens.size(0)):
+                cnt = actual_counts[b].item() if actual_counts.dim() > 0 else actual_counts.item()
+                if cnt > 0:
+                    has_valid = True
+                    break
+            if not has_valid:
+                return None
+        
         batch_size = frame_tokens.size(0)
         num_frames = frame_tokens.size(1)
         num_fines = fine_input_ids.size(1)

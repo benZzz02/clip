@@ -404,6 +404,13 @@ class PretrainDataset(Dataset):
                             texts = [e["text"] for e in overlapping[:self.htg_max_fine_texts]]
                             fine_texts = self._build_fine_texts_batch(texts)
 
+                if fine_texts is None:
+                    fine_texts = {
+                        "input_ids": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "attention_mask": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "actual_count": torch.tensor([0], dtype=torch.long),
+                    }
+
                 if self.return_expanded_frames:
                     expanded_images = images
                 if self.return_level_id:
@@ -473,6 +480,13 @@ class PretrainDataset(Dataset):
                         if overlapping:
                             texts = [e["text"] for e in overlapping[:self.htg_max_fine_texts]]
                             fine_texts = self._build_fine_texts_batch(texts)
+
+                if fine_texts is None:
+                    fine_texts = {
+                        "input_ids": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "attention_mask": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "actual_count": torch.tensor([0], dtype=torch.long),
+                    }
 
                 if self.return_expanded_frames:
                     expanded_images = images
