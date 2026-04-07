@@ -321,9 +321,18 @@ class PretrainDataset(Dataset):
         attention_mask = tokenized_text["attention_mask"].squeeze(0)
         return input_ids, attention_mask
 
-    def _build_fine_texts_batch(self, texts):
+    def _build_fine_texts_batch(self, texts, max_fines=None):
+        if max_fines is None:
+            max_fines = self.htg_max_fine_texts
+        
         if not texts:
             return None
+        
+        current_num = len(texts)
+        if current_num < max_fines:
+            pad_count = max_fines - current_num
+            texts = texts + [self.tokenizer.pad_token or ""] * pad_count
+        
         batch = self.tokenizer(
             texts,
             padding="max_length",
@@ -331,9 +340,13 @@ class PretrainDataset(Dataset):
             max_length=self.max_length,
             return_tensors="pt",
         )
+        
+        actual_fine_count = torch.tensor([current_num], dtype=torch.long)
+        
         return {
             "input_ids": batch["input_ids"],
             "attention_mask": batch["attention_mask"],
+            "actual_count": actual_fine_count,
         }
 
     def _compute_frame_timestamps(self, start_time, end_time, num_frames):

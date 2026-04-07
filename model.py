@@ -475,6 +475,7 @@ class VLP(nn.Module):
         
         fine_input_ids = fine_texts["input_ids"]
         fine_attention_mask = fine_texts["attention_mask"]
+        actual_counts = fine_texts.get("actual_count")
         
         batch_size = frame_tokens.size(0)
         num_frames = frame_tokens.size(1)
@@ -499,20 +500,16 @@ class VLP(nn.Module):
         
         pred = F.softmax(sim / 0.1, dim=-1)
         
-        frame_timestamps = frame_timestamps.to(frame_tokens.device)
-        
-        fine_text_ranges = fine_texts.get("fine_ranges", None)
-        
-        if fine_text_ranges is None:
-            target = torch.ones_like(pred) / num_fines
-        else:
-            target = torch.zeros_like(pred)
+        if actual_counts is not None:
+            mask = torch.zeros_like(pred, dtype=torch.bool)
             for b in range(batch_size):
-                for f in range(num_fines):
-                    for t in range(num_frames):
-                        if fine_text_ranges[b, f, 0] <= frame_timestamps[b, t] <= fine_text_ranges[b, f, 1]:
-                            target[b, t, f] = 1.0
-            target = target / target.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+                actual = actual_counts[b].item() if actual_counts.dim() > 0 else actual_counts.item()
+                for f in range(actual, num_fines):
+                    mask[b, :, f] = True
+            pred = pred.masked_fill(mask, 0.0)
+            pred = pred / pred.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        
+        target = torch.ones_like(pred) / num_fines
         
         loss = F.kl_div(pred.log(), target, reduction="batchmean")
         
