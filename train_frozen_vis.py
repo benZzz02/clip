@@ -288,6 +288,12 @@ def parse_args():
         default=0.1,
         help="Weight for HTG loss",
     )
+    parser.add_argument(
+        "--htg_max_fine_texts",
+        type=int,
+        default=4,
+        help="Maximum number of overlapping fine texts used by HTG per sample",
+    )
 
     return parser.parse_args()
 
@@ -390,11 +396,19 @@ def clip_contrastive_loss(
     if htg_loss_weight > 0 and fine_texts is not None:
         frame_tokens = model.module.last_frame_tokens
         if frame_tokens is not None:
-            htg_loss = model.module._compute_htg_loss(
-                frame_tokens,
-                fine_texts,
-                None,
-            )
+            valid_mask = level_ids > 0
+            if "actual_count" in fine_texts:
+                valid_mask = valid_mask & (fine_texts["actual_count"] > 0)
+            if valid_mask.any():
+                filtered_fine_texts = {
+                    key: value[valid_mask]
+                    for key, value in fine_texts.items()
+                }
+                htg_loss = model.module._compute_htg_loss(
+                    frame_tokens[valid_mask],
+                    filtered_fine_texts,
+                    None,
+                )
     
     rank = dist.get_rank()
     batch_size = image_features.size(0)
@@ -496,6 +510,7 @@ def train():
         "enable_htg": args.enable_htg,
         "fine_annotations_dir": args.fine_annotations_dir,
         "htg_loss_weight": args.htg_loss_weight,
+        "htg_max_fine_texts": args.htg_max_fine_texts,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -615,7 +630,7 @@ def train():
         samples_cache_version=CONFIG["samples_cache_version"],
         enable_htg=CONFIG["enable_htg"],
         fine_annotations_dir=CONFIG["fine_annotations_dir"],
-        htg_max_fine_texts=8,
+        htg_max_fine_texts=CONFIG["htg_max_fine_texts"],
     )
 
     train_sampler = DistributedMixedLevelBatchSampler(

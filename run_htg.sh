@@ -5,9 +5,9 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate vllm
 
 NPROC=2
-EXP_NAME="htg_8f_v1"
+EXP_NAME="htg_8f_v2"
 
-PER_GPU_BATCH_SIZE=128
+PER_GPU_BATCH_SIZE=96
 ACCUM_STEPS=1
 NUM_WORKERS=8
 NUM_FRAMES=8
@@ -35,7 +35,7 @@ MAIN_CSV_PATH="/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv"
 ANNOTATIONS_ROOT="/mnt/mydisk/CLIP/surglavi_level_csv"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
-LEVEL_BATCH_SIZES="fine:80,mid:32,coarse:16"
+LEVEL_BATCH_SIZES="fine:60,mid:24,coarse:12"
 
 SAMPLES_CACHE_DIR="/mnt/mydisk/CLIP/.cache/pretrain_samples"
 USE_SAMPLES_CACHE=true
@@ -50,6 +50,7 @@ SELECTION_LOSS_WEIGHT=0.7
 ENABLE_HTG=true
 FINE_ANNOTATIONS_DIR="/mnt/mydisk/CLIP/surglavi_level_csv/fine"
 HTG_LOSS_WEIGHT=0.1
+HTG_MAX_FINE_TEXTS=4
 
 export CUDA_VISIBLE_DEVICES=0,1
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
@@ -94,4 +95,5 @@ torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
     --enable_htg "$ENABLE_HTG" \
     --fine_annotations_dir "$FINE_ANNOTATIONS_DIR" \
-    --htg_loss_weight "$HTG_LOSS_WEIGHT"
+    --htg_loss_weight "$HTG_LOSS_WEIGHT" \
+    --htg_max_fine_texts "$HTG_MAX_FINE_TEXTS"

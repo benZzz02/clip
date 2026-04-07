@@ -490,19 +490,24 @@ class VLP(nn.Module):
         batch_size = frame_tokens.size(0)
         num_frames = frame_tokens.size(1)
         num_fines = fine_input_ids.size(1)
-        
+        if actual_counts is not None:
+            num_fines = max(int(actual_counts.max().item()), 1)
+            fine_input_ids = fine_input_ids[:, :num_fines]
+            fine_attention_mask = fine_attention_mask[:, :num_fines]
+
         frame_emb = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
-        
+
         fine_features = []
-        for i in range(num_fines):
-            _, token_hidden, _ = self.text(
-                input_ids=fine_input_ids[:, i],
-                attention_mask=fine_attention_mask[:, i],
-                return_hidden=True,
-            )
-            pooled = self.text.mean_pooling(token_hidden, fine_attention_mask[:, i])
-            text_emb = F.normalize(self.text.project(pooled), dim=-1)
-            fine_features.append(text_emb)
+        with torch.no_grad():
+            for i in range(num_fines):
+                _, token_hidden, _ = self.text(
+                    input_ids=fine_input_ids[:, i],
+                    attention_mask=fine_attention_mask[:, i],
+                    return_hidden=True,
+                )
+                pooled = self.text.mean_pooling(token_hidden, fine_attention_mask[:, i])
+                text_emb = F.normalize(self.text.project(pooled), dim=-1)
+                fine_features.append(text_emb)
         
         fine_emb = torch.stack(fine_features, dim=1)
         
