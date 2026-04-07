@@ -1,0 +1,21 @@
+dataset,metric,value,source_model,source_table,source_url,scale
+cholec80_phase,video_avg_accuracy,0.5798,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+cholec80_phase,video_avg_f1,0.3942,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+autolaparo_phase,video_avg_accuracy,0.5572,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+autolaparo_phase,video_avg_f1,0.4595,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+stras_bypass70_phase,video_avg_accuracy,0.3124,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+stras_bypass70_phase,video_avg_f1,0.2605,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+bern_bypass70_phase,video_avg_accuracy,0.1830,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+bern_bypass70_phase,video_avg_f1,0.1506,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+grasp_phase,video_avg_accuracy,0.3477,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+grasp_phase,video_avg_f1,0.2798,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+grasp_step,video_avg_accuracy,0.1415,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+grasp_step,video_avg_f1,0.1114,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+sarrarp50_phase,video_avg_accuracy,0.1394,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+sarrarp50_phase,video_avg_f1,0.0762,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+cholect50_triplet,triplet.mAP,0.0417,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+cholec80_instrument,video_avg_mAP,0.3677,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+grasp_instrument,video_avg_mAP,0.4306,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+heichole_phase,video_avg_accuracy,0.5695,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+heichole_phase,video_avg_f1,0.4400,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+heichole_instrument,video_avg_mAP,0.3147,SurgCLIP(β),Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
