@@ -1,0 +1,21 @@
+dataset,metric,value,source_model,source_table,source_url,scale
+cholec80_phase,video_avg_accuracy,0.6129,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+cholec80_phase,video_avg_f1,0.5053,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+autolaparo_phase,video_avg_accuracy,0.6914,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+autolaparo_phase,video_avg_f1,0.5637,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+stras_bypass70_phase,video_avg_accuracy,0.3237,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+stras_bypass70_phase,video_avg_f1,0.3078,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+bern_bypass70_phase,video_avg_accuracy,0.3209,HecVL,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+bern_bypass70_phase,video_avg_f1,0.1968,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+grasp_phase,video_avg_accuracy,0.4149,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+grasp_phase,video_avg_f1,0.3494,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+grasp_step,video_avg_accuracy,0.2628,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+grasp_step,video_avg_f1,0.1653,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+sarrarp50_phase,video_avg_accuracy,0.2880,CLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+sarrarp50_phase,video_avg_f1,0.0776,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+cholect50_triplet,triplet.mAP,0.0528,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+cholec80_instrument,video_avg_mAP,0.4080,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+grasp_instrument,video_avg_mAP,0.4597,SurgCLIP,Table 2,https://arxiv.org/html/2509.10555v1,fraction
+heichole_phase,video_avg_accuracy,0.6384,SurgCLIP,Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+heichole_phase,video_avg_f1,0.5515,SurgCLIP,Table 2 (updated),https://arxiv.org/html/2509.10555,fraction
+heichole_instrument,video_avg_mAP,0.3679,SurgCLIP,Table 2 (updated),https://arxiv.org/html/2509.10555,fraction

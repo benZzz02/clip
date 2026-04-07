@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer
 
+from eval_report_utils import export_evaluation_reports
 from surgclip.surgclip.config import get_config
 from surgclip.surgclip.model import SurgCLIP
 from zeroshot_evaluate import (
@@ -180,8 +181,32 @@ def evaluate_zero_shot(args):
     with open(result_path, "w", encoding="utf-8") as f:
         json.dump(to_builtin(results), f, ensure_ascii=False, indent=2)
 
+    report_paths = export_evaluation_reports(
+        results=to_builtin(results),
+        dataset=args.dataset,
+        output_dir=args.output_dir,
+        metadata={
+            "dataset": args.dataset,
+            "model_family": "surgclip",
+            "ckpt": args.ckpt,
+            "tokenizer_name": args.tokenizer_name,
+            "batch_size": args.batch_size,
+            "num_workers": args.num_workers,
+            "num_frames": args.num_frames,
+            "model_num_frames": args.model_num_frames,
+            "frame_stride": args.frame_stride,
+            "image_size": args.image_size,
+            "output_dir": args.output_dir,
+            "result_json": result_path,
+        },
+        sota_file=args.sota_file,
+    )
+
     print(json.dumps(to_builtin(results), ensure_ascii=False, indent=2))
     print(f"\n结果已保存到: {result_path}")
+    print(f"指标表已保存到: {report_paths['summary_metrics_csv']}")
+    if "sota_comparison_csv" in report_paths:
+        print(f"SOTA 对比表已保存到: {report_paths['sota_comparison_csv']}")
 
 
 def parse_args():
@@ -197,6 +222,7 @@ def parse_args():
     parser.add_argument("--model_num_frames", type=int, default=None)
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--image_size", type=int, default=224)
+    parser.add_argument("--sota_file", type=str, default=None)
     return parser.parse_args()
 
 
