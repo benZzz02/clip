@@ -281,33 +281,11 @@ class PretrainDataset(Dataset):
                 return None
 
             frames_np = vr.get_batch(frame_indices).asnumpy()
-            return self._postprocess_frames(frames_np), timestamps
+            return self._postprocess_frames(frames_np)
 
         except Exception as e:
             print(f"[decord decode failed] {video_path} | {e}")
             return None
-
-    def _try_get_images_with_timestamps(self, video_path, text_start_time, text_end_time, expand_ratio=1.0):
-        result = self._try_get_images(video_path, text_start_time, text_end_time, expand_ratio)
-        if result is None:
-            return None, []
-        
-        try:
-            vr = VideoReader(video_path, ctx=cpu(0))
-            fps = float(vr.get_avg_fps())
-            if not np.isfinite(fps) or fps <= 0:
-                fps = 30.0
-            video_duration = max(len(vr) - 1, 0) / fps
-            
-            if float(expand_ratio) > 1.0:
-                text_start_time, text_end_time = self._expand_window(
-                    text_start_time, text_end_time, video_duration=video_duration, expand_ratio=expand_ratio
-                )
-            
-            timestamps = self._sample_timestamps(text_start_time, text_end_time, video_duration=video_duration)
-            return result, timestamps
-        except:
-            return result, []
 
     def _build_text(self, caption):
         tokenized_text = self.tokenizer(
@@ -341,7 +319,7 @@ class PretrainDataset(Dataset):
             return_tensors="pt",
         )
         
-        actual_fine_count = torch.tensor([current_num], dtype=torch.long)
+        actual_fine_count = torch.tensor(current_num, dtype=torch.long)
         
         return {
             "input_ids": batch["input_ids"],
@@ -406,9 +384,9 @@ class PretrainDataset(Dataset):
 
                 if fine_texts is None:
                     fine_texts = {
-                        "input_ids": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
-                        "attention_mask": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
-                        "actual_count": torch.tensor([0], dtype=torch.long),
+                        "input_ids": torch.zeros(self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "attention_mask": torch.zeros(self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "actual_count": torch.tensor(0, dtype=torch.long),
                     }
 
                 if self.return_expanded_frames:
@@ -483,9 +461,9 @@ class PretrainDataset(Dataset):
 
                 if fine_texts is None:
                     fine_texts = {
-                        "input_ids": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
-                        "attention_mask": torch.zeros(1, self.htg_max_fine_texts, self.max_length, dtype=torch.long),
-                        "actual_count": torch.tensor([0], dtype=torch.long),
+                        "input_ids": torch.zeros(self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "attention_mask": torch.zeros(self.htg_max_fine_texts, self.max_length, dtype=torch.long),
+                        "actual_count": torch.tensor(0, dtype=torch.long),
                     }
 
                 if self.return_expanded_frames:

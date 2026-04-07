@@ -510,18 +510,21 @@ class VLP(nn.Module):
         
         pred = F.softmax(sim / 0.1, dim=-1)
         
+        target = torch.zeros_like(pred)
         if actual_counts is not None:
             mask = torch.zeros_like(pred, dtype=torch.bool)
             for b in range(batch_size):
                 actual = actual_counts[b].item() if actual_counts.dim() > 0 else actual_counts.item()
                 for f in range(actual, num_fines):
                     mask[b, :, f] = True
+                if actual > 0:
+                    target[b, :, :actual] = 1.0 / actual
             pred = pred.masked_fill(mask, 0.0)
             pred = pred / pred.sum(dim=-1, keepdim=True).clamp(min=1e-6)
-        
-        target = torch.ones_like(pred) / num_fines
-        
-        loss = F.kl_div(pred.log(), target, reduction="batchmean")
+        else:
+            target.fill_(1.0 / num_fines)
+
+        loss = F.kl_div(pred.clamp(min=1e-8).log(), target, reduction="batchmean")
         
         return loss
 

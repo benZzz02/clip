@@ -794,6 +794,11 @@ def train():
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
+            if fine_texts is not None:
+                fine_texts = {
+                    key: value.to(device, non_blocking=True)
+                    for key, value in fine_texts.items()
+                }
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
