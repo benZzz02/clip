@@ -274,25 +274,13 @@ def parse_args():
         "--enable_htg",
         type=str2bool,
         default=False,
-        help="Enable Hierarchical Text Grounding (HTG)",
-    )
-    parser.add_argument(
-        "--fine_annotations_dir",
-        type=str,
-        default=None,
-        help="Path to fine-level annotations directory for HTG",
+        help="Enable batch-reused hierarchical triplet grounding",
     )
     parser.add_argument(
         "--htg_loss_weight",
         type=float,
         default=0.1,
         help="Weight for HTG loss",
-    )
-    parser.add_argument(
-        "--htg_max_fine_texts",
-        type=int,
-        default=4,
-        help="Maximum number of overlapping fine texts used by HTG per sample",
     )
 
     return parser.parse_args()
@@ -381,7 +369,6 @@ def clip_contrastive_loss(
     attention_mask,
     level_ids,
     selection_loss_weight=0.5,
-    fine_texts=None,
     htg_loss_weight=0.0,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
@@ -392,31 +379,13 @@ def clip_contrastive_loss(
         selection_image=selection_images,
     )
     
-    htg_loss = None
-    if htg_loss_weight > 0 and fine_texts is not None:
-        frame_tokens = model.module.last_frame_tokens
-        if frame_tokens is not None:
-            valid_mask = level_ids > 0
-            if "actual_count" in fine_texts:
-                valid_mask = valid_mask & (fine_texts["actual_count"] > 0)
-            if valid_mask.any():
-                filtered_fine_texts = {
-                    key: value[valid_mask]
-                    for key, value in fine_texts.items()
-                }
-                htg_loss = model.module._compute_htg_loss(
-                    frame_tokens[valid_mask],
-                    filtered_fine_texts,
-                    None,
-                )
-    
     rank = dist.get_rank()
     batch_size = image_features.size(0)
     device = image_features.device
     logit_scale = model.module.logit_scale.exp()
     labels = torch.arange(batch_size, device=device) + rank * batch_size
 
-    def _symmetric_contrastive(image_feats, text_feats):
+    def _gather_features(image_feats, text_feats):
         gathered_image = concat_all_gather(image_feats.detach())
         gathered_text = concat_all_gather(text_feats.detach())
 
@@ -425,6 +394,11 @@ def clip_contrastive_loss(
 
         all_image_features = torch.cat(gathered_image, dim=0)
         all_text_features = torch.cat(gathered_text, dim=0)
+
+        return all_image_features, all_text_features
+
+    def _symmetric_contrastive(image_feats, text_feats):
+        all_image_features, all_text_features = _gather_features(image_feats, text_feats)
 
         logits_per_image = logit_scale * image_feats @ all_text_features.t()
         logits_per_text = logit_scale * text_feats @ all_image_features.t()
@@ -438,10 +412,29 @@ def clip_contrastive_loss(
     else:
         selection_loss = _symmetric_contrastive(selected_image_features, text_features)
         total_loss = base_loss + selection_loss_weight * selection_loss
-    
-    if htg_loss is not None and not torch.isnan(htg_loss):
+
+    htg_loss = None
+    if (
+        htg_loss_weight > 0
+        and selected_image_features is not None
+        and batch_size >= 3
+        and level_ids.size(0) >= 3
+        and level_ids[0].item() == 0
+        and level_ids[1].item() == 1
+        and level_ids[2].item() == 2
+    ):
+        _, all_text_features = _gather_features(selected_image_features, text_features)
+        anchor_label = torch.full(
+            (2,),
+            rank * batch_size,
+            device=device,
+            dtype=torch.long,
+        )
+        triplet_video = selected_image_features[1:3]
+        htg_logits = logit_scale * triplet_video @ all_text_features.t()
+        htg_loss = F.cross_entropy(htg_logits, anchor_label)
         total_loss = total_loss + htg_loss_weight * htg_loss
-    
+
     return total_loss
 
 
@@ -508,9 +501,7 @@ def train():
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
         "enable_htg": args.enable_htg,
-        "fine_annotations_dir": args.fine_annotations_dir,
         "htg_loss_weight": args.htg_loss_weight,
-        "htg_max_fine_texts": args.htg_max_fine_texts,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -628,15 +619,13 @@ def train():
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
         samples_cache_version=CONFIG["samples_cache_version"],
-        enable_htg=CONFIG["enable_htg"],
-        fine_annotations_dir=CONFIG["fine_annotations_dir"],
-        htg_max_fine_texts=CONFIG["htg_max_fine_texts"],
     )
 
     train_sampler = DistributedMixedLevelBatchSampler(
         train_dataset,
         batch_size=PER_GPU_BATCH_SIZE,
         level_batch_sizes=LEVEL_BATCH_SIZES,
+        require_complete_triplet=CONFIG["enable_htg"],
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
@@ -799,21 +788,12 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            if CONFIG.get("enable_htg", False):
-                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids, fine_texts = batch
-            else:
-                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
-                fine_texts = None
+            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             images = None
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
-            if fine_texts is not None:
-                fine_texts = {
-                    key: value.to(device, non_blocking=True)
-                    for key, value in fine_texts.items()
-                }
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -832,7 +812,6 @@ def train():
                         attention_mask,
                         level_ids,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
-                        fine_texts=fine_texts,
                         htg_loss_weight=CONFIG.get("htg_loss_weight", 0.0),
                     )
                     loss = raw_loss / current_accum_steps
