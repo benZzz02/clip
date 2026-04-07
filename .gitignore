@@ -14,3 +14,5 @@ cholec80_peska
 CholecT50
 outputs
 .cache
+__pycache__/
+*.pyc

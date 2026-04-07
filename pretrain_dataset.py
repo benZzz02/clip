@@ -1,5 +1,6 @@
 # pretrain_dataset.py
 
+import os
 import random
 
 import numpy as np
@@ -9,6 +10,7 @@ from decord import VideoReader, cpu
 from torch.utils.data import Dataset
 
 from pretrain_manifest_cache import load_or_build_pretrain_samples
+from build_fine_text_index import load_or_build_fine_text_index, find_overlapping_fines
 
 
 class PretrainDataset(Dataset):
@@ -51,6 +53,9 @@ class PretrainDataset(Dataset):
         use_samples_cache=True,
         rebuild_samples_cache=False,
         samples_cache_version="v1",
+        enable_htg=False,
+        fine_annotations_dir=None,
+        htg_max_fine_texts=8,
     ):
         super().__init__()
 
@@ -99,6 +104,21 @@ class PretrainDataset(Dataset):
             rebuild_samples_cache=self.rebuild_samples_cache,
             samples_cache_version=self.samples_cache_version,
         )
+
+        self.enable_htg = bool(enable_htg)
+        self.htg_max_fine_texts = max(1, int(htg_max_fine_texts))
+
+        self.fine_text_index = None
+        if self.enable_htg and fine_annotations_dir:
+            from pathlib import Path
+            csv_dir = Path(main_csv_path).parent
+            self.fine_text_index = load_or_build_fine_text_index(
+                main_csv_path=main_csv_path,
+                fine_annotations_dir=fine_annotations_dir,
+                video_root_folder=video_root_folder,
+                use_cache=True,
+                rebuild_cache=False,
+            )
 
     def __len__(self):
         return len(self.samples)
@@ -261,11 +281,33 @@ class PretrainDataset(Dataset):
                 return None
 
             frames_np = vr.get_batch(frame_indices).asnumpy()
-            return self._postprocess_frames(frames_np)
+            return self._postprocess_frames(frames_np), timestamps
 
         except Exception as e:
             print(f"[decord decode failed] {video_path} | {e}")
             return None
+
+    def _try_get_images_with_timestamps(self, video_path, text_start_time, text_end_time, expand_ratio=1.0):
+        result = self._try_get_images(video_path, text_start_time, text_end_time, expand_ratio)
+        if result is None:
+            return None, []
+        
+        try:
+            vr = VideoReader(video_path, ctx=cpu(0))
+            fps = float(vr.get_avg_fps())
+            if not np.isfinite(fps) or fps <= 0:
+                fps = 30.0
+            video_duration = max(len(vr) - 1, 0) / fps
+            
+            if float(expand_ratio) > 1.0:
+                text_start_time, text_end_time = self._expand_window(
+                    text_start_time, text_end_time, video_duration=video_duration, expand_ratio=expand_ratio
+                )
+            
+            timestamps = self._sample_timestamps(text_start_time, text_end_time, video_duration=video_duration)
+            return result, timestamps
+        except:
+            return result, []
 
     def _build_text(self, caption):
         tokenized_text = self.tokenizer(
@@ -278,6 +320,27 @@ class PretrainDataset(Dataset):
         input_ids = tokenized_text["input_ids"].squeeze(0)
         attention_mask = tokenized_text["attention_mask"].squeeze(0)
         return input_ids, attention_mask
+
+    def _build_fine_texts_batch(self, texts):
+        if not texts:
+            return None
+        batch = self.tokenizer(
+            texts,
+            padding="max_length",
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt",
+        )
+        return {
+            "input_ids": batch["input_ids"],
+            "attention_mask": batch["attention_mask"],
+        }
+
+    def _compute_frame_timestamps(self, start_time, end_time, num_frames):
+        if num_frames == 1:
+            return [(start_time + end_time) / 2]
+        edges = np.linspace(start_time, end_time, num_frames + 1)
+        return [(edges[i] + edges[i + 1]) / 2 for i in range(num_frames)]
 
     def __getitem__(self, idx):
         last_error = None
@@ -314,6 +377,20 @@ class PretrainDataset(Dataset):
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+
+                fine_texts = None
+                if self.enable_htg and self.fine_text_index is not None:
+                    video_stem = os.path.splitext(os.path.basename(item["video_path"]))[0]
+                    if video_stem in self.fine_text_index:
+                        overlapping = find_overlapping_fines(
+                            self.fine_text_index[video_stem],
+                            item["start_time"],
+                            item["end_time"],
+                        )
+                        if overlapping:
+                            texts = [e["text"] for e in overlapping[:self.htg_max_fine_texts]]
+                            fine_texts = self._build_fine_texts_batch(texts)
+
                 if self.return_expanded_frames:
                     expanded_images = images
                 if self.return_level_id:
@@ -324,11 +401,12 @@ class PretrainDataset(Dataset):
                             input_ids,
                             attention_mask,
                             torch.tensor(level_id, dtype=torch.long),
+                            fine_texts,
                         )
-                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long), fine_texts
                 if self.return_expanded_frames:
-                    return images, expanded_images, input_ids, attention_mask
-                return images, input_ids, attention_mask
+                    return images, expanded_images, input_ids, attention_mask, fine_texts
+                return images, input_ids, attention_mask, fine_texts
 
             last_error = (
                 f"video={item['video_path']}, "
@@ -369,6 +447,20 @@ class PretrainDataset(Dataset):
             if images is not None:
                 input_ids, attention_mask = self._build_text(item["caption"])
                 level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+
+                fine_texts = None
+                if self.enable_htg and self.fine_text_index is not None:
+                    video_stem = os.path.splitext(os.path.basename(item["video_path"]))[0]
+                    if video_stem in self.fine_text_index:
+                        overlapping = find_overlapping_fines(
+                            self.fine_text_index[video_stem],
+                            item["start_time"],
+                            item["end_time"],
+                        )
+                        if overlapping:
+                            texts = [e["text"] for e in overlapping[:self.htg_max_fine_texts]]
+                            fine_texts = self._build_fine_texts_batch(texts)
+
                 if self.return_expanded_frames:
                     expanded_images = images
                 if self.return_level_id:
@@ -379,11 +471,12 @@ class PretrainDataset(Dataset):
                             input_ids,
                             attention_mask,
                             torch.tensor(level_id, dtype=torch.long),
+                            fine_texts,
                         )
-                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long), fine_texts
                 if self.return_expanded_frames:
-                    return images, expanded_images, input_ids, attention_mask
-                return images, input_ids, attention_mask
+                    return images, expanded_images, input_ids, attention_mask, fine_texts
+                return images, input_ids, attention_mask, fine_texts
 
             retry_count += 1
             if retry_count % 100 == 0:

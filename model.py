@@ -270,6 +270,7 @@ class VLP(nn.Module):
         self.last_frame_peak = None
         self.last_token_peak = None
         self.last_distill_regularization = None
+        self.last_frame_tokens = None
 
     def _prepare_image_input(self, image: torch.Tensor):
         if image.ndim == 4:
@@ -468,6 +469,55 @@ class VLP(nn.Module):
         self.last_text_gate = None
         return F.normalize(self.text.project(text_global_hidden), dim=-1)
 
+    def _compute_htg_loss(self, frame_tokens, fine_texts, frame_timestamps):
+        if fine_texts is None or frame_tokens is None:
+            return None
+        
+        fine_input_ids = fine_texts["input_ids"]
+        fine_attention_mask = fine_texts["attention_mask"]
+        
+        batch_size = frame_tokens.size(0)
+        num_frames = frame_tokens.size(1)
+        num_fines = fine_input_ids.size(1)
+        
+        frame_emb = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
+        
+        fine_features = []
+        for i in range(num_fines):
+            _, token_hidden, _ = self.text(
+                input_ids=fine_input_ids[:, i],
+                attention_mask=fine_attention_mask[:, i],
+                return_hidden=True,
+            )
+            pooled = self.text.mean_pooling(token_hidden, fine_attention_mask[:, i])
+            text_emb = F.normalize(self.text.project(pooled), dim=-1)
+            fine_features.append(text_emb)
+        
+        fine_emb = torch.stack(fine_features, dim=1)
+        
+        sim = torch.matmul(frame_emb, fine_emb.transpose(1, 2))
+        
+        pred = F.softmax(sim / 0.1, dim=-1)
+        
+        frame_timestamps = frame_timestamps.to(frame_tokens.device)
+        
+        fine_text_ranges = fine_texts.get("fine_ranges", None)
+        
+        if fine_text_ranges is None:
+            target = torch.ones_like(pred) / num_fines
+        else:
+            target = torch.zeros_like(pred)
+            for b in range(batch_size):
+                for f in range(num_fines):
+                    for t in range(num_frames):
+                        if fine_text_ranges[b, f, 0] <= frame_timestamps[b, t] <= fine_text_ranges[b, f, 1]:
+                            target[b, t, f] = 1.0
+            target = target / target.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        
+        loss = F.kl_div(pred.log(), target, reduction="batchmean")
+        
+        return loss
+
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
         source_image = selection_image if (self.training and selection_image is not None) else image
         if source_image is None:
@@ -499,11 +549,13 @@ class VLP(nn.Module):
             self.last_pair_confidence = pair_confidence.detach()
             self.last_frame_entropy = frame_entropy.detach()
             self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+            self.last_frame_tokens = frame_tokens.detach()
         else:
             self.last_frame_weights = None
             self.last_pair_confidence = None
             self.last_frame_entropy = None
             self.last_frame_peak = None
+            self.last_frame_tokens = None
 
         self.last_token_weights = None
         self.last_pair_weights = None
@@ -530,6 +582,7 @@ class VLP(nn.Module):
         self.last_entropy_regularization = None
         self.last_distill_regularization = None
         self.last_video_gate = None
+        self.last_frame_tokens = None
         return video_features
 
     def encode_text(
@@ -547,6 +600,7 @@ class VLP(nn.Module):
         self.last_token_entropy = None
         self.last_token_peak = None
         self.last_text_gate = None
+        self.last_frame_tokens = None
         return F.normalize(text_features, dim=-1)
 
     def forward(self, image, input_ids, attention_mask, level_ids=None):

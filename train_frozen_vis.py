@@ -270,6 +270,24 @@ def parse_args():
         default=0.5,
         help="Weight for the train-time expanded-window selection contrastive loss",
     )
+    parser.add_argument(
+        "--enable_htg",
+        type=str2bool,
+        default=False,
+        help="Enable Hierarchical Text Grounding (HTG)",
+    )
+    parser.add_argument(
+        "--fine_annotations_dir",
+        type=str,
+        default=None,
+        help="Path to fine-level annotations directory for HTG",
+    )
+    parser.add_argument(
+        "--htg_loss_weight",
+        type=float,
+        default=0.1,
+        help="Weight for HTG loss",
+    )
 
     return parser.parse_args()
 
@@ -357,6 +375,8 @@ def clip_contrastive_loss(
     attention_mask,
     level_ids,
     selection_loss_weight=0.5,
+    fine_texts=None,
+    htg_loss_weight=0.0,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=images,
@@ -365,6 +385,17 @@ def clip_contrastive_loss(
         level_ids=level_ids,
         selection_image=selection_images,
     )
+    
+    htg_loss = None
+    if htg_loss_weight > 0 and fine_texts is not None:
+        frame_tokens = model.module.last_frame_tokens
+        if frame_tokens is not None:
+            htg_loss = model.module._compute_htg_loss(
+                frame_tokens,
+                fine_texts,
+                None,
+            )
+    
     rank = dist.get_rank()
     batch_size = image_features.size(0)
     device = image_features.device
@@ -389,10 +420,15 @@ def clip_contrastive_loss(
 
     base_loss = _symmetric_contrastive(image_features, text_features)
     if selected_image_features is None:
-        return base_loss
-
-    selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-    return base_loss + selection_loss_weight * selection_loss
+        total_loss = base_loss
+    else:
+        selection_loss = _symmetric_contrastive(selected_image_features, text_features)
+        total_loss = base_loss + selection_loss_weight * selection_loss
+    
+    if htg_loss is not None and not torch.isnan(htg_loss):
+        total_loss = total_loss + htg_loss_weight * htg_loss
+    
+    return total_loss
 
 
 def train():
@@ -457,6 +493,9 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
+        "enable_htg": args.enable_htg,
+        "fine_annotations_dir": args.fine_annotations_dir,
+        "htg_loss_weight": args.htg_loss_weight,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -574,6 +613,9 @@ def train():
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
         samples_cache_version=CONFIG["samples_cache_version"],
+        enable_htg=CONFIG["enable_htg"],
+        fine_annotations_dir=CONFIG["fine_annotations_dir"],
+        htg_max_fine_texts=8,
     )
 
     train_sampler = DistributedMixedLevelBatchSampler(
@@ -742,7 +784,11 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            if CONFIG.get("enable_htg", False):
+                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids, fine_texts = batch
+            else:
+                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+                fine_texts = None
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             images = None
             input_ids = input_ids.to(device, non_blocking=True)
@@ -766,6 +812,8 @@ def train():
                         attention_mask,
                         level_ids,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
+                        fine_texts=fine_texts,
+                        htg_loss_weight=CONFIG.get("htg_loss_weight", 0.0),
                     )
                     loss = raw_loss / current_accum_steps
 
