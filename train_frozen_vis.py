@@ -275,13 +275,13 @@ def parse_args():
         "--enable_htg",
         type=str2bool,
         default=False,
-        help="Enable batch-reused hierarchical triplet grounding",
+        help="Enable multi-positive hierarchical anchoring",
     )
     parser.add_argument(
         "--htg_loss_weight",
         type=float,
         default=0.1,
-        help="Weight for HTG loss",
+        help="Weight for hierarchical multi-positive anchoring loss",
     )
 
     return parser.parse_args()
@@ -305,12 +305,18 @@ def collate_fn_expanded_frames_only(batch):
     for item in batch:
         if item is None:
             continue
-        if len(item) != 5:
+        if len(item) not in (5, 8):
             raise ValueError(
-                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids)."
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids) or the same plus sample metadata."
             )
-        _, selection_images, input_ids, attention_mask, level_ids = item
-        compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+        if len(item) == 5:
+            _, selection_images, input_ids, attention_mask, level_ids = item
+            compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+        else:
+            _, selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = item
+            compact_batch.append(
+                (selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times)
+            )
 
     if not compact_batch:
         return None
@@ -386,6 +392,9 @@ def clip_contrastive_loss(
     input_ids,
     attention_mask,
     level_ids,
+    video_ids=None,
+    start_times=None,
+    end_times=None,
     selection_loss_weight=0.5,
     htg_loss_weight=0.0,
 ):
@@ -435,23 +444,33 @@ def clip_contrastive_loss(
     if (
         htg_loss_weight > 0
         and selected_image_features is not None
-        and batch_size >= 3
-        and level_ids.size(0) >= 3
-        and level_ids[0].item() == 0
-        and level_ids[1].item() == 1
-        and level_ids[2].item() == 2
+        and video_ids is not None
+        and start_times is not None
+        and end_times is not None
     ):
-        _, all_text_features = _gather_features(selected_image_features, text_features)
-        anchor_label = torch.full(
-            (2,),
-            rank * batch_size,
-            device=device,
-            dtype=torch.long,
-        )
-        triplet_video = selected_image_features[1:3]
-        htg_logits = logit_scale * triplet_video @ all_text_features.t()
-        htg_loss = F.cross_entropy(htg_logits, anchor_label)
-        total_loss = total_loss + htg_loss_weight * htg_loss
+        fine_mask = level_ids == 0
+        parent_mask = level_ids > 0
+        if fine_mask.any() and parent_mask.any():
+            per_parent_losses = []
+            parent_indices = torch.nonzero(parent_mask, as_tuple=False).flatten()
+            for parent_idx in parent_indices.tolist():
+                child_mask = (
+                    fine_mask
+                    & (video_ids == video_ids[parent_idx])
+                    & (start_times >= start_times[parent_idx])
+                    & (end_times <= end_times[parent_idx])
+                )
+                child_indices = torch.nonzero(child_mask, as_tuple=False).flatten()
+                if child_indices.numel() == 0:
+                    continue
+
+                logits = logit_scale * (selected_image_features[parent_idx : parent_idx + 1] @ text_features.t())
+                log_probs = F.log_softmax(logits, dim=-1)
+                per_parent_losses.append(-log_probs[0, child_indices].mean())
+
+            if per_parent_losses:
+                htg_loss = torch.stack(per_parent_losses).mean()
+                total_loss = total_loss + htg_loss_weight * htg_loss
 
     return total_loss
 
@@ -633,6 +652,7 @@ def train():
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
         return_expanded_frames=True,
+        return_sample_meta=CONFIG["enable_htg"],
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -817,11 +837,21 @@ def train():
                 continue
 
             step_start = time.perf_counter()
-            selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            if len(batch) == 4:
+                selection_images_cpu, input_ids, attention_mask, level_ids = batch
+                video_ids = None
+                start_times = None
+                end_times = None
+            else:
+                selection_images_cpu, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
+            if video_ids is not None:
+                video_ids = video_ids.to(device, non_blocking=True)
+                start_times = start_times.to(device, non_blocking=True)
+                end_times = end_times.to(device, non_blocking=True)
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -838,6 +868,9 @@ def train():
                         input_ids,
                         attention_mask,
                         level_ids,
+                        video_ids=video_ids,
+                        start_times=start_times,
+                        end_times=end_times,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
                         htg_loss_weight=CONFIG.get("htg_loss_weight", 0.0),
                     )

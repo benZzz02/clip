@@ -5,7 +5,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate vllm
 
 NPROC=2
-EXP_NAME="htg_triplet_reuse_8f_v1"
+EXP_NAME="htg_multipositive_8f_v1"
 
 PER_GPU_BATCH_SIZE=128
 ACCUM_STEPS=1
@@ -54,7 +54,7 @@ export CUDA_VISIBLE_DEVICES=0,1
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
-export SAVE_PREFIX="outputs/htg_triplet_reuse_8f_run1/"
+export SAVE_PREFIX="outputs/htg_multipositive_8f_run1/"
 
 mkdir -p "$SAVE_PREFIX"
 
