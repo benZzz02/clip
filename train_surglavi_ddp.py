@@ -193,7 +193,26 @@ def collate_fn_skip_corrupted(batch):
     batch = [item for item in batch if not torch.all(item[0].eq(0))]
     if len(batch) == 0:
         return None
-    return torch.utils.data.dataloader.default_collate(batch)
+    
+    # 处理包含样本元数据的 batch
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) not in (5, 8):
+            raise ValueError(
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids) or the same plus sample metadata."
+            )
+        if len(item) == 5:
+            _, selection_images, input_ids, attention_mask, level_ids = item
+            compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+        else:
+            _, selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = item
+            compact_batch.append(
+                (selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times)
+            )
+    
+    return torch.utils.data.dataloader.default_collate(compact_batch)
 
 
 @torch.no_grad()
@@ -415,7 +434,7 @@ class SurgCLIPAdapter(torch.nn.Module):
         return image_features, selected_image_features, text_features
 
 
-def clip_contrastive_loss(model, images, selection_images, input_ids, attention_mask, level_ids, selection_loss_weight=0.5):
+def clip_contrastive_loss(model, images, selection_images, input_ids, attention_mask, level_ids, selection_loss_weight=0.5, htg_loss_weight=0.0, video_ids=None, start_times=None, end_times=None):
     rank = dist.get_rank()
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=images,
@@ -448,8 +467,43 @@ def clip_contrastive_loss(model, images, selection_images, input_ids, attention_
     base_loss = _symmetric_contrastive(image_features, text_features)
     if selected_image_features is None:
         return base_loss
+
     selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-    return base_loss + selection_loss_weight * selection_loss
+    total_loss = base_loss + selection_loss_weight * selection_loss
+
+    htg_loss = None
+    if (
+        htg_loss_weight > 0
+        and selected_image_features is not None
+        and video_ids is not None
+        and start_times is not None
+        and end_times is not None
+    ):
+        fine_mask = level_ids == 0
+        parent_mask = level_ids > 0
+        if fine_mask.any() and parent_mask.any():
+            per_parent_losses = []
+            parent_indices = torch.nonzero(parent_mask, as_tuple=False).flatten()
+            for parent_idx in parent_indices.tolist():
+                child_mask = (
+                    fine_mask
+                    & (video_ids == video_ids[parent_idx])
+                    & (start_times >= start_times[parent_idx])
+                    & (end_times <= end_times[parent_idx])
+                )
+                child_indices = torch.nonzero(child_mask, as_tuple=False).flatten()
+                if child_indices.numel() == 0:
+                    continue
+
+                logits = logit_scale * (selected_image_features[parent_idx : parent_idx + 1] @ text_features.t())
+                log_probs = F.log_softmax(logits, dim=-1)
+                per_parent_losses.append(-log_probs[0, child_indices].mean())
+
+            if per_parent_losses:
+                htg_loss = torch.stack(per_parent_losses).mean()
+                total_loss = total_loss + htg_loss_weight * htg_loss
+
+    return total_loss
 
 
 def parse_args():
@@ -473,25 +527,25 @@ def parse_args():
 
     # dataset paths
     p.add_argument("--video_root_folder", type=str, default=os.environ.get(
-        "PRETRAIN_VIDEO_ROOT_FOLDER", "downloaded_video_224_test"
+        "PRETRAIN_VIDEO_ROOT_FOLDER", "/data/nfs_data/CLIP/downloaded_video_224_test"
     ))
     p.add_argument("--assume_resized_video", type=int, default=int(os.environ.get("PRETRAIN_VIDEO_ALREADY_RESIZED", "0")))
 
     p.add_argument("--main_csv_path", type=str, default=os.environ.get(
-        "PRETRAIN_MAIN_CSV_PATH", "surglavi_level_csv/all_video.csv"
+        "PRETRAIN_MAIN_CSV_PATH", "/data/nfs_data/CLIP/surglavi_level_csv/all_video.csv"
     ))
     p.add_argument("--annotations_folder", type=str, default=os.environ.get(
-        "PRETRAIN_ANNOTATIONS_FOLDER", "surglavi_level_csv/fine"
+        "PRETRAIN_ANNOTATIONS_FOLDER", "/data/nfs_data/CLIP/surglavi_level_csv/fine"
     ))
-    p.add_argument("--annotations_root", type=str, default=os.environ.get("PRETRAIN_ANNOTATIONS_ROOT", ""))
-    p.add_argument("--annotation_levels", type=str, default=os.environ.get("PRETRAIN_ANNOTATION_LEVELS", ""))
+    p.add_argument("--annotations_root", type=str, default=os.environ.get("PRETRAIN_ANNOTATIONS_ROOT", "/data/nfs_data/CLIP/surglavi_level_csv"))
+    p.add_argument("--annotation_levels", type=str, default=os.environ.get("PRETRAIN_ANNOTATION_LEVELS", "coarse,mid,fine"))
     p.add_argument("--level_mix", type=str, default=os.environ.get("PRETRAIN_LEVEL_MIX", "concat"),
                    choices=("concat", "balanced"))
     p.add_argument("--level_seed", type=int, default=int(os.environ.get("PRETRAIN_LEVEL_SEED", 42)))
     p.add_argument("--level_batch_sizes", type=str, default=os.environ.get("LEVEL_BATCH_SIZES", "fine:80,mid:32,coarse:16"))
     p.add_argument("--sample_mode", type=str, default=os.environ.get("PRETRAIN_SAMPLE_MODE", "random"),
                    choices=("random", "center"))
-    p.add_argument("--samples_cache_dir", type=str, default=os.environ.get("SAMPLES_CACHE_DIR", ".cache/pretrain_samples"))
+    p.add_argument("--samples_cache_dir", type=str, default=os.environ.get("SAMPLES_CACHE_DIR", "/data/clip/.cache/pretrain_samples"))
     p.add_argument(
         "--use_samples_cache",
         type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
@@ -511,7 +565,7 @@ def parse_args():
     p.add_argument("--surgclip_model_name", type=str, default=os.environ.get("SURGCLIP_MODEL_NAME", "SurgCLIP-B"))
 
     # checkpoint saving
-    p.add_argument("--save_dir", type=str, default=os.environ.get("SAVE_DIR", "."))
+    p.add_argument("--save_dir", type=str, default=os.environ.get("SAVE_DIR", "/data/surglavi_checkpoint"))
     p.add_argument("--save_every", type=int, default=int(os.environ.get("SAVE_EVERY", 0)),
                    help="Save checkpoint every N epochs. 0 = only save final.")
     p.add_argument("--save_name", type=str, default=os.environ.get("SAVE_NAME", "surglavi_final.pt"))
@@ -543,6 +597,9 @@ def parse_args():
     )
     p.add_argument("--train_window_expand_ratio", type=float, default=float(os.environ.get("TRAIN_WINDOW_EXPAND_RATIO", 1.5)))
     p.add_argument("--selection_loss_weight", type=float, default=float(os.environ.get("SELECTION_LOSS_WEIGHT", 0.5)))
+    p.add_argument("--enable_htg", type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
+                   default=os.environ.get("ENABLE_HTG", "0").lower() in {"1", "true", "t", "yes", "y"})
+    p.add_argument("--htg_loss_weight", type=float, default=float(os.environ.get("HTG_LOSS_WEIGHT", 0.1)))
 
     return p.parse_args()
 
@@ -603,6 +660,7 @@ def train():
         level_seed=args.level_seed,
         return_level_id=bool(args.annotations_root or args.annotation_levels),
         return_expanded_frames=True,
+        return_sample_meta=args.enable_htg,
         expanded_window_ratio=args.train_window_expand_ratio,
         samples_cache_dir=args.samples_cache_dir,
         use_samples_cache=args.use_samples_cache,
@@ -622,6 +680,7 @@ def train():
             train_dataset,
             batch_size=args.per_gpu_batch_size,
             level_batch_sizes=level_batch_sizes,
+            require_complete_triplet=args.enable_htg,
             num_replicas=world_size,
             rank=rank,
             shuffle=True,
@@ -786,13 +845,26 @@ def train():
             if batch is None:
                 continue
 
-            if len(batch) == 5:
+            if len(batch) == 8:
+                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = batch
+                images = None
+                selection_images = selection_images_cpu.to(device, non_blocking=True)
+                input_ids = input_ids.to(device, non_blocking=True)
+                attention_mask = attention_mask.to(device, non_blocking=True)
+                level_ids = level_ids.to(device, non_blocking=True)
+                video_ids = video_ids.to(device, non_blocking=True)
+                start_times = start_times.to(device, non_blocking=True)
+                end_times = end_times.to(device, non_blocking=True)
+            elif len(batch) == 5:
                 images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
                 images = None
                 selection_images = selection_images_cpu.to(device, non_blocking=True)
                 input_ids = input_ids.to(device, non_blocking=True)
                 attention_mask = attention_mask.to(device, non_blocking=True)
                 level_ids = level_ids.to(device, non_blocking=True)
+                video_ids = None
+                start_times = None
+                end_times = None
             elif len(batch) == 4:
                 images_cpu, selection_images_cpu, input_ids, attention_mask = batch
                 images = None
@@ -800,6 +872,9 @@ def train():
                 input_ids = input_ids.to(device, non_blocking=True)
                 attention_mask = attention_mask.to(device, non_blocking=True)
                 level_ids = None
+                video_ids = None
+                start_times = None
+                end_times = None
             else:
                 raise ValueError(f"Unexpected batch length: {len(batch)}")
 
@@ -819,6 +894,10 @@ def train():
                         attention_mask,
                         level_ids,
                         selection_loss_weight=args.selection_loss_weight,
+                        htg_loss_weight=args.htg_loss_weight if args.enable_htg else 0.0,
+                        video_ids=video_ids if args.enable_htg else None,
+                        start_times=start_times if args.enable_htg else None,
+                        end_times=end_times if args.enable_htg else None,
                     )
                     current_accum_steps = micro_step if (is_last_batch and micro_step != args.accum_steps) else args.accum_steps
                     loss = raw_loss / current_accum_steps
