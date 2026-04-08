@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+set +u
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vllm
+if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
+  conda activate vllm
+fi
+set -u
 
 # Experiment
 EXP_NAME="${EXP_NAME:-train_window_denoise_8f}"

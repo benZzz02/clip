@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+set +u
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate vllm
+if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
+  conda activate vllm
+fi
+set -u
 
 NPROC=2
 EXP_NAME="htg_multipositive_8f_v1"
