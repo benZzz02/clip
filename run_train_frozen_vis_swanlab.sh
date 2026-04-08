@@ -103,7 +103,7 @@ HTG_LOSS_WEIGHT="${HTG_LOSS_WEIGHT:-0.1}"
 
 # Logging and outputs
 USE_SWANLAB="${USE_SWANLAB:-true}"
-SAVE_ROOT="${SAVE_ROOT:-/data/nfs_data/outputs}"
+SAVE_ROOT="${SAVE_ROOT:-/data/nfs_data/CLIP/outputs}"
 SAVE_PREFIX="${SAVE_PREFIX:-${SAVE_ROOT}/${EXP_NAME}/}"
 TB_LOGDIR="${TB_LOGDIR:-runs/${EXP_NAME}}"
 SWANLAB_LOGDIR="${SWANLAB_LOGDIR:-swanlog/${EXP_NAME}}"
