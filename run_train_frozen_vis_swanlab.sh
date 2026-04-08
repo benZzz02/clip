@@ -8,6 +8,26 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+pick_first_existing() {
+  local kind="$1"
+  shift
+  local candidate
+  for candidate in "$@"; do
+    [[ -z "$candidate" ]] && continue
+    if [[ "$kind" == "file" && -f "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+    if [[ "$kind" == "dir" && -d "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Experiment
 EXP_NAME="${EXP_NAME:-train_window_denoise_8f}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
@@ -36,12 +56,28 @@ IMAGE_SIZE="${IMAGE_SIZE:-224}"
 MAX_LENGTH="${MAX_LENGTH:-256}"
 NUM_FRAMES="${NUM_FRAMES:-8}"
 TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
-VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-/mnt/mydisk/CLIP/lemonfm.pth}"
+VISION_PRETRAINED_WEIGHTS="$(pick_first_existing file \
+  "${VISION_PRETRAINED_WEIGHTS:-}" \
+  "$REPO_ROOT/lemonfm.pth" \
+  "/data/clip/lemonfm.pth" \
+  "/mnt/mydisk/CLIP/lemonfm.pth")"
 
 # Data
-VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-/mnt/mydisk/CLIP/downloaded_video_224_test}"
-MAIN_CSV_PATH="${MAIN_CSV_PATH:-/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv}"
-ANNOTATIONS_ROOT="${ANNOTATIONS_ROOT:-/mnt/mydisk/CLIP/surglavi_level_csv}"
+VIDEO_ROOT_FOLDER="$(pick_first_existing dir \
+  "${VIDEO_ROOT_FOLDER:-}" \
+  "$REPO_ROOT/downloaded_video_224_test" \
+  "/data/clip/downloaded_video_224_test" \
+  "/mnt/mydisk/CLIP/downloaded_video_224_test")"
+MAIN_CSV_PATH="$(pick_first_existing file \
+  "${MAIN_CSV_PATH:-}" \
+  "$REPO_ROOT/surglavi_level_csv/all_video.csv" \
+  "/data/clip/surglavi_level_csv/all_video.csv" \
+  "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv")"
+ANNOTATIONS_ROOT="$(pick_first_existing dir \
+  "${ANNOTATIONS_ROOT:-}" \
+  "$REPO_ROOT/surglavi_level_csv" \
+  "/data/clip/surglavi_level_csv" \
+  "/mnt/mydisk/CLIP/surglavi_level_csv")"
 ANNOTATION_LEVELS="${ANNOTATION_LEVELS:-coarse,mid,fine}"
 LEVEL_MIX="${LEVEL_MIX:-concat}"
 LEVEL_BATCH_SIZES="${LEVEL_BATCH_SIZES:-fine:80,mid:32,coarse:16}"
@@ -52,7 +88,7 @@ MAX_RETRY="${MAX_RETRY:-5}"
 ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
 
 # Sample cache
-SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-/mnt/mydisk/CLIP/.cache/pretrain_samples}"
+SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-$REPO_ROOT/.cache/pretrain_samples}"
 USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
 REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
 SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
@@ -88,6 +124,16 @@ echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 echo "NPROC=$NPROC"
 echo "SAVE_PREFIX=$SAVE_PREFIX"
 echo "TRAIN_WINDOW_EXPAND_RATIO=$TRAIN_WINDOW_EXPAND_RATIO"
+
+if [[ -z "$VISION_PRETRAINED_WEIGHTS" ]]; then
+  echo "Could not locate lemonfm.pth. Set VISION_PRETRAINED_WEIGHTS explicitly." >&2
+  exit 1
+fi
+
+if [[ -z "$VIDEO_ROOT_FOLDER" || -z "$MAIN_CSV_PATH" || -z "$ANNOTATIONS_ROOT" ]]; then
+  echo "Could not resolve one or more data paths. Set VIDEO_ROOT_FOLDER / MAIN_CSV_PATH / ANNOTATIONS_ROOT explicitly." >&2
+  exit 1
+fi
 
 if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
   torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \

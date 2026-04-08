@@ -17,7 +17,17 @@ def build_LemonFM(pretrained_weights="lemonfm.pth"):
         raise ValueError("pretrained_weights is None")
 
     if not os.path.isfile(pretrained_weights):
-        raise FileNotFoundError(f"Local checkpoint not found: {pretrained_weights}")
+        cwd_candidate = os.path.join(os.getcwd(), os.path.basename(pretrained_weights))
+        script_candidate = os.path.join(os.path.dirname(__file__), os.path.basename(pretrained_weights))
+        searched = [pretrained_weights, cwd_candidate, script_candidate]
+        for candidate in searched[1:]:
+            if os.path.isfile(candidate):
+                pretrained_weights = candidate
+                break
+        else:
+            raise FileNotFoundError(
+                "Local checkpoint not found. Tried: " + ", ".join(searched)
+            )
 
     print(f"Loading LemonFM weights from local file: {os.path.abspath(pretrained_weights)}")
 

@@ -8,6 +8,26 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+pick_first_existing() {
+  local kind="$1"
+  shift
+  local candidate
+  for candidate in "$@"; do
+    [[ -z "$candidate" ]] && continue
+    if [[ "$kind" == "file" && -f "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+    if [[ "$kind" == "dir" && -d "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 NPROC=2
 EXP_NAME="htg_multipositive_8f_v1"
 
@@ -32,16 +52,32 @@ ASSUME_RESIZED_VIDEO=true
 USE_SWANLAB=true
 
 TEXT_MODEL_NAME="marcobombieri/surgicberta"
-VISION_PRETRAINED_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
-VIDEO_ROOT_FOLDER="/mnt/mydisk/CLIP/downloaded_video_224_test"
-MAIN_CSV_PATH="/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv"
+VISION_PRETRAINED_WEIGHTS="$(pick_first_existing file \
+  "${VISION_PRETRAINED_WEIGHTS:-}" \
+  "$REPO_ROOT/lemonfm.pth" \
+  "/data/clip/lemonfm.pth" \
+  "/mnt/mydisk/CLIP/lemonfm.pth")"
+VIDEO_ROOT_FOLDER="$(pick_first_existing dir \
+  "${VIDEO_ROOT_FOLDER:-}" \
+  "$REPO_ROOT/downloaded_video_224_test" \
+  "/data/clip/downloaded_video_224_test" \
+  "/mnt/mydisk/CLIP/downloaded_video_224_test")"
+MAIN_CSV_PATH="$(pick_first_existing file \
+  "${MAIN_CSV_PATH:-}" \
+  "$REPO_ROOT/surglavi_level_csv/all_video.csv" \
+  "/data/clip/surglavi_level_csv/all_video.csv" \
+  "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv")"
 
-ANNOTATIONS_ROOT="/mnt/mydisk/CLIP/surglavi_level_csv"
+ANNOTATIONS_ROOT="$(pick_first_existing dir \
+  "${ANNOTATIONS_ROOT:-}" \
+  "$REPO_ROOT/surglavi_level_csv" \
+  "/data/clip/surglavi_level_csv" \
+  "/mnt/mydisk/CLIP/surglavi_level_csv")"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
 LEVEL_BATCH_SIZES="fine:80,mid:32,coarse:16"
 
-SAMPLES_CACHE_DIR="/mnt/mydisk/CLIP/.cache/pretrain_samples"
+SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-$REPO_ROOT/.cache/pretrain_samples}"
 USE_SAMPLES_CACHE=true
 REBUILD_SAMPLES_CACHE=false
 SAMPLES_CACHE_VERSION="v1"
@@ -59,6 +95,16 @@ export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
 export SAVE_PREFIX="outputs/htg_multipositive_8f_run1/"
+
+if [[ -z "$VISION_PRETRAINED_WEIGHTS" ]]; then
+  echo "Could not locate lemonfm.pth. Set VISION_PRETRAINED_WEIGHTS explicitly." >&2
+  exit 1
+fi
+
+if [[ -z "$VIDEO_ROOT_FOLDER" || -z "$MAIN_CSV_PATH" || -z "$ANNOTATIONS_ROOT" ]]; then
+  echo "Could not resolve one or more data paths. Set VIDEO_ROOT_FOLDER / MAIN_CSV_PATH / ANNOTATIONS_ROOT explicitly." >&2
+  exit 1
+fi
 
 mkdir -p "$SAVE_PREFIX"
 
