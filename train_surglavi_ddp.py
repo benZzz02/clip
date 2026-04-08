@@ -190,29 +190,11 @@ def parse_level_batch_sizes(spec: str):
 
 def collate_fn_skip_corrupted(batch):
     # 兼容你原来的坏样本过滤逻辑（images 全 0 时跳过）
-    batch = [item for item in batch if not torch.all(item[0].eq(0))]
+    batch = [item for item in batch if item is not None and not torch.all(item[0].eq(0))]
     if len(batch) == 0:
         return None
-    
-    # 处理包含样本元数据的 batch
-    compact_batch = []
-    for item in batch:
-        if item is None:
-            continue
-        if len(item) not in (5, 8):
-            raise ValueError(
-                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids) or the same plus sample metadata."
-            )
-        if len(item) == 5:
-            _, selection_images, input_ids, attention_mask, level_ids = item
-            compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
-        else:
-            _, selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = item
-            compact_batch.append(
-                (selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times)
-            )
-    
-    return torch.utils.data.dataloader.default_collate(compact_batch)
+
+    return torch.utils.data.dataloader.default_collate(batch)
 
 
 @torch.no_grad()

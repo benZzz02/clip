@@ -8,8 +8,17 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
-NPROC=3
 EXP_NAME="surglavi_lora_3gpu_bs100"
+
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2}"
+IFS=',' read -r -a CUDA_DEVICE_LIST <<< "$CUDA_VISIBLE_DEVICES"
+GPU_COUNT="${#CUDA_DEVICE_LIST[@]}"
+NPROC="${NPROC:-3}"
+
+if [[ "$NPROC" -ne "$GPU_COUNT" ]]; then
+    echo "NPROC ($NPROC) must match the number of GPUs in CUDA_VISIBLE_DEVICES ($GPU_COUNT)." >&2
+    exit 1
+fi
 
 PER_GPU_BATCH_SIZE=32
 ACCUM_STEPS=1
@@ -61,7 +70,7 @@ SAVE_NAME="final.pt"
 TB_LOGDIR="runs/${EXP_NAME}"
 RESUME_FROM_CHECKPOINT=""
 
-export CUDA_VISIBLE_DEVICES=0,1,2
+export CUDA_VISIBLE_DEVICES
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
