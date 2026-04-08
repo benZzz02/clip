@@ -55,23 +55,23 @@ TEXT_MODEL_NAME="marcobombieri/surgicberta"
 VISION_PRETRAINED_WEIGHTS="$(pick_first_existing file \
   "${VISION_PRETRAINED_WEIGHTS:-}" \
   "$REPO_ROOT/lemonfm.pth" \
-  "/data/clip/lemonfm.pth" \
+  "/data/nfs_data/lemonfm.pth" \
   "/mnt/mydisk/CLIP/lemonfm.pth")"
 VIDEO_ROOT_FOLDER="$(pick_first_existing dir \
   "${VIDEO_ROOT_FOLDER:-}" \
   "$REPO_ROOT/downloaded_video_224_test" \
-  "/data/clip/downloaded_video_224_test" \
+  "/data/nfs_data/downloaded_video_224_test" \
   "/mnt/mydisk/CLIP/downloaded_video_224_test")"
 MAIN_CSV_PATH="$(pick_first_existing file \
   "${MAIN_CSV_PATH:-}" \
   "$REPO_ROOT/surglavi_level_csv/all_video.csv" \
-  "/data/clip/surglavi_level_csv/all_video.csv" \
+  "/data/nfs_data/surglavi_level_csv/all_video.csv" \
   "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv")"
 
 ANNOTATIONS_ROOT="$(pick_first_existing dir \
   "${ANNOTATIONS_ROOT:-}" \
   "$REPO_ROOT/surglavi_level_csv" \
-  "/data/clip/surglavi_level_csv" \
+  "/data/nfs_data/surglavi_level_csv" \
   "/mnt/mydisk/CLIP/surglavi_level_csv")"
 ANNOTATION_LEVELS="coarse,mid,fine"
 LEVEL_MIX="concat"
@@ -94,7 +94,7 @@ export CUDA_VISIBLE_DEVICES=0,1
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
-export SAVE_PREFIX="outputs/htg_multipositive_8f_run1/"
+export SAVE_PREFIX="/data/nfs_data/outputs/htg_multipositive_8f_run1/"
 
 if [[ -z "$VISION_PRETRAINED_WEIGHTS" ]]; then
   echo "Could not locate lemonfm.pth. Set VISION_PRETRAINED_WEIGHTS explicitly." >&2

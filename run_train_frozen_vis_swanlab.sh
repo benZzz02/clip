@@ -59,24 +59,24 @@ TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
 VISION_PRETRAINED_WEIGHTS="$(pick_first_existing file \
   "${VISION_PRETRAINED_WEIGHTS:-}" \
   "$REPO_ROOT/lemonfm.pth" \
-  "/data/clip/lemonfm.pth" \
+  "/data/nfs_data/lemonfm.pth" \
   "/mnt/mydisk/CLIP/lemonfm.pth")"
 
 # Data
 VIDEO_ROOT_FOLDER="$(pick_first_existing dir \
   "${VIDEO_ROOT_FOLDER:-}" \
   "$REPO_ROOT/downloaded_video_224_test" \
-  "/data/clip/downloaded_video_224_test" \
+  "/data/nfs_data/downloaded_video_224_test" \
   "/mnt/mydisk/CLIP/downloaded_video_224_test")"
 MAIN_CSV_PATH="$(pick_first_existing file \
   "${MAIN_CSV_PATH:-}" \
   "$REPO_ROOT/surglavi_level_csv/all_video.csv" \
-  "/data/clip/surglavi_level_csv/all_video.csv" \
+  "/data/nfs_data/surglavi_level_csv/all_video.csv" \
   "/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv")"
 ANNOTATIONS_ROOT="$(pick_first_existing dir \
   "${ANNOTATIONS_ROOT:-}" \
   "$REPO_ROOT/surglavi_level_csv" \
-  "/data/clip/surglavi_level_csv" \
+  "/data/nfs_data/surglavi_level_csv" \
   "/mnt/mydisk/CLIP/surglavi_level_csv")"
 ANNOTATION_LEVELS="${ANNOTATION_LEVELS:-coarse,mid,fine}"
 LEVEL_MIX="${LEVEL_MIX:-concat}"
@@ -103,7 +103,7 @@ HTG_LOSS_WEIGHT="${HTG_LOSS_WEIGHT:-0.1}"
 
 # Logging and outputs
 USE_SWANLAB="${USE_SWANLAB:-true}"
-SAVE_ROOT="${SAVE_ROOT:-/mnt/mydisk/CLIP/outputs}"
+SAVE_ROOT="${SAVE_ROOT:-/data/nfs_data/outputs}"
 SAVE_PREFIX="${SAVE_PREFIX:-${SAVE_ROOT}/${EXP_NAME}/}"
 TB_LOGDIR="${TB_LOGDIR:-runs/${EXP_NAME}}"
 SWANLAB_LOGDIR="${SWANLAB_LOGDIR:-swanlog/${EXP_NAME}}"
