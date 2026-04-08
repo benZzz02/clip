@@ -21,6 +21,7 @@ class DistributedMixedLevelBatchSampler(Sampler):
         dataset,
         batch_size,
         level_batch_sizes,
+        require_complete_triplet=False,
         num_replicas=None,
         rank=None,
         shuffle=True,
@@ -47,6 +48,7 @@ class DistributedMixedLevelBatchSampler(Sampler):
         self.shuffle = bool(shuffle)
         self.seed = int(seed)
         self.drop_last = bool(drop_last)
+        self.require_complete_triplet = bool(require_complete_triplet)
         self.epoch = 0
 
         if sum(self.level_batch_sizes.values()) != self.batch_size:
@@ -69,6 +71,17 @@ class DistributedMixedLevelBatchSampler(Sampler):
         ]
         if missing_levels:
             raise ValueError(f"Dataset is missing samples for levels: {missing_levels}")
+
+        self.complete_triplets = self._build_complete_triplets()
+        if self.require_complete_triplet:
+            required_levels = ("fine", "mid", "coarse")
+            for level in required_levels:
+                if self.level_batch_sizes.get(level, 0) <= 0:
+                    raise ValueError(
+                        f"require_complete_triplet=True requires level_batch_sizes[{level!r}] > 0"
+                    )
+            if not self.complete_triplets:
+                raise ValueError("No complete fine-mid-coarse triplets found in dataset.")
 
     def set_epoch(self, epoch):
         self.epoch = int(epoch)
@@ -101,7 +114,60 @@ class DistributedMixedLevelBatchSampler(Sampler):
 
         if not per_level_batches:
             return 0
+
         return min(per_level_batches)
+
+    def _build_complete_triplets(self):
+        samples_by_video = defaultdict(lambda: {"fine": [], "mid": [], "coarse": []})
+
+        for idx, sample in enumerate(self.dataset.samples):
+            level = str(sample.get("level", "fine"))
+            if level not in ("fine", "mid", "coarse"):
+                continue
+            video_path = sample.get("video_path")
+            if not video_path:
+                continue
+            samples_by_video[video_path][level].append((idx, sample))
+
+        triplets = []
+        for level_groups in samples_by_video.values():
+            fines = sorted(level_groups["fine"], key=lambda x: (x[1]["start_time"], x[1]["end_time"]))
+            mids = sorted(level_groups["mid"], key=lambda x: (x[1]["start_time"], x[1]["end_time"]))
+            coarses = sorted(level_groups["coarse"], key=lambda x: (x[1]["start_time"], x[1]["end_time"]))
+
+            if not fines or not mids or not coarses:
+                continue
+
+            for coarse_idx, coarse_sample in coarses:
+                chosen_mid = None
+                for mid_idx, mid_sample in mids:
+                    if (
+                        coarse_sample["start_time"] <= mid_sample["start_time"]
+                        and mid_sample["end_time"] <= coarse_sample["end_time"]
+                    ):
+                        chosen_mid = (mid_idx, mid_sample)
+                        break
+
+                if chosen_mid is None:
+                    continue
+
+                mid_idx, mid_sample = chosen_mid
+                chosen_fine = None
+                for fine_idx, fine_sample in fines:
+                    if (
+                        mid_sample["start_time"] <= fine_sample["start_time"]
+                        and fine_sample["end_time"] <= mid_sample["end_time"]
+                    ):
+                        chosen_fine = (fine_idx, fine_sample)
+                        break
+
+                if chosen_fine is None:
+                    continue
+
+                fine_idx, _ = chosen_fine
+                triplets.append((fine_idx, mid_idx, coarse_idx))
+
+        return triplets
 
     def __len__(self):
         return self._num_batches_for_rank()
@@ -133,9 +199,48 @@ class DistributedMixedLevelBatchSampler(Sampler):
             level_ptrs[level] = 0
             level_rngs[level] = rng
 
-        def draw_from_level(level, n):
+        triplet_pool = []
+        if self.require_complete_triplet:
+            allowed_fines = set(level_pools.get("fine", []))
+            allowed_mids = set(level_pools.get("mid", []))
+            allowed_coarses = set(level_pools.get("coarse", []))
+            triplets = [
+                triplet
+                for triplet in self.complete_triplets
+                if (
+                    triplet[0] in allowed_fines
+                    and triplet[1] in allowed_mids
+                    and triplet[2] in allowed_coarses
+                )
+            ]
+            triplet_rng = random.Random(self.seed + self.epoch * 1000 + 999)
+            if self.shuffle:
+                triplet_rng.shuffle(triplets)
+            triplet_pool = triplets
+            if not triplet_pool:
+                fallback_triplets = list(self.complete_triplets[self.rank::self.num_replicas])
+                if self.shuffle:
+                    triplet_rng.shuffle(fallback_triplets)
+                triplet_pool = fallback_triplets or list(self.complete_triplets)
+            if not triplet_pool:
+                raise RuntimeError(
+                    f"Rank {self.rank} could not build any complete triplet anchors."
+                )
+
+        def draw_from_level(level, n, forbidden=None):
+            if n <= 0:
+                return []
+
             pool = level_pools[level]
             ptr = level_ptrs[level]
+            forbidden = set() if forbidden is None else set(forbidden)
+
+            available = sum(1 for idx in pool if idx not in forbidden)
+            if available < n and self.drop_last:
+                raise RuntimeError(
+                    f"Not enough non-anchor samples for level={level} on rank={self.rank}. "
+                    f"Need {n}, have {available}."
+                )
 
             if len(pool) < n and self.drop_last:
                 raise RuntimeError(
@@ -144,29 +249,46 @@ class DistributedMixedLevelBatchSampler(Sampler):
                 )
 
             out = []
+            seen = set(forbidden)
             while len(out) < n:
                 if ptr >= len(pool):
                     ptr = 0
                     if self.shuffle and len(pool) > 1:
                         level_rngs[level].shuffle(pool)
 
-                take = min(n - len(out), len(pool) - ptr)
-                out.extend(pool[ptr:ptr + take])
-                ptr += take
+                candidate = pool[ptr]
+                ptr += 1
+                if candidate in seen:
+                    continue
+                out.append(candidate)
+                seen.add(candidate)
 
             level_ptrs[level] = ptr
             return out
 
         batch_rng = random.Random(self.seed + self.epoch * 100000 + self.rank)
 
-        for _ in range(num_batches):
+        for batch_idx in range(num_batches):
             batch = []
+            anchors = []
+            if self.require_complete_triplet:
+                anchors = list(triplet_pool[batch_idx % len(triplet_pool)])
+                batch.extend(anchors)
+
             for level in self.level_order:
                 take_n = self.level_batch_sizes[level]
                 if take_n > 0:
-                    batch.extend(draw_from_level(level, take_n))
+                    anchor_count = 0
+                    if self.require_complete_triplet and level in ("fine", "mid", "coarse"):
+                        anchor_count = 1
+                    batch.extend(draw_from_level(level, take_n - anchor_count, forbidden=batch))
 
             if self.shuffle:
-                batch_rng.shuffle(batch)
+                if anchors:
+                    tail = batch[len(anchors):]
+                    batch_rng.shuffle(tail)
+                    batch = anchors + tail
+                else:
+                    batch_rng.shuffle(batch)
 
             yield batch

@@ -270,6 +270,18 @@ def parse_args():
         default=0.5,
         help="Weight for the train-time expanded-window selection contrastive loss",
     )
+    parser.add_argument(
+        "--enable_htg",
+        type=str2bool,
+        default=False,
+        help="Enable multi-positive hierarchical anchoring",
+    )
+    parser.add_argument(
+        "--htg_loss_weight",
+        type=float,
+        default=0.1,
+        help="Weight for hierarchical multi-positive anchoring loss",
+    )
 
     return parser.parse_args()
 
@@ -285,6 +297,30 @@ def parse_level_batch_sizes(spec: str):
     if not out:
         raise ValueError("level_batch_sizes is empty")
     return out
+
+
+def collate_fn_expanded_frames_only(batch):
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) not in (5, 8):
+            raise ValueError(
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids) or the same plus sample metadata."
+            )
+        if len(item) == 5:
+            _, selection_images, input_ids, attention_mask, level_ids = item
+            compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+        else:
+            _, selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = item
+            compact_batch.append(
+                (selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times)
+            )
+
+    if not compact_batch:
+        return None
+
+    return torch.utils.data.dataloader.default_collate(compact_batch)
 
 
 LEVEL_NAME_BY_ID = {
@@ -356,7 +392,11 @@ def clip_contrastive_loss(
     input_ids,
     attention_mask,
     level_ids,
+    video_ids=None,
+    start_times=None,
+    end_times=None,
     selection_loss_weight=0.5,
+    htg_loss_weight=0.0,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=images,
@@ -392,7 +432,41 @@ def clip_contrastive_loss(
         return base_loss
 
     selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-    return base_loss + selection_loss_weight * selection_loss
+    total_loss = base_loss + selection_loss_weight * selection_loss
+
+    htg_loss = None
+    if (
+        htg_loss_weight > 0
+        and selected_image_features is not None
+        and video_ids is not None
+        and start_times is not None
+        and end_times is not None
+    ):
+        fine_mask = level_ids == 0
+        parent_mask = level_ids > 0
+        if fine_mask.any() and parent_mask.any():
+            per_parent_losses = []
+            parent_indices = torch.nonzero(parent_mask, as_tuple=False).flatten()
+            for parent_idx in parent_indices.tolist():
+                child_mask = (
+                    fine_mask
+                    & (video_ids == video_ids[parent_idx])
+                    & (start_times >= start_times[parent_idx])
+                    & (end_times <= end_times[parent_idx])
+                )
+                child_indices = torch.nonzero(child_mask, as_tuple=False).flatten()
+                if child_indices.numel() == 0:
+                    continue
+
+                logits = logit_scale * (selected_image_features[parent_idx : parent_idx + 1] @ text_features.t())
+                log_probs = F.log_softmax(logits, dim=-1)
+                per_parent_losses.append(-log_probs[0, child_indices].mean())
+
+            if per_parent_losses:
+                htg_loss = torch.stack(per_parent_losses).mean()
+                total_loss = total_loss + htg_loss_weight * htg_loss
+
+    return total_loss
 
 
 def train():
@@ -457,6 +531,8 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
+        "enable_htg": args.enable_htg,
+        "htg_loss_weight": args.htg_loss_weight,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -569,6 +645,7 @@ def train():
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
         return_expanded_frames=True,
+        return_sample_meta=CONFIG["enable_htg"],
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -580,6 +657,7 @@ def train():
         train_dataset,
         batch_size=PER_GPU_BATCH_SIZE,
         level_batch_sizes=LEVEL_BATCH_SIZES,
+        require_complete_triplet=CONFIG["enable_htg"],
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
@@ -742,12 +820,31 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            if len(batch) == 5:
+                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+                video_ids = None
+                start_times = None
+                end_times = None
+            else:
+                (
+                    images_cpu,
+                    selection_images_cpu,
+                    input_ids,
+                    attention_mask,
+                    level_ids,
+                    video_ids,
+                    start_times,
+                    end_times,
+                ) = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             images = None
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
+            if video_ids is not None:
+                video_ids = video_ids.to(device, non_blocking=True)
+                start_times = start_times.to(device, non_blocking=True)
+                end_times = end_times.to(device, non_blocking=True)
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -765,7 +862,11 @@ def train():
                         input_ids,
                         attention_mask,
                         level_ids,
+                        video_ids=video_ids,
+                        start_times=start_times,
+                        end_times=end_times,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
+                        htg_loss_weight=CONFIG.get("htg_loss_weight", 0.0),
                     )
                     loss = raw_loss / current_accum_steps
 

@@ -58,6 +58,8 @@ LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
 LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.5}"
+ENABLE_HTG="${ENABLE_HTG:-false}"
+HTG_LOSS_WEIGHT="${HTG_LOSS_WEIGHT:-0.1}"
 
 # Logging and outputs
 USE_SWANLAB="${USE_SWANLAB:-true}"
@@ -117,6 +119,8 @@ if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
       --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
       --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
       --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
+      --enable_htg "$ENABLE_HTG" \
+      --htg_loss_weight "$HTG_LOSS_WEIGHT" \
       --resume_from_checkpoint "$RESUME_FROM_CHECKPOINT"
 else
   torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \
@@ -151,5 +155,7 @@ else
       --local_temperature "$LOCAL_TEMPERATURE" \
       --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
       --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
-      --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
+      --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
+      --enable_htg "$ENABLE_HTG" \
+      --htg_loss_weight "$HTG_LOSS_WEIGHT"
 fi
