@@ -765,18 +765,28 @@ def train():
         optimizer.zero_grad(set_to_none=True)
         last_loss_value = None
         accum_loss_sum = torch.zeros((), device=device)
+        valid_step = 0
+        skipped_batches = 0
 
         for step, batch in enumerate(progress_bar):
-            if batch is None:
+            batch_is_valid = torch.tensor(
+                0 if batch is None else 1,
+                device=device,
+                dtype=torch.int32,
+            )
+            dist.all_reduce(batch_is_valid, op=dist.ReduceOp.MIN)
+            if batch_is_valid.item() == 0:
+                skipped_batches += 1
                 continue
 
+            valid_step += 1
             selection_images_cpu, input_ids, attention_mask, level_ids = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
 
-            micro_step = (step % ACCUM_STEPS) + 1
+            micro_step = ((valid_step - 1) % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
             current_accum_steps = micro_step if (is_last_batch and micro_step != ACCUM_STEPS) else ACCUM_STEPS
             should_update = (micro_step == ACCUM_STEPS) or is_last_batch
@@ -860,6 +870,8 @@ def train():
             del input_ids, attention_mask, level_ids
 
         if rank == 0:
+            if skipped_batches > 0:
+                print(f"Epoch {epoch + 1} 跳过坏 batch 数: {skipped_batches}")
             print(
                 f"Epoch {epoch + 1} 完成。最后记录损失: "
                 f"{last_loss_value if last_loss_value is not None else 'N/A'}"

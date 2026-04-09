@@ -72,7 +72,7 @@ class PretrainDataset(Dataset):
         self.max_length = max_length
         self.sample_mode = sample_mode
         self.ffmpeg_timeout = ffmpeg_timeout
-        self.max_retry = max_retry
+        self.max_retry = max(1, int(max_retry))
         self.video_root_folder = video_root_folder
         self.assume_resized_video = assume_resized_video
         self.num_frames = max(1, int(num_frames))
@@ -109,6 +109,9 @@ class PretrainDataset(Dataset):
     def __len__(self):
         return len(self.samples)
 
+    def _evict_video_reader(self, video_path):
+        self._video_reader_cache.pop(video_path, None)
+
     def _get_video_reader(self, video_path):
         if self.video_reader_cache_size > 0:
             cached_reader = self._video_reader_cache.get(video_path)
@@ -116,11 +119,19 @@ class PretrainDataset(Dataset):
                 self._video_reader_cache.move_to_end(video_path)
                 return cached_reader
 
-        reader = VideoReader(
-            video_path,
-            ctx=cpu(0),
-            num_threads=self.video_reader_threads,
-        )
+        kwargs = {
+            "ctx": cpu(0),
+            "num_threads": self.video_reader_threads,
+        }
+        if not self.assume_resized_video:
+            kwargs["width"] = self.image_size
+            kwargs["height"] = self.image_size
+
+        try:
+            reader = VideoReader(video_path, **kwargs)
+        except TypeError:
+            kwargs.pop("num_threads", None)
+            reader = VideoReader(video_path, **kwargs)
 
         if self.video_reader_cache_size > 0:
             self._video_reader_cache[video_path] = reader
@@ -249,12 +260,14 @@ class PretrainDataset(Dataset):
         try:
             vr = self._get_video_reader(video_path)
         except Exception as e:
+            self._evict_video_reader(video_path)
             print(f"[decord open failed] {video_path} | {e}")
             return None
 
         try:
             num_video_frames = len(vr)
             if num_video_frames <= 0:
+                self._evict_video_reader(video_path)
                 print(f"[decord empty video] {video_path}")
                 return None
 
@@ -285,12 +298,14 @@ class PretrainDataset(Dataset):
                 video_duration=video_duration,
             )
             if frame_indices is None:
+                self._evict_video_reader(video_path)
                 return None
 
             frames_np = vr.get_batch(frame_indices).asnumpy()
             return self._postprocess_frames(frames_np)
 
         except Exception as e:
+            self._evict_video_reader(video_path)
             print(f"[decord decode failed] {video_path} | {e}")
             return None
 
@@ -363,64 +378,8 @@ class PretrainDataset(Dataset):
             )
             idx = random.randint(0, len(self.samples) - 1)
 
-        retry_count = self.max_retry
-        while True:
-            item = self.samples[idx]
-
-            expanded_images = None
-            if self.return_expanded_frames:
-                expanded_images = self._try_get_images(
-                    item["video_path"],
-                    item["start_time"],
-                    item["end_time"],
-                    expand_ratio=self.expanded_window_ratio,
-                )
-                if expanded_images is None:
-                    images = self._try_get_images(
-                        item["video_path"],
-                        item["start_time"],
-                        item["end_time"],
-                        expand_ratio=1.0,
-                    )
-                    expanded_images = images
-                else:
-                    images = expanded_images
-            else:
-                images = self._try_get_images(
-                    item["video_path"],
-                    item["start_time"],
-                    item["end_time"],
-                    expand_ratio=1.0,
-                )
-
-            if images is not None:
-                input_ids, attention_mask = self._build_text(item["caption"])
-                level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
-                if self.return_expanded_frames:
-                    expanded_images = images
-                if self.return_level_id:
-                    if self.return_expanded_frames:
-                        return (
-                            images,
-                            expanded_images,
-                            input_ids,
-                            attention_mask,
-                            torch.tensor(level_id, dtype=torch.long),
-                        )
-                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
-                if self.return_expanded_frames:
-                    return images, expanded_images, input_ids, attention_mask
-                return images, input_ids, attention_mask
-
-            retry_count += 1
-            if retry_count % 100 == 0:
-                print(
-                    "PretrainDataset is still skipping bad samples after "
-                    f"{retry_count} retries. Last sample: {last_error}"
-                )
-
-            last_error = (
-                f"video={item['video_path']}, "
-                f"start={item['start_time']}, end={item['end_time']}"
-            )
-            idx = random.randint(0, len(self.samples) - 1)
+        print(
+            "PretrainDataset exhausted retries and will skip sample: "
+            f"{last_error}"
+        )
+        return None

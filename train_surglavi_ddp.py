@@ -40,7 +40,10 @@ def cleanup_ddp():
 
 def collate_fn_skip_corrupted(batch):
     # 兼容你原来的坏样本过滤逻辑（images 全 0 时跳过）
-    batch = [item for item in batch if not torch.all(item[0].eq(0))]
+    batch = [
+        item for item in batch
+        if item is not None and not torch.all(item[0].eq(0))
+    ]
     if len(batch) == 0:
         return None
     return torch.utils.data.dataloader.default_collate(batch)
@@ -355,14 +358,24 @@ def train():
         progress = tqdm(train_loader, disable=(rank != 0), desc=f"Epoch {epoch+1}/{args.epochs}")
 
         optimizer.zero_grad(set_to_none=True)
+        valid_step = 0
+        skipped_batches = 0
 
         for step, batch in enumerate(progress):
-            if batch is None:
+            batch_is_valid = torch.tensor(
+                0 if batch is None else 1,
+                device=device,
+                dtype=torch.int32,
+            )
+            dist.all_reduce(batch_is_valid, op=dist.ReduceOp.MIN)
+            if batch_is_valid.item() == 0:
+                skipped_batches += 1
                 continue
 
+            valid_step += 1
             images, input_ids, attention_mask = [b.to(device, non_blocking=True) for b in batch]
 
-            micro_step = (step % args.accum_steps) + 1
+            micro_step = ((valid_step - 1) % args.accum_steps) + 1
             should_update = (micro_step == args.accum_steps)
 
             sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
@@ -394,6 +407,9 @@ def train():
 
             if rank == 0:
                 progress.set_postfix(loss=float(raw_loss.item()), lr=float(scheduler.get_last_lr()[0]))
+
+        if rank == 0 and skipped_batches > 0:
+            print(f"Epoch {epoch + 1} skipped bad batches: {skipped_batches}", flush=True)
 
         # periodic save
         if args.save_every and ((epoch + 1) % args.save_every == 0):
