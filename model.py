@@ -410,7 +410,14 @@ class VLP(nn.Module):
 
         return video_global_hidden, frame_tokens
 
-    def _compute_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+    def _compute_frame_selection_weights(
+        self,
+        frame_tokens,
+        token_hidden,
+        attention_mask,
+        level_ids=None,
+        capture_debug_stats=False,
+    ):
         batch_size = frame_tokens.size(0)
         dtype = frame_tokens.dtype
         device = frame_tokens.device
@@ -439,23 +446,30 @@ class VLP(nn.Module):
             temperatures=frame_temps,
         )
 
-        frame_best = self._masked_max(
-            raw_alignment,
-            token_mask.unsqueeze(1),
-            dim=-1,
-        )
-        frame_mean = self._masked_mean(
-            raw_alignment,
-            token_mask.unsqueeze(1),
-            dim=-1,
-        )
-        frame_margin = F.relu(frame_best - frame_mean)
-        confidence = (frame_margin.mean(dim=-1) / 0.35).clamp(
-            min=0.0,
-            max=1.0,
-        )
+        debug_stats = None
+        if capture_debug_stats:
+            frame_best = self._masked_max(
+                raw_alignment,
+                token_mask.unsqueeze(1),
+                dim=-1,
+            )
+            frame_mean = self._masked_mean(
+                raw_alignment,
+                token_mask.unsqueeze(1),
+                dim=-1,
+            )
+            frame_margin = F.relu(frame_best - frame_mean)
+            confidence = (frame_margin.mean(dim=-1) / 0.35).clamp(
+                min=0.0,
+                max=1.0,
+            )
+            debug_stats = {
+                "pair_confidence": confidence.detach(),
+                "frame_entropy": self._normalized_entropy(frame_weights).detach(),
+                "frame_peak": frame_weights.max(dim=-1).values.detach(),
+            }
 
-        return frame_weights, confidence.detach()
+        return frame_weights, debug_stats
 
     def _project_video_global(self, video_global_hidden):
         return F.normalize(self.video_projection(video_global_hidden), dim=-1)
@@ -468,7 +482,15 @@ class VLP(nn.Module):
         self.last_text_gate = None
         return F.normalize(self.text.project(text_global_hidden), dim=-1)
 
-    def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
+    def encode_training_pair(
+        self,
+        image,
+        input_ids,
+        attention_mask,
+        level_ids=None,
+        selection_image=None,
+        capture_debug_stats=False,
+    ):
         source_image = selection_image if (self.training and selection_image is not None) else image
         if source_image is None:
             raise ValueError("encode_training_pair requires image or selection_image.")
@@ -484,21 +506,26 @@ class VLP(nn.Module):
         selected_image_features = None
 
         if self.training and selection_image is not None:
-            frame_weights, pair_confidence = self._compute_frame_selection_weights(
+            frame_weights, debug_stats = self._compute_frame_selection_weights(
                 frame_tokens=frame_tokens,
                 token_hidden=token_hidden,
                 attention_mask=attention_mask,
                 level_ids=level_ids,
+                capture_debug_stats=capture_debug_stats,
             )
             selected_image_features = self._project_selected_video(
                 frame_tokens,
                 frame_weights,
             )
-            frame_entropy = self._normalized_entropy(frame_weights)
             self.last_frame_weights = frame_weights.detach()
-            self.last_pair_confidence = pair_confidence.detach()
-            self.last_frame_entropy = frame_entropy.detach()
-            self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+            if debug_stats is not None:
+                self.last_pair_confidence = debug_stats["pair_confidence"]
+                self.last_frame_entropy = debug_stats["frame_entropy"]
+                self.last_frame_peak = debug_stats["frame_peak"]
+            else:
+                self.last_pair_confidence = None
+                self.last_frame_entropy = None
+                self.last_frame_peak = None
         else:
             self.last_frame_weights = None
             self.last_pair_confidence = None

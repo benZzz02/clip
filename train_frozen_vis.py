@@ -389,6 +389,7 @@ def clip_contrastive_loss(
     attention_mask,
     level_ids,
     selection_loss_weight=0.5,
+    capture_debug_stats=False,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=selection_images,
@@ -396,6 +397,7 @@ def clip_contrastive_loss(
         attention_mask=attention_mask,
         level_ids=level_ids,
         selection_image=selection_images,
+        capture_debug_stats=capture_debug_stats,
     )
     rank = dist.get_rank()
     batch_size = image_features.size(0)
@@ -403,15 +405,18 @@ def clip_contrastive_loss(
     logit_scale = model.module.logit_scale.exp()
     labels = torch.arange(batch_size, device=device) + rank * batch_size
 
+    def _gather_with_local_grad(local_features):
+        gathered = concat_all_gather(local_features.detach())
+        gathered[rank] = local_features
+        return torch.cat(gathered, dim=0)
+
+    all_text_features = _gather_with_local_grad(text_features)
+
     def _symmetric_contrastive(image_feats, text_feats):
         gathered_image = concat_all_gather(image_feats.detach())
-        gathered_text = concat_all_gather(text_feats.detach())
-
         gathered_image[rank] = image_feats
-        gathered_text[rank] = text_feats
 
         all_image_features = torch.cat(gathered_image, dim=0)
-        all_text_features = torch.cat(gathered_text, dim=0)
 
         logits_per_image = logit_scale * image_feats @ all_text_features.t()
         logits_per_text = logit_scale * text_feats @ all_image_features.t()
@@ -816,6 +821,11 @@ def train():
             is_last_batch = (step + 1) == num_batches
             current_accum_steps = micro_step if (is_last_batch and micro_step != ACCUM_STEPS) else ACCUM_STEPS
             should_update = (micro_step == ACCUM_STEPS) or is_last_batch
+            capture_debug_stats = (
+                should_update
+                and DEBUG_LOG_INTERVAL > 0
+                and ((global_step + 1) % DEBUG_LOG_INTERVAL == 0)
+            )
 
             sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
 
@@ -828,6 +838,7 @@ def train():
                         attention_mask,
                         level_ids,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
+                        capture_debug_stats=capture_debug_stats,
                     )
                     loss = raw_loss / current_accum_steps
 
@@ -854,7 +865,12 @@ def train():
                 loss_avg = loss_log.item() / world_size
                 last_loss_value = loss_avg
                 accum_loss_sum.zero_()
-                debug_stats = _collect_debug_stats(_unwrap_state_io_module(model.module), level_ids)
+                debug_stats = {}
+                if capture_debug_stats:
+                    debug_stats = _collect_debug_stats(
+                        _unwrap_state_io_module(model.module),
+                        level_ids,
+                    )
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
