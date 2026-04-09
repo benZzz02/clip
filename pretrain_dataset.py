@@ -1,6 +1,7 @@
 # pretrain_dataset.py
 
 import random
+from collections import OrderedDict
 
 import numpy as np
 import torch
@@ -51,6 +52,8 @@ class PretrainDataset(Dataset):
         use_samples_cache=True,
         rebuild_samples_cache=False,
         samples_cache_version="v1",
+        video_reader_threads=1,
+        video_reader_cache_size=16,
     ):
         super().__init__()
 
@@ -78,6 +81,9 @@ class PretrainDataset(Dataset):
         self.use_samples_cache = bool(use_samples_cache)
         self.rebuild_samples_cache = bool(rebuild_samples_cache)
         self.samples_cache_version = str(samples_cache_version)
+        self.video_reader_threads = max(1, int(video_reader_threads))
+        self.video_reader_cache_size = max(0, int(video_reader_cache_size))
+        self._video_reader_cache = OrderedDict()
 
         self.pixel_mean = torch.tensor(
             [0.485, 0.456, 0.406], dtype=torch.float32
@@ -102,6 +108,27 @@ class PretrainDataset(Dataset):
 
     def __len__(self):
         return len(self.samples)
+
+    def _get_video_reader(self, video_path):
+        if self.video_reader_cache_size > 0:
+            cached_reader = self._video_reader_cache.get(video_path)
+            if cached_reader is not None:
+                self._video_reader_cache.move_to_end(video_path)
+                return cached_reader
+
+        reader = VideoReader(
+            video_path,
+            ctx=cpu(0),
+            num_threads=self.video_reader_threads,
+        )
+
+        if self.video_reader_cache_size > 0:
+            self._video_reader_cache[video_path] = reader
+            self._video_reader_cache.move_to_end(video_path)
+            while len(self._video_reader_cache) > self.video_reader_cache_size:
+                self._video_reader_cache.popitem(last=False)
+
+        return reader
 
     def _sample_timestamps(self, start_time, end_time, video_duration):
         if video_duration is not None and video_duration > 0:
@@ -220,7 +247,7 @@ class PretrainDataset(Dataset):
 
     def _try_get_images(self, video_path, text_start_time, text_end_time, expand_ratio=1.0):
         try:
-            vr = VideoReader(video_path, ctx=cpu(0))
+            vr = self._get_video_reader(video_path)
         except Exception as e:
             print(f"[decord open failed] {video_path} | {e}")
             return None

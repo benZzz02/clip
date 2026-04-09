@@ -287,6 +287,24 @@ def parse_level_batch_sizes(spec: str):
     return out
 
 
+def collate_fn_expanded_frames_only(batch):
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) != 5:
+            raise ValueError(
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids)."
+            )
+        _, selection_images, input_ids, attention_mask, level_ids = item
+        compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+
+    if not compact_batch:
+        return None
+
+    return torch.utils.data.dataloader.default_collate(compact_batch)
+
+
 LEVEL_NAME_BY_ID = {
     0: "fine",
     1: "mid",
@@ -351,7 +369,6 @@ def _collect_debug_stats(model_module, level_ids):
 
 def clip_contrastive_loss(
     model,
-    images,
     selection_images,
     input_ids,
     attention_mask,
@@ -359,7 +376,7 @@ def clip_contrastive_loss(
     selection_loss_weight=0.5,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
-        image=images,
+        image=selection_images,
         input_ids=input_ids,
         attention_mask=attention_mask,
         level_ids=level_ids,
@@ -598,6 +615,7 @@ def train():
         batch_sampler=train_sampler,
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
+        collate_fn=collate_fn_expanded_frames_only,
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
     )
@@ -749,9 +767,11 @@ def train():
         accum_loss_sum = torch.zeros((), device=device)
 
         for step, batch in enumerate(progress_bar):
-            images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            if batch is None:
+                continue
+
+            selection_images_cpu, input_ids, attention_mask, level_ids = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
-            images = None
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
@@ -767,7 +787,6 @@ def train():
                 with autocast(dtype=amp_dtype):
                     raw_loss = clip_contrastive_loss(
                         model,
-                        images,
                         selection_images,
                         input_ids,
                         attention_mask,
@@ -838,7 +857,7 @@ def train():
                             flush=True,
                         )
 
-            del images, input_ids, attention_mask, level_ids
+            del input_ids, attention_mask, level_ids
 
         if rank == 0:
             print(
