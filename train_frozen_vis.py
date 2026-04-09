@@ -184,6 +184,21 @@ def parse_args():
     parser.add_argument("--ffmpeg_timeout", type=int, default=10)
     parser.add_argument("--max_retry", type=int, default=5)
     parser.add_argument(
+        "--prefetch_factor",
+        type=int,
+        default=int(os.environ.get("PREFETCH_FACTOR", 2)),
+    )
+    parser.add_argument(
+        "--video_reader_threads",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_THREADS", 1)),
+    )
+    parser.add_argument(
+        "--video_reader_cache_size",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 16)),
+    )
+    parser.add_argument(
         "--assume_resized_video",
         type=str2bool,
         default=os.environ.get("PRETRAIN_VIDEO_ALREADY_RESIZED", "0") == "1",
@@ -463,6 +478,9 @@ def train():
         "video_root_folder": args.video_root_folder,
         "ffmpeg_timeout": args.ffmpeg_timeout,
         "max_retry": args.max_retry,
+        "prefetch_factor": max(1, int(args.prefetch_factor)),
+        "video_reader_threads": max(1, int(args.video_reader_threads)),
+        "video_reader_cache_size": max(0, int(args.video_reader_cache_size)),
         "assume_resized_video": args.assume_resized_video,
         "num_frames": args.num_frames,
         "annotations_root": args.annotations_root,
@@ -569,6 +587,9 @@ def train():
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
         print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
+        print(f"prefetch_factor: {CONFIG['prefetch_factor']}")
+        print(f"video_reader_threads: {CONFIG['video_reader_threads']}")
+        print(f"video_reader_cache_size: {CONFIG['video_reader_cache_size']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -596,6 +617,8 @@ def train():
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
         samples_cache_version=CONFIG["samples_cache_version"],
+        video_reader_threads=CONFIG["video_reader_threads"],
+        video_reader_cache_size=CONFIG["video_reader_cache_size"],
     )
 
     train_sampler = DistributedMixedLevelBatchSampler(
@@ -617,7 +640,7 @@ def train():
         pin_memory=True,
         collate_fn=collate_fn_expanded_frames_only,
         persistent_workers=(CONFIG["num_workers"] > 0),
-        prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
+        prefetch_factor=CONFIG["prefetch_factor"] if CONFIG["num_workers"] > 0 else None,
     )
 
     num_batches = len(train_loader)
@@ -663,6 +686,9 @@ def train():
                     "video_root_folder": CONFIG["video_root_folder"],
                     "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],
                     "max_retry": CONFIG["max_retry"],
+                    "prefetch_factor": CONFIG["prefetch_factor"],
+                    "video_reader_threads": CONFIG["video_reader_threads"],
+                    "video_reader_cache_size": CONFIG["video_reader_cache_size"],
                     "assume_resized_video": CONFIG["assume_resized_video"],
                     "num_frames": CONFIG["num_frames"],
                     "per_gpu_batch_size": PER_GPU_BATCH_SIZE,
