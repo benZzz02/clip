@@ -47,7 +47,6 @@ class PretrainDataset(Dataset):
         level_seed=42,
         return_level_id=False,
         return_expanded_frames=False,
-        return_sample_meta=False,
         expanded_window_ratio=2.0,
         samples_cache_dir=".cache/pretrain_samples",
         use_samples_cache=True,
@@ -66,7 +65,6 @@ class PretrainDataset(Dataset):
         self.level_seed = int(level_seed)
         self.return_level_id = bool(return_level_id)
         self.return_expanded_frames = bool(return_expanded_frames)
-        self.return_sample_meta = bool(return_sample_meta)
         self.expanded_window_ratio = max(1.0, float(expanded_window_ratio))
 
         self.tokenizer = tokenizer
@@ -107,10 +105,6 @@ class PretrainDataset(Dataset):
             rebuild_samples_cache=self.rebuild_samples_cache,
             samples_cache_version=self.samples_cache_version,
         )
-        unique_video_paths = sorted({sample["video_path"] for sample in self.samples})
-        self.video_id_by_path = {
-            video_path: idx for idx, video_path in enumerate(unique_video_paths)
-        }
 
     def _get_video_reader(self, video_path):
         if self.video_reader_cache_size > 0:
@@ -312,12 +306,27 @@ class PretrainDataset(Dataset):
         attention_mask = tokenized_text["attention_mask"].squeeze(0)
         return input_ids, attention_mask
 
-    def _build_sample_meta(self, item):
-        return (
-            torch.tensor(self.video_id_by_path[item["video_path"]], dtype=torch.long),
-            torch.tensor(item["start_time"], dtype=torch.float32),
-            torch.tensor(item["end_time"], dtype=torch.float32),
-        )
+    def _build_return_value(self, item, images, expanded_images):
+        input_ids, attention_mask = self._build_text(item["caption"])
+        level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+
+        if self.return_expanded_frames:
+            expanded_images = images if expanded_images is None else expanded_images
+
+        if self.return_level_id:
+            if self.return_expanded_frames:
+                return (
+                    images,
+                    expanded_images,
+                    input_ids,
+                    attention_mask,
+                    torch.tensor(level_id, dtype=torch.long),
+                )
+            return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+
+        if self.return_expanded_frames:
+            return images, expanded_images, input_ids, attention_mask
+        return images, input_ids, attention_mask
 
     def __getitem__(self, idx):
         last_error = None
@@ -352,46 +361,7 @@ class PretrainDataset(Dataset):
                 )
 
             if images is not None:
-                input_ids, attention_mask = self._build_text(item["caption"])
-                level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
-                sample_meta = self._build_sample_meta(item) if self.return_sample_meta else None
-
-                if self.return_expanded_frames:
-                    expanded_images = images
-                if self.return_level_id:
-                    if self.return_expanded_frames:
-                        if self.return_sample_meta:
-                            return (
-                                images,
-                                expanded_images,
-                                input_ids,
-                                attention_mask,
-                                torch.tensor(level_id, dtype=torch.long),
-                                *sample_meta,
-                            )
-                        return (
-                            images,
-                            expanded_images,
-                            input_ids,
-                            attention_mask,
-                            torch.tensor(level_id, dtype=torch.long),
-                        )
-                    if self.return_sample_meta:
-                        return (
-                            images,
-                            input_ids,
-                            attention_mask,
-                            torch.tensor(level_id, dtype=torch.long),
-                            *sample_meta,
-                        )
-                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
-                if self.return_expanded_frames:
-                    if self.return_sample_meta:
-                        return images, expanded_images, input_ids, attention_mask, *sample_meta
-                    return images, expanded_images, input_ids, attention_mask
-                if self.return_sample_meta:
-                    return images, input_ids, attention_mask, *sample_meta
-                return images, input_ids, attention_mask
+                return self._build_return_value(item, images, expanded_images)
 
             last_error = (
                 f"video={item['video_path']}, "
@@ -430,46 +400,7 @@ class PretrainDataset(Dataset):
                 )
 
             if images is not None:
-                input_ids, attention_mask = self._build_text(item["caption"])
-                level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
-                sample_meta = self._build_sample_meta(item) if self.return_sample_meta else None
-
-                if self.return_expanded_frames:
-                    expanded_images = images
-                if self.return_level_id:
-                    if self.return_expanded_frames:
-                        if self.return_sample_meta:
-                            return (
-                                images,
-                                expanded_images,
-                                input_ids,
-                                attention_mask,
-                                torch.tensor(level_id, dtype=torch.long),
-                                *sample_meta,
-                            )
-                        return (
-                            images,
-                            expanded_images,
-                            input_ids,
-                            attention_mask,
-                            torch.tensor(level_id, dtype=torch.long),
-                        )
-                    if self.return_sample_meta:
-                        return (
-                            images,
-                            input_ids,
-                            attention_mask,
-                            torch.tensor(level_id, dtype=torch.long),
-                            *sample_meta,
-                        )
-                    return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
-                if self.return_expanded_frames:
-                    if self.return_sample_meta:
-                        return images, expanded_images, input_ids, attention_mask, *sample_meta
-                    return images, expanded_images, input_ids, attention_mask
-                if self.return_sample_meta:
-                    return images, input_ids, attention_mask, *sample_meta
-                return images, input_ids, attention_mask
+                return self._build_return_value(item, images, expanded_images)
 
             retry_count += 1
             if retry_count % 100 == 0:
