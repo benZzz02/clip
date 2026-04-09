@@ -422,6 +422,9 @@ def train():
     USE_SWANLAB = args.use_swanlab
     LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
     DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
+    anchor_same_video_triplets = all(
+        LEVEL_BATCH_SIZES.get(level, 0) > 0 for level in ("fine", "mid", "coarse")
+    )
 
     if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
         raise ValueError(
@@ -457,6 +460,7 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
+        "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -547,6 +551,7 @@ def train():
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
+        print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -580,6 +585,7 @@ def train():
         train_dataset,
         batch_size=PER_GPU_BATCH_SIZE,
         level_batch_sizes=LEVEL_BATCH_SIZES,
+        anchor_same_video_triplets=CONFIG["anchor_same_video_triplets"],
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
@@ -656,6 +662,7 @@ def train():
                     "samples_cache_version": args.samples_cache_version,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
+                    "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
                 }
