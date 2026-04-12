@@ -22,6 +22,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer
 
 from mixed_level_batch_sampler import DistributedMixedLevelBatchSampler
+from peskavlp_adapter import PeskaVLPAdapter, load_state_dict_flexible
 from pretrain_dataset import PretrainDataset
 
 # 你复制 surgclip/ 到仓库根目录后，这个 import 才会生效
@@ -145,17 +146,10 @@ def configure_finetuning(
     )
     if not replaced:
         raise RuntimeError(f"No linear layers matched LoRA targets: {lora_targets}")
-
-    model.surgclip.vision_proj.weight.requires_grad = True
-    if model.surgclip.vision_proj.bias is not None:
-        model.surgclip.vision_proj.bias.requires_grad = True
-    model.surgclip.text_proj.weight.requires_grad = True
-    if model.surgclip.text_proj.bias is not None:
-        model.surgclip.text_proj.bias.requires_grad = True
-    model.frame_local_projection.weight.requires_grad = True
-    if model.frame_local_projection.bias is not None:
-        model.frame_local_projection.bias.requires_grad = True
-    model.logit_scale.requires_grad = True
+    if hasattr(model, "enable_lora_trainable_parameters"):
+        model.enable_lora_trainable_parameters()
+    else:
+        model.logit_scale.requires_grad = True
 
     return {"mode": "lora", "replaced_modules": replaced}
 
@@ -164,6 +158,29 @@ def count_parameters(module: nn.Module):
     total = sum(param.numel() for param in module.parameters())
     trainable = sum(param.numel() for param in module.parameters() if param.requires_grad)
     return total, trainable
+
+
+def load_initial_weights_if_needed(model: nn.Module, ckpt_path: str, device, rank: int):
+    if not ckpt_path:
+        return
+
+    if rank == 0:
+        print(f"[rank0] loading init checkpoint from: {ckpt_path}")
+
+    model_device = next(model.parameters()).device
+
+    msg, format_name = load_state_dict_flexible(
+        model,
+        ckpt_path,
+        device=model_device,
+        source="init checkpoint",
+        validate_prefixes=False,
+    )
+
+    if rank == 0:
+        print(f"[rank0] init checkpoint format={format_name}")
+        print(f"[rank0] init missing keys={msg.missing_keys}")
+        print(f"[rank0] init unexpected keys={msg.unexpected_keys}")
 
 
 def parse_float_list(spec: str, expected_len: int = None):
@@ -235,6 +252,18 @@ class SurgCLIPAdapter(torch.nn.Module):
         self.last_pair_confidence = None
         self.last_frame_entropy = None
         self.last_frame_peak = None
+
+    def enable_lora_trainable_parameters(self):
+        self.surgclip.vision_proj.weight.requires_grad = True
+        if self.surgclip.vision_proj.bias is not None:
+            self.surgclip.vision_proj.bias.requires_grad = True
+        self.surgclip.text_proj.weight.requires_grad = True
+        if self.surgclip.text_proj.bias is not None:
+            self.surgclip.text_proj.bias.requires_grad = True
+        self.frame_local_projection.weight.requires_grad = True
+        if self.frame_local_projection.bias is not None:
+            self.frame_local_projection.bias.requires_grad = True
+        self.logit_scale.requires_grad = True
 
     def configure_window_denoise(self, local_temperature: float, level_frame_temperatures):
         self.local_temperature = float(local_temperature)
@@ -542,9 +571,15 @@ def parse_args():
 
     # tokenizer: 用于 caption -> input_ids/attention_mask，同时对齐 SurgCLIP 文本编码器权重
     p.add_argument("--tokenizer_name", type=str, default=os.environ.get("TOKENIZER_NAME", "bert-base-uncased"))
+    p.add_argument("--model_family", type=str, default=os.environ.get("MODEL_FAMILY", "surgclip"),
+                   choices=("surgclip", "peskavlp"))
+    p.add_argument("--init_checkpoint", type=str, default=os.environ.get("INIT_CHECKPOINT", None))
 
     # SurgLaVi model config
     p.add_argument("--surgclip_model_name", type=str, default=os.environ.get("SURGCLIP_MODEL_NAME", "SurgCLIP-B"))
+    p.add_argument("--peskavlp_vision_backbone", type=str, default=os.environ.get("PESKAVLP_VISION_BACKBONE", "resnet_50"))
+    p.add_argument("--peskavlp_vision_pretrained", type=str, default=os.environ.get("PESKAVLP_VISION_PRETRAINED", "random"))
+    p.add_argument("--peskavlp_embed_dim", type=int, default=int(os.environ.get("PESKAVLP_EMBED_DIM", 768)))
 
     # checkpoint saving
     p.add_argument("--save_dir", type=str, default=os.environ.get("SAVE_DIR", "/data/surglavi_checkpoint"))
@@ -567,7 +602,7 @@ def parse_args():
         type=str,
         default=os.environ.get(
             "LORA_TARGETS",
-            "text_encoder.encoder.layer.,vision_encoder.model.blocks."
+            "text_encoder.encoder.layer.,vision_encoder.model.blocks.,backbone_text.model.encoder.layer.,backbone_img.global_embedder"
         ),
         help="Comma-separated substrings used to select Linear layers for LoRA wrapping.",
     )
@@ -609,9 +644,16 @@ def train():
     if rank == 0:
         print(f"[rank0] world_size={world_size} num_frames={args.num_frames} per_gpu_batch_size={args.per_gpu_batch_size} amp_dtype={amp_dtype}")
         print(f"[rank0] save_dir={args.save_dir} save_every={args.save_every} save_name={args.save_name}")
-        print(f"[rank0] surgclip_model_name={args.surgclip_model_name} tokenizer_name={args.tokenizer_name}")
+        print(f"[rank0] model_family={args.model_family} surgclip_model_name={args.surgclip_model_name} tokenizer_name={args.tokenizer_name}")
         print(f"[rank0] seed={args.seed}")
         print(f"[rank0] gradient_checkpointing={args.gradient_checkpointing}")
+        print(f"[rank0] init_checkpoint={args.init_checkpoint}")
+        if args.model_family == "peskavlp":
+            print(
+                f"[rank0] peskavlp_vision_backbone={args.peskavlp_vision_backbone} "
+                f"peskavlp_vision_pretrained={args.peskavlp_vision_pretrained} "
+                f"peskavlp_embed_dim={args.peskavlp_embed_dim}"
+            )
         print(f"[rank0] video_root_folder={args.video_root_folder}")
         print(f"[rank0] main_csv_path={args.main_csv_path}")
         print(f"[rank0] samples_cache_dir={args.samples_cache_dir} use_samples_cache={args.use_samples_cache} rebuild_samples_cache={args.rebuild_samples_cache} samples_cache_version={args.samples_cache_version}")
@@ -700,31 +742,43 @@ def train():
             worker_init_fn=build_worker_init_fn(args.seed, rank),
         )
 
-    config = get_config(
-        args.surgclip_model_name,
-        overrides={
-            "device": str(device),
-            "num_frames": int(args.num_frames),
-            "inputs": {
-                "image_res": int(args.image_size),
-                "video_input": {
-                    "num_frames_test": int(args.num_frames),
+    if args.model_family == "surgclip":
+        config = get_config(
+            args.surgclip_model_name,
+            overrides={
+                "device": str(device),
+                "num_frames": int(args.num_frames),
+                "inputs": {
+                    "image_res": int(args.image_size),
+                    "video_input": {
+                        "num_frames_test": int(args.num_frames),
+                    },
                 },
+                "model": {
+                    "temporal_modeling": {
+                        "enabled": int(args.num_frames) > 1,
+                    },
+                    "text_encoder": {
+                        "pretrained": args.tokenizer_name,
+                    },
+                },
+                "gradient_checkpointing": bool(args.gradient_checkpointing),
             },
-            "model": {
-                "temporal_modeling": {
-                    "enabled": int(args.num_frames) > 1,
-                },
-                "text_encoder": {
-                    "pretrained": args.tokenizer_name,
-                },
-            },
-            "gradient_checkpointing": bool(args.gradient_checkpointing),
-        },
-    )
+        )
+        surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
+        model = SurgCLIPAdapter(surgclip_core)
+    elif args.model_family == "peskavlp":
+        model = PeskaVLPAdapter(
+            text_model_name=args.tokenizer_name,
+            tokenizer=tokenizer,
+            embed_dim=args.peskavlp_embed_dim,
+            vision_backbone_name=args.peskavlp_vision_backbone,
+            vision_pretrained=args.peskavlp_vision_pretrained,
+        )
+    else:
+        raise ValueError(f"Unsupported model_family: {args.model_family}")
 
-    surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
-    model = SurgCLIPAdapter(surgclip_core)
+    load_initial_weights_if_needed(model, args.init_checkpoint, device, rank)
     model.configure_window_denoise(
         local_temperature=args.local_temperature,
         level_frame_temperatures=args.level_frame_temperatures,
@@ -822,11 +876,21 @@ def train():
         progress = tqdm(train_loader, disable=(rank != 0), desc=f"Epoch {epoch+1}/{args.epochs}")
 
         optimizer.zero_grad(set_to_none=True)
+        valid_step = 0
+        skipped_batches = 0
 
         for step, batch in enumerate(progress):
-            if batch is None:
+            batch_is_valid = torch.tensor(
+                0 if batch is None else 1,
+                device=device,
+                dtype=torch.int32,
+            )
+            dist.all_reduce(batch_is_valid, op=dist.ReduceOp.MIN)
+            if batch_is_valid.item() == 0:
+                skipped_batches += 1
                 continue
 
+            valid_step += 1
             if len(batch) == 8:
                 images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = batch
                 images = None
@@ -860,7 +924,7 @@ def train():
             else:
                 raise ValueError(f"Unexpected batch length: {len(batch)}")
 
-            micro_step = (step % args.accum_steps) + 1
+            micro_step = ((valid_step - 1) % args.accum_steps) + 1
             is_last_batch = (step + 1) == len(train_loader)
             should_update = (micro_step == args.accum_steps) or is_last_batch
 
@@ -906,6 +970,9 @@ def train():
 
             if rank == 0:
                 progress.set_postfix(loss=float(raw_loss.item()), lr=float(scheduler.get_last_lr()[0]))
+
+        if rank == 0 and skipped_batches > 0:
+            print(f"Epoch {epoch + 1} skipped bad batches: {skipped_batches}", flush=True)
 
         # periodic save
         if args.save_every and ((epoch + 1) % args.save_every == 0):

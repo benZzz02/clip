@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CONDA_ENV_NAME="${CONDA_ENV_NAME:-vllm}"
+FALLBACK_CONDA_ENV="${FALLBACK_CONDA_ENV:-py310}"
+
 set +u
 source ~/miniconda3/etc/profile.d/conda.sh
-if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
-  conda activate vllm
+if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
+  if conda info --envs | awk '{print $1}' | grep -qx "$CONDA_ENV_NAME"; then
+    conda activate "$CONDA_ENV_NAME"
+  elif [[ -n "${FALLBACK_CONDA_ENV:-}" ]] && conda info --envs | awk '{print $1}' | grep -qx "$FALLBACK_CONDA_ENV"; then
+    conda activate "$FALLBACK_CONDA_ENV"
+  fi
 fi
 set -u
 
@@ -14,6 +21,10 @@ CUDA_DEVICE="${CUDA_DEVICE:-2}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
 TOKENIZER_NAME="${TOKENIZER_NAME:-bert-base-uncased}"
+MODEL_FAMILY="${MODEL_FAMILY:-surgclip}"
+PESKAVLP_VISION_BACKBONE="${PESKAVLP_VISION_BACKBONE:-resnet_50}"
+PESKAVLP_VISION_PRETRAINED="${PESKAVLP_VISION_PRETRAINED:-random}"
+PESKAVLP_EMBED_DIM="${PESKAVLP_EMBED_DIM:-768}"
 DATA_ROOT="${DATA_ROOT:-/data/nfs_data/CLIP}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
@@ -26,7 +37,7 @@ FINETUNE_MODE="${FINETUNE_MODE:-lora}"
 LORA_RANK="${LORA_RANK:-8}"
 LORA_ALPHA="${LORA_ALPHA:-16}"
 LORA_DROPOUT="${LORA_DROPOUT:-0.05}"
-LORA_TARGETS="${LORA_TARGETS:-text_encoder.encoder.layer.,vision_encoder.model.blocks.}"
+LORA_TARGETS="${LORA_TARGETS:-text_encoder.encoder.layer.,vision_encoder.model.blocks.,backbone_text.model.encoder.layer.,backbone_img.global_embedder}"
 
 mkdir -p "$OUTPUT_DIR"
 
@@ -41,7 +52,11 @@ do
   CUDA_VISIBLE_DEVICES="$CUDA_DEVICE" DATA_ROOT="$DATA_ROOT" python zeroshot_evaluate_surglavi.py \
     --dataset "$ds" \
     --ckpt "$CKPT" \
+    --model_family "$MODEL_FAMILY" \
     --surgclip_model_name "$SURGCLIP_MODEL_NAME" \
+    --peskavlp_vision_backbone "$PESKAVLP_VISION_BACKBONE" \
+    --peskavlp_vision_pretrained "$PESKAVLP_VISION_PRETRAINED" \
+    --peskavlp_embed_dim "$PESKAVLP_EMBED_DIM" \
     --tokenizer_name "$TOKENIZER_NAME" \
     --batch_size "$BATCH_SIZE" \
     --num_workers "$NUM_WORKERS" \

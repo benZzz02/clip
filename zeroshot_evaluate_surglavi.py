@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from peskavlp_adapter import PeskaVLPAdapter, load_state_dict_flexible
 from transformers import AutoTokenizer
 
 from surgclip.surgclip.config import get_config
@@ -97,6 +98,21 @@ class SurgCLIPAdapter(torch.nn.Module):
             torch.tensor(init_logit_scale, dtype=torch.float32)
         )
 
+    def enable_lora_trainable_parameters(self):
+        self.surgclip.vision_proj.weight.requires_grad = True
+        if self.surgclip.vision_proj.bias is not None:
+            self.surgclip.vision_proj.bias.requires_grad = True
+        self.surgclip.text_proj.weight.requires_grad = True
+        if self.surgclip.text_proj.bias is not None:
+            self.surgclip.text_proj.bias.requires_grad = True
+        self.logit_scale.requires_grad = True
+
+    def allowed_missing_prefixes(self):
+        return ("frame_local_projection.", "logit_scale")
+
+    def allowed_unexpected_prefixes(self):
+        return ("frame_local_projection.", "logit_scale")
+
     def _sync_temp_from_logit_scale(self):
         temp_value = (1.0 / self.logit_scale.exp()).clamp(min=1e-6, max=100.0)
         self.surgclip.temp.data.copy_(temp_value)
@@ -157,66 +173,28 @@ def configure_finetuning(model: "SurgCLIPAdapter", args):
     )
     if not replaced:
         raise RuntimeError(f"No linear layers matched LoRA targets: {args.lora_targets}")
-
-    model.surgclip.vision_proj.weight.requires_grad = True
-    if model.surgclip.vision_proj.bias is not None:
-        model.surgclip.vision_proj.bias.requires_grad = True
-    model.surgclip.text_proj.weight.requires_grad = True
-    if model.surgclip.text_proj.bias is not None:
-        model.surgclip.text_proj.bias.requires_grad = True
-    model.logit_scale.requires_grad = True
+    if hasattr(model, "enable_lora_trainable_parameters"):
+        model.enable_lora_trainable_parameters()
+    else:
+        model.logit_scale.requires_grad = True
 
     return {"mode": "lora", "replaced_modules": replaced}
 
 
 def load_model_checkpoint(model, ckpt_path, device):
     print(f"正在加载模型权重: {ckpt_path}")
-    ckpt = torch.load(ckpt_path, map_location=device)
-
-    if "model_state_dict" in ckpt:
-        state_dict = ckpt["model_state_dict"]
-        print("检测到 checkpoint 格式: model_state_dict")
-    elif "state_dict" in ckpt:
-        state_dict = ckpt["state_dict"]
-        print("检测到 checkpoint 格式: state_dict")
-    else:
-        state_dict = ckpt
-        print("检测到纯 state_dict 格式")
-
-    normalized_state_dict = {}
-    for key, value in state_dict.items():
-        while key.startswith("module.") or key.startswith("_orig_mod."):
-            if key.startswith("module."):
-                key = key[len("module."):]
-            if key.startswith("_orig_mod."):
-                key = key[len("_orig_mod."):]
-        normalized_state_dict[key] = value
-
-    msg = model.load_state_dict(normalized_state_dict, strict=False)
+    msg, format_name = load_state_dict_flexible(
+        model,
+        ckpt_path,
+        device=device,
+        source="checkpoint",
+        validate_prefixes=True,
+        allowed_missing_prefixes=model.allowed_missing_prefixes() if hasattr(model, "allowed_missing_prefixes") else (),
+        allowed_unexpected_prefixes=model.allowed_unexpected_prefixes() if hasattr(model, "allowed_unexpected_prefixes") else (),
+    )
+    print(f"检测到 checkpoint 格式: {format_name}")
     print("Missing keys:", msg.missing_keys)
     print("Unexpected keys:", msg.unexpected_keys)
-
-    allowed_missing_prefixes = (
-        "frame_local_projection.",
-    )
-    allowed_unexpected_prefixes = (
-        "frame_local_projection.",
-    )
-    disallowed_missing = [
-        key for key in msg.missing_keys
-        if not key.startswith(allowed_missing_prefixes)
-    ]
-    disallowed_unexpected = [
-        key for key in msg.unexpected_keys
-        if not key.startswith(allowed_unexpected_prefixes)
-    ]
-
-    if disallowed_missing or disallowed_unexpected:
-        raise RuntimeError(
-            f"Checkpoint 与当前模型不匹配。\n"
-            f"Missing keys: {msg.missing_keys}\n"
-            f"Unexpected keys: {msg.unexpected_keys}"
-        )
 
     return model
 
@@ -224,30 +202,41 @@ def load_model_checkpoint(model, ckpt_path, device):
 def build_model(args, tokenizer, device):
     model_num_frames = args.model_num_frames or args.num_frames
 
-    config = get_config(
-        args.surgclip_model_name,
-        overrides={
-            "device": str(device),
-            "num_frames": int(model_num_frames),
-            "inputs": {
-                "image_res": int(args.image_size),
-                "video_input": {
-                    "num_frames_test": int(model_num_frames),
+    if args.model_family == "surgclip":
+        config = get_config(
+            args.surgclip_model_name,
+            overrides={
+                "device": str(device),
+                "num_frames": int(model_num_frames),
+                "inputs": {
+                    "image_res": int(args.image_size),
+                    "video_input": {
+                        "num_frames_test": int(model_num_frames),
+                    },
+                },
+                "model": {
+                    "temporal_modeling": {
+                        "enabled": int(model_num_frames) > 1,
+                    },
+                    "text_encoder": {
+                        "pretrained": args.tokenizer_name,
+                    },
                 },
             },
-            "model": {
-                "temporal_modeling": {
-                    "enabled": int(model_num_frames) > 1,
-                },
-                "text_encoder": {
-                    "pretrained": args.tokenizer_name,
-                },
-            },
-        },
-    )
+        )
+        surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=False)
+        model = SurgCLIPAdapter(surgclip_core)
+    elif args.model_family == "peskavlp":
+        model = PeskaVLPAdapter(
+            text_model_name=args.tokenizer_name,
+            tokenizer=tokenizer,
+            embed_dim=args.peskavlp_embed_dim,
+            vision_backbone_name=args.peskavlp_vision_backbone,
+            vision_pretrained=args.peskavlp_vision_pretrained,
+        )
+    else:
+        raise ValueError(f"Unsupported model_family: {args.model_family}")
 
-    surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=False)
-    model = SurgCLIPAdapter(surgclip_core)
     finetune_info = configure_finetuning(model, args)
     model = model.to(device)
     model = load_model_checkpoint(model, args.ckpt, device)
@@ -264,7 +253,7 @@ def evaluate_zero_shot(args):
 
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer_name)
 
-    print("正在加载 SurgCLIP 结构...")
+    print(f"正在加载模型结构: {args.model_family}")
     model = build_model(args, tokenizer, device)
 
     data_loader, _ = build_dataloader(
@@ -295,11 +284,16 @@ def evaluate_zero_shot(args):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Zero-shot evaluation for SurgCLIP")
+    parser = argparse.ArgumentParser(description="Zero-shot evaluation for SurgCLIP/PeskaVLP")
     parser.add_argument("--dataset", type=str, required=True, choices=list(DATASET_CONFIGS.keys()))
     parser.add_argument("--ckpt", type=str, required=True)
     parser.add_argument("--tokenizer_name", type=str, default="bert-base-uncased")
+    parser.add_argument("--model_family", type=str, default=os.environ.get("MODEL_FAMILY", "surgclip"),
+                        choices=("surgclip", "peskavlp"))
     parser.add_argument("--surgclip_model_name", type=str, default="SurgCLIP-B")
+    parser.add_argument("--peskavlp_vision_backbone", type=str, default=os.environ.get("PESKAVLP_VISION_BACKBONE", "resnet_50"))
+    parser.add_argument("--peskavlp_vision_pretrained", type=str, default=os.environ.get("PESKAVLP_VISION_PRETRAINED", "random"))
+    parser.add_argument("--peskavlp_embed_dim", type=int, default=int(os.environ.get("PESKAVLP_EMBED_DIM", 768)))
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--output_dir", type=str, default="./eval_outputs_surglavi")
@@ -316,7 +310,7 @@ def parse_args():
         type=str,
         default=os.environ.get(
             "LORA_TARGETS",
-            "text_encoder.encoder.layer.,vision_encoder.model.blocks."
+            "text_encoder.encoder.layer.,vision_encoder.model.blocks.,backbone_text.model.encoder.layer.,backbone_img.global_embedder"
         ),
     )
     return parser.parse_args()

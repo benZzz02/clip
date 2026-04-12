@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CONDA_ENV_NAME="${CONDA_ENV_NAME:-vllm}"
+FALLBACK_CONDA_ENV="${FALLBACK_CONDA_ENV:-py310}"
+
 set +u
 source ~/miniconda3/etc/profile.d/conda.sh
-if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
-    conda activate vllm
+if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
+    if conda info --envs | awk '{print $1}' | grep -qx "$CONDA_ENV_NAME"; then
+        conda activate "$CONDA_ENV_NAME"
+    elif [[ -n "${FALLBACK_CONDA_ENV:-}" ]] && conda info --envs | awk '{print $1}' | grep -qx "$FALLBACK_CONDA_ENV"; then
+        conda activate "$FALLBACK_CONDA_ENV"
+    fi
 fi
 set -u
 
-EXP_NAME="surglavi_lora_3gpu_bs100"
+EXP_NAME="${EXP_NAME:-surglavi_lora_3gpu_bs100}"
 
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2}"
 IFS=',' read -r -a CUDA_DEVICE_LIST <<< "$CUDA_VISIBLE_DEVICES"
@@ -35,8 +42,13 @@ IMAGE_SIZE=224
 MAX_LENGTH=256
 SEED=42
 
-TOKENIZER_NAME="bert-base-uncased"
-SURGCLIP_MODEL_NAME="SurgCLIP-B"
+TOKENIZER_NAME="${TOKENIZER_NAME:-bert-base-uncased}"
+MODEL_FAMILY="${MODEL_FAMILY:-surgclip}"
+SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
+INIT_CHECKPOINT="${INIT_CHECKPOINT:-}"
+PESKAVLP_VISION_BACKBONE="${PESKAVLP_VISION_BACKBONE:-resnet_50}"
+PESKAVLP_VISION_PRETRAINED="${PESKAVLP_VISION_PRETRAINED:-random}"
+PESKAVLP_EMBED_DIM="${PESKAVLP_EMBED_DIM:-768}"
 
 VIDEO_ROOT_FOLDER="/data/nfs_data/CLIP/downloaded_video_224_test"
 ASSUME_RESIZED_VIDEO=1
@@ -51,11 +63,11 @@ USE_SAMPLES_CACHE=true
 REBUILD_SAMPLES_CACHE=true
 SAMPLES_CACHE_VERSION="nfs_v1"
 
-FINETUNE_MODE="lora"
+FINETUNE_MODE="${FINETUNE_MODE:-lora}"
 LORA_RANK=8
 LORA_ALPHA=16
 LORA_DROPOUT=0.05
-LORA_TARGETS="text_encoder.encoder.layer.,vision_encoder.model.blocks."
+LORA_TARGETS="${LORA_TARGETS:-text_encoder.encoder.layer.,vision_encoder.model.blocks.,backbone_text.model.encoder.layer.,backbone_img.global_embedder}"
 GRADIENT_CHECKPOINTING=1
 LOCAL_TEMPERATURE=0.15
 LEVEL_FRAME_TEMPERATURES="0.35,0.8,1.6"
@@ -92,7 +104,11 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --max_length "$MAX_LENGTH" \
     --num_frames "$NUM_FRAMES" \
     --tokenizer_name "$TOKENIZER_NAME" \
+    --model_family "$MODEL_FAMILY" \
     --surgclip_model_name "$SURGCLIP_MODEL_NAME" \
+    --peskavlp_vision_backbone "$PESKAVLP_VISION_BACKBONE" \
+    --peskavlp_vision_pretrained "$PESKAVLP_VISION_PRETRAINED" \
+    --peskavlp_embed_dim "$PESKAVLP_EMBED_DIM" \
     --video_root_folder "$VIDEO_ROOT_FOLDER" \
     --assume_resized_video "$ASSUME_RESIZED_VIDEO" \
     --main_csv_path "$MAIN_CSV_PATH" \
@@ -121,4 +137,5 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
     --enable_htg "$ENABLE_HTG" \
     --htg_loss_weight "$HTG_LOSS_WEIGHT" \
+    ${INIT_CHECKPOINT:+--init_checkpoint "$INIT_CHECKPOINT"} \
     ${RESUME_FROM_CHECKPOINT:+--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT"}
