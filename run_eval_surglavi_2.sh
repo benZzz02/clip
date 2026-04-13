@@ -15,8 +15,8 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
 fi
 set -u
 
-CKPT="${CKPT:-/data/nfs_data/CLIP/surglavi_checkpoint/surglavi_lora_3gpu_bs100/surglavi_epoch_50.pt}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_surglavi}"
+CKPT="${CKPT:-/data/surglavi_checkpoint/peskavlp_lora_3gpu_bs100/surglavi_epoch_40.pt}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_peskavlp_full}"
 CUDA_DEVICE="${CUDA_DEVICE:-2}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
@@ -25,7 +25,7 @@ MODEL_FAMILY="${MODEL_FAMILY:-surgclip}"
 PESKAVLP_VISION_BACKBONE="${PESKAVLP_VISION_BACKBONE:-resnet_50}"
 PESKAVLP_VISION_PRETRAINED="${PESKAVLP_VISION_PRETRAINED:-random}"
 PESKAVLP_EMBED_DIM="${PESKAVLP_EMBED_DIM:-768}"
-DATA_ROOT="${DATA_ROOT:-/data/nfs_data/CLIP}"
+DATA_ROOT="${DATA_ROOT:-/data/nfs_data}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
 MODEL_NUM_FRAMES="${MODEL_NUM_FRAMES:-8}"

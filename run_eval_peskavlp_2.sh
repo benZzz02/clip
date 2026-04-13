@@ -2,7 +2,7 @@
 set -euo pipefail
 
 export MODEL_FAMILY="${MODEL_FAMILY:-peskavlp}"
-export TOKENIZER_NAME="${TOKENIZER_NAME:-milyalsentzer/Bio_ClinicalBERT}"
+export TOKENIZER_NAME="${TOKENIZER_NAME:-emilyalsentzer/Bio_ClinicalBERT}"
 export PESKAVLP_VISION_BACKBONE="${PESKAVLP_VISION_BACKBONE:-resnet_50}"
 export PESKAVLP_VISION_PRETRAINED="${PESKAVLP_VISION_PRETRAINED:-random}"
 export PESKAVLP_EMBED_DIM="${PESKAVLP_EMBED_DIM:-768}"

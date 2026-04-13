@@ -1,4 +1,5 @@
 lemonfm.pth
+PeskaVLP.pth
 vlp_ckpt.pth
 vlp_epoch_*.pt
 ckpt*
@@ -12,3 +13,6 @@ anno_downstream
 auto
 cholec80_peska
 CholecT50
+.codex/
+__pycache__/
+runs/
