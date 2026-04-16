@@ -46,6 +46,7 @@ class PretrainDataset(Dataset):
         level_mix="concat",
         level_seed=42,
         return_level_id=False,
+        return_sample_index=False,
         return_expanded_frames=False,
         expanded_window_ratio=2.0,
         samples_cache_dir=".cache/pretrain_samples",
@@ -64,6 +65,7 @@ class PretrainDataset(Dataset):
         self.level_mix = level_mix
         self.level_seed = int(level_seed)
         self.return_level_id = bool(return_level_id)
+        self.return_sample_index = bool(return_sample_index)
         self.return_expanded_frames = bool(return_expanded_frames)
         self.expanded_window_ratio = max(1.0, float(expanded_window_ratio))
 
@@ -309,30 +311,49 @@ class PretrainDataset(Dataset):
     def _build_return_value(self, item, images, expanded_images):
         input_ids, attention_mask = self._build_text(item["caption"])
         level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
+        sample_index = int(item.get("_sample_index", -1))
 
         if self.return_expanded_frames:
             expanded_images = images if expanded_images is None else expanded_images
 
         if self.return_level_id:
             if self.return_expanded_frames:
-                return (
+                values = [
                     images,
                     expanded_images,
                     input_ids,
                     attention_mask,
                     torch.tensor(level_id, dtype=torch.long),
-                )
-            return images, input_ids, attention_mask, torch.tensor(level_id, dtype=torch.long)
+                ]
+                if self.return_sample_index:
+                    values.append(torch.tensor(sample_index, dtype=torch.long))
+                return tuple(values)
+            values = [
+                images,
+                input_ids,
+                attention_mask,
+                torch.tensor(level_id, dtype=torch.long),
+            ]
+            if self.return_sample_index:
+                values.append(torch.tensor(sample_index, dtype=torch.long))
+            return tuple(values)
 
         if self.return_expanded_frames:
-            return images, expanded_images, input_ids, attention_mask
-        return images, input_ids, attention_mask
+            values = [images, expanded_images, input_ids, attention_mask]
+            if self.return_sample_index:
+                values.append(torch.tensor(sample_index, dtype=torch.long))
+            return tuple(values)
+        values = [images, input_ids, attention_mask]
+        if self.return_sample_index:
+            values.append(torch.tensor(sample_index, dtype=torch.long))
+        return tuple(values)
 
     def __getitem__(self, idx):
         last_error = None
 
         for _ in range(self.max_retry):
-            item = self.samples[idx]
+            item = dict(self.samples[idx])
+            item["_sample_index"] = idx
 
             expanded_images = None
             if self.return_expanded_frames:
@@ -371,7 +392,8 @@ class PretrainDataset(Dataset):
 
         retry_count = self.max_retry
         while True:
-            item = self.samples[idx]
+            item = dict(self.samples[idx])
+            item["_sample_index"] = idx
 
             expanded_images = None
             if self.return_expanded_frames:

@@ -271,6 +271,12 @@ def parse_args():
         default=0.5,
         help="Weight for the train-time expanded-window selection contrastive loss",
     )
+    parser.add_argument(
+        "--hierarchical_consistency_weight",
+        type=float,
+        default=0.1,
+        help="Weight for same-video adjacent-level consistency on selected views",
+    )
 
     return parser.parse_args()
 
@@ -293,12 +299,12 @@ def collate_fn_expanded_frames_only(batch):
     for item in batch:
         if item is None:
             continue
-        if len(item) != 5:
+        if len(item) != 6:
             raise ValueError(
-                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids)."
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids, sample_indices)."
             )
-        _, selection_images, input_ids, attention_mask, level_ids = item
-        compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
+        _, selection_images, input_ids, attention_mask, level_ids, sample_indices = item
+        compact_batch.append((selection_images, input_ids, attention_mask, level_ids, sample_indices))
 
     if not compact_batch:
         return None
@@ -374,7 +380,10 @@ def clip_contrastive_loss(
     input_ids,
     attention_mask,
     level_ids,
+    sample_indices,
+    dataset_samples,
     selection_loss_weight=0.5,
+    hierarchical_consistency_weight=0.1,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=selection_images,
@@ -412,13 +421,61 @@ def clip_contrastive_loss(
         return 0.5 * (loss_i + loss_t)
 
     base_loss = _symmetric_contrastive(image_features, text_features)
+    hierarchical_loss = torch.zeros((), device=device)
     if selected_image_features is None:
         total_loss = base_loss
     else:
         selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-        total_loss = base_loss + selection_loss_weight * selection_loss
+        if hierarchical_consistency_weight > 0:
+            hierarchical_loss = compute_hierarchical_consistency_loss(
+                selected_image_features=selected_image_features,
+                sample_indices=sample_indices,
+                dataset_samples=dataset_samples,
+            )
+        total_loss = (
+            base_loss
+            + selection_loss_weight * selection_loss
+            + hierarchical_consistency_weight * hierarchical_loss
+        )
 
     return total_loss
+
+
+def compute_hierarchical_consistency_loss(selected_image_features, sample_indices, dataset_samples):
+    """
+    Lightweight adjacent-level consistency on same-video selected views:
+      fine <-> mid and mid <-> coarse.
+    This preserves the current train-time denoising design while making
+    hierarchy more than a temperature-only prior.
+    """
+    if sample_indices is None:
+        return torch.zeros((), device=selected_image_features.device)
+
+    by_video = {}
+    for batch_pos, sample_idx in enumerate(sample_indices.tolist()):
+        if sample_idx < 0:
+            continue
+        sample = dataset_samples[int(sample_idx)]
+        video_path = sample.get("video_path")
+        level = str(sample.get("level", "")).lower()
+        if not video_path or level not in {"fine", "mid", "coarse"}:
+            continue
+        by_video.setdefault(video_path, {})[level] = batch_pos
+
+    losses = []
+    for level_map in by_video.values():
+        if "fine" in level_map and "mid" in level_map:
+            fine_feat = selected_image_features[level_map["fine"]]
+            mid_feat = selected_image_features[level_map["mid"]]
+            losses.append(1.0 - F.cosine_similarity(fine_feat.unsqueeze(0), mid_feat.unsqueeze(0)).mean())
+        if "mid" in level_map and "coarse" in level_map:
+            mid_feat = selected_image_features[level_map["mid"]]
+            coarse_feat = selected_image_features[level_map["coarse"]]
+            losses.append(1.0 - F.cosine_similarity(mid_feat.unsqueeze(0), coarse_feat.unsqueeze(0)).mean())
+
+    if not losses:
+        return torch.zeros((), device=selected_image_features.device)
+    return torch.stack(losses).mean()
 
 
 def train():
@@ -487,6 +544,7 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
+        "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
@@ -578,6 +636,7 @@ def train():
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
+        print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
         print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
@@ -600,6 +659,7 @@ def train():
         assume_resized_video=CONFIG["assume_resized_video"],
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
+        return_sample_index=True,
         return_expanded_frames=True,
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
@@ -690,6 +750,7 @@ def train():
                     "samples_cache_version": args.samples_cache_version,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
+                    "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
@@ -786,7 +847,7 @@ def train():
                 continue
 
             step_start = time.perf_counter()
-            selection_images_cpu, input_ids, attention_mask, level_ids = batch
+            selection_images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
@@ -807,7 +868,10 @@ def train():
                         input_ids,
                         attention_mask,
                         level_ids,
+                        sample_indices,
+                        train_dataset.samples,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
+                        hierarchical_consistency_weight=CONFIG["hierarchical_consistency_weight"],
                     )
                     loss = raw_loss / current_accum_steps
 
@@ -893,7 +957,7 @@ def train():
                         flush=True,
                     )
 
-            del input_ids, attention_mask, level_ids
+            del input_ids, attention_mask, level_ids, sample_indices
             batch_fetch_start = time.perf_counter()
 
         if rank == 0:
