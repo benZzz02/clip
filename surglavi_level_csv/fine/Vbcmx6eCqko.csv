@@ -1,6 +1,4 @@
 start,end,text
-0.999,6.883,"The robotic right hemicolectomy procedure is underway, focusing on intracorporeal anastomosis using a V-lock suture to treat sickle adenocarcinoma."
-0.999,6.883,"The robotic arms perform a right hemicolectomy, followed by an intracorporeal anastomosis using a V-lock suture to treat sickle adenocarcinoma."
 7.383,21.972,"The surgeon uses robotic monopolar curved scissors to score the mesentery, creating a window beneath the identified ileocolic pedicle."
 7.383,21.972,The surgeon identifies the ileocolic pedicle and creates a window beneath it by scoring the mesentery with robotic monopolar curved scissors.
 22.472,56.601,"The surgeon visualizes and preserves the duodenum while dividing the ileocolic pedicle using a vessel sealer, performing a high ligation."
@@ -29,9 +27,3 @@ start,end,text
 149.57,212.733,"The surgeon closes the common defect using a 15 cm 3-0 V-Lock suture, securing the tissue with precise stitching."
 213.233,217.114,"The surgeon extracts the specimen through a three-centimeter suprapubic incision, completing the removal process."
 213.233,217.114,"The surgeon extracts the specimen through a three-centimeter suprapubic incision, visibly removing it from the surgical field."
-217.614,219.015,The patient had a good recovery.
-217.614,219.015,The patient had a good recovery.
-219.235,225.456,He had return of bowel function on post-operative day two and was discharged to home in good condition on post-operative day four.
-219.235,225.456,He had return of bowel function on post-operative day two and was discharged to home in good condition on post-operative day four.
-225.476,234.099,The final pathology was a two point five centimeter cecal adenocarcinoma T two N zero with all fifty one lymph nodes being negative.
-225.476,234.099,The final pathology was a two point five centimeter cecal adenocarcinoma T two N zero with all fifty one lymph nodes being negative.

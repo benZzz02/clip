@@ -1,6 +1,4 @@
 start,end,text
-4.911,17.574,This movie illustrates the surgical technique for robot-assisted minimally invasive partial resection of the spleen in a twenty-four-year-old female with a large post-traumatic splenic cyst.
-18.074,29.057,CAT scan reconstructions are extremely useful to pro-operatively assess size and location of the cyst and to precisely understand the vascular anatomy of the splenic hilum to plan the surgical strategy.
 29.357,37.297,"Two ports are connected to the robotic arms: one for the robotic endoscope and another available for surgical assistance, facilitating the robot-assisted minimally invasive splenectomy."
 37.797,47.541,"The surgeon mobilizes the left colonic flexure by sectioning the gastrocolic ligament, providing access to the lesser sac."
 48.041,56.764,"The surgeon uses bipolar coagulation to treat the short gastric vessels, followed by sealing and sectioning them with ultrasonic shears."
@@ -18,5 +16,3 @@ start,end,text
 342.889,349.253,"The surgeon removes the vascular loops from the surgical field, ensuring the area is clear following the previous vessel ligation and transection steps."
 349.753,376.353,The surgeon places the transected spleen into a retrieval bag for extraction through a small suprapubic incision. The splenophenic ligament is reconstructed to prevent torsion of the remaining spleen on its vascular pedicle.
 376.853,387.478,"The surgeon applies a hemostatic matrix to the dissected splenic parenchyma, ensuring hemostasis. A small drainage tube is visibly placed near the surgical site, intended to remain for twenty-four hours before removal."
-387.978,395.601,The post-operative course was an eventful and the patient was discharged on the third post-operative day.
-396.101,406.085,The regular vascularization of the residual spleen was verified by an echocolordoppler ultrasonography just one month after the surgical procedure.

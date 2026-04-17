@@ -1,9 +1,4 @@
 start,end,text
-0.651,11.379,"In this video, we present a case of robotic transabdominal interspecteric resection and stapled colloenal anastomosis with the DaVinci XI robotic system."
-11.879,20.244,A thirty-one years old gentleman presented to us with complaints of bleeding perectum. He was diagnosed to have a non-metastatic low rectal adenocarcinoma.
-20.744,27.527,"MRI scan showed a low rectal growth, five centimeters from the anal verge, with multiple enlarged mesorectal lymph nodes."
-28.027,37.131,He received long-course concurrent chemoradiotherapy. Post CT-RT MRI scan showed partial response and he was planned for a robotic low anterior resection.
-37.631,47.988,"The robotic cart is docked to the patient, with the robotic arms positioned optimally for organ-specific targeting using the standard port configuration."
 48.488,77.627,"The surgeon begins dissection medial to the duodenal jejunal flexure, lifting the inferior mesenteric vein anteriorly. The dissection proceeds posterior to the vein in the avascular plane, where the vein is clipped and divided."
 78.127,109.886,"The surgeon divides the pancreatic attachment of the mesocolon up to the tail of the pancreas, preparing for complete mobilization of the splenic flexure."
 110.386,135.182,"The surgeon dissects the mesocolon from the Gerota's fascia inferiorly, initiating a medial to lateral dissection by incising the medial peritoneal fold."
@@ -13,7 +8,6 @@ start,end,text
 191.204,209.837,"The surgeon retracts the sigmoid colon medially and incises the lateral peritoneal fold superiorly, extending the incision up to the splenic flexure."
 210.337,242.375,"The surgeon incises the splenocolic ligament and enters the lesser sac to achieve complete mobilization of the splenic flexure, ensuring adequate bowel mobilization for a tension-free anastomosis in rectal cancer cases."
 242.875,262.851,"The surgeon retracts the rectum anteriorly and begins dissection in the posterior extramesorectal plane, using adequate traction and counter traction to maintain the proper dissection plane. The enhanced dexterity from seven degrees of motion aids in the precise dissection deep within the pelvis."
-263.351,274.832,"The XI system allows the pelvic face to be done in the same docking position of the robotic cart, unlike the previous versions of the Da Vinci robotic system."
 275.332,298.136,"The surgeon incises the lateral and anterior peritoneal folds following sufficient posterior mobilization, facilitating further dissection and mobilization of the colorectal structures."
 298.636,316.997,"The surgeon carefully dissects the rectal tube away from the seminal vesicles and vas deferens, while incising the Denonvilliers fascia to continue the dissection inferiorly in the anterior plane."
 317.497,348.363,"The surgeon retains the denonvillous fascia on the specimen side while dissecting around a bulky anteriorly placed tumor, ensuring precise separation of the fascia from surrounding tissues."
@@ -22,6 +16,3 @@ start,end,text
 407.814,442.205,The surgeon utilizes the X-eye system in a thirty-degree up position to enhance visualization deep in the pelvis during posterior dissection. Partial intraspinctric dissection is performed to achieve an adequate distal margin.
 442.705,456.562,The surgeon transects the rectal tube distally using an Eichelon-Sixty endoscopic linear stapler. A five-centimeter transverse incision is made in the left iliac fossa to extract the specimen following proximal transection at an adequate level.
 457.062,485.8,"The anvil of the circular stapler is positioned in the descending colon and reinserted into the abdominal cavity. A 29mm circular stapler is inserted into the anal canal, and the anvil is articulated with the trocar. The stapler is then approximated and fired, creating a stapled coloanal anastomosis."
-486.3,488.502,"The surgeon performs a temporary covering ileostomy, creating a visible stoma on the abdominal surface to divert fecal flow."
-489.002,498.691,The total operative time was four hours and the estimated blood loss was fifty ml. The patient was discharged on post-operative day five without any significant morbidity.
-499.191,512.543,Histopathology showed YPT-N-B residual viable adenocarcinoma. The distal resection margin was two centimeters and free of tumor. The TMA quality was complete and the circumferential resection margin was free.

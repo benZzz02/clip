@@ -1,8 +1,4 @@
 start,end,text
-0.655,8.583,"Hello, I'm sharing a right colectomy for a very large mid-ascending colon cancer."
-0.655,8.583,"Hello, I'm sharing a right colectomy for a very large mid-ascending colon cancer."
-9.083,15.23,"Young patient, first colonoscopy after being found to be anemic, really didn't have any symptoms surprisingly."
-9.083,15.23,"Young patient, first colonoscopy after being found to be anemic, really didn't have any symptoms surprisingly."
 15.73,29.484,"The surgeon elevates the ileocolic pedicle and initiates a medial to lateral dissection, carefully separating the tissue layers in the surgical field."
 15.73,29.484,"The surgeon elevates the ileocolic pedicle and initiates a medial to lateral dissection, carefully separating the tissue layers around the pedicle."
 29.984,41.751,The surgeon exposes lymph nodes colored black from a tattoo placed distal to the tumor in the mid-ascending colon during the right colectomy.
@@ -15,8 +11,6 @@ start,end,text
 59.569,68.633,"The surgeon isolates the ileocolic pedicle at its junction with the superior mesenteric vessels, carefully separating it from surrounding tissues."
 69.133,82.838,"The surgeon carefully dissects through the fatty tissue overlaying the vessels, revealing the blue coloration of the superior mesenteric vein."
 69.133,82.838,"The surgeon carefully dissects through the fatty tissue overlaying the vessels, revealing the blue hue of the superior mesenteric vein."
-83.338,97.336,I think there are a lot of excellent ways of getting this type of exposure. I'm still doing it in the manner that you see here. But I'm continuing to experiment with other modalities.
-83.338,97.336,I think there are a lot of excellent ways of getting this type of exposure. I'm still doing it in the manner that you see here. But I'm continuing to experiment with other modalities.
 97.836,105.561,"The surgeon ligates the ileocolic artery and continues dissection around the area, focusing on separating tissue layers near the junction with the superior mesenteric vessels."
 97.836,105.561,"The surgeon ligates the ileocolic artery and continues with further dissection around the area, focusing on separating tissue layers."
 105.581,122.67,"The surgeon exposes the head of the pancreas, visible in the surgical field."
@@ -46,7 +40,6 @@ start,end,text
 348.04,376.21,"The surgeon releases the hepatic flexure, dissecting around the portion of the ascending colon that is adherent to the sidewall, and continues the dissection into the sidewall."
 376.71,417.757,"The surgeon approaches the sidewall from an inferior angle, carefully dissecting to ensure complete removal of any potential tumor invasion, aiming for an R0 resection. The ureter is visually identified and preserved during this process."
 376.71,402.331,"The surgeon carefully bites into the sidewall from an inferior approach, aiming for an R0 resection. The dissection is performed with attention to avoiding tumor invasion and ensuring the ureter is not compromised."
-402.791,467.167,So I'm going and I'm looking here and And I'm coming back up and around.
 418.257,484.456,"The surgeon returns to the inferior approach, maneuvering around the dissected area to complete the procedure."
 467.667,484.456,"The surgeon approaches from an inferior angle to complete the dissection, ensuring the final separation of the targeted tissue."
 484.956,524.015,"The surgeon divides the small bowel mesentery and checks perfusion, with the stapler positioned at the colon margin before proceeding to take the small bowel."
@@ -61,5 +54,4 @@ start,end,text
 637.547,696.36,"The surgeon navigates around the far corner of the surgical field, using imbricating sutures to secure the tissue layers back down."
 646.61,696.36,"The surgeon navigates around the far corner of the surgical site, using an imbricating suture technique to secure the tissue as they proceed back down the line."
 696.86,732.096,"The surgeon performs a hand-sewn anastomosis for the right colon, covering the area with residual omentum. The specimen is extracted through a fan and seal incision, revealing its large size."
-696.86,715.895,"The surgeon discusses the option to staple the anastomosis but prefers to perform a hand-sewn technique for the right colon, noting that it takes longer but results in a well-formed anastomosis."
 716.395,732.096,The surgeon covers the anastomosis site with residual omentum after performing a fan and seal extraction of a large specimen from the right colon.

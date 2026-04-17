@@ -1,22 +1,4 @@
 start,end,text
-0.713,10.482,This instructional video depicts the surgical management of benign prostatic hyperplasia with robotic-assisted laparoscopic simple suprapubic prostatectomy.
-10.982,18.687,"Our patient is a seventy-year-old male with a long history of lower urinary tract symptoms, in addition to urinary retention and bladder stones."
-19.128,23.07,Physical exam revealed a very large non-tender prostate without nodules.
-23.49,25.872,His post-void residual is a hundred cc's.
-26.372,33.077,Creatinine is one point O and PSA eighteen point five with a high serum four case score.
-33.577,38.879,Marked here is the PI-RADS III lesion in the right medial peripheral zone on MRI fusion biopsy.
-39.359,42.239,Prostate size was estimated at two hundred seven grams.
-42.66,45.701,Biopsy revealed no evidence of malignancy.
-46.201,50.662,CAT scan shows extent of his bladder stones and prostatic enlargement.
-51.162,55.923,"Several weeks after his biopsy, he was seen in the emergency room for bilateral flank pain."
-56.343,58.564,CAT scan showed bilateral hydronephrosis.
-58.924,63.121,He was taken to the operating room for ureteral stents.
-63.621,72.645,"After discussing various treatment options, the patient decided to undergo a robotic simple suprapubic prostatectomy with removal of his bladder stones."
-73.145,78.908,Optimal candidates for simple prostatectomy is generally reserved for prostates larger than one hundred grams.
-79.308,84.17,The suprapubic approach is well suited for patients of concurrent bladder stones or diverticula.
-84.61,90.902,Minimally invasive methods utilizing robotic assisted surgery has become commonplace.
-91.402,96.106,"The surgeon begins the procedure by placing robotic ports on the patient's abdomen, preparing for the robotic-assisted suprapubic prostatectomy."
-96.606,104.213,"The patient is positioned in a modified dorsal lithotomy steep Trendelenburg position, with the robotic surgical system positioned between the patient's legs for the procedure."
 104.713,112.359,"The surgeon positions Maryland bipolar forceps in the left robotic arm, monopolar scissors in the right arm, and tenaculum forceps in the third arm, preparing for precise manipulation during the prostatectomy."
 112.68,117.375,"The sigmoid colon is visible below, with the outline of the bladder seen ahead in the surgical field."
 117.875,121.877,"The surgeon makes an incision lateral to the left medial umbilical ligament, using robotic-assisted instruments visible in the surgical field."
@@ -31,8 +13,6 @@ start,end,text
 179.907,185.391,"The surgeon continues to open the bladder wall, extending the incision laterally until reaching the visible lateral limits of the prostate."
 185.891,194.538,Bladder stones are visually identified and removed using a specimen retrieval bag inserted through the eleven millimeter assistant port.
 195.038,199.557,"The surgeon removes five bladder stones using a specimen retrieval bag through the assistant port, with the stones clearly visible as they are extracted from the bladder."
-200.057,205.5,This patient had ureteral stents placed preoperatively because his prostate caused ureteral obstruction.
-206,212.003,"As most cases do not have stents placed preoperatively, they can be placed laparoscopically at this juncture."
 212.503,217.386,"The surgeon uses a tenaculum to identify the posterior bladder neck, providing a clear view of the anatomical structure during the prostatectomy procedure."
 217.886,223.109,"The surgeon begins the dissection by entering the plane between the prostate adenoma and the prostatic capsule, carefully separating these structures."
 223.609,232.192,The surgeon uses a combination of bipolar and monopolar energy to cauterize tissue and control bleeding within the surgical field.
@@ -51,7 +31,6 @@ start,end,text
 304.139,306.602,"The surgeon secures the adenoma using a surgical slip knot, completing its detachment for removal."
 307.102,312.908,The surgeon places a total of five interrupted 2-0 microsutures in the surgical field.
 313.408,318.053,"The surgeon removes the urethral stents, which were previously placed during the prostatectomy procedure."
-318.553,321.855,Hemostatic agents can be used as necessary.
 322.355,325.578,The surgeon inserts a 22 French three-way Foley catheter into the urethra.
 326.078,329.5,"The surgeon closes the bladder using two layers of running 2-0 Vicryl sutures, ensuring secure closure of the bladder wall."
 329.92,333.963,"The surgeon demonstrates the placement of the first layer of sutures, likely involving the closure of the bladder using running sutures."
@@ -62,21 +41,3 @@ start,end,text
 349.106,352.85,"Under laparoscopic visualization, the surgeon removes all trocars from the abdominal cavity, ensuring clear observation of the surgical field during the removal process."
 353.35,355.912,"The assistant port is visually inspected and closed if necessary, ensuring secure closure of the surgical site."
 356.412,359.315,The surgeon removes the specimen and proceeds to close the skin and fascia layers.
-359.815,369.778,"Robotic time was a hundred and sixty-four minutes, total operative time one hundred and ninety-eight minutes, and estimated blood loss eight hundred and fifty milliliters."
-370.278,374.265,Continuous bladder irrigation is ran overnight and clamped on post-op day one.
-374.685,377.37,He was kept on clear liquids until passage of flatus.
-377.83,382.218,Close suction drain was removed after fluid creatinine was consistent with serum creatinine.
-382.638,387.223,He was discharged on post-op day number two.
-387.723,391.505,The patient is seen postoperatively in one week and was without complaints.
-392.005,394.746,Cystogram showed no leak and the catheter was removed.
-395.186,399.607,"He will follow up in three months with a post-void residual, blood work, and renal ultrasound."
-400.048,407.203,Final pathology showed BPH tissue without evidence of malignancy.
-407.703,410.624,We have performed twenty-one robotic simple prostatectomies.
-411.024,413.744,Median prostate size is a hundred and seventy-seven grams.
-414.125,419.686,Median robotic time is a hundred and sixty-five minutes with an estimated blood loss of four hundred and fifty cc's.
-420.186,422.707,Median stay in the hospital is one point five days.
-423.207,426.768,There have been a total of four complications all Clavian II.
-427.268,433.029,All patients are emptying adequately without incontinence and we have not had any bladder neck contractures.
-433.529,437.993,Robotic simple prostatectomy provides good patient outcomes with low morbidity.
-438.493,442.767,This concludes our instructional video on robotic simple suprapubic prostatectomy.
-443.108,443.389,Thank you.

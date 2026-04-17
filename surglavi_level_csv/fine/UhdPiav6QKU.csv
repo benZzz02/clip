@@ -1,5 +1,4 @@
 start,end,text
-0.858,6.08,This is a video showing a laparoscopic conversion of a nascent fundoplication to a gastric bypass.
 6.58,11.882,"The surgeon introduces a liver retractor to elevate the left lobe of the liver, providing better access to the surgical field."
 12.382,22.957,"The surgeon begins dissecting adhesions between the stomach and the left lobe of the liver, using laparoscopic instruments to carefully separate these structures."
 23.457,27.46,"The surgeon carefully dissects near the liver, maintaining proximity to avoid injuring the stomach during the laparoscopic procedure."
@@ -13,7 +12,6 @@ start,end,text
 85.732,87.213,"The surgeon has created an adequate window through the dissection, providing a clear view of the surgical field."
 87.233,93.819,"The nasogastric tube is visible within the stomach, positioned to aid in the identification and manipulation of the gastric structures during the procedure."
 94.319,101.905,"The surgeon uses a green load stapler to transect the nissen wrap after obtaining an adequate window, with the nasogastric tube visible in the esophagus."
-102.405,115.198,We try and avoid any clips that were from the previous surgery so we don't have a misfire of the stapler.
 115.698,133.89,"Following the transection of the nascent wrap, the surgeon dissects the angle of His, carefully separating tissue at this anatomical junction."
 134.39,136.872,"The surgeon carefully dissects and removes adhesions from the previous surgery, using instruments to separate the fibrous tissue from surrounding structures."
 136.892,145.891,"The surgeon proceeds with dissection in the posterior region, likely continuing the surgical approach around the stomach area."
@@ -47,7 +45,6 @@ start,end,text
 426.21,454.783,"The surgeon takes separate stitches at the corners of the anastomosis to ensure secure bites, using precise suturing technique."
 455.283,459.986,"The surgeon begins stitching the third layer, continuing the suturing process observed in previous layers."
 460.486,466.649,"The surgeon inserts a thirty-two French tube into the small bowel to calibrate the anastomosis, ensuring the correct size and alignment of the surgical connection."
-467.149,476.093,It also helps prevent us getting the posterior layer.
 476.593,499.786,"The surgeon completes the third layer of sutures and begins the fourth layer using two ovicral stitches, ensuring secure closure of the surgical site."
 500.286,510.531,The surgeon tests the anastomosis by submerging it underwater and insufflating air to visually check for any leaks.
 511.031,525.005,The surgeon measures approximately one hundred centimeters of the alimentary limb to prepare for the creation of the jejunal jejunostomy.
@@ -60,4 +57,3 @@ start,end,text
 637.417,653.327,"The surgeon uses silk suture to completely close the mesenteric defect between the bowel loops and the mesentery, ensuring the defect is securely sealed."
 653.827,660.088,"After completing the jejuno-jejunostomy, the surgeon performs a final endoscopy to inspect the surgical site."
 660.588,667.869,The surgical team submerges the anastomosis underwater to check for leaks and ensure the patency of the connection.
-668.369,670.174,And this concludes the procedure. Thank you.

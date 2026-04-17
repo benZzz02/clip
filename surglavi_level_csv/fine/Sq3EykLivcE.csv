@@ -1,16 +1,11 @@
 start,end,text
-0.921,9.167,I am sharing a case of a robotic sigmoid resection for a small cancer in a polyp that was incompletely resected.
-9.187,25.698,"There was residual disease at the site on a repeat endoscopic view. The patient was offered attempted endoscopic resection versus formal surgical oncologic resection, and they chose oncologic resection."
 26.198,30.081,"The surgeon uses electrocautery to burn the area marked by a small tattoo, which is visually subtle."
-30.581,35.645,You'll see later in the case I do flexible endoscopy to take a look and make sure that's the right spot.
 36.145,44.652,"The surgeon performs a medial to lateral dissection in the abdominal cavity, facilitated by the patient's favorable body habitus and minimal visceral fat, allowing clear visualization of anatomical structures."
 45.152,63.44,"The surgeon traces along the inferior mesenteric artery (IMA) to perform a high ligation, preparing to isolate and secure the vessel."
 63.94,84.827,"The surgeon carefully dissects laterally, revealing the left ureter without the use of stents, as it becomes visible in the surgical field."
 85.327,103.977,"The surgeon continues to dissect the inferior mesenteric artery (IMA) towards its root where it originates from the aorta, using precise surgical techniques to separate the artery from surrounding tissues."
 104.477,119.066,"The ureter is visible again in the surgical field, highlighted for identification before proceeding with the transection or high ligation of the inferior mesenteric artery (IMA)."
 119.566,129.932,"The surgeon carefully dissects inside the vascular sheath, cleaning off the adventitia surrounding the inferior mesenteric artery (IMA)."
-130.432,135.967,"This used to make me really nervous to do this, you'll see that there's a clear plane there."
-136.327,146.733,"And I think that the benefit is being able to get a very good seal, whether you're using an energy device or if you were to use clips. Every patient is different."
 147.233,160.474,"The surgeon ligates the inferior mesenteric artery (IMA) and traces the dissection further upwards, preparing to potentially address the inferior mesenteric vein (IMV)."
 160.974,179.047,"The surgeon performs lateral dissection on a patient with a redundant sigmoid colon and mesentery, opting not to do high ligation of the inferior mesenteric vein or mobilization of the splenic flexure."
 179.547,183.97,"The surgeon joins the medial dissection, with a visible sponge placed in the surgical field to aid in the procedure."
@@ -19,19 +14,12 @@ start,end,text
 225.467,236.793,"The surgeon uses a vessel sealer to clean the rectosigmoid junction, with the rectum already partially mobilized to facilitate the upcoming anastomosis."
 236.853,259.075,"The surgeon performs minimal dissection in the retro rectal space, which is a technique used to elevate the rectum for anastomosis after completing proximal mobilization."
 259.575,271.723,"The surgeon approaches the transected inferior mesenteric artery (IMA), moving upwards towards the bowel wall. The visual field shows a long redundant sigmoid colon and mesentery."
-271.743,299.196,"There was a great lymph node yield in this case. I think there were about thirty-seven lymph nodes, all negative, and it was a T-one tumor."
 299.696,322.759,"The surgeon uses a flexible endoscope to visualize the tumor, located near the area where the vessel sealer is positioned, ensuring a six-centimeter proximal margin."
 323.259,332.045,"The surgeon checks the perfusion of the rectum and sigmoid colon, ensuring adequate blood flow to the tissues following mobilization and preparation for anastomosis."
-332.545,340.27,I consider doing a transrectal extraction of the specimen in this case. In the end I elected against it.
-340.77,348.256,I didn't want any chance that I was going to tear the rectum pulling this specimen out and I don't morsel the specimen in cancer cases.
 348.756,356.858,"The surgeon divides the bowel at proximal and distal points, ensuring the incision is made at a ninety-degree angle across the anti-mesenteric surface."
 357.358,380.112,"The surgeon places a stay suture in the far corner to ensure proper alignment of the bowel for hands-on anastomosis, pulling the staple line into position."
 380.612,391.18,"The surgeon uses a 3-0 nine-inch V-lock suture to join the two staple lines, forming the posterior outer row of a two-layer anastomosis."
-391.68,409.495,I think this lines up really nicely. And it's pretty quick.
-409.995,430.391,"You know, I like to do intracorporeal anastomosis and extraction of the specimen at the end of the case. I think it saves time, particularly robotics, so you don't have to undock in the middle and then either redock or finish the case laparoscopically. I just have moved away from EEA staplers."
 430.891,439.872,The surgeon completes the outer back row of the anastomosis and proceeds to make a proctotomy followed by an enterotomy using surgical scissors.
-440.372,466.163,"Some people have questioned whether I feel that this doesn't lead to a wide open anastomosis or if that lip in between the stapeline and the otomy becomes ischemic. I haven't noticed any strictures and you'll see in a second when I do ICG again, I'm not really concerned about ischemia to that segment, mostly because I'm going close to a centimeter away from the end."
-466.663,483.51,"And additionally, if it had become ischemic, I still have that posterior row that's there. So even if that necrosed, I feel pretty comfortable. But I have not had any major issues with this anastomosis and I feel very secure with it."
 483.53,525.253,"The surgeon begins sewing the inner posterior row of the anastomosis, starting at the posterior midline and stitching away from themselves. Each stitch is cinched after placement to ensure precise positioning."
 525.753,547.09,"The surgeon takes a bite on the rectal side with a suture, parks it down in the pelvis, and prepares to start a new stitch in the middle as they transition around the corner."
 547.59,565.455,"The surgeon performs the inner posterior row of suturing, sewing towards themselves and using a baseball stitch technique to secure the lip created at the enterotomy, approximately one centimeter away from the staple line."
@@ -42,4 +30,3 @@ start,end,text
 713.303,785.851,"The surgeon runs the original posterior row suture over the top, joining the two staple lines in the surgical field."
 786.351,799.236,"The surgeon completes the procedure by tying the suture to the silk stay suture, securing the final stitch in place."
 799.736,812.699,"The surgeon performs a leak test using a flexible endoscope, inserting it through the anastomosis to assess for any leaks, patency, and signs of bleeding."
-813.199,853.267,"No trouble coming up and through that anastomosis, widely patent. This patient did very well, was discharged on post-operative day one. Again, pathology T one and zero was doing very well at her two week follow up. Specimen was subsequently at the end of the case extracted through a fin and steel incision and was discharged with five pills of oxycodone, which they said they didn't take. Thank you for watching."

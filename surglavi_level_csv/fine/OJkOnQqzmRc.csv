@@ -1,7 +1,5 @@
 start,end,text
-3.648,12.471,This operation had some unexpected aberrant anatomy. I was performing this cholecystectomy for a one point one centimeter gallbladder polyp.
 12.971,24.795,"The surgeon dissects the posterior wall of the gallbladder, progressing one third to one half of the way up the fossa before placing clips on the cystic duct or artery."
-25.295,34.643,"I always joke that this is out of paranoia, but in this case it proved to be an example where this extended dissection prevented a complication."
 35.143,45.55,The surgeon identifies the cystic duct and cystic artery during the dissection. The cystic duct is visibly inserting onto the infundibulum of the gallbladder.
 46.05,60.132,"As the surgeon continues the dissection up the gallbladder fossa, another duct structure becomes visible. The structure is highlighted using the firefly mode, enhanced by the preoperative administration of indocyanine green."
 60.632,76.723,"The surgeon continues dissection to isolate an additional duct structure, toggling between regular view and firefly mode to trace its course and better define its origin and insertion."
@@ -9,7 +7,6 @@ start,end,text
 92.685,115.74,"The surgeon observes the course of a duct, noting its separation from the gallbladder and liver. The anatomy suggests an aberrant insertion of the right posterior hepatic duct into the cystic duct, although this case presents unique characteristics."
 116.24,133.132,"The surgeon identifies an aberrant duct structure inserting into the infundibulum of the gallbladder, which then empties into the cystic duct."
 133.632,155.313,"The surgeon creates a window behind the gallbladder and above the identified aberrant duct, continuing dissection up the gallbladder fossa to confirm the absence of additional aberrancies. The isolated structure is clearly delineated after careful dissection."
-155.813,182.34,"Reviewing the anatomy under Firefly shows an impressive view. Had I missed this aberrancy and clipped the cystic duct below, I would have likely injured or transected this aberrant duct at its origin from the liver when removing the gallbladder from the fossa. If injured flush with the liver, my options would be likely limited to suture ligation or attempting a complicated repair."
 182.84,189.265,"The common hepatic duct is visually identified in its expected anatomical location, confirming its position relative to surrounding structures."
 189.765,202.795,"The surgeon performs an intraoperative cholangiogram to visualize the biliary anatomy, placing a large clip as far proximal as possible from the apparent aberrant duct."
 203.295,223.647,"An assistant places a fourteen French angiocatheter in the epigastrium and advances the cholangiogram catheter into the abdominal cavity. The surgeon performs a ductotomy on the infundibulum of the gallbladder, proximal to the insertion of the aberrant duct."
@@ -17,5 +14,3 @@ start,end,text
 237.809,260.603,"The robotic arms are positioned with a C-arm above them to perform an intraoperative cholangiogram. The first cholangiogram reveals the common bile duct, left hepatic duct, and at least one right hepatic duct. The setup allows for a second cholangiogram to isolate the aberrant duct."
 261.103,281.257,"The surgeon holds the catheter in position within the duct, unable to inflate the balloon without dislodging it. The intraoperative cholangiogram reveals the aberrant duct branching multiple times until it becomes indistinct."
 281.757,295.089,"The surgeon places distal clips on the infundibulum of the gallbladder, ensuring the confluence to the cystic duct remains intact to preserve the communication of the aberrant duct."
-295.589,306.52,This patient has done very well post-operatively. She had no complications and is now one month from her operation. Her pathology did not reveal any malignancies.
-307.02,310.383,"I hope this video was helpful. As always, thank you again for watching."

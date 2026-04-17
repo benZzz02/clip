@@ -1,6 +1,5 @@
 start,end,text
 4.948,13.415,"The surgeon performs an intraoperative cholangiogram during a robotic-assisted single incision cholecystectomy, visualizing the bile duct anatomy."
-13.915,25.984,"This patient had chronic cholecystitis and had a transient elevation of the LFTs in the past. Therefore, an intraoperative cholangiogram was indicated."
 26.484,34.843,"The surgeon performs piecemeal dissection of the triangle of Calot to achieve visualization of the critical view, carefully separating anatomical structures within this area."
 35.343,43.726,The surgeon alternates dissection between the anterior and posterior views to manage moderate inflammation during the robotic-assisted single incision cholecystectomy.
 44.226,55.993,"The surgeon dissects approximately one third of the distance of the gallbladder fossa, ensuring clear visualization of the anatomy before clipping or cutting any structures."
@@ -11,4 +10,3 @@ start,end,text
 106.106,118.37,"The surgeon performs an intraoperative cholangiogram by undocking one robotic arm. Following this, clips are placed on the proximal cystic duct."
 118.87,129.595,"The surgeon transects the cystic duct and cystic artery, then removes the gallbladder from the fossa using electrocautery."
 130.095,138.218,"The surgeon closes the abdominal wall using standard suturing techniques, and the angiocatheter puncture site is sealed with Dermabond or Steri-Strips."
-138.718,139.438,Thank you very much.

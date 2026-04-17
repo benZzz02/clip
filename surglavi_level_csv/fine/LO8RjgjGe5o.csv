@@ -1,15 +1,4 @@
 start,end,text
-5.248,11.171,This is a case report of a robotic-assisted Roux-en-Y cystojejunostomy for a large pancreatic pseudocyst.
-11.671,15.993,"This procedure was performed at Sinai Grace Hospital, part of the Detroit Medical Center."
-16.493,24.093,Our patient is a fifty-six-year-old male with chronic recurrent pancreatitis due to excessive alcohol use. He denied any previous surgeries.
-24.593,37.316,"Cystic changes were noted on CAT scans as far back as April, evolving and enlarging through July without improvement. His symptoms included epigastric abdominal pain, left upper quadrant pain, nausea, vomiting, and early satiety."
-37.816,44.938,"During his hospital course, a right upper quadrant ultrasound was completed to rule out gallstones without any cholelithiasis noted."
-45.438,62.275,"This CT demonstrates the pseudocyst, noted to be twelve point five by seven by eleven centimeters. and compressed between the left lobe of the liver and the stomach, causing a mass effect and displacement of the stomach itself."
-62.775,68.739,"Preoperatively, our patient was dependent on TPN due to inability to tolerate oral diet."
-69.239,77.966,He was sent to subacute rehab for roughly six weeks to allow the cyst to mature and to optimize his nutritional status prior to surgery.
-78.466,88.491,The patient is positioned in the French position in reverse Trendelenburg for the initiation of a diagnostic laparoscopy.
-88.991,102.477,"The surgeon evaluates the abdomen, revealing the cyst located along the hepatogastric ligament and the lesser curve, not posterior to the stomach. This anatomical positioning leads to the decision to perform a Roux-en-Y cystogenostomy."
-102.977,117.166,"The robotic XI platform is docked, with visible port placement including orange-marked 8mm trocars and blue-marked 12mm trocars."
 117.666,135.158,"The surgeon uses the robotic XI platform to run the small bowel from the ligament of Treitz for forty centimeters, creating a small window in the mesenteric border with a Maryland bipolar instrument."
 135.658,151.781,"The surgeon transects the small bowel using a 45mm blue load robotic stapler. Subsequently, the small bowel mesentery is incised with a vessel sealer towards the base, facilitating the mobilization of the Roux limb."
 152.281,165.458,"The surgeon positions the Roux limb anterior to the transverse colon, adjacent to the cyst, creating an anticholic and antigastric configuration. The Roux limb is then sutured to the most dependent portion of the cyst using a 3-0 barbed suture in a running fashion."
@@ -21,5 +10,3 @@ start,end,text
 291.672,303.419,"The surgeon forms the jejunal aneurotomy at the anti-mesenteric border using monopolar scissors, carefully incising the tissue."
 303.919,337.065,"The surgeon creates a cystojejunostomy by suturing the jejunum to the cyst wall using a running technique with 3-0 barbed suture, ensuring a secure connection between the two structures."
 337.565,354.55,"The surgeon performs an intraoperative bowel perfusion assessment of the Roux limb and the common channel using near-infrared mode, confirming good blood flow. A 15 French drain is placed, marking the completion of the procedure."
-355.05,382.779,"Post-operatively, our patient reported immediate relief of his chronic abdominal pain and his appetite returned almost immediately. He was initiated on a clear liquid diet on post-operative day one and was advanced to a soft diet on post-operative day two, discontinuing his TPN. He was ambulating, urinating, and having bowel function upon discharge on post-operative day two. His JP amylase was negative times two and the JP was removed prior to discharge."
-383.279,404.893,"While laparoscopic Roux-en-Y cystojejunostomies are reported in the literature, as shown here with successful outcomes, the use of robotic surgery for this indication is not extensively reported. Our case demonstrates the safe and effective use of robotic surgery for this indication, which allows enhanced articulation for the hand zone anastomosis, better three-D visualization, and increased magnification."

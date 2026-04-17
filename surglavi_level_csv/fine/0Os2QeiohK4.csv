@@ -1,10 +1,4 @@
 start,end,text
-0.151,7.873,This video is of a robotic pancreatic duodenectomy and cholecystectomy undertaken in a forty eight year old woman with painless jaundice.
-8.373,14.794,Imaging showed intra and extra hepatic biliary dilation with a double duct sign.
-15.294,21.135,"An endoscopic view reveals a submucosal mass located at the biliary orifice, characterized by its distinct appearance within the mucosal layer."
-21.215,23.976,Biopsy was consistent with neuroendocrine tumor.
-24.336,28.197,On imaging there was a relatively large mass in the head of the pancreas.
-28.697,32.099,The surgical team utilizes a six trocar technique to perform the robotic pancreaticoduodenectomy.
 32.58,41.506,"A trocar is placed at the umbilicus for diagnostic laparoscopy, followed by the placement of three robotic operating arms at the same level."
 42.006,48.69,"An airflow device is positioned along the anterior axillary line, cephalad at the umbilicus near the costal margin, as part of the surgical setup."
 49.19,54.694,"The surgeon uses a cut-down technique to place an applied port, completing the setup for the robotic-assisted pancreaticoduodenectomy."
@@ -19,7 +13,6 @@ start,end,text
 124.78,136.734,"The surgeon dissects and takes down the ligament of Treitz, advancing the jejunum under the root of the mesentery before dividing the jejunum."
 137.234,151.327,"The surgeon opens the gastrocolic omentum and lifts the stomach ventrally. Dissection proceeds through the gastroepiploic artery and vein, followed by division of the duodenum."
 151.827,173.392,"The surgeon dissects along the inferior border of the pancreas to identify the pyramesenteric vein. The pancreas is lifted off the pyramesenteric vein and portal vein, with division performed using a hook cautery, vessel sealer, or scissors with energy."
-173.892,178.215,It depends on what is going to be the easiest and best that day.
 178.715,197.984,"The surgeon opens the mesentery for the transsection of the jejunum, dividing the mesentery as the dissection progresses toward the area where the superior mesenteric vein passes beneath the pancreas."
 198.484,215.476,"The surgeon performs dissection along the superior mesenteric artery, skeletonizing it, while mobilizing the portal vein away from the artery. This creates a clean surgical field for lymphadenectomy."
 215.976,229.02,"The surgeon continues the dissection to free the gallbladder, carefully dissecting across the common hepatic duct to remove the gallbladder en bloc with the specimen."
@@ -33,4 +26,3 @@ start,end,text
 387.404,415.253,"The surgeon completes the anastomosis between the pancreatic duct and the enterotomy, running the ventral layer of the two-layer anastomosis using three OV-lock sutures. The corner sutures, connecting the posterior and ventral layers, are tied securely."
 415.753,429.919,"The surgeon uses sutures to invert the staple line on the small bowel, followed by reconstructing the ligament of Treitz with several interrupted V-lock sutures."
 430.419,495.063,"The surgeon identifies the small bowel and the afferent and efferent limbs for the duodenal jejunostomy. The small bowel and duodenum are opened, and the staple line on the duodenum is excised during the anastomosis. The posterior layer is constructed with sutures placed inside out on the duodenum and outside in on the small bowel, running until reaching three o'clock on the duodenum. The staple line is removed, ensuring the antrum appears pink. The ventral layer reconstruction is a one-layer anastomosis, starting at nine o'clock and sewing to three o'clock on the duodenum, with sutures tied across from each other. A drain is placed under the bile duct, and the anastomosis is wrapped with the falciform ligament."
-495.223,529.457,"Trocarocytes were closed with Maxon, followed by Vicra, followed by Steristrips. Seprafilm may be placed prior to closing, depending upon our anticipated pathology. The dilute bibivacaine is sprayed throughout the peritoneal cavity. Patient was discharged on the fourth post-operative day. Pathology documents a T-to-N-one M-zero, a near-underkin tumor that was completely excised with clean margins. Patient was assuming normal activities by the time the patient was seen for the first post-op visit in the office, which was on post-op day ten."

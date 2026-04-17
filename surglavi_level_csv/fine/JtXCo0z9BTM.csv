@@ -1,13 +1,4 @@
 start,end,text
-1.158,11.1,"In this video, we are presenting a case of robotic partial nephrectomy with the use of SIVRA-III-D virtual reality model in pre-operative planning of the procedure."
-11.6,17.282,SIVRA software creates the three-D models from existing preoperative CT scans or MRIs.
-17.782,22.944,It is considered a medical device and it is FDA cleared for both preoperative and intraoperative use.
-23.444,33.067,The models may be viewed in a standard three-D format from the surgeon's mobile phone or tablet and may be viewed in a virtual reality for even greater three-D visualization.
-33.567,55.872,Our patient is a fifty-two year old female who presented with an incidental finding of a large right renal mass.
-56.372,65.876,Imaging showed a double arterial supply and venous drainage of the kidney.
-66.376,73.118,"A three-D model was created and provided us with a clearer, easy, memorable image of the vascular anatomy of the tumor and the kidney."
-73.578,81.162,It demonstrated a separate arterial supply and venous drainage of the tumor and gave us a better idea about the tumor relation to the normal renal burring
-81.662,94.846,"Depending on our understanding of the anatomy provided by the three-D model, we planned to perform an early ligation and division of the superior artery and vein supplying the tumor, before claiming the inferior vascular group to minimize ischemia time."
 95.346,130.558,"The surgeon mobilizes the right colon to access the retroperitoneal space, then identifies and follows the ureter proximally towards the renal hilum."
 131.058,161.385,"The surgeon dissects around the two groups of vessels supplying the kidney, carefully identifying and separating them from surrounding tissues."
 161.885,172.09,"The surgeon clips and divides the superior vein draining the tumor, as part of the nephrectomy procedure."
@@ -18,9 +9,6 @@ start,end,text
 295.532,326.021,"The surgeon excises the tumor using sharp dissection, carefully separating it from surrounding tissues."
 326.521,351.839,"The surgeon completes the oversewing of the tumor bed and finishes the inner layer of phrenography, ensuring secure closure of the surgical site."
 352.339,354.179,"The surgeon performs early unclamping of the inferior artery and vein, restoring blood flow to the kidney following ischemia."
-354.679,363.032,and the total warm ischemia time was only eleven minutes.
 363.532,408.902,"The surgeon completes the outer layer of rhinography using interrupted sutures and a sliding clip technique, securing the tissue layers in place."
 409.402,413.124,"The surgeon completes final hemostasis by applying flow seal and tail seal to the surgical site, ensuring effective control of bleeding."
 413.624,425.109,"The surgeon places the nephrectomy specimen into an endocatch bag for removal from the surgical site, followed by the placement of a GP drain."
-425.609,430.571,The patient was discharged the next day and pathology showed negative surgical margin.
-431.071,431.391,Thank you.

@@ -1,12 +1,4 @@
 start,end,text
-1.306,6.692,This video presents the role of laparoscopy in multivisceral resection for colorectal cancer.
-1.34,6.726,This video presents the role of laparoscopy in multivisceral resection for colorectal cancer.
-7.192,16.143,"Sixty-eight years old male presented with distal sigmoid tumor, staging CT showed urinary bladder involvement and patient BMI was twenty-eight."
-7.226,16.177,"Sixty-eight years old male presented with distal sigmoid tumor, staging CT showed urinary bladder involvement and patient BMI was twenty-eight."
-16.643,25.252,This is our normal port placement for anterior resection.
-16.677,25.285,The laparoscopic setup shows the standard port placement for an anterior resection procedure.
-25.752,33.857,"To our surprise, it was an under-call CT scan, and small bowel was also involved with the tumor."
-25.785,33.892,"To our surprise, it was an under-call CT scan, and small bowel was also involved with the tumor."
 34.357,38.46,"The surgeon begins the mobilization of the small bowel, carefully manipulating the tissue to free it from surrounding structures."
 34.392,38.495,"The surgeon begins the mobilization of the small bowel, carefully manipulating the tissue to separate it from surrounding structures."
 38.96,42.903,"The surgeon performs an en bloc resection, carefully excising the involved tissue as a single unit to ensure complete removal of the tumor and any affected surrounding structures."
@@ -23,8 +15,6 @@ start,end,text
 99.741,111.711,"The surgeon clips the inferior mesenteric vein (IMV) with hemologs and cuts the vein between the clips, ensuring secure ligation and division."
 112.176,121.703,"The surgeon creates a space in front of the pancreas, continuing the medial to lateral mobilization process."
 112.211,121.739,"The surgeon creates a space in front of the pancreas, continuing the medial to lateral mobilization process."
-122.203,135.674,Traction and counter traction is the key element
-122.239,135.708,Traction and counter traction is the key element.
 136.174,151.924,"The surgeon creates an entry into the lesser sac, facilitating access to the area behind the stomach and in front of the pancreas."
 136.208,151.961,"The surgeon creates an entry into the lesser sac, following the medial to lateral mobilization in front of the pancreas."
 152.424,168.928,"A swab is placed on the pancreas to facilitate further mobilization of the splenic flexure, providing a clear visual reference for the next steps in the procedure."
@@ -36,16 +26,12 @@ start,end,text
 185.155,199.414,"The surgeon performs medial to lateral mobilization, separating the mesocolon from retroperitoneal structures, and isolates the inferior mesenteric artery."
 185.19,194.516,"The surgeon performs medial to lateral mobilization, separating the mesocolon from the underlying retroperitoneal structures, using traction and counter traction techniques."
 195.016,199.445,"The surgeon isolates the inferior mesenteric artery, clearly delineating it from surrounding tissues."
-199.914,204.157,Again traction and counter traction is very important.
-199.945,204.186,Again traction and counter traction is very important.
 204.657,216.484,"The surgeon dissects the inferior mesenteric artery (IMA), applies clips using Hem-o-lok, and divides the artery, completing its isolation from surrounding tissues."
 204.686,216.509,"The surgeon dissects the inferior mesenteric artery (IMA), applies a hemlock clip, and divides the artery."
 216.984,225.608,"The surgeon continues the medial to lateral mobilization of the left colon, separating the mesocolon from the underlying retroperitoneal structures."
 217.009,225.639,"The surgeon continues medial to lateral mobilization of the left colon, further separating the mesocolon from the underlying retroperitoneal structures."
 226.108,232.172,"The surgeon uses hook diathermy to perform precise dissection, focusing on separating tissue layers with controlled cautery application."
 226.139,232.203,"The surgeon uses hook diathermy to perform precise dissection of the tissue, continuing the medial to lateral mobilization of the left colon."
-232.672,240.678,It is only possible with good traction and counter traction.
-232.703,240.708,It is only possible with good traction and counter traction.
 241.178,259.257,"The surgeon completes the medial mobilization of the colon and divides the lateral attachments using hook diathermy, ensuring the colon is fully mobilized."
 241.208,259.311,"The surgeon completes the medial mobilization of the colon and divides the lateral attachments using hook diathermy, ensuring the colon is fully mobilized."
 259.757,279.328,"The surgeon begins splenic flexural mobilization by dividing the gastrocolic omentum, releasing the transverse colon, and entering the lesser sac from above."
@@ -54,12 +40,9 @@ start,end,text
 279.862,285.74,"The surgeon performs lateral dissection to release the splenocolic ligament, further mobilizing the left colon."
 286.207,299.018,"A swab is visibly placed above the pancreas, and the complete mobilization of the splenic flexure is evident."
 286.24,299.043,"A swab is visibly placed above the pancreas, and the complete mobilization of the splenic flexure is evident."
-299.518,305.863,"In this clip, we can see the involvement of urinary bladder as suggested on the CT scan."
 299.543,305.885,"The video shows the urinary bladder, which appears to be involved in the surgical field as indicated by the CT scan findings."
 306.363,319.163,"The surgeon performs an en bloc resection, taking a full-thickness cuff of the urinary bladder to ensure clear margins."
 306.385,319.197,"The surgeon performs an en bloc resection, taking a full-thickness cuff of the urinary bladder to achieve clear margins."
-319.663,354.857,We again emphasize the importance of traction and counter traction in laparoscopy.
-319.697,354.891,We again emphasize the importance of traction and counter traction in laparoscopy.
 355.357,416.812,"The surgeon completely divides the wall of the urinary bladder and removes it along with the specimen, demonstrating the completion of the en bloc resection."
 355.391,416.845,The surgeon completely divides the wall of the urinary bladder and removes it along with the specimen.
 417.312,428.117,"The left iliac artery is clearly visible, having been carefully separated from surrounding tissues."
@@ -70,12 +53,7 @@ start,end,text
 447.703,467.999,The surgeon prepares the sigmoid colon for transection using a harmonic scalpel and divides it with an Endo-GIA 60 stapler.
 468.463,475.848,"The surgeon extracts the resected tumor specimen through a midline incision, completing the removal process."
 468.499,475.878,"The surgeon extracts the resected tumor specimen through the midline incision, completing the removal process."
-476.348,483.893,The surgeon uses an Alexis wound protector to maintain the surgical field and facilitate specimen extraction.
-476.378,483.923,The surgeon uses an Alexis wound protector to facilitate the extraction of the specimen through the incision site.
 484.393,490.557,"The surgeon examines the resected specimen, which includes portions of the small bowel and urinary bladder wall, ensuring all relevant anatomical structures are intact."
 484.423,490.587,"The surgeon examines the resected specimen, which includes the tumor and surrounding tissues, extracted through the midline incision."
 491.057,495.561,"The surgeon repairs the urinary bladder using a double layer of 2-0 Vicryl sutures, ensuring the integrity of the bladder wall."
 491.087,495.611,"The surgeon repairs the urinary bladder using a two-layer technique with ovicryl sutures, ensuring the integrity of the bladder wall."
-496.061,505.827,"The surgeon uses a CDH-29 circular stapler to fashion the colorectal anastomosis, followed by performing a leak test to visually assess the integrity of the anastomosis."
-496.111,505.877,"The surgeon performs a colorectal anastomosis using a CDH-29 circular stapler, followed by a leak test to verify the integrity of the anastomosis."
-506.352,512.517,Pathological staging was T for BN one and it was R naught resection and length of stay was six days.

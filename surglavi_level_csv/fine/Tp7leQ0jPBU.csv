@@ -1,13 +1,4 @@
 start,end,text
-0.81,7.452,"The robotic surgical system is used to perform a gastric diverticulectomy and Nissen fundoplication, addressing atypical GERD symptoms. The procedure involves precise manipulation of gastric tissue and reinforcement of the lower esophageal sphincter."
-7.952,13.514,The patient is a seventy-one-year-old female who presented to the office with persistent cough and had been treated for GERD with a PPI.
-14.014,19.395,"She had had recurrent issues with pneumonia, upper respiratory infections, and episodes of coughing of small chunks of food."
-19.875,25.68,"She had been repeatedly treated with steroids, however, she continues to have recurrent episodes and no improvement in her respiratory symptoms."
-26.18,28.901,"As a part of her workup, the patient underwent upper endoscopy."
-29.201,36.563,This showed signs of esophagitis as well as reflux as well as hiatal hernia and a gastric diverticulum.
-37.063,47.752,An upper GI double contrast study confirmed these findings which showed gastroesophageal reflux as well as a posterior gastric outpouch measuring approximately seven centimeters in size.
-48.252,59.276,"As a result of these findings, it was thought the patient would benefit from a robotic intervention that would include hiatal hernia repair, nissen fundoplication, as well as gastric diverticulectomy."
-59.776,66.059,The gastric diverticulum was also thought to be a principal contributor to those patients' atypical GERD symptoms.
 66.559,72.238,"The surgeon begins the procedure by dissecting the gastrohepatic ligament using a robotic hook cautery, carefully separating the ligament from surrounding tissues."
 72.738,80.702,"A robotic arm is utilized as a temporary liver retractor, providing an unobstructed view of the hiatus during the procedure."
 81.202,87.365,"The surgeon completes the dissection of the gastrohepatic ligament, revealing the entry into the gastroesophageal membrane."
@@ -26,9 +17,5 @@ start,end,text
 310.764,325.439,The surgeon uses upper endoscopy to visually confirm the intact staple line and successful resection at the base of the gastric diverticulum.
 325.939,360.719,"The surgeon closes a small hiatal hernia using an O non-absorbable barb suture, carefully stitching the hernia defect to reinforce the area."
 361.219,367.603,"Following the closure of the hiatal hernia, the surgeon performs the shoeshine maneuver, manipulating the stomach fundus to facilitate the creation of the Nissen fundoplication."
-368.063,372.846,This is not shown here.
 373.346,419.12,"The surgeon completes the wrap by using a non-absorbable suture to approximate the anterior gastric wall with the anterior surface of the esophagus, securing the two structures together."
 419.62,454.413,"The surgeon passes the final U stitch, completing the wrap around the esophagus and anterior gastric wall."
-454.913,459.934,The patient did well post-operatively and was discharged on post-operative day number one.
-460.434,469.617,She had no more episodes of upper respiratory infections and more significantly had no more atypical symptoms of GERD including no vomiting of chunks of food.
-470.117,474.358,A symptom we had thought that was specifically related to her large gastric diverticulum.

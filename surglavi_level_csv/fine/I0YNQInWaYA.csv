@@ -1,16 +1,10 @@
 start,end,text
-1.047,5.871,"Hi, I am Dr. Amar, metabolic and bariatric surgeon from Hyderabad."
-6.371,10.895,This is a video of single anastomosis sleeve ileal bypass.
-11.395,20.002,It is also known as sleeve gastrectomy with loop bipartition. It is a modification of SAD-ES.
-20.502,31.167,"Difference being, duodenum is not transacted in this procedure and terminal ileum is directly anastomosed to pyloric antrum. in a loop fashion."
 31.187,39.211,"The surgeon inserts a 12mm optical port into the right upper quadrant, providing visual access to the surgical field."
 39.711,46.833,"The surgeon adjusts the optical port to be parallel to the abdominal wall after visualizing the peritoneum, preparing to insert it further into the abdominal cavity."
 46.853,59.642,"The surgeon positions three laparoscopic ports: a 10 mm umbilical port and a 5 mm left upper parodactyl port, in addition to the previously mentioned optical port."
 60.142,85.292,"The surgeon disconnects the greater omentum from the greater curvature of the stomach, beginning opposite and slightly above the level of the incisura angularis, using an energy source."
 85.792,108.807,"The surgeon enters the lesser sac and continues the resection upwards towards the gastroesophageal junction, carefully manipulating the tissue in this area."
 109.307,120.701,"The surgeon uses a bowel grasper to retract the stomach and liver, utilizing the same instrument due to the absence of an additional port."
-121.201,130.583,"If there is any difficulty, five mm epigastric port can be used for lever retraction."
-131.083,149.875,There is no need to use any additional port to retract greater momentum. Visualization is adequate if retraction is applied properly.
 150.375,170.506,"The surgeon divides all short gastric vessels, exercising caution while dividing the upper short gastric vessels near the gastroesophageal junction."
 171.006,190.884,"The surgeon divides the pancreaticogastric peritoneal reflection and pancreaticogastric attachments to fully mobilize the stomach fundus, ensuring clear separation from the pancreas."
 191.384,220.93,"The surgeon continues dissection up to the gastroesophageal junction, ensuring the gastroesophageal pad of fat remains intact to preserve blood supply to the upper part of the sleeve."
@@ -18,7 +12,6 @@ start,end,text
 244.985,263.86,"The surgeon continues the dissection until the left crus of the diaphragm is visually identified, ensuring clear exposure of the anatomical landmark."
 264.36,283.724,"The surgeon continues the dissection towards the pylorus, progressing along the stomach while maintaining careful technique to avoid damage to surrounding structures."
 284.224,303.649,"The surgeon dissects towards the pylorus, carefully avoiding the greater curvature to prevent damage to the sleeve. The greater omentum is disconnected from the greater curvature of the stomach, progressing towards the pylorus."
-304.149,322.901,This is necessary to prevent or reduce bleeding while doing anastomosis.
 323.401,343.818,"The surgeon relieves all pancreatic-gastric attachments to fully mobilize the pyloric antrum, completing the devascularization of the greater curvature of the stomach."
 344.318,360.054,"The surgeon begins forming the gastric sleeve, starting six centimeters proximal to the pylorus. A six-centimeter width of the pyloric antrum is prepared to facilitate the upcoming horizontal gastro-ileal anastomosis."
 360.554,381.111,"The surgeon uses a sixty green stapler to make the initial cut on the stomach, followed by the insertion of a gastric calibration tube to ensure proper sizing and alignment."
@@ -50,4 +43,3 @@ start,end,text
 1188.768,1244.446,"The surgeon applies anchoring switches on either side of the anastomosis for additional security. The wide gap behind the anastomosis is left open, as the surgeon chooses not to close it."
 1244.946,1266.12,"The surgeon uses methylene blue solution to test the patency of the anastomosis. The gastric sleeve staple line and anastomosis are covered with surgical material, possibly surgical snow, for protection."
 1266.62,1274.747,The surgeon places the removed stomach into a sterile plastic bag. The gastric sleeve created during the procedure has two visible outlets.
-1275.247,1315.03,"Since most of the undigested food reaches the terminal ileum through anastomosis, hormonal changes are high. So weight loss will be more, weight regain risk is less, diabetes resolution is more. Since part of the food goes through duodenum also, malabsorption will be less. Surgery is easy to perform, learning curve is short and access to biliary tract is maintained. Hypoglycemia risk is less because anti-incretin effect is still maintained. Please like this video on YouTube. Thank you."

@@ -1,5 +1,4 @@
 start,end,text
-1.907,10.513,"Hello, this is a case of a representative laparoscopic cholecystectomy. This was in a young female with symptoms of biliary colic secondary to gallstones."
 11.013,24.802,"The surgeon places a twelve millimeter trocar at the umbilicus and three five millimeter trocars in the upper abdomen, demonstrating entry into the abdominal cavity with the five millimeter trocars."
 25.302,30.641,"The laparoscopic camera provides a view from the twelve millimeter trocar positioned at the umbilicus, offering a perspective of the surgical field during the cholecystectomy procedure."
 31.141,43.325,"The surgeon grasps the fundus of the gallbladder and retracts it upward toward the head, revealing the liver, gallbladder, stomach, and duodenum in the surgical field."
@@ -23,4 +22,3 @@ start,end,text
 284.873,304.598,The surgeon places the gallbladder into an endocatch bag for removal from the abdominal cavity.
 305.098,309.879,"The surgeon verifies complete hemostasis in the surgical field, ensuring there is no active bleeding following the removal of the gallbladder."
 310.379,323.149,"The surgeon irrigates the operative field, ensuring the area is clean and free of debris following the division of the cystic duct and artery."
-323.649,323.933,Thank you.

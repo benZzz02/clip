@@ -1,7 +1,6 @@
 start,end,text
 1.303,6.187,"The surgeon uses laparoscopic instruments to dissect and mobilize the upper right lung lobe, preparing it for complete lobe resection."
 6.468,11.713,"The surgeon sequentially divides the vessels, fissures, and bronchus using endosteplars, ensuring precise separation of these anatomical structures."
-12.213,19.18,Structures are prepared with sponge sticks or if you like other instruments selected from the menu.
 19.68,28.627,"Thoracoscopic forceps are introduced through the posterior port and maneuvered behind the superior pulmonary vein, following the clear identification of the middle lobe vein."
 29.127,45.055,"The surgeon encircles the superior pulmonary vein with a vessel rubber loop, creating sufficient space to introduce a stapler around the vessel for division."
 45.555,100.638,"The surgeon introduces an endovascular stapler through the posterior port, passing its thin blade behind the superior pulmonary vein. The vein is then divided after the removal of the vessel loop."
@@ -9,4 +8,3 @@ start,end,text
 115.375,128.623,"The surgeon uses endosteplars to divide the minor fissure, separating the lung tissue along the visible anatomical plane."
 129.123,140.115,"Following the transection of the fissure past the artery, the middle lobe descends, revealing the posterior aspect of the artery and the remaining arterial branches to the upper lobe, which are subsequently transected."
 140.615,147.282,"The surgeon removes the complete upper lobe using an endobag through the utility incision, completing the exercise."
-147.782,150.785,"To see the complete exercise, please contact Surgical Science."

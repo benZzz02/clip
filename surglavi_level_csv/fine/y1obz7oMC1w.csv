@@ -1,9 +1,4 @@
 start,end,text
-4.863,9.907,This patient presented through the ER with abdominal pain and a heart rate in the one hundred and thirties.
-10.407,13.991,His abdominal exam had focal but not general peritonitis.
-14.491,20.296,His past surgical history was unremarkable and his CT scan was diagnostic of a cecal volvulus.
-20.796,23.658,This patient had inflammation that was easy to reduce.
-24.158,26.46,Decompressing the cecum would be the next step.
 26.96,34.539,"The surgeon uses a tips-up grasper to place a purse string suture with a zero silk suture, preparing for further surgical intervention."
 35.039,40.183,"The surgeon places a purse string suture above the expected fluid level in the colon, aiming to prevent spillage during the procedure."
 40.683,47.327,"The surgeon docks four robotic arms in preparation for a bowel resection, facilitating the decompression of the bowel."
@@ -12,7 +7,6 @@ start,end,text
 59.595,65.376,"The transverse colon is exposed, allowing the surgeon to identify the anatomy distal to the volvulus."
 65.876,69.197,"The surgeon identifies the appendix, which is clearly visible and easily distinguishable from surrounding structures."
 69.697,76.48,The surgeon identifies landmarks proximal and distal to the volvulus and begins transecting the mesocolon using robotic assistance.
-76.98,81.361,This patient had recently undergone a colonoscopy and had no evidence of cancer.
 81.861,93.447,"The surgeon transects the mesentery immediately beneath the intestine, ensuring preservation of perfusion to the anastomosis and minimizing the risk of bleeding."
 93.947,99.929,"The cecum appears bulky during the operation, but the surgical procedure continues without complications."
 100.429,110.611,"The surgeon uses a vessel sealer to incrementally separate the pathologic section of the colon from the surgical field, improving exposure with each step."
@@ -26,6 +20,3 @@ start,end,text
 172.756,182.28,The surgeon creates enterotomies while ensuring that stay sutures are held upright to prevent passive flow of enteric contents into the abdominal cavity.
 182.78,188.283,"The surgeon performs the anastomosis using a standard technique, completing the procedure with a two-layer closure of the bowel ends."
 188.783,195.392,The surgeon uses a 2-0 Vicryl suture to close the mucosal layer and a 3-0 PDS suture to imbricate the suture line during the ileocolic anastomosis.
-195.892,198.514,This patient's post-op course was uneventful.
-199.014,206.2,A mild ileus resolved after about two days and they were discharged home with essentially no post-operative pain.
-206.7,207.541,Thank you for watching.

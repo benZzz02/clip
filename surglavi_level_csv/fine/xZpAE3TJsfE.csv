@@ -1,19 +1,4 @@
 start,end,text
-1.485,6.79,Laparoscopy complete myocardial excision for mid-transverse colon cancer.
-1.485,6.79,The laparoscopic procedure involves excising the myocardial tissue associated with mid-transverse colon cancer.
-7.29,20.701,The patient was a seventy-year-old female who presented abdominal pain for six months. Colonoscopy revealed unsaturated mass at the transverse colon and the biospecial adenocarcinoma.
-7.29,13.055,The patient was a seventy-year-old female who presented abdominal pain for six months.
-13.555,20.701,"The colonoscopy reveals an unsaturated mass located at the transverse colon, identified as adenocarcinoma."
-21.201,26.445,Abdominal CT revealed the tumor was located at the mid-transverse colon.
-21.201,26.445,Abdominal CT revealed the tumor was located at the mid-transverse colon.
-26.945,39.024,"The operative time was one hundred and fourteen minutes. with an estimated blood loss of thirty milliliters, and a post-operative hospital stay was six days."
-26.945,30.331,The operative time was one hundred and fourteen minutes.
-30.831,39.024,"with an estimated blood loss of thirty milliliters, and a post-operative hospital stay was six days."
-39.524,43.871,The final pathologic staging was PT-III-N-IBM-Zero.
-39.524,43.871,The final pathologic staging was PT-III-N-IBM-Zero.
-44.371,65.779,"The surgeon places a ten-millimeter port two centimeters below the umbilicus, another ten-millimeter port at the left upper quadrant, and three five-millimeter ports at the right upper, right lower, and left lower quadrants of the abdomen."
-44.371,46.527,The pores are placed as fallows.
-47.027,65.779,"The surgeon places a 10mm port two centimeters below the umbilicus, another 10mm port at the left upper quadrant, and three 5mm ports at the right upper, right lower, and left lower quadrants of the abdomen."
 66.279,81.786,"The surgeon opens the transverse colonic mesentery above the ligament of Treitz, revealing the underlying anatomical structures within the abdominal cavity."
 66.279,81.786,The surgeon opens the transverse colonic mesentery above the ligament of Treitz after exploring the abdominal cavity.
 82.286,144.966,"The surgeon lifts the transverse mesentery, exposing the superior mesenteric vein (SMV) and superior mesenteric artery (SMA) at their roots, and separates the anterior pancreatic or duodenal space."
@@ -25,7 +10,6 @@ start,end,text
 208.713,245.904,"The surgeon extends the right tall space, carefully preserving the integrity of the duodenal fascia and mesocolon fascia, while avoiding injury to the duodenum."
 208.713,211.117,"The surgeon extends the right tall space, likely creating more room for surgical manipulation within the abdominal cavity."
 211.617,216.625,"The surgeon carefully examines the integrity of the duodenal fascia and the mesocolon fascia, ensuring these structures remain intact during the procedure."
-217.125,245.904,"Also, injury to the duodenum should be avoided."
 246.404,279.714,"The surgeon divides the middle colic vein (MCV) and elongates the lower margin of the pancreas, revealing the anatomical structures and their spatial relationship within the surgical field."
 246.404,279.714,"The surgeon divides the middle colic vein (MCV) and elongates the lower margin of the pancreas, revealing the anatomical structures involved in the procedure."
 280.214,318.627,"The surgeon exposes the gastroduodenal artery (GDH), revealing its anatomical position in relation to the surrounding structures."

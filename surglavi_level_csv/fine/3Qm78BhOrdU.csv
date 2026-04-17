@@ -1,5 +1,4 @@
 start,end,text
-3.345,13.19,North Cypress Bariatrics presents a robotic inguinal hernia repair performed by Dr. Brad Snyder.
 13.69,25.075,The patient is positioned supine with arms extended. The abdomen is prepped and draped. A 5mm trocar is inserted into the left upper quadrant for visualization.
 25.575,34.48,"The surgeon visualizes all three layers of the abdominal wall and enters the peritoneum, insufflating CO2 gas into the abdomen to a pressure of fifteen millimeters of mercury."
 34.98,47.347,"The surgeon initially uses a zero-degree scope to confirm adequate pneumoperitoneum, then switches to a thirty-degree, five-millimeter scope for continued visualization during the procedure."
@@ -17,9 +16,6 @@ start,end,text
 178.505,190.99,"The surgeon navigates the plane just above the peritoneum, clearly visualizing Cooper's ligament on the pubic tubercle medial to the epigastric vessels."
 191.49,198.657,"The surgeon creates space on the anterior surface of the inguinal hernia repair site to place an interrupted vial suture, preparing to tack the mesh securely in position."
 199.157,206.283,"The surgeon proceeds to dissect the hernia sac, following the initial takedown of the peritoneum anterior to the inguinal hernia."
-206.783,211.768,Meticulous attention to hemostasis is important here.
-212.268,226.207,"The advantages of robotics is superior visualization and articulating monopolar shears. Because of this, we can really control any kind of bleeding before it begins and gets our field bloody."
-226.707,248.045,"In addition to that, less blood in the field and less blood when the patient's healing probably relates to less pain post-operatively."
 248.545,259.25,"The surgeon uses monopolar shears and blunt dissection to detach tissue attachments near the epigastric vessels, carefully approaching the area while maintaining control over the dissection."
 259.75,271.256,"The surgeon encounters the edge of the internal inguinal ring, with the hernia visibly protruding into the ring."
 271.756,284.107,"The surgeon carefully manipulates the anterior surface of the hernia sac, ensuring not to injure it, while preparing to reveal the cord structures posteriorly."
@@ -41,7 +37,6 @@ start,end,text
 573.63,593.226,"The surgeon uses a 2-0 vascular suture on an SH needle to tack the mesh to the pubic tubercle, carefully placing the stitch in the challenging-to-visualize area."
 593.726,629.38,"The surgeon uses the shaft of the needle driver to push medial tissue aside for better visualization. A suture is placed with a half-centimeter bite on the apex of the mesh, securing it to the pubic tubercle. The surgeon maintains tissue displacement with the needle driver while tying the knot to ensure clear visibility."
 629.88,658.54,"The surgeon uses two needle drivers to break sutures by grasping them firmly and turning the drivers ninety degrees away from each other, demonstrating the technique twice more in the video."
-659.04,682.246,"I prefer the five millimeter snaked needle drivers because of their size and their dexterity. However, you do have to be careful sometimes throwing knots that you don't wrap the suture around the snake articulating portions because it will break the suture quite easily if you're not careful."
 682.746,695.394,"The surgeon ties a few knots to secure the mesh in place over the pubic tubercle, using three sutures to maintain its orientation until the mesh can scar in naturally."
 695.894,717.016,"The surgeon positions the top edge of the mesh underneath the area where the peritoneum will be closed on the anterior surface. A suture is placed at the edge of the mesh, securing it with a loose air knot."
 717.516,735.306,"The surgeon gently ties the mesh in place without excessive tension, ensuring it holds securely. The needle is inserted deeply into the abdominal wall to prevent it from being lost during the procedure."
@@ -53,4 +48,3 @@ start,end,text
 828.845,854.136,"The surgeon uses a barbed suture to secure the peritoneum, pulling the suture laterally to remove slack and then cinching it down medially to ensure a tight closure without tearing the tissue."
 854.636,873.642,"The surgeon uses a suture with memory, employing a pulley technique to pull the needle down and push it with one hand, effectively removing slack from the suture while maintaining camera position."
 874.142,894.169,"The surgeon reverses the direction of the barbed suture to lock it into place, completing the closure of the peritoneum without knots. The mesh remains intact, and the robotic system is undocked. The needles are removed, and the fascia is closed."
-894.669,898.671,I hope you enjoyed it. Watch more at NorthCypressBariatrics.com.

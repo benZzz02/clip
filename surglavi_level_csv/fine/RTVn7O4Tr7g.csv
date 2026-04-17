@@ -1,7 +1,6 @@
 start,end,text
 2.23,6.812,"The surgeon performs a left hepatectomy to address bleeding hepatocellular carcinoma (HCC), focusing on the resection of the left liver lobe."
 7.312,11.293,"The surgical team has made a right subcostal incision with a midline extension, providing access to the liver for the hepatectomy procedure."
-11.793,13.313,The Makuchi is in season.
 13.813,19.475,"The surgical field reveals active bleeding from the tumor site, with visible old clots surrounding the area."
 19.975,25.077,The video shows an active bleed from the tumor during the left hepatectomy procedure for bleeding hepatocellular carcinoma (HCC).
 25.577,30.573,"The surgeon has brought down the gallbladder, revealing its anatomical position and surrounding structures."
@@ -24,12 +23,9 @@ start,end,text
 238.393,243.257,"The surgeon identifies the line of demarcation for the parenchymal transection on the liver surface, marking the area where the liver tissue will be divided."
 243.417,249.915,"The surgeon places two stay sutures and begins dissection using a harmonic scalpel, focusing on precise tissue separation."
 250.415,257.419,"The surgeon identifies the vein leading to segment five of the liver and follows its course towards the inferior vena cava (IVC), ensuring clear visualization of the vascular pathway."
-257.919,261.021,These were the settings with CVPF six.
-261.101,261.981,We were going ahead.
 262.061,269.065,"The surgeon defines the metaphylactic vein, tracing its course following the segment five vein towards the inferior vena cava (IVC)."
 269.565,296.165,"The surgeon proceeds with the parenchymal transection of the liver using a combination of harmonic scalpel, clips, sutures, and calipers."
 296.665,299.779,"The surgeon follows the middle hepatic vein, tracing its path within the liver tissue."
-300.279,305.081,I think in this situation CUSA would have been a better to follow the middle hepatic vein towards the IVC.
 305.581,322.268,"The cut surface of the liver appears irregular and ragged, likely due to the parenchymal division technique used, highlighting the visual difference compared to smoother surfaces achieved with CUSA."
 322.768,328.293,The surgeon has ligated the segment IV branch and is now proceeding with dissection along the middle hepatic vein.
 328.793,339.801,"The surgeon addresses bleeding from the middle hepatic vein during parenchymal transection by using forceps to grasp the vessel, applying suction to dry the area, and placing a suture with proline to control the bleeding."
@@ -41,4 +37,3 @@ start,end,text
 398.558,403.32,"The specimen, removed after the left hepatectomy, is displayed, showing the excised liver tissue."
 403.82,408.482,The surgeon places a multipulverated romodrain near the cut surface of the liver following the resection.
 408.823,415.306,The surgeon applies a hemostatic glue to the cut surface of the liver to control bleeding.
-415.806,416.206,Thank you.

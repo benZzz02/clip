@@ -1,14 +1,10 @@
 start,end,text
-1.067,10.391,"So here's a case of rectal prolapse, elderly female, chose to do a robotic rectopexy."
-1.067,10.391,"So here's a case of rectal prolapse, elderly female, chose to do a robotic rectopexy."
 10.891,19.595,The surgeon unfolds peritoneal attachments in the pelvic region to assess the redundancy of the tissue.
 10.891,19.595,The surgeon unfolds peritoneal attachments in the pelvic region to assess the redundancy of the tissue.
 20.095,25.077,The surgical setup shows a transverse port orientation with two robotic arms positioned on the left and one on the right.
 20.095,25.077,The robotic setup includes a transverse port orientation with two instruments positioned on the left side and one on the right side.
 25.577,30.577,"The surgeon attempts to tent up the sigmoid mesentery, manipulating the tissue to create tension and improve visibility in the surgical field."
 25.577,30.577,"The surgeon attempts to tent up the sigmoid mesentery, manipulating the tissue to create elevation and improve visibility of the surgical field."
-31.077,39.243,"iliacs, the arteries and veins were kind of covering the sacral promontory in a weird manner that kind of made me nervous."
-31.077,39.243,"iliacs, the arteries and veins were kind of covering the sacral promontory in a weird manner that kind of made me nervous."
 39.283,44.267,"The surgeon begins a peritoneal incision at a higher position than usual, preparing the surgical field for the robotic rectopexy procedure."
 39.283,44.267,"The surgeon begins a peritoneal incision at a higher position than usual, using robotic instruments to access the surgical site."
 44.767,52.872,"The surgeon carefully exposes the sacrum by following the peritoneal incision downwards, revealing the anatomical structures in the pelvic region."
@@ -20,71 +16,32 @@ start,end,text
 65.39,74.114,"The surgeon identifies the periosteum, the dense layer of connective tissue covering the bone, during the exposure near the sacrum."
 74.614,78.616,"The surgeon proceeds with the dissection after identifying the periosteum and iliac vessels, carefully navigating around the sacral promontory."
 74.614,78.616,"The surgeon proceeds with the dissection after establishing the desired anatomical exposure, focusing on the area around the sacrum."
-79.096,90.218,"For myself, my usual standard is a full posterior and right-sided dissection. Often is the case that I'll do a full anterior dissection."
-79.096,87.1,"For myself, my usual standard is a full posterior and right-sided dissection."
-87.6,90.218,Often is the case that I'll do a full anterior dissection.
 90.718,100.645,"The surgical field reveals a patient who has previously undergone a hysterectomy, with a visibly low cul-de-sac and absence of an extraperitoneal rectovaginal septum."
 90.718,100.645,"The surgical field reveals a patient who has previously undergone a hysterectomy, with a visible low cul-de-sac and absence of an extraperitoneal rectovaginal septum."
 101.145,105.309,"The surgeon follows the posterior total mesorectal excision (TME) plane, carefully navigating the anatomical structures visible in the surgical field."
 101.145,105.309,"The surgeon follows the posterior total mesorectal excision (TME) plane, carefully dissecting along the defined anatomical pathway."
-105.809,119.313,"Often in these prolapse cases, this plane is very redundant and fibrotic from the chronic prolapse, and I find that it's easy to inadvertently go too close to the sacrum, so I"
-105.809,119.313,"Often in these prolapse cases, this plane is very redundant and fibrotic from the chronic prolapse, and I find that it's easy to inadvertently go too close to the sacrum, so I"
 119.813,139.007,"The surgeon identifies presacral veins while dissecting, ensuring to stay above the yellow fat layer to avoid entering the veins."
 119.813,123.016,"Presacral veins are visible in the surgical field, located near the sacrum."
-123.516,127.919,"And I just always remind myself, just stay up on the yellow fat, stay up."
-128.419,139.007,Don't get into those veins.
 139.507,143.53,"The surgeon follows the curve of the coccyx, with the levator muscle visible in the surgical field."
 139.507,141.368,"The surgeon follows the curve of the coccyx, maintaining dissection along the posterior total mesorectal excision (TME) plane, avoiding presacral veins and fibrotic tissue near the sacrum."
 141.408,143.53,"The levator muscle is visible in the surgical field, identifiable by its distinct muscle fibers and location relative to the coccyx and presacral veins."
 144.03,157.635,"The surgeon performs right-sided dissection, joining it with the previously established posterior TME plane, carefully navigating around visible anatomical structures."
-144.03,148.712,And now I'll do my right-sided
 149.212,157.635,"The surgeon continues dissection, joining the current plane with the posterior plane, maintaining careful alignment with the anatomical structures."
 158.135,177.808,"The surgeon adjusts the laparoscopic camera to a thirty-degree angle, enhancing the exposure of the surgical field and revealing a clear dissection plane."
 158.135,162.537,"The surgeon adjusts the angle to thirty degrees upward, enhancing the exposure of the surgical field."
-163.037,165.999,"Alternatively, you could just use a zero degree scope."
 166.499,177.808,"The surgeon uses a thirty-degree scope to visualize a well-defined anatomical plane, enhancing exposure and clarity of the surgical field."
 178.308,204.441,"The surgeon attempts to develop the rectovaginal septum but encounters difficulty due to the obscured fat plane from a previous total hysterectomy. The surgeon palpates the area and identifies the perineal body, deciding not to proceed further anteriorly."
 178.308,188.117,"The surgeon attempts to develop the rectovaginal septum, but struggles to identify a clear tissue plane in the surgical field."
-188.617,194.803,The previous total hysterectomy really obscured that fat plane that was there.
 194.823,201.821,"The surgeon palpates the area and identifies the perineal body, noting its location during the procedure."
-202.321,204.441,So I decided not to go further anterior.
 204.842,212.323,"The surgeon completes the dissection, focusing on the posterior and right lateral areas, ensuring clear separation of tissue planes in these regions."
 204.842,212.323,"The surgeon performs dissection in the posterior and right lateral regions, focusing on these specific areas."
 212.823,223.046,"The surgeon uses two silk sutures to take bites of the lateral stalk, carefully approaching but not penetrating the rectal wall."
 212.823,218.064,"The surgeon uses silk sutures to take bites of the lateral stalk, advancing towards the rectal wall."
 218.345,223.046,"The surgeon carefully avoids biting the rectal wall while suturing, ensuring precision in the placement of silk sutures on the lateral stalk."
-223.546,246.199,"I'm well aware of the numerous ways that this repair can be done. with sigmoid resection, which I've eliminated a couple of years ago, with mesh, which I just don't feel comfortable with, or with just doing a simple proctopexy. And I have to say, I'm really happy with my results."
-223.546,230.653,I'm well aware of the numerous ways that this repair can be done.
-231.153,242.777,"with sigmoid resection, which I've eliminated a couple of years ago, with mesh, which I just don't feel comfortable with, or with just doing a simple proctopexy."
-243.238,246.199,"And I have to say, I'm really happy with my results."
-246.699,258.223,"This is an elderly patient with several comorbidities, and they were discharged from the recovery room. The key to these bites, I think, is more the sacral bite,"
-246.699,255.482,"This is an elderly patient with several comorbidities, and they were discharged from the recovery room."
-255.982,258.223,"The key to these bites, I think, is more the sacral bite,"
 258.596,284.628,"The surgeon takes a substantial bite of the periosteum during the rectopexy procedure, ensuring the area is clear of venous tributaries to minimize bleeding. The iliac vessels are kept at a safe distance from the surgical site, completing the pexy."
 258.596,261.718,"The surgeon secures a firm bite of the periosteum, ensuring stable tissue engagement during the procedure."
-262.218,274.384,"Sometimes it's scary taking those bites and the needle comes through and there's bleeding, which is why I think it's important at the start of your dissection to really clear off the periosteum to make sure that there's no venous tributaries there."
-274.404,280.626,"And certainly like in a case like this, making sure that the iliacs are well away from where you're working."
-280.646,284.628,And that completes my pexy.
-284.708,289.045,"Very simple, those two stitches. And then I do close,"
-284.708,286.189,"Very simple, those two stitches."
-286.589,289.045,"And then I do close,"
 289.545,316.034,"The surgeon opens the peritoneum, taking care to prevent small bowel from dropping into the area, which could lead to obstruction."
 289.545,302.555,"The surgeon opens the peritoneum, revealing a potential space where the small bowel could descend and cause an obstruction."
-303.055,307.458,Perhaps this also reinforces the repair a little bit.
-307.678,308.318,Probably not.
-308.579,316.034,I really don't think there's any strength to this.
 316.534,335.466,"The surgeon carefully navigates the peritoneal fold on the right lateral side, ensuring not to inadvertently take a large bite that could involve the right ureter during the dissection."
-316.534,325.24,"Every once in a while, you've got to be careful when you're doing this because that peritoneal fold on the right lateral side will actually retract very close to the right ureter."
-325.74,335.466,And you don't want to take too big of a bite inadvertently and grab the ureter.
-335.966,352.681,"This case, I think, took me thirty seven minutes. Again, the patient was discharged from the holding area. There's been zero prolapse since the day of the operation."
-335.966,340.329,"This case, I think, took me thirty seven minutes."
-340.829,346.737,"Again, the patient was discharged from the holding area."
-347.237,352.681,There's been zero prolapse since the day of the operation.
-353.181,375.282,"And frankly, I'm very happy with the elimination of sigmoid resections these days, regardless of history of constipation. I really think that the pendulum has swung back away from that. And I wonder how many times I've done sigmoid resections where it wasn't really a mandatory thing to do."
-353.181,362.667,"And frankly, I'm very happy with the elimination of sigmoid resections these days, regardless of history of constipation."
-362.707,365.889,I really think that the pendulum has swung back away from that.
-366.009,375.282,And I wonder how many times I've done sigmoid resections where it wasn't really a mandatory thing to do.
 375.782,383.911,"The surgeon displays the completed rectopexy, showing the rectum suspended in its new position, marking the conclusion of the procedure."
 375.782,380.707,"The surgeon displays the completed surgical outcome, showing the rectum suspended in its final position."
-381.028,383.171,And that concludes the procedure.
-383.671,383.911,Thank you.

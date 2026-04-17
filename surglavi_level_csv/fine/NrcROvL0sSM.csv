@@ -1,7 +1,4 @@
 start,end,text
-0.841,17.503,This case presentation from the Cleveland Clinic demonstrates single-part laparoscopic restorative proctocolectomy with ileal pouch anal anastomosis through the left lower quadrant ileostomy site in a three-stage fashion.
-18.003,34.393,"This thirty-nine-year-old female presented to the clinic with a medically refractory ulcerative colitis. Since patient has a congenital atrophy in her right upper extremity, a right ileostomy site was deemed unmanageable for her."
-34.893,40.317,and a decision was made to use the left lower quadrant for the ileostomy.
 40.817,55.107,"The surgeon performs a single incisional laparoscopic total colectomy, creating a left-sided ileostomy. The procedure is adapted due to the patient's high steroid use and medically refractory ulcerative colitis."
 55.607,58.989,"The patient is positioned in the modified lithotomy position, with legs elevated and spread apart, allowing optimal access to the surgical site for the colectomy procedure."
 59.489,68.895,The surgeon excises a disc-shaped section of previously marked skin in the left lower quadrant and enters the abdomen using a muscle-splitting technique.
@@ -15,8 +12,6 @@ start,end,text
 135.403,142.056,"The surgeon staples the recto-sigmoid junction while leaving the inferior mesenteric artery intact, completing the dissection and preparation for resection."
 142.556,152.802,"The surgeon exteriorizes the colon through the ileostomy site, completing the mobilization and removal process."
 153.302,159.166,"The surgeon matures the ileostomy, leaving the rectal stem in the pelvis without implantation."
-159.666,163.028,The patient's postoperative recovery was uneventful.
-163.528,175.083,"Six months after laparoscopic total colectomy, patient was taken to the operating room for the second stage procedure."
 175.583,209.61,"The surgeon performs a circumferential incision around the stoma site in the left lower quadrant, releasing the loop ileostomy. The ileostomy is temporarily sealed with a trio-viral stick and returned to the abdomen."
 210.11,227.362,"The surgeon establishes pneumoperitoneum using a single port access device, inflating the abdominal cavity to facilitate the surgical procedure."
 227.862,236.476,"The surgeon ligates the inferior mesenteric artery at the level of the superior artery, navigating through the avascular plane posterior to the mesorectum."
@@ -29,6 +24,3 @@ start,end,text
 368.915,379.572,The surgeon places a persisting stick with 2-0 Prolene suture and inserts an EEA 28mm stapler into the ileal pouch.
 380.072,394.422,"Under laparoscopic view, the surgeon creates an intracorporeal anastomosis and performs a pouchoscopy to inspect the newly formed ileal pouch."
 394.922,402.448,"A loop of bowel proximal to the ileal pouch is identified and exteriorized, followed by the maturation of the ileostomy."
-402.948,405.293,"The surgeon displays the intact specimen, likely the resected segment of bowel, following the completion of the colectomy procedure."
-405.793,408.796,The patient's postoperative recovery was uneventful.
-409.296,418.144,This case demonstrates the feasibility and safety of single-port surgery in IPA patients using the left lower quadrant ileostomacite.

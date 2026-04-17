@@ -9,7 +9,7 @@ conda activate "${CONDA_ENV:-vllm}"
 
 NPROC="${NPROC:-2}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
-EXP_NAME="${EXP_NAME:-same_video_triplet_8f_run1}"
+EXP_NAME="${EXP_NAME:-hier_consistency_denoise_8f_run1}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
 ACCUM_STEPS="${ACCUM_STEPS:-1}"
@@ -52,7 +52,7 @@ TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.7}"
 
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
-SAVE_PREFIX="${SAVE_PREFIX:-outputs/same_video_triplet_8f_run1/}"
+SAVE_PREFIX="${SAVE_PREFIX:-outputs/hier_consistency_denoise_8f_run1/}"
 
 if [[ "$SAVE_PREFIX" == */ ]]; then
     mkdir -p "$SAVE_PREFIX"
@@ -104,6 +104,7 @@ cmd=(
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
+    --hierarchical_consistency_weight 0.1
 )
 
 if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then

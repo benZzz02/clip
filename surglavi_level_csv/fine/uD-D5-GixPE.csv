@@ -1,6 +1,4 @@
 start,end,text
-6.988,24.383,"This is a sixty-eight-year-old male patient with a history of morbid obesity who presented with a symptomatic epigastric ventral hernia. One year prior, following eighty-pound weight loss, the hernia had become symptomatic and painful, preventing him from exercising and interfered with his job as a musician."
-24.883,40.047,"Given these reasons, the patient was offered a robotic transabdominal preperitoneal ventral hernia repair."
 40.547,45.131,"The robotic surgical system is docked, and an initial inspection of the abdominal cavity is conducted, revealing the anatomical structures and any visible abnormalities."
 45.631,57.9,"The surgeon uses two grasping forceps to carefully reduce the omentum and transverse colon from the hernia sac, applying gentle downward traction to reposition the hernia contents."
 58.4,69.397,"After the complete reduction of the hernia, the surgeon inspects the omentum and transverse colon, confirming there is no visible ischemia or damage to these structures."
@@ -10,4 +8,3 @@ start,end,text
 129.463,146.531,"The surgeon uses a non-absorbable suture to close the fascial defect, employing a running stitch technique."
 147.031,181.817,"The surgeon places a mesh centrally over the defect area, securing it with a central tagging suture. Interrupted vicryl sutures are then used circumferentially to anchor the mesh to the fascia."
 182.317,213.839,The surgeon closes the peritoneal defect with a running absorbable suture after securing the mesh over the defect area.
-214.339,224.979,"Operative time was two hours and a half. Blood loss was minimal. Post-op cost was unremarkable, and the patient was discharged on post-op day one. He was doing well at two-week follow-up."

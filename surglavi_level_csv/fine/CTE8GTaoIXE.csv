@@ -1,21 +1,4 @@
 start,end,text
-1.37,2.13,Hello everyone.
-2.63,11.212,This is a video presentation of local excision for rectal cancer performed using DaVinci X robotic platform.
-11.712,16.053,This is a seventy nine year old female who was referred with change in bowel habits.
-16.553,23.774,The endoscopic view shows a three-centimeter lesion with a central depression located approximately seven centimeters from the anal margin.
-24.274,29.372,The endorectal ultrasound scan revealed this to be a T one and not lesion.
-29.872,37.497,The patient had a BMI of thirty and her comorbidities included hypertension and hiatus hernia.
-37.997,41.72,The MRI revealed a posterior lesion.
-42.22,47.903,"In the sagittal view, the lesion is visible adjacent to the sphincter complex."
-48.403,56.176,I'm going to briefly talk about our theatre setup as this is a crucial step for the robotic platform.
-56.676,59.117,"The patient's legs are positioned in stirrups, indicating preparation for a surgical procedure involving the lower abdomen or pelvis."
-59.617,65.3,The patient's legs are extended and abducted to prevent interference with the robotic arms during the procedure.
-65.8,69.863,"The side guard is positioned from the patient's left shoulder, providing support and stability during the procedure."
-70.363,72.724,"The surgeon uses a gel point port, which is visible in the surgical field."
-73.224,85.228,"The robotic arms utilize three ports, while a fourth air seal port is managed by the assistant to control suction during the colorectal surgery."
-85.728,89.069,"The video displays the setup of the robotic platform, including the positioning of the robotic arms and ports, with the patient's legs in stirrups and side guard extending from the left shoulder."
-89.569,93.131,"The camera is positioned at the top, providing a view of the surgical field with robotic instruments visible on either side, actively engaged in the procedure."
-93.631,103.395,An 8mm air seal port is utilized for interpolation and serves as an assistant port during the robotic colorectal surgery.
 103.895,107.636,"The surgeon begins the procedure by marking the margins circumferentially around the targeted area, using a visible marking tool to outline the surgical field."
 108.136,132.032,"The surgeon leaves approximately one centimeter of tissue from the lesion, maintaining a safe margin during the procedure."
 132.532,176.944,"The surgeon performs a full thickness excision up to the level of the mesorectum using robotic instruments, visible through the camera positioned at the top."
@@ -24,13 +7,3 @@ start,end,text
 202.985,280.15,"The surgeon uses scissors and fenestrated bipolar forceps to perform precise dissection around the marked margins, with visible mesorectal fat in the background."
 280.65,307.63,"The surgeon completes the dissection of the lesion, washes the surgical area, and checks for hemostasis to ensure there is no bleeding."
 308.13,413.717,"The surgeon closes the defect using a V-lock suture, carefully stitching the tissue edges together to ensure proper closure."
-414.217,420.378,"The specimen is visually secured onto a polystyrene board, preparing it for transport to pathology."
-420.878,425.019,"So far, we've done a total of five cases, all of which have been for cancer."
-425.519,432.661,Length of stay has been around two days and operative time similar to our TEMPS platform approach being around eighty-five minutes.
-433.161,438.622,There was only one patient with R one resection due to high-grade dysplasia at the margin.
-439.122,441.945,We've had two readmissions with rectal bleed
-442.445,444.866,of which one was due to diverticulosis.
-445.366,450.269,Flexible sigmoidoscopy in that patient did not reveal any bleeding at the site of excision.
-450.769,462.854,"There were two complications, one patient requiring blood transfusion and another one having perianal necrosis, which we believe was from short course radiotherapy that the patient had received prior to local excision."
-463.354,467.763,"Overall, we believe local excision can be performed safely with Da Vinci platform."
-468.263,474.471,"It offers the advantage of precise movements of instruments, endoress technology, and three-D stereoscopic vision."

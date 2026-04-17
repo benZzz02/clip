@@ -1,7 +1,4 @@
 start,end,text
-0.797,32.438,"We present a robotic repair of a complex colovesical fistula with chronic bladder wall abscess due to diverticulitis. Our patient is an eighty-two-year-old woman with a history of diverticulitis. She presented with recurrent urinary tract infections and intermittent pneumaturia. On exam, her vitals were within normal limits and her abdomen was soft and non-tender. CT scans showed air tracking from the sigmoid colon to the bladder consistent with the colovesical fistula. with associated chronic bladder wall abscess."
-32.938,43.062,Cystoscopy noted no evidence of malignancy and identified the fistula. Preoperative colonoscopy showed benign stricture and no evidence of malignancy.
-43.562,48.804,"A CT image is displayed, with an arrow indicating the location of the colovesical fistula between the sigmoid colon and bladder."
 55.907,66.522,"The operating room setup is displayed, with the patient cart positioned on the patient's left side. The video shows the placement of three working ports, which are labeled for identification. The surgical assistant stands on the patient's right side, utilizing one of the labeled ports."
 67.022,136.725,"The surgeon performs central ligation of the inferior mesenteric artery (IMA) and inferior mesenteric vein (IMV) using a medial to lateral approach. The IMV is identified and ligated near the ligament of Treitz and just below the pancreas. Subsequently, the IMA is identified and ligated close to its origin to facilitate resection and ensure an attention-free anastomosis."
 137.225,218.429,"The surgeon continues the medial to lateral dissection, developing the plane between the colon mesentery and Gerota's fascia. The ureters are identified and carefully preserved during the procedure. The splenic flexure is fully mobilized."
@@ -12,5 +9,3 @@ start,end,text
 363.03,412.28,"The surgeon performs a cystotomy to expose the bladder trigone, preparing for the resection of the fistula tract along with the fibrotic bladder wall abscess cavity."
 412.78,446.292,"The surgeon closes the bladder resection and cystotomy sites using a running suture technique, applying two layers of sutures to ensure secure closure."
 446.792,461.845,"The surgeon performs an end-to-end colorectal anastomosis, connecting the divided sections of the colon. A surgical drain is placed in the pelvis to manage postoperative fluid accumulation."
-462.345,474.143,Pathology showed inflamed bladder and colon tissue without evidence of malignancy. The Foley catheter was removed on post-update twelve after a CT cystogram showed no evidence of a leak.
-474.643,481.355,This is an example of where the robotic platform facilitated a minimally invasive repair of a complex colovesical fistula.

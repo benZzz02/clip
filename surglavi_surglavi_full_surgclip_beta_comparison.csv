@@ -1,0 +1,13 @@
+Task,eval_outputs_surglavi,eval_outputs_surglavi_full,SurgCLIP_beta,eval_outputs_surglavi_vs_beta,eval_outputs_surglavi_full_vs_beta,eval_outputs_surglavi_vs_surglavi_full
+Cholec80 Phase,32.87 / 14.57,25.86 / 14.78,57.98 / 39.42,-25.11 Acc / -24.85 F1,-32.12 Acc / -24.64 F1,+7.01 Acc / -0.21 F1
+AutoLaparo Phase,22.74 / 16.20,24.50 / 16.06,55.72 / 45.95,-32.98 Acc / -29.75 F1,-31.22 Acc / -29.89 F1,-1.76 Acc / +0.14 F1
+StrasBypass70 Phase,14.57 / 10.79,9.04 / 8.74,31.24 / 26.05,-16.67 Acc / -15.26 F1,-22.20 Acc / -17.31 F1,+5.53 Acc / +2.05 F1
+HeiChole Phase,25.41 / 15.95,19.21 / 17.47,56.95 / 44.00,-31.54 Acc / -28.05 F1,-37.74 Acc / -26.53 F1,+6.20 Acc / -1.52 F1
+BernBypass70 Phase,10.69 / 7.94,8.75 / 7.31,18.30 / 15.06,-7.61 Acc / -7.12 F1,-9.55 Acc / -7.75 F1,+1.94 Acc / +0.63 F1
+GraSP Phase,15.09 / 11.16,11.00 / 8.28,34.77 / 27.98,-19.68 Acc / -16.82 F1,-23.77 Acc / -19.70 F1,+4.09 Acc / +2.88 F1
+GraSP Step,7.43 / 5.04,5.10 / 3.96,14.15 / 11.14,-6.72 Acc / -6.10 F1,-9.05 Acc / -7.18 F1,+2.33 Acc / +1.08 F1
+SARRARP50 Action,21.84 / 10.65,6.17 / 4.04,13.94 / 7.62,+7.90 Acc / +3.03 F1,-7.77 Acc / -3.58 F1,+15.67 Acc / +6.61 F1
+CholeT50 Triplet mAP,2.36,2.44,4.17,-1.81,-1.73,-0.08
+Cholec80 Tool mAP,21.04,19.99,36.77,-15.73,-16.78,+1.05
+HeiChole Tool mAP,25.26,21.11,31.47,-6.21,-10.36,+4.15
+GraSP Tool mAP,39.95,37.54,43.06,-3.11,-5.52,+2.41

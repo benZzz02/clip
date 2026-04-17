@@ -1,10 +1,4 @@
 start,end,text
-1.033,6.359,This is a brief video of a robotic right hepatectomy with a technical description.
-6.859,23.695,"I will take you through the key steps of this operation, which include extrahepatic inflow control, the retrohepatic cavell dissection, hepatic parenchymal division with the laparoscopic CUSA, and the intraparenchymal hepatic vein outflow control."
-24.195,29.36,Our patient is a forty-year-old otherwise healthy woman with a large right liver mass.
-29.86,42.193,"MRI with EOVIST was consistent with a liver adenoma, and the mass involved segments five, six, seven, and eight, so she has consented for a robotic right hepatectomy."
-42.693,50.007,"Like any other minimally invasive surgery, patient positioning and port placement are critical to the success of the operation."
-50.507,54.295,This is a diagram of my port placement for robotic hepatectomy.
 54.795,62.967,"The patient is positioned supine with a bump under the right abdomen, and the operating table is tilted to ten to fifteen degrees in reverse Trendelenburg position."
 63.467,70.472,"A diagram displays the port placement for the robotic hepatectomy, with black dots indicating the robotic ports and blue dots representing the assist ports."
 70.972,78.698,"The surgeon uses a laparoscopic CUZA instrument through the assist port located at the right subcostal midclavicular line, visible in the surgical field."
@@ -13,7 +7,6 @@ start,end,text
 93.323,101.267,"The surgeon dissects, clips, and divides the cystic duct and cystic artery, followed by lowering the hilar plate."
 101.767,118.938,"The surgeon encircles the cystic duct stump with an endo loop, retracting the bile duct medially to expose the posterior lateral liver hilum. The right hepatic artery is identified and circumferentially dissected."
 119.438,129.122,The surgeon occludes the right hepatic artery and uses ultrasound with Doppler to confirm the patency of the left hepatic artery before proceeding with division.
-129.622,140.847,The use of ultrasound during robotic hepatectomy is critical to the safety of the operation and ability to perform the procedure.
 141.347,156.897,"The surgeon ties the right hepatic artery with a silk tie, clips it, and divides it, revealing the underlying right portal vein for further dissection."
 157.397,160.24,"The surgeon circumferentially dissects the right portal vein, revealing its structure and surrounding tissue within the liver hilum."
 160.74,167.205,"The surgeon isolates and divides the branches leading to segment six and any caudate branches of the liver, using precise dissection techniques."
@@ -28,9 +21,7 @@ start,end,text
 254.89,259.293,"Indocyanine green is administered after achieving inflow control, highlighting the demarcation line between the liver segments."
 259.793,268.066,"The left hepatic lobe appears bright due to the uptake of indocyanine green, while the right hepatic lobe remains dark, indicating the demarcation between the two lobes."
 268.566,277.736,"The surgeon performs parenchymal transection using a laparoscopic CUSA and a robotic vessel sealer, aiming to minimize blood loss during the division of liver tissue."
-278.236,281.039,And this is essentially a bloodless dissection.
 281.539,293.63,"The surgeon uses the laparoscopic CUSA to dissect intrahepatic vascular and biliary structures, ensuring precise control of these elements during the hepatectomy procedure."
-294.13,305.278,"A skilled bedside assistant is necessary to run the laparoscopic CUSA, and this can be a disadvantage of this approach in some settings."
 305.778,309.202,"The surgeon divides the right hepatic duct intraparenchymally, with the surrounding liver tissue visible during the transection."
 309.702,318.092,"The surgeon carefully positions the instruments to avoid the hepatic duct bifurcation, ensuring there is no impingement on the left hepatic duct during the procedure."
 318.592,332.157,"The surgeon encircles and divides the right hilar plate containing the hepatic duct using a robotic stapler equipped with a vascular staple load, ensuring precise separation of these structures."
@@ -39,9 +30,3 @@ start,end,text
 345.3,350.746,The surgical specimen is placed into a large endobag and extracted through a fan and steel incision.
 351.246,355.231,"The surgeon inspects the liver remnant, which appears well vascularized, indicating healthy blood supply to the remaining tissue."
 355.731,370.02,"The surgeon uses Doppler ultrasound to confirm hemostasis and assess the inflow of the left hepatic artery and left portal vein, ensuring proper blood flow in the remaining liver tissue."
-370.52,377.827,The blood loss for this case was approximately two hundred fifty cc's and there were no blood transfusion requirements.
-378.327,381.811,This patient did very well and her stay was uncomplicated.
-382.311,386.575,She discharged on post-operative day number three with normal liver function.
-387.075,396.792,In follow-up clinic at one week she was on minimal pain medication without any narcotic requirements.
-397.292,400.783,I hope you enjoyed this video of a robotic right hepatectomy.
-401.283,404.632,Please subscribe to my YouTube channel and have a great day.

@@ -1,6 +1,4 @@
 start,end,text
-0.451,7.294,This CT scan is of a fifty year old female who presented with right upper abdominal pain and showing an adrenal cyst on the right side.
-7.674,13.257,"The video displays the standard port placement for an adrenalectomy procedure, showing the arrangement of surgical ports on the patient's abdomen."
 13.757,20.84,The surgeon begins the dissection between the liver and the right adrenal gland after placing the surgical ports.
 21.34,25.362,"The surgeon lifts the liver to gain proper access to the adrenal cyst located on the right side, improving visibility for further dissection."
 25.862,29.963,"The surgeon uses a harmonic scalpel to lift the liver, providing better access to the right adrenal cyst."
@@ -15,7 +13,6 @@ start,end,text
 77.37,86.062,The surgeon coagulates small bleeding vessels in the surgical field near the thin-walled adrenal cyst on the right side.
 86.562,94.617,"The surgeon continues the dissection towards the superior part of the adrenal cyst, carefully separating it from surrounding tissues."
 95.117,106.423,"The chromaffin tissue is clearly visible on the surface of the adrenal cyst, highlighting its distinct appearance during the dissection."
-106.923,114.927,We have to be careful for adrenal vein because that is the only important structure that we have to identify and ligate while doing an adrenalectomy.
 115.427,121.671,"The surgical field shows the area around the adrenal gland where the adrenal artery is typically not visible, highlighting the challenge in identifying this structure during the procedure."
 122.171,139.333,"The surgeon inadvertently punctures the adrenal cyst, causing fluid to escape and the cyst to visibly collapse."
 139.833,144.136,The surgeon identifies a vessel located on the inferior aspect of the adrenal gland during the dissection.
@@ -24,7 +21,5 @@ start,end,text
 154.022,157.184,"The surgeon exposes the lumen of a vessel adjacent to the adrenal gland, providing a clear view of its interior structure."
 157.684,175.363,"The surgeon identifies the site of the adrenal vein, carefully dissecting around it and applying a ligar clip to secure the vessel."
 175.863,199.188,"The surgeon separates the upper pole of the kidney from the adrenal cyst, while noting the close proximity of clips on the adrenal vein, which will be addressed later in the procedure."
-199.688,218.541,It's always safe to put a clip when you doubt that there might be some small vein and which may ooze after cutting.
 219.041,225.826,"The surgeon focuses on the superior aspect of the adrenal cyst, preparing to remove the final portion of the cyst."
 226.326,236.941,The surgeon applies a clip to control bleeding tissue observed during the adrenalectomy procedure.
-237.441,247.085,"Following the removal of the adrenal specimen, the surgeon performs hemostasis at the inferior aspect of the liver, addressing small tears and visible signature marks."

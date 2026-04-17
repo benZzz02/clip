@@ -1,8 +1,4 @@
 start,end,text
-0.547,4.23,"The surgeon performs a laparoscopic excision of an endometriosis nodule located on the rectum, using precise instruments to remove the affected tissue."
-4.73,10.473,The case is of a thirty-five year old G-one P-one with a history of chronic pelvic pain and infertility.
-10.973,18.939,"A year prior, she had undergone an incomplete laparoscopy where extensive endometriosis was noted between the rectum and the vagina."
-19.439,25.565,"On exam, she had a two centimeter mass that was palpable in the rectovaginal septum."
 26.065,34.047,"Upon entry into the abdominal cavity, the surgeon observes a complete obliteration of the posterior cul-de-sac, indicating dense adhesions in the pelvic region."
 34.547,46.57,"The surgeon begins the procedure by carefully removing filmy adhesions that tether the sigmoid colon to the left pelvic side wall, using laparoscopic instruments to gently separate the tissues."
 47.07,54.016,"The surgeon continues the dissection cranially to mobilize the sigmoid colon, separating it from surrounding structures for improved access."
@@ -18,7 +14,6 @@ start,end,text
 148.094,179.455,"The surgeon uses sharp dissection to carefully detach rectal attachments from the posterior uterus. The first attachment is freed, improving visualization of the rectum. Dissection continues laterally to release the nodule from attachments on both side walls."
 179.955,186.061,"The surgeon carefully dissects the nodule from the posterior surface of the uterus, separating it from the surrounding tissue."
 186.561,194.908,"The surgeon uses electrosurgery at the interface between the nodule and the posterior uterus, carefully applying energy to separate the nodule from the uterine tissue."
-195.408,206.911,"Throughout the dissection, the surroundings are constantly reevaluated to avoid injury."
 207.411,216.176,"The surgeon mobilizes the mass off the right pelvic side wall, carefully separating it from surrounding tissues to ensure complete dissection."
 216.676,223.78,"A hand is placed in the vagina to assist in delineating healthy vaginal tissue from the nodule, providing clear visual differentiation between the structures."
 224.28,230.05,"The surgeon temporarily tethers the right ovary out of the way, ensuring clear access to the surgical field for continued dissection."
@@ -34,5 +29,3 @@ start,end,text
 318.967,331.716,"A barbed PDO suture is visible being used in the surgical field, likely for securing or closing tissue layers."
 332.216,343.497,"The surgeon excises the peritoneum overlying the left pelvic side wall, mirroring the procedure performed on the right side."
 343.997,356.785,"The surgeon completes the excision and performs a rectal leak test, checking for any signs of leakage in the rectal area."
-357.285,366.87,"The patient was discharged home post-op day zero, had a routine post-op course, and reported significantly improved pain at her post-op visit."
-367.37,370.392,All specimens removed were notable for endometriosis.

@@ -1,31 +1,12 @@
 start,end,text
-0.071,12.915,Three-D augmented reality robotic assisted segmental ureterectomy with buccal mucosal graft for the repair of upper complex ureteral strictures.
-13.415,19.657,Ureteral stenosis constitutes a very complex surgical scenario with a high rate of postoperative failure.
-19.997,31.781,"For two to three centimeters upper strictures, a robotic-assisted segmental ureteral resection with subsequent uretero-ureteral anastomosis is considered a valid treatment option."
-32.281,42.048,"The surgeon uses a buccal mucosa graft to construct the anterior plate of the uretero-ureteral anastomosis, aiming to reduce suture tension."
-42.548,49.25,"The surgeon employs ureteroscopy intraoperatively to locate the ureteral stenosis, providing a visual guide for the procedure."
-49.75,62.963,"However, the addition of the endoscopy increases the intraoperative complexity and costs of the surgery and may lead to iatrogenic damage to the ureter, increasing the risk of a post-surgical treatment failure."
-63.463,77.378,"Among the alternative strategies, ICG and the luminal injection has been proposed as an intraoperative aid to identify the stenosis borders, but it needs a nephrostomium site as well as the intraoperative ureteroscopy employment."
-77.618,84.465,Three-D virtual models have been also used as a guide to locate the stricture in a cognitive way intraoperatively.
-84.805,98.452,"In order to increase the precision in identifying the stricture during the surgical dissection of the ureter, a step further to the use of cognitive three-D guidance has to be done, testing the role of augmented reality surgical navigation."
-98.952,105.816,"Such technology has already demonstrated great usefulness in identifying hidden targets in other surgical settings,"
-106.316,111.878,"such as prostate lesions, kidney neoplasms and iliac artery plaques in kidney transplant."
-112.378,130.305,"In case of upper ureteral strictures not detectable on the organ surface, as it happens for stones embedded into the ureteral wall, the augmented reality technology can allow the precise identification of the target, minimizing the removal of peristenotic healthy tissue during the surgical dissection."
-130.525,134.267,"In order to perform augmented reality intraoperative navigation,"
-134.727,146.597,"An assistant uses a three-dimensional mouse to manually superimpose a virtual model onto the operative field, visible on the DaVinci Surgical Console's dedicated icon rack."
-147.097,153.336,"The surgeon views real-time superimposed images on the operative field using Tile Pro technology, enhancing visualization during the procedure."
 153.836,163.225,The surgeon uses the lower pole of the kidney and the intersection with iliac vessels as anatomical markers to achieve a precise overlay of the virtual ureter onto the real ureter during augmented reality navigation.
-163.725,172.813,"In the following video, three cases of different level ureteral strictures located above the iliac vessels crossing are shown."
-173.313,182.564,"The video shows a patient with a medium lower ureteral stricture in the upper ureter, caused by an embedded ureteral stone."
 183.064,194.729,"Augmented reality technology is utilized to overlay a 3D model of the ureter and its stone onto the operative field, allowing for precise visualization of the ureteral stricture location."
 195.229,203.716,"The surgeon identifies the stricture level with the embedded stone and proceeds to incise the ureter, resecting the stenotic ureteral tract."
 203.956,214.684,"The surgeon performs ureteroscopy to visually confirm the accuracy of the augmented reality model superimposed over the ureter, ensuring the virtual representation aligns with the actual anatomical structures."
-215.184,224.042,"In the second case, the surgeon identifies a stone-related stricture in the middle portion of the upper ureter, using augmented reality to precisely locate the affected area."
 224.542,230.185,"The surgeon prepares an omental flap, which will be used in the subsequent reconstructive phase of the procedure."
 230.685,240.151,"The augmented reality system superimposes the virtual model of the ureter and the stone onto the real anatomy, aligning the digital representation with the visible structures in the operative field."
 240.651,249.476,"The surgeon identifies the ureteral stricture and makes an incision to resect the stenotic ureteral tract, preserving a significant portion of the healthy peristenotic ureter."
 249.976,264.194,"During the surgical resection, the embedded stone is clearly visible within the ureter, allowing for precise identification and removal."
-264.694,271.119,"In the third case, the surgeon identifies the stricture located just below the ureteropoietic junction, preparing for surgical intervention in this anatomical region."
 271.619,279.586,Microcalcifications are visible on the ureteral wall at the current level of dissection.
 280.086,292.628,"Indocyanine green (ICG) dye is injected through the nephrostomy tube, but the fluorescence does not provide clear visual feedback regarding the level of the ureteral stricture."
 293.128,299.253,"The surgeon cuts and spatulates the ureter, preparing it for the reconstructive phase of the procedure."
@@ -38,6 +19,3 @@ start,end,text
 355.329,368.87,"The surgeon models the graft tissue over the ureteral defect, ensuring it covers the area completely for repair."
 369.37,375.195,"The surgeon inserts an instrument into the newly reconstructed ureter, demonstrating the increased caliber that facilitates its progression through the ureteral segment."
 375.695,393.203,"The surgeon wraps the omental flap, prepared earlier in the procedure, around the repaired ureter to ensure graft vascularization and prevent stricture recurrence."
-393.703,400.467,"In all the three cases, the surgery was successful without significant intra- and post-operative complications."
-400.967,406.197,All the examinations performed confirmed the resolution of the striptease.
-406.697,424.678,"Augmented reality intraoperative guidance showed to be a useful and precise technological tool able to correctly identify the ureteral stricture even when not visible on the ureteral wall surface, leading to maximize the preservation of the ureteral peristrictural healthy tissue."

@@ -1,6 +1,4 @@
 start,end,text
-0.665,11.208,"In this video, we present a case of fully robotic malignant retroperitoneal lymph node dissection with three-D modeling, following curative resection of colorectal cancer."
-11.708,21.357,"The three-dimensional reconstruction of standard patient CT imaging is displayed, with the retroperitoneal lymph node and aorta highlighted and superimposed on the model."
 21.857,28.539,The surgeon utilizes the TilePro input port on the DaVinci XI robotic system to access and display the three-dimensional modeling of the surgical area during the procedure.
 28.819,35.761,"The patient is positioned in a modified lithotomy position, and ureteric stents are visibly inserted."
 36.261,40.322,"Under visual guidance, four robotic ports and one assistant port are inserted into the patient's abdomen, facilitating access for the robotic surgical instruments."
@@ -11,4 +9,3 @@ start,end,text
 100.677,127.206,"The surgeon identifies a malignant node at the aortic bifurcation and performs sharp dissection to remove it, utilizing live intraoperative referencing to a 3D reconstruction for precise navigation."
 127.706,203.337,"The surgeon uses the three-dimensional reconstruction to establish a dissection plane between the malignant node and the anterior aortic wall, navigating through dense fibrotic tissue."
 203.837,206.482,The surgeon places the specimen into an endo-catch bag for removal from the surgical field.
-206.982,217.16,The total operative time was a hundred and fifty minutes and estimated blood loss was less than fifty minutes. There were no post-operative complications.

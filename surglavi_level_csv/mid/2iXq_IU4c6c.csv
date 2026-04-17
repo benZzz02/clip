@@ -1,7 +1,4 @@
 start,end,text
-2.532,12.037,This exercise is not tying. It is designed to teach users how to do a surgeon's knot followed by two additional throws in the instrument tie fashion using the robotic arms.
 12.537,25.342,"The robotic left arm grasps the end of the tie on the right side of the screen, initiating a double loop surgeon's knot at the wrist junction to prevent slippage of the loops."
 25.842,36.445,"The robotic right arm attempts to grab a more distal portion of the tie to pull through the knot. As the knot is tightened, the arm repositions to maintain visibility on screen."
-36.945,56.389,"We found the best way to do this in this exercise is to actually pull up on one end of the ties as you tighten down your knot. And as you'll see again, we'll actually pull up vertically here on one of the ties, which not only allows us to complete our knot efficiently, but also places that end in a good position to grab for the next throw."
 56.889,66.377,"The surgeon completes the third and final tie using alternating robotic arms, demonstrating the instrument tie technique."
-66.877,73.463,"Avoiding instrument collisions, instruments out of view, and excessive force are essential for scoring well on this exercise."

@@ -1,9 +1,4 @@
 start,end,text
-0.605,8.333,"Hello, I'm sharing a robotic low anterior resection for a recto sigmoid cancer in a young male."
-0.605,21.345,"Hello, I'm sharing a robotic low anterior resection for a recto sigmoid cancer in a young male. This was found on a index colonoscopy for rectal bleeding, was at around a twenty five centimeters and above the peritoneal reflection."
-8.833,21.345,"This was found on a index colonoscopy for rectal bleeding, was at around a twenty five centimeters and above the peritoneal reflection."
-21.845,28.376,And he was worked up in a multidisciplinary fashion and elected to undergo a sigmoid resection.
-21.845,28.376,And he was worked up in a multidisciplinary fashion and elected to undergo a sigmoid resection.
 28.736,41.901,"The surgeon begins a medial to lateral dissection to isolate the inferior mesenteric artery (IMA) pedicles, aiming to enter the retro-rectal space by identifying the crackly plane."
 28.736,41.901,"The surgeon begins a medial to lateral dissection to isolate the inferior mesenteric artery (IMA) pedicles, aiming to access the retro-rectal space by entering the correct anatomical plane."
 42.401,48.764,The surgeon attempts to identify the ureter before proceeding to ligate the inferior mesenteric vessels.
@@ -32,15 +27,9 @@ start,end,text
 220.018,259.216,"The surgeon navigates the rectal sigmoid area, aiming to achieve an adequate distal margin by dissecting below the peritoneal reflection. The dissection proceeds anteriorly, staying within the visible areolar plane."
 220.018,240.424,"The surgeon focuses on the rectal sigmoid area, aiming to achieve an adequate distal margin by dissecting below the peritoneal reflection and proceeding anteriorly."
 240.924,259.216,"The surgeon carefully dissects within the areolar plane, which is clearly visible in this patient, ensuring precise separation of tissue layers during the colectomy procedure."
-259.716,276.692,"In this case, I believe there were fifty-six lymph nodes, eighteen of which were positive. The patient is getting set up for adjuvant therapy at this time."
-259.716,276.692,"In this case, I believe there were fifty-six lymph nodes, eighteen of which were positive. The patient is getting set up for adjuvant therapy at this time."
-277.192,301.8,"I found the planes in him to be a little bit more edematous and fibrotic. I actually wondered if this had to do with his tumor, which the endoscopic biopsies had a dense inflammatory reaction, desmoplastic reaction of the tumor itself, because this almost looked to me as if somebody had gotten neoadjuvant radiation with the amount of fibrosis in here."
-277.192,301.8,"I found the planes in him to be a little bit more edematous and fibrotic. I actually wondered if this had to do with his tumor, which the endoscopic biopsies had a dense inflammatory reaction, desmoplastic reaction of the tumor itself, because this almost looked to me as if somebody had gotten neoadjuvant radiation with the amount of fibrosis in here."
 302.3,328.634,"The surgeon dissects down the left-sided plane and joins anteriorly, progressing more than six centimeters distal to the tumor."
 302.3,372.841,"The surgeon dissects down the left-sided plane and joins anteriorly, reaching a point more than six centimeters distal to the tumor. A tattoo marking is visible at this level, and the surgeon cleans off the rectal mesentery for a tumor-specific mesorectal excision."
 329.134,372.841,"The surgeon cleans the rectal mesentery at the level of a tattoo placed six centimeters distal to the tumor, preparing for a tumor-specific mesorectal excision."
-373.341,391.578,"In these cancer cases, I am not averse to doing transrectal extraction if I feel that the un-morselated specimen, because I won't chop up a cancer, can fit through the lumen of the distal bowel without causing damage. This cancer I felt was too large."
-373.341,391.578,"In these cancer cases, I am not averse to doing transrectal extraction if I feel that the un-morselated specimen, because I won't chop up a cancer, can fit through the lumen of the distal bowel without causing damage. This cancer I felt was too large."
 392.078,421.791,"The surgeon completes the transection of the bowel and moves the specimen aside, preparing to perform an intracorporeal sutured anastomosis."
 392.078,421.791,"The surgeon handles the bulky mesentery and decides against transrectal extraction. After completing the transection, the specimen is moved aside, and an intracorporeal sutured anastomosis is performed."
 421.831,457.454,"The surgeon carefully dissects the proximal mesentery, approaching the area just proximal to the high ligation of the inferior mesenteric artery (IMA), and aligns it with the chosen proximal margin."
@@ -49,7 +38,6 @@ start,end,text
 457.954,468.124,"The surgeon identifies a tattoo on the right side, which is proximal to the tumor, indicating the location for surgical reference. Both proximal and distal tattoos are visible."
 468.624,493.995,"The surgeon uses indocyanine green (ICG) to assess the margins after taking the mesentery. The stapler is positioned in place, ready to fire, focusing on ensuring adequate blood supply at the proximal margin."
 468.624,480.417,"The surgeon uses indocyanine green (ICG) dye to visualize and determine the surgical margins after taking the mesentery. The stapler is positioned in place, ready to be fired for the next step in the procedure."
-480.917,493.995,It's the proximal margin that I concern more about in terms of blood supply than the rectum. I find that it is much more unlikely that you could have ischemia of the rectum.
 494.495,509.002,"The surgeon places a 60mm stapler distally in the pelvis, noting that a 45mm stapler might have been more suitable for fitting into the confined space, but successfully manages to position the larger stapler."
 494.495,509.002,"The surgeon places a 60mm stapler distally to perform the anastomosis, noting that a 45mm stapler might have been more suitable for fitting into the pelvis, but the 60mm stapler was successfully positioned."
 509.502,525.244,"The surgeon performs two firings of the stapler distally to complete the transection, preparing for the subsequent anastomosis."
@@ -64,8 +52,6 @@ start,end,text
 598.858,648.306,"The surgeon clears pericolic fat to expose the bowel, then makes a colotomy followed by a proctotomy, preparing the bowel for anastomosis."
 648.806,683.991,"The surgeon begins suturing the inner row at the posterior midline, moving towards the patient's left side. The rectal wall bridge and colon wall bridge between the staple line and the cut edge of the bowel are visible, appearing potentially ischemic."
 648.806,683.991,"The surgeon begins suturing the inner row at the posterior midline, moving towards the patient's left. The rectal wall bridge and colon wall bridge between the staple line and the cut edge of the bowel are visible, with areas appearing ischemic."
-684.491,713.687,I can assure you it does light up and I have never had an instance where I was concerned about ischemia there that I wasn't comfortable with my anastomosis and I'm very happy with this form of an anastomosis in terms of leak rate.
-684.491,713.687,I can assure you it does light up and I have never had an instance where I was concerned about ischemia there that I wasn't comfortable with my anastomosis and I'm very happy with this form of an anastomosis in terms of leak rate.
 714.187,763.33,"The surgeon begins the second inner suture line, suturing towards the patient's right side, ensuring full thickness bites are taken through the tissue."
 714.187,763.33,"The surgeon begins the second inner suture line, suturing towards the patient's right side, ensuring full thickness bites are taken through the bowel tissue."
 763.83,844.838,"The surgeon prepares to switch to a canal technique, focusing on the anterior aspect of the inner suture row. The canal technique is used to prevent the mucosa from pouching outward during the suturing process."
@@ -76,5 +62,4 @@ start,end,text
 898.875,952.461,"The surgeon performs additional suture throws near the end of the anastomosis to achieve hemostasis, ensuring no expanding hematoma forms in the mesentery."
 952.961,1040.597,"The surgeon ties two sutures together, then uses the original suture from the back row to canal over the top, imbricating the inner suture line."
 952.961,1040.597,"The surgeon ties the two suture lines together, then uses the original suture from the back row to canal over the top, imbricating the inner suture line."
-1041.097,1087.839,"Now we'll do our leak test. I do this with a nineteen millimeter rigid scope. Everything looked good. Just cleaning things up, making sure I don't feel uncomfortable about my tension. Patient did great. Discharge on post-operative day one. On to adjuvant therapy. Comments and suggestions are welcome."
 1041.097,1087.839,"The surgeon performs a leak test using a nineteen millimeter rigid scope, inspecting the anastomosis for any signs of leakage. The surgical area is cleaned up, ensuring proper tension and integrity of the sutures."

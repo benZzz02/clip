@@ -1,9 +1,4 @@
 start,end,text
-3.047,6.429,robotic right flank and midline incisional hernia repair.
-6.449,16.334,This is a twenty nine year old female who developed a large right flank hernia from a kidney transplant.
-16.434,26.38,She also had a history of a lap splenectomy which led to the development of a small epigastric incisional hernia.
-26.88,32.545,She was referred to me for progressive enlargement and discomfort of her right flank hernia.
-33.045,38.307,So I set her up for a robotic repair possible open.
 38.807,42.409,"The surgeon begins the procedure by inserting an optical trocar in the left upper quadrant, preparing for robotic hernia repair."
 42.909,46.15,"The video shows markers placed on the patient's abdomen, delineating the previous incision sites related to her past surgical procedures."
 46.43,53.893,"The patient is positioned slightly right side up, with the robotic system docked over the lateral abdomen, preparing for the hernia repair procedure."
@@ -12,11 +7,8 @@ start,end,text
 62.444,67.449,"The laparoscopic view reveals the outline of the graft, visible within the surgical field."
 67.949,76.837,"The surgeon performs lysis of adhesions, exposing the small epigastric incisional hernia within the surgical field."
 77.337,87.158,"The surgical team adjusts the table motion to position the patient more right side up, causing the colon to visibly drop down and move out of the surgical field."
-87.658,91.721,"So logistically, it was somewhat difficult to decide my approach here."
 92.101,95.744,"The surgeon targets the flank hernia for repair, focusing on the visible hernia site."
-95.784,98.686,This is what caused her the most discomfort.
 98.766,101.388,"The surgeon begins the hernia repair using a pre-peritoneal approach, positioning instruments to access the hernia site beneath the peritoneum."
-101.888,109.474,"I'm actually walking through this part of the procedure with my chief resident, Dr. Jarvis Walters."
 109.974,112.335,"The chief resident performs a preperitoneal dissection, carefully separating the peritoneal layer from underlying structures."
 112.835,130.658,"The surgeon navigates between the true preperitoneal space and the pre-transversalis space, moving laterally where the peritoneum appears thin. The dissection occurs between the anterior and posterior layers of the transversalis fascia."
 131.158,138.443,"The surgeon exposes the naked muscle belly, positioned above the anterior transversalis fascia, revealing the muscle tissue without overlying fascia."
@@ -25,30 +17,19 @@ start,end,text
 157.635,160.943,"The surgeon identifies the pseudosac within the surgical field, highlighting its presence during the hernia repair procedure."
 161.443,176.927,"The surgeon places an assistant trocar to provide stable retraction of the hernia sac, addressing the difficulty in reducing the hernia defect due to its depth."
 177.427,183.191,"The surgeon enters a well-defined plane above the anterior transversalis fascia, revealing the muscle belly and facilitating further dissection in the preperitoneal space."
-183.691,193.854,"I often times review and see videos of people trying to reduce sacs and what they don't realize, they say, oh, it won't reduce, it won't reduce."
-194.134,196.994,Most of the time it's because you're dissecting the wrong plane.
 197.054,207.667,"The surgeon navigates the surgical field with attenuated peritoneum, remaining in the pre-transversalis plane to manage the hernia repair."
 208.167,210.49,"The surgeon uses stable retraction provided by an assistant trocar to effectively reduce the hernia sac, addressing the depth of the hernia defect."
 210.55,213.814,"The surgeon carefully dissects and takes down the posterior transversalis fascia, revealing underlying structures in the surgical field."
 214.314,218.5,"The surgeon navigates towards the true pre-peritoneal space, aiming to access the correct anatomical plane for hernia repair."
-218.52,220.222,That was clearly not it.
 220.722,224.367,"The surgeon manipulates the muscle tissue, assessing the anatomical plane to determine the correct surgical layer for dissection."
-224.407,226.609,"So I'm thinking, oh yeah, fat's my friend."
-226.669,228.082,That's a great plane.
 228.582,237.107,"The surgeon identifies the transversus abdominis muscle located directly above the scissors, reassessing the anatomical plane during the procedure."
-237.607,242.41,"So again, the robot's very immersive and it's very easy to get lost."
 242.69,247.273,"The surgeon returns to a previously identified area, performing lateral dissection before moving back medially, navigating through the tissue planes."
 247.333,252.977,The transversus abdominis muscle is clearly visible on the lateral abdominal wall.
-253.477,256.611,And then you regain plane.
 257.111,259.053,"The surgeon exposes the retroperitoneal fat, visible as a yellowish tissue layer within the surgical field."
-259.113,260.494,This is a great plane right here.
-260.554,261.475,It's nice and soft.
-261.515,262.656,It's not very scarred.
 262.676,268.702,"The surgeon assesses the anatomical location in relation to the kidney graft, examining the surrounding tissue and structures."
 269.202,273.025,"The surgeon navigates along the lateral border of the retroperitoneal fat, maintaining a clear visual distinction between the tissue planes."
 273.525,286.213,"The surgeon works laterally and then moves medially, positioning the dissection plane just beneath the transversus abdominis muscle."
 286.713,298.659,"The surgeon works along the lower border of the kidney graft, approaching the myopectineal orifice, revealing a clear surgical plane."
-299.159,306.943,You can tell I'm always looking back to see where that kidney graft is because injuring that graft is the last thing I want to do.
 307.443,314.875,"The surgeon cuts through the final piece of scarred tissue, causing the kidney graft to visibly shift or fall into a new position."
 315.375,319.056,"The surgeon navigates within the preperitoneal space, ensuring the kidney graft remains out of the surgical field."
 319.076,325.638,"The transversus abdominis muscle is visible on the abdominal wall, positioned past the kidney graft."
@@ -62,9 +43,7 @@ start,end,text
 374.082,379.847,The surgeon sizes the area of dissection to select an appropriately sized mesh for placement over the hernia defect.
 380.167,394.44,"The surgeon places an 18x18 cm barred heavyweight mesh over the closed defect area, ensuring coverage within the pre-retinal space."
 394.94,399.705,The surgeon upsizes the left upper quadrant trocar to eight millimeters to facilitate the placement of the mesh in the pre-retinal space around the defect.
-399.765,402.242,We placed
 402.742,408.967,"The surgeon places the mesh into the preperitoneal space, securing it with cardinal tacks and sutures at the lower aspect."
-408.987,420.457,So now I have to decide what to do with this small midline epigastric incisional hernia.
 420.957,424.56,The surgeon dissects and removes portions of the falciform ligament to ensure adequate coverage for the mesh placement.
 424.641,428.103,The surgeon decides to perform an Intraperitoneal Onlay Mesh (IPOM) technique in the area of the small midline epigastric incisional hernia.
 428.164,432.373,"The surgeon primarily closes the hernia defect using a running OV lock suture technique, ensuring the edges of the defect are approximated securely."
@@ -73,4 +52,3 @@ start,end,text
 452.689,466.188,"The resident buries a long, exposed V-lock suture within the surgical field to ensure it is not visible on the surface."
 466.688,476.775,"The surgeon uses a 13 by 15 centimeter sheet of Ventralite ST mesh, which is circumferentially sutured in place with a number one running V-Lock suture."
 477.275,485.001,The surgeon resects the large hernia sac and closes the defect using a purse-string-like suture technique with a 3-0 V-Lock suture.
-485.501,489.904,The patient was admitted for observation and was discharged on post update one.

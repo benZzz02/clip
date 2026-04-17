@@ -1,7 +1,5 @@
 start,end,text
-31.707,36.848,The portion of small bowel that you want resected should be determined.
 37.348,43.049,"The surgeon begins the small bowel resection by making an entry into the mesenteric border, similar to the initial step in an open procedure."
-43.549,53.531,"This patient had a large gallstone ileus lodged in her mid-jejunum, so this is not an oncologic resection."
 54.031,63.679,The surgeon uses a harmonic scalpel at the mesenteric border to create a window through the opposite side of the small bowel.
 64.179,77.766,"The surgeon uses energy devices to cauterize several small vessels at the mesenteric border, preventing potential bleeding that could obscure the surgical field."
 78.266,93.747,"The surgeon manipulates the small bowel over the energy device to assess the size and location of the created window, ensuring it is adequate for the procedure."
@@ -14,20 +12,15 @@ start,end,text
 242.912,257.007,"The surgeon uses an energy device to transect the mesentery, which supplies blood to the resected bowel specimen, after the bowel has been transected on both sides."
 257.507,262.453,"The surgeon maintains dissection directly along the mesenteric border of the small bowel, ensuring precise separation of the mesentery from the bowel tissue."
 262.953,268.435,"The surgeon uses a cautery device to cauterize smaller vessels along the mesenteric border, preventing potential bleeding during the small bowel resection."
-268.455,279.08,"In an oncologic resection, a wedge would need to be performed and larger blood vessels could be encountered."
 279.58,290.873,"The surgeon removes the specimen and enters the anti-mesenteric corner of the staple line, preparing to address the remaining tissue."
-291.373,306.411,this has the lowest amount of blood supply.
-306.911,326.55,The smaller the aneurotomy in this situation makes it easier to close later.
 327.05,331.576,The surgeon aligns the two segments of bowel directly adjacent to each other in preparation for anastomosis.
 332.076,355.018,"The surgeon places stay sutures to align the bowel segments, facilitating the positioning of the stapler for anastomosis."
 355.518,361.42,"The surgeon uses their left hand to position the small bowel across both tines of the surgical stapler, ensuring proper alignment for stapling."
 361.92,366.942,"The surgeon positions the small bowel segments at the anti-mesenteric border, aligning them for resection."
 367.442,376.825,The surgeon carefully checks the staple line for integrity while removing the stapler from the resected small bowel segments.
-377.325,379.946,And plan for a suture repair.
 380.446,389.423,"The surgeon begins a running suture repair using 2-0 Vicryl, starting at the apex of the incision on the small bowel."
 389.923,418.533,"The surgeon runs the suture to the staple line along the anti-mesenteric border of the small bowel, ensuring alignment with the previously placed staples."
 419.033,431.844,"The surgeon continues suturing to completely close the aneurotomy along the anti-mesenteric border, ensuring a tight closure of the small opening."
 432.344,488.608,The surgeon optionally places an additional suture in a limber fashion to reinforce the existing suture line.
 489.108,493.836,"The surgeon ties the suture in place, securing the closure of the surgical site. Attention is then directed to addressing the mesenteric defect."
-494.276,502.33,"In oncologic resection, this defect can be much larger than in the benign situation."
 502.83,506.696,"The surgeon covers the small bowel with the omentum, restoring the anatomical configuration by draping the omentum over the bowel."

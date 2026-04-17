@@ -1,9 +1,4 @@
 start,end,text
-2.076,7.617,This video demonstrates robotic pancreatic odiodinectomy technique employed at Tata Memorial Hospital.
-8.117,15.379,A fifty year old lady presenting with abdominal discomfort and mild icterus was diagnosed to have ampullary lesion.
-15.879,21.64,A tri-physic CT scan showed double duct sign with a small mass at the ampulla.
-22.14,31.333,The side wing endoscopy and biopsy confirmed diagnosis of adenocarcinoma and the plan was robotic pylorus preserving pancreatic odiodinectomy.
-31.833,46.925,"The surgeon positions four robotic ports in a straight line at or below the level of the umbilicus, tailored to the patient's body habitus, along with two assistant ports for the robotic pancreaticoduodenectomy procedure."
 47.425,60.186,"The surgeon begins the dissection by opening the lesser sac, revealing the epiploic and middle colic veins draining into the superior mesenteric vein at the inferior border of the pancreas."
 60.686,75.749,The surgeon separates the mesocolon from the anterior surface of the pancreatic head and divides the right gastroepiploic vein.
 76.249,82.67,"The surgeon further exposes the superior mesenteric vein (SMV), revealing its position relative to the surrounding pancreatic tissue."
@@ -25,10 +20,8 @@ start,end,text
 277.235,290.418,"The surgeon divides the small bowel mesentery and uses a prograsper to retract the pancreatic head upwards and laterally, initiating the dissection of the uncinate process."
 290.918,303.623,"The surgeon clips smaller blood vessels and enters the mesopancreas plane, identifying the superior mesenteric artery within the surgical field."
 304.123,310.505,"The assistant uses a suction device to provide retraction by gently rolling the superior mesenteric vein (SMV) and superior mesenteric artery (SMA), enhancing exposure in the surgical field."
-311.005,322.588,An experienced assistant is of a great help while working in this area.
 323.088,330.335,"The surgeon clears the retropancreatic lymph nodes after clipping them, ensuring the prevention of potential echial leaks in the postoperative period."
 330.835,342.385,"The surgeon progresses cranially along the superior mesenteric artery (SMA), dissecting the uncinate process and identifying the inferior pancreaticoduodenal artery."
-342.885,349.348,"Usually it's a single vessel, but at times two such arteries can be encountered."
 349.848,367.25,"The surgeon clips and divides the inferior pancreaticoduodenal artery (IPDA) and clears the remaining lymphatic tissue in the region, completing the lymph node dissection."
 367.75,390.852,"The surgeon divides the superior pancreaticoduodenal vein, completing the final portion of the uncinate process dissection. Subsequently, lymph nodes near the origin of the superior mesenteric artery and behind the portal vein are removed, finalizing the resection."
 391.352,399.697,"The surgeon uses a prograsper introduced from the left side to achieve improved retraction in the surgical field, enhancing visibility and access to the region being operated on."
@@ -45,7 +38,6 @@ start,end,text
 518.548,538.44,"Following the placement of posterior ductal sutures, the surgeon places one or two additional sutures through the pancreatic parenchyma and the full thickness of the jejunal wall, both below and above the ductal sutures, to complete the second layer of the anastomosis."
 538.94,541.422,"The surgeon begins placing sutures for the third layer of the anastomosis, following the completion of the previous layers involving ductal and jejunal sutures."
 541.922,547.212,"The surgeon begins by placing a suture at the superior corner of the anastomosis, a challenging area due to its position."
-547.712,551.635,to negotiate this area if the inferior stitches are taken first.
 552.135,566.071,"The surgeon places at least three anterior ductal sutures, utilizing good vision and magnification to ensure precise placement without the need for pre-placed sutures."
 566.571,597.942,"The surgeon places sutures from the pancreatic parenchyma to the jejunum to complete the third layer of the pancreaticojejunostomy. Subsequently, anterior pancreatic capsule to jejunal seromuscular sutures are placed, completing the fourth and final layer of the anastomosis."
 598.442,611.604,The surgeon creates a jejunotomy approximately fifteen centimeters distal to the pancreatic anastomosis to begin the biliary anastomosis.
@@ -53,16 +45,12 @@ start,end,text
 631.32,641.884,"The surgeon ensures that the sutures are securely placed at both the jejunal and bile duct sides, achieving a tight approximation between these structures."
 642.384,649.887,A stay suture is placed on the anterior wall of the bile duct to enhance exposure during the surgical procedure.
 650.387,659.33,The surgeon stops the posterior layer suturing at the right corner and begins the anterior layer using interrupted foropedias sutures.
-659.83,675.016,This technique prevents any future risk of stenosis or stricture formation and also gives a better control for placing sutures in the anterior layer.
 675.516,690.329,"The surgeon pre-places the last few sutures around the anastomosis site before knotting, then packs a gauze piece around the area to visually check for any weaknesses or leaks."
 690.829,698.656,The surgeon identifies the jejunal limb within the infrapolic compartment and prepares to bring it up for the duodenal jejunostomy.
 699.156,708.49,"The surgeon performs a four-layer hand-sewn anastomosis using vicryl or V-lock continuous sutures, meticulously constructing the anastomosis with visible precision."
-708.99,723.52,"When we are doing a classical or bilaurus resecting procedure, a stapled side-to-side gastrojejunostomy can also be performed and this can reduce some surgery duration."
 724.02,728.383,"The surgeon stabilizes the jejunum and stomach, then creates an enterotomy, visibly opening the intestinal lumen for further anastomosis."
 728.403,737.57,"The surgeon uses a prograsper to apply vertical traction on the first layer suture, ensuring the lumens remain correctly oriented during the anastomosis."
 738.07,749.938,The surgeon begins placing continuous locking sutures from the corners to complete the posterior inner layer of the anastomosis.
 750.438,767.423,"The surgeon gently passes a nasojejunal tube into the efferent limb, positioning it for potential post-operative feeding in case of delayed gastric emptying."
 767.923,784.206,"The surgeon completes the anterior inner or third layer of sutures, followed by the fourth layer of seromuscular sutures, finalizing the duodenal jejunostomy."
 784.706,795.308,"Two soft drains are placed, with the left drain positioned near the pancreatic jejunostomy and the right drain in Morrison's pouch. The surgical specimen is extracted through a fan and steel incision."
-795.808,806.586,This patient had an uneventful recovery and final pathology confirmed a T-B well-differentiated ampullary adenocarcinoma without any lymph node involvement.
-807.086,808.067,Thank you for watching.

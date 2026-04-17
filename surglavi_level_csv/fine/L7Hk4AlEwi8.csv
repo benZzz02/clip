@@ -1,5 +1,4 @@
 start,end,text
-3.5,10.185,The first case is an example of a patient with an incisional hernia.
 10.685,19.852,"The surgeon closes the fascial defect after performing lysis of adhesions and reducing the hernia contents, ensuring the abdominal wall is securely repaired."
 20.352,28.542,The surgeon reduces the abdominal pressure to six to eight millimeters of mercury in preparation for mesh fixation during the hernia repair procedure.
 29.042,37.347,"The surgeon closes the fascial defect along its long axis using a sero-barred slowly absorbable suture, ensuring the edges are approximated securely."
@@ -7,9 +6,7 @@ start,end,text
 46.852,55.63,"The surgeon tightens the suture after reaching the opposite end of the fascial defect, ensuring closure of the incisional hernia."
 56.13,65.242,"The surgeon runs the suture in the opposite direction along the defect, creating an overlapping pattern to reinforce the closure."
 65.742,69.047,"The surgeon tightens the suture along the closed defect, ensuring secure approximation of the tissue edges."
-69.547,76.555,The second case is a patient with a recurrent incisional hernia.
 77.055,83.439,"The surgeon observes dense adhesions between the mesh and the surrounding soft tissue, deciding not to excise the mesh due to these visual findings."
-83.939,90.042,"However, this is at the discretion and judgment of the surgeon at the time of the procedure."
 90.542,97.627,"The surgeon performs lysis of adhesions to free the hernia contents, reducing them back into the abdominal cavity."
 98.127,102.775,"The surgeon closes the fascial defect, suturing the tissue edges together to repair the hernia."
 103.275,144.608,"The surgeon reduces the abdominal pressure to six to eight millimeters of mercury and closes the hernia defect along its long axis using a zero-barred, slowly absorbable suture."

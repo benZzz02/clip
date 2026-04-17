@@ -1,10 +1,4 @@
 start,end,text
-0.945,7.329,"The robotic system is used to perform a partial nephrectomy on a clinical TII-A renal mass, employing super selective clamping techniques."
-7.589,14.674,It's a sixty-one year old patient with a right upper pole renal mass suspected to be a clear cell renal cell carcinoma on a CT scan.
-15.174,22.499,The complexity of the nephron sparing surgery was moderate to high according to the renal nephrometry score and PADUA score as well.
-22.999,29.007,It was decided with the patient to proceed to a conservative surgical treatment for this tumor.
-29.507,45.351,"The surgical team plans super selective clamping after analyzing the CT scan with 3D reconstructions, identifying two tumor-specific segmental arteries and a perforating upper pole renal artery."
-45.851,51.569,"The surgeon prepares to clamp two segmental arteries supplying the renal mass, using a robotic approach for super selective clamping during the partial nephrectomy."
 52.069,63.181,"The surgical team carefully dissects into the renal hilum, preparing and identifying the arterial branches for clamping as per the preoperative plan."
 63.681,136.217,"The surgeon encircles the different arterial branches with vessel loops, progressing towards the quaternary branches in preparation for selective clamping."
 136.717,158.685,"The surgeon uses laparoscopic bulldog clamps to initially clamp the tumor-specific tertiary and quaternary segmental arteries, visible within the surgical field."
@@ -15,9 +9,5 @@ start,end,text
 306.245,324.553,"The surgeon progresses with the tumor excision by carefully detaching the capsule of the renal mass from the surrounding normal parenchyma, following the cleavage plane."
 325.053,383.407,The surgeon begins reconstructing the deep tumor bed using a 3-0 V-lock suture after the tumor has been excised from the kidney.
 383.907,390.05,"The surgeon removes three laparoscopic bulldog clamps, utilizing the early unclamping technique facilitated by the placement of the first suture."
-390.55,396.732,Warm ischemia time was thirty-three minutes.
 397.232,404.915,"The surgeon completes the tumor bed reconstruction by placing two additional 3-0 V-Loc sutures, ensuring hemostasis of the kidney parenchyma."
-405.415,410.494,We didn't do the rhinography we usually do because of the important size of the tumor bed.
 410.994,417.279,The surgeon applies a Tacosil hemostatic patch to the large tumor bed to address residual bleeding.
-417.779,423.704,"The surgeon performs nephron-sparing surgery on a large renal mass, facilitated by super selective clamping, which preserves kidney function by limiting blood flow only to the tumor area."
-424.204,432.351,"The surgery was longer than with the main artery clamping, but we achieved a minimal global renal ischemia thanks to this super selective clamping technique."

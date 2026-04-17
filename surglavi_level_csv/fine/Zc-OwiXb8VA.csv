@@ -1,19 +1,12 @@
 start,end,text
-0.689,11.014,"Hello, I'm sharing a robotic sigmoid on a morbidly obese gentleman. Large sigmoid cancer."
-0.689,11.014,"Hello, I'm sharing a robotic sigmoid on a morbidly obese gentleman. Large sigmoid cancer."
 11.034,18.557,"The surgeon uses a sponge to retract the small bowel, revealing the tattoo-marked area of the sigmoid colon."
 11.034,18.557,"The surgeon uses a sponge to retract the small bowel, revealing the tattooed area of the sigmoid colon, which is marked for identification."
-18.657,27.953,"This is usually enough for most patients. Um, given his visceral adiposity, I needed an assist port, which I don't usually use."
-18.657,27.953,"This is usually enough for most patients. Um, given his visceral adiposity, I needed an assist port, which I don't usually use."
 28.053,36.516,"The surgeon continues to adjust the elevation of the sigmoid colon, with assistance visible in the surgical field."
 28.053,36.516,"The surgeon continues to adjust the elevation of the sigmoid colon, with assistance visible in the surgical field."
 37.016,41.757,"The surgeon opens the tissue over the sacral promontory using a vessel sealer, opting for this instrument instead of scissors."
 37.016,41.757,"The surgeon opens over the sacral promontory using a vessel sealer, opting for this instrument instead of scissors for the dissection."
-41.817,62.93,"In this case, uh, the patient was continued on anticoagulation through this surgery."
-41.817,62.93,"In this case, uh, the patient was continued on anticoagulation through this surgery."
 63.43,68.675,"The surgeon uses an assist to hold the small bowel aside, maintaining a clear surgical field for the procedure."
 63.43,92.055,"The surgical team uses an assist to keep the small bowel out of the way, with the patient positioned in Trendelenburg and left side up, as indicated by the altimeter and numerical display."
-69.175,92.055,"You can tell by the altimeter and the numbers there, the degrees of Trendelenburg and left side up that I have my patient in and given their size, the assist was crucial."
 92.555,102.204,"The surgeon continues the medial to lateral dissection of the sigmoid colon without the use of ureteral catheters, indicating a careful approach to avoid ureteral injury."
 92.555,102.204,"The surgeon continues the medial to lateral dissection of the colon without the use of ureteral catheters, indicating a careful approach to avoid ureteral injury."
 102.704,130.67,"The surgeon isolates the inferior mesenteric vessels, carefully separating them from surrounding tissues using surgical instruments."
@@ -48,7 +41,6 @@ start,end,text
 560.33,575.935,"The surgeon applies a stapler to the distal section of the colon, securing the tissue in preparation for resection."
 576.435,583.257,"The surgeon performs an intracorporeal anastomosis using a sewn technique after the specimen has been separated, joining the bowel ends within the abdominal cavity."
 576.435,603.743,"The surgeon performs an intracorporeal anastomosis by sewing the two staple lines together using a 3-0 nine-inch V-Loc suture, following the separation of the specimen."
-583.757,593.62,for these malignant cases or even benign cases where I will use a stapler to divide the bowel rather than to morsel it. This is my chosen anastomosis.
 594.12,632.985,"The surgeon uses a 3-0 nine-inch B-lock suture to join the two staple lines, carefully aligning the edges of the bowel to ensure the enterotomy, colotomy, and proctotomy are even on both the proximal and distal sides."
 604.243,632.985,"The surgeon aligns the edges of the bowel, ensuring that the enterotomy and colotomy are even on both the proximal and distal sides, preparing for a secure anastomosis."
 633.485,645.761,"The surgeon performs a proctotomy, visibly clearing rectal fat from the lateral aspect on the near side of the surgical field."
@@ -59,9 +51,6 @@ start,end,text
 692.302,718.54,"The surgeon places each stitch precisely during the sewn anastomosis, maneuvering around the far corner of the bowel to ensure accurate alignment and secure connection."
 719.04,751.237,"The surgeon transitions to suturing the canal, ensuring visibility of the near side by carefully placing the second and third VLAC sutures, starting in the middle and sewing around the near corner."
 719.04,751.237,"The surgeon transitions to a canal approach, ensuring visibility of the near side by placing the second and third VLAC sutures. The sutures are started in the middle and sewn around the near corner."
-751.737,784.928,"This patient was, um, morbidly obese, um, significant coronary disease, um, with this large cancer leading to anemia and presenting with unstable angina. The surgery went well. Discharge was at forty eight hours."
-751.737,773.48,"This patient was, um, morbidly obese, um, significant coronary disease, um, with this large cancer leading to anemia and presenting with unstable angina. The surgery went well."
-773.98,784.928,Discharge was at forty eight hours.
 785.428,825.63,"The surgeon navigates around the near corner of the surgical field, using reticulated instruments to switch to the canal. The backhand suturing technique is employed to secure the stitch with precision."
 785.428,825.63,"The surgeon navigates around the near corner, switching to the canal using reticulated instruments. The surgeon backhands the suturing with precision, securing it back to the previous stitch."
 826.13,878.087,"The surgeon adjusts the far suture, bringing it back towards the midline to avoid tying knots in the corners during the anastomosis."
@@ -70,5 +59,3 @@ start,end,text
 878.587,938.542,"The surgeon ties two sutures together and uses the original suture to invaginate the inner and outer staple lines anteriorly, securing them to the silk suture."
 939.042,968.857,"The surgeon performs a leak test using a 19mm rigid scope, driving it through the widely patent anastomosis to visually inspect for any air leaks."
 939.042,975.294,"The surgeon performs a leak test using a 19mm rigid scope, inspecting the anastomosis for air leaks. The scope is driven through the widely patent anastomosis."
-969.357,976.917,"Again, the patient did very well. I don't leave drains for these cases. And I hope you enjoyed."
-975.794,976.917,And I hope you enjoyed.

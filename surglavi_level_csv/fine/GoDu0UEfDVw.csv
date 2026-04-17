@@ -1,5 +1,4 @@
 start,end,text
-2.349,7.473,In this video we present a robotic duodenal switch.
 7.973,16.16,"The surgeon uses laparoscopic instruments to run the small bowel, visually inspecting and marking key anatomical points along its length."
 16.66,36.477,"The surgeon runs the small bowel laparoscopically for approximately 120 centimeters to establish the common channel, marking the endpoint with a silk suture."
 36.977,44.403,"The surgeon runs the bowel for an additional 130 centimeters, resulting in a total alimentary limb length of 250 centimeters."
@@ -12,14 +11,12 @@ start,end,text
 106.676,133.302,"The surgeon prepares to use a black cartridge for the initial stapling, followed by green cartridges for subsequent firings, indicating a change in stapling technique during the procedure."
 133.802,147.868,"The surgeon frees and mobilizes the peritoneum superior to the duodenal bulb, preparing the area for further dissection."
 148.368,167.625,"The surgeon performs dissection on the inferior aspect of the duodenal bulb, aiming to create a tunnel between the inferior and superior aspects to facilitate the placement of a stapler around the duodenum."
-168.125,179.778,Everything is done on division due to the fact that there's no haptic feedback with robotic platform.
 180.278,196.677,"The surgeon positions the anvil part on the inferior edge of the duodenum, preparing for the stapling process."
 197.177,203.282,"The surgeon performs a hand-sewn anastomosis, connecting the duodenum to the ileum, with visible sutures securing the junction between these two intestinal segments."
 203.782,219.095,"The surgeon runs a posterior row of Duovicro sutures along the duodenum, securing the tissue in preparation for anastomosis."
 219.595,227.463,"The surgeon adjusts the positioning of the duodenum and ileum to reduce tension on the anastomosis, ensuring proper alignment between the two structures."
 227.963,254.44,"The surgeon uses a hook cautery to perform a duodenotomy and an iliotomy, creating openings in the duodenum and ileum for the anastomosis."
 254.94,261.503,The surgeon uses a vessel sealer to create openings in the tissue for the hand-sewn anastomosis between the duodenum and ileum.
-262.003,268.806,"Please note, unlike a gastric bypass, the goal is to make a generous opening."
 269.306,275.188,"The surgeon uses Vicro sutures to secure the anastomosis, tying together the two sutures to reinforce the connection between the duodenum and ileum."
 275.688,279.37,"The surgeon begins running one of the sutures from the midline, preparing for the hand-sewn anastomosis between the duodenum and ileum."
 279.87,282.878,"The surgeon runs the second suture along the previously created openings for the hand-sewn anastomosis, following the duodenotomy and iliotomy."
@@ -29,4 +26,3 @@ start,end,text
 362.589,386.862,"The surgeon uses a permanent suture to perform a running closure of the mesenteric defect, ensuring the defect is securely closed."
 387.362,405.093,"The surgeon transects the loop of ileum that was previously brought up, forming the Roux-en-Y configuration characteristic of the duodenal switch procedure."
 405.593,418.594,"The surgeon tests the integrity of the anastomosis by insufflating air into the bowel while applying fluid to check for leaks, observing the anastomosis for any signs of air bubbles or fluid escape."
-419.094,420.738,Thank you for watching this video.

@@ -5,11 +5,8 @@ start,end,text
 77.802,83.063,"The surgeon identifies the colon of the animal and retracts it, likely using robotic instruments visible through the camera."
 83.563,85.463,"The camera provides a view towards the pelvis, showing the anatomical structures within the pelvic cavity."
 85.963,93.825,"The surgeon identifies the uterus, positioned centrally in the surgical field, and carefully maneuvers it along with visible blood vessels using robotic instruments."
-94.245,118.322,"All of this anatomy is similar to human anatomy and serves as a good model for training, feasibility, and validation work, period."
 118.822,128.614,"The surgeon operates the camera, adjusting its position and movements while simultaneously manipulating surgical instruments within the field."
 129.114,147.77,"The surgeon uses scissors held in the right hand to perform a monoclonal corporeal dissection, opening the standard attachments of the colon with a medial to lateral approach."
-148.27,162.742,This is described in detail in the animal protocol.
-163.242,185.818,Robot movements and camera movements are controlled by the surgeon and readjustment of the robot at the clamp is done under direct surgical communication with the bedside assistant.
 186.318,194.508,"The surgeon uses their left hand to carefully position the colon, adjusting its orientation within the surgical field."
 195.008,209.758,"The surgeon's left hand applies minimal force while positioning the colon, ensuring tissue integrity is maintained."
 210.258,227.923,The surgeon uses bipolar cautery with the left hand to control bleeding encountered during the procedure.
@@ -21,7 +18,6 @@ start,end,text
 363.126,382.135,"The surgical field shows successful control of bleeding, with no visible active bleeding from the previously dissected vessels."
 382.635,413.343,"The robotic arms and camera are maneuvered by the surgeon, demonstrating precise control over the surgical instruments and visual field."
 413.843,435.359,"The surgeon continues to dissect the colon towards its junction with the rectum, aiming to identify the superior rectal artery equivalent in the porcine model."
-435.859,446.981,Robot depth is controlled at bedside.
 447.481,460.59,"The bedside assistant positions the robot using a standard laparoscopic grasper, adjusting its placement as needed."
 461.09,474.608,"The surgeon visualizes the entire dissection of the colon, preparing to perform additional dissection to achieve adequate colon mobilization."
 475.108,489.358,"The surgeon performs a dissection along the white line of Toldt in a porcine model, using robotic assistance to mobilize the colon."
@@ -29,11 +25,9 @@ start,end,text
 497.343,511.484,"The surgeon dissects the colon up to the splenic flexure, following a standard approach similar to human colectomy procedures."
 511.984,522.488,"The surgeon uses a monopolar device to take down lateral adhesions, visibly separating the tissue from the surrounding structures."
 522.988,552.824,"The surgeon manipulates the robotic camera view and instructs the bedside assistant to gently push the robot in. The assistant brings in a stapling device, preparing to staple across the colon."
-553.224,576.401,"Once again, mimicking the procedure that is anticipated in human. This is a standard bowel grasper and stapler used in human surgery."
 576.901,597.219,"The surgeon assists in positioning the stapler to divide and seal the colon, ensuring proper alignment for the stapling procedure."
 597.719,615.874,The bedside assistant gently positions the stapling device while the surgeon assists in ensuring its proper placement for stapling the colon.
 616.374,624.402,"The surgeon fires the stapler, visibly dividing and sealing the colon as part of the procedure."
-624.902,637.272,by the assistant once the surgeon gives the command.
 637.772,650.322,"The surgeon inspects the staple line on the colon after the stapler has been fired, ensuring proper division and sealing of the tissue."
 650.822,690.99,"The surgeon divides a small amount of undivided tissue using the stapler, ensuring complete separation and sealing of the colon."
 691.49,709.113,"The surgeon performs a standard medial to lateral procedure using monopolar scissors and bipolar cautery. Monopolar scissors are applied first, followed by bipolar cautery on major vessels."

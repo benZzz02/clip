@@ -1,10 +1,4 @@
 start,end,text
-1.1,6.088,Total laparoscopic hysterectomy for severe endometriosis.
-6.588,15.641,This is a forty-year-old lady who underwent a laparoscopic cystectomy for endometriosis in a different hospital eleven months ago.
-16.141,19.158,She presented with severe dysmenorrhea.
-19.658,25.12,The examination reveals a visible right pelvic mass and nodules located on the posterior aspect of the uterus.
-25.62,33.162,Ultrasound done showed an adenomyotic uterus with multiple cysts in the right ovary.
-33.662,39.163,She underwent a laparoscopy for total laparoscopic hysterectomy.
 39.663,48.647,"The surgeon observes the uterus, which is densely adherent to the surrounding intestinal structures, indicating significant adhesions."
 49.147,55.552,"The surgeon performs laparoscopic adhesiolysis, carefully separating the dense adhesions between the uterus and intestines using laparoscopic instruments."
 56.052,70.823,"The surgeon carefully dissects the intestines away from the uterus, separating the gut from the densely adherent uterine tissue."
@@ -14,7 +8,6 @@ start,end,text
 144.909,169.674,"The surgeon releases the sigmoid colon, which is densely adherent to the uterus and the right utero sacral ligament, using laparoscopic techniques."
 170.174,224.143,"The surgeon dissects and ligates the right uterine artery at its origin from the internal iliac artery, ensuring clear separation from surrounding tissues."
 224.643,239.677,"The surgeon ligates the left uterine artery at its origin from the internal iliac artery, completing the vascular control on the left side."
-240.177,265.757,The aim of ligating the two uterine arteries is to devascularize the uterus so that hysterectomy can be performed easily.
 266.257,276.246,"The surgeon carefully dissects the sigmoid colon away from the uterus, separating the densely adherent tissue between these structures."
 276.746,310.462,"The surgeon enters the right pararectal space and completes the release of the sigmoid colon from the uterus, ensuring the colon is no longer adherent to the uterine tissue."
 310.962,319.245,"The surgeon coagulates and cuts the left round ligament, visibly separating it from surrounding tissues."

@@ -1,42 +1,25 @@
 start,end,text
-7.523,11.947,We present a robotic radical prostatectomy in its entirety.
-12.447,15.889,There are minimal edits for non-operative portions of the case.
-16.349,21.934,This is a fifty-six year old male with a PSA of five and a digital rectal exam showing a small nodule.
-22.434,24.996,He is in good health with no prior family history.
-25.496,31.781,He has prior surgery with laparoscopic bilateral inguinal hernia repair with mesh.
-32.281,35.243,His biopsy showed a glisten score of three plus four disease.
-35.743,44.721,"After discussing options, he is elected for robotic prostatectomy."
 45.221,49.864,"The surgeon begins the procedure by lysing adhesions in the pelvic space, carefully separating fibrous tissue bands to clear the surgical field."
-50.364,55.327,This patient has had prior surgery with laparoscopic hernia repair bilaterally with mesh.
-55.827,60.73,"Oftentimes, this was an exclusion for laparoscopic prostatectomy."
-61.23,66.173,"However, we have treated many patients successfully without untoward effects."
 66.673,76.621,"The surgeon performs sharp dissection to separate the mesh, which is covered by peritoneum and some adhering viscera, without using cautery."
 77.121,83.707,"The surgeon carefully handles fibrosis encountered in the space of Retzius, ensuring precise dissection to avoid complications."
-84.207,90.832,"With experience, this portion of the case can be done safely."
 91.332,100.879,"The robotic system is configured using a five-port technique, with three robotic arms and a camera controlled by the robot, providing a clear view of the surgical field."
 101.379,119.903,"The assistant uses a twelve millimeter port to apply suction, provide traction, and apply clips during the procedure."
 120.403,129.856,"The surgeon clears the working space after docking the robotic system, ensuring ample room for the prostatectomy procedure."
 130.356,146.324,"The surgeon performs sharp dissection in the peritoneum using minimal cautery, carefully avoiding potential bowel injury."
 146.824,252.065,"The surgeon uses robotic monopolar scissors in the right hand and bipolar forceps in the left hand, while the third robotic arm, the ProGraph, provides manipulation and counter-traction of tissues during the prostatectomy."
 252.565,261.392,"The surgeon begins the posterior dissection using a transperitoneal approach, with robotic instruments visible in the surgical field."
-261.892,286.216,"I like using the transperitoneal technique because dissection of the seminal vesicles as well as the vasa can be done very precisely. In addition, with minimal blood loss and quick operative times, the chance of the patient having ileus or issues with their bowels afterwards is minimal."
 286.716,324.138,"The surgeon dissects the seminal vesicles, revealing arteries that are clipped to minimize cautery impact on surrounding tissues. This approach helps protect the nerves lateral to the seminal vesicles, which are important for sexual function."
-324.638,361.155,"The patient's sexual function was minimal, but he desired nerve sparing to try to preserve his remaining function. We also used a nerve monitor manufactured by Propep Surgical, which is used during the case in a fashion where we can measure signals from the patient's neurovascular bundles to assess location as well as preservation at the end of the case."
 361.655,602.052,"The surgeon performs careful dissection lateral to the seminal vesicles, aiming to spare neurovascular tissue to enhance the patient's chances of postoperative recovery of erectile function."
 602.552,617.218,"Following the dissection of the seminal vesicles, the surgeon focuses on Denonvilliers' fascia, a membranous partition located at the lowest part of the rectovesical pouch, visually separating the prostate and urinary bladder from the rectum."
-617.718,632.06,"The surgeon discusses the rectoprostatic fascia, a membranous layer that inhibits the posterior spread of prostate cancer, highlighting its role in preventing cancer invasion into the rectum."
 632.56,718.578,"The surgeon performs cold dissection using scissors, carefully cutting tissue to minimize the risk of rectal injury during the prostatectomy."
 719.078,760.713,"The surgeon uses hot scissors to dissect lateral to the medial umbilical ligament while pulling on it with the left bipolar. The previously placed mesh is visible and close to the dissection area, requiring careful navigation through the areolar tissue to locate the pubic symphysis and avoid damage to surrounding vasculature."
-761.213,1199.93,"Prior surgeries like this sometimes can really present a difficult situation, and experience is very important in navigating through this."
 1200.43,1224.554,"The surgeon mobilizes the anterior bladder wall and proceeds to identify the endophilic fascia. The periprostatic fat surrounding the prostate is carefully removed, with the excised tissue sent for analysis."
 1225.054,1291.855,"The surgeon completes the removal of periprostatic fat with minimal blood loss, enhancing the visibility of surrounding tissues for subsequent dissection. This removal also facilitates efficient suctioning by preventing blockages during potential bleeding later in the procedure."
 1292.355,1324.843,"The robotic-assisted dissection proceeds along the levators, with the surgeon carefully sparing individual muscle fibers near the dorsal vein using cold dissection techniques. This approach minimizes the risk of damage to the muscles and nerve fibers in the area."
 1325.343,1387.368,"The surgeon cuts across the puboprostatic ligaments on the left side of the prostate, exposing the dorsal vein beneath."
 1387.868,1417.169,"The surgeon uses robotic needle drivers to suture the dorsal vein with a zero PDS suture, employing a slip knot technique to ensure a tight seal and minimize bleeding."
-1417.669,1473.683,Sometimes we will throw the dorsal vein suture later or nearly at the end of the case. This is because occasionally nerve bundles tend to run high up on the prostate and I will wait to do this complete nerve dissection before tying down the dorsal vein.
 1474.183,1502.633,"The surgeon performs an anterior urethra pexy as part of the reconstruction after prostate removal, repositioning the urethra to an anterior position to stabilize its angle."
 1503.133,1537.914,"The surgeon prepares to start the bladder neck dissection, introducing Propep electrodes for nerve monitoring, which is visually similar to nerve monitoring systems used in other surgical procedures."
-1538.414,1618.727,"The ProPep system is integrated into the surgical robot. When we are ready to stimulate, we simply press a button and instead of bipolar current, we send a signal which stimulates the nerves that run around the prostate. The signals are picked up by the electrodes and we see a characteristic waveform which lets us know that nerves that may be involved with continence and possibly sexual function are nearby. We can thus tailor the surgery individually to a patient. Also, at the end of the case, we can obtain a final stimulation and see the characteristics of the nerve signals at this point. And we can tell that the nerves are similar to how we had started at the beginning of the case, which helps us give quantitative information to the patient."
 1619.227,1745.106,"The surgeon performs dissection of the bladder neck, using a full Foley balloon to bounce back and forth, aiding in identifying the interface between the prostate and bladder despite unclear surgical planes."
 1745.606,1809.582,"The surgeon carefully opens the bladder neck, applying minimal traction to prevent enlargement of the bladder neck. This approach aims to reduce the risk of leakage during the subsequent anastomosis between the bladder and urethra. The posterior bladder neck dissection is performed cautiously due to the limited surgical planes and potential for bleeding, which can obscure the dissection path."
 1810.082,1836.125,"The surgeon navigates through an areolar tissue plane, preparing to identify the vas deferens and seminal vesicles. The posterior bladder neck is visible, with minimized risk of injury during this phase of the dissection."
@@ -50,11 +33,9 @@ start,end,text
 2443,2525.863,"The surgeon performs dissection on the right side, releasing the nerve bundles using both antegrade and retrograde techniques."
 2526.363,2949.844,"The surgeon completes the dissection of the right posterior pedicle, adhering to the established principles of careful tissue separation and hemostasis."
 2950.344,2968.894,"The surgeon completes the apical dissection using cautery and sharp dissection in the region where the dorsal vein suture was initially applied. Copious irrigation is used to maintain a clear surgical field, with the vascular bundles positioned away from the dissection area."
-2969.394,3024.212,"One of the tips in completing this area is to try to pinch the tissue. If you can pinch the tissue, it's unlikely that it's going to be prostate."
 3024.712,3084.729,"The surgeon enters the space containing the urethra, exposing areolar tissue. Dissection focuses on preserving urethral length, with visible attention to the fibers of the urethra to avoid positive margins."
 3085.229,3146.685,The surgical field is well-visualized with minimal bleeding. The assistant irrigates the area to maintain clarity and prevent mistaking prostate tissue for urethra during dissection.
 3147.185,3205.416,"The surgeon begins using cautery in the operative field, with the neurovascular bundles visibly positioned safely away from the area of dissection."
 3205.916,3643.215,"The surgeon performs an anastomosis using a running suture technique, minimizing tissue handling to reduce the risk of leakage."
 3643.715,3694.744,"The surgeon completes the final portion of the anastomosis and tests the Foley catheter by instilling 120 cc of sterile saline to check for leaks. The absence of leaks is visually confirmed, reducing the risk of urethral strictures and bladder neck contracture."
 3695.244,3719.139,"The surgeon completes the procedure by dropping the pneumoperitoneum to check for any bleeding. The pouch of Douglas is inspected for bowel injuries and fluid collection, ensuring no unnoticed complications during the surgery."
-3719.639,3738.213,We hope this video was informative in the performance of a robotic radical prostatectomy. Please see our website at www.texasroboticsurgery.com to learn more about robotic prostatectomy.

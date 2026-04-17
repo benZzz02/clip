@@ -1,8 +1,4 @@
 start,end,text
-0.511,6.218,"The surgeon initiates a laparoscopic cholecystectomy using a Veress needle technique, preparing for the creation of pneumoperitoneum."
-6.718,9.541,"The surgeon inserts laparoscopic ports into the abdominal cavity, establishing access points for the instruments used in the cholecystectomy procedure."
-10.041,21.495,"After inserting the varus needle and achieving pneumoperitoneum, the surgeon inserts a 5mm trocar in the supraumbilical region."
-21.995,33.377,"Two additional 5mm trocars are inserted, one in the epigastric region lateral to the falciform ligament and another in the right lumbar region, facilitating access for laparoscopic instruments."
 33.877,42.259,"A twelve millimeter trocar is inserted into the left hypochondrium, complementing the previously placed trocars for the laparoscopic cholecystectomy procedure."
 42.759,48.22,"The surgeon removes the varus needle under direct visualization, completing the initial setup for the laparoscopic cholecystectomy."
 48.72,80.358,"The second assistant uses a grasper to hold the gallbladder fundus, retracting it towards the top right side of the abdomen to facilitate the surgeon's focus on the neck of the gallbladder."
@@ -23,6 +19,5 @@ start,end,text
 597.317,816.473,"The second assistant grasps the gallbladder from its reflection with the liver, allowing the surgeon to dissect the peritoneum and proceed with completing the cholecystectomy."
 816.973,832.68,The surgeon uses an endopouch retriever to extract the gallbladder specimen through a twelve-millimeter port.
 833.18,848.991,"After the specimen is extracted, the surgeon performs accurate hemostasis on the cystic plate, ensuring no bleeding is visible in the surgical field."
-849.491,861.217,We always encourage a good washout with normal saline.
 861.717,872.662,The surgeon extracts the twelve millimeter port and closes the fascia using Netibond 2-0 suture and an EndoClose device.
 873.162,875.823,"The remaining trocars are extracted from the abdominal ports, concluding the procedure."

@@ -1,6 +1,4 @@
 start,end,text
-0.81,15.778,This is a video of a total laparoscopic hysterectomy and bilateral salpingo-oophorectomy with cystoscopy.
-16.278,26.175,"The surgical team utilizes a blunt probe, harmonic shears, a bipolar vessel sealing device, and laparoscopic needle drivers during the laparoscopic hysterectomy procedure."
 26.675,30.761,"The surgeon inspects the pelvic region after gaining access to the abdominal cavity, visually assessing the anatomical structures within the surgical field."
 30.901,43.524,"The surgeon systematically inspects and manipulates the anatomical structures, starting anteriorly, moving to the left adnexa, then to the right adnexa, and finishing in the posterior cul-de-sac during the total laparoscopic hysterectomy."
 44.024,58.337,"The surgeon identifies the inferior epigastric artery on the right side, with an arrow indicating the pulsating vessel. The artery is visible exiting the inguinal canal, positioned medial to the insertion of the round ligament on the pelvic sidewall."
@@ -18,7 +16,6 @@ start,end,text
 243.751,281.791,"The surgeon uses blunt dissection within the peritoneal space to expose the iliac vessels and identify the ureter, ensuring clear visualization of these anatomical structures."
 282.291,303.145,The surgeon identifies the ureter by observing its vermiculation and proceeds to create a window in the peritoneum on the sidewall.
 303.645,314.517,"The surgeon creates a window through the peritoneum after safely identifying the ureter, isolating the infundibulopelvic ligament to ensure it can be taken without compromising the ureter."
-315.017,323.26,It's important to always again spread parallel to the IP to not cause excessive bleeding.
 323.76,336.766,"The surgeon prepares to transect the infundibulopelvic ligament at a point proximal to the ovary, ensuring that the ovarian tissue, located approximately two centimeters proximal to the ovary, is preserved."
 337.266,344.41,"The surgeon inspects the infundibulopelvic ligament after it has been taken, ensuring good hemostasis with no visible bleeding in the surgical field."
 344.91,393.493,The surgeon identifies the colpotomy cup positioned anteriorly and indicates the area where the bladder flap will be directed.
@@ -30,7 +27,6 @@ start,end,text
 514.367,525.878,"The surgeon identifies the colpotomy ring and prepares to ligate the uterine vessels, ensuring to stay medial to the ring to minimize the risk of ureteral injury."
 526.378,565.861,"The surgeon ligates the uterine vessels while staying medial to the colpotomy ring to minimize the risk of ureteral injury, a common concern at this site."
 566.361,586.355,"The surgeon coagulates the right uterine vessels and then shifts focus to the left round ligament, initiating dissection on the opposite side."
-586.855,621.654,"It's important to remember when operating laparoscopically and using a four-port configuration to use your suprapubic hand to help provide traction and counter-traction, especially when dissecting the retroperitoneal space. Opening up this space will allow the pneumoperitoneum to enter retroperitoneally to expose the tissue planes necessary to perform your dissection."
 622.154,634.476,"The surgeon encounters oozing in the retroperitoneal space and uses a suction tip to clear the blood, improving visibility of the surgical field."
 634.976,666.218,"The surgeon develops the pararectal space, with the round ligament forming the superior border, the external iliac artery as the lateral border, and the ureter as the medial border. The dissection is kept medial as the ureter passes on the medial leaf of the broad ligament beneath the uterine vessel."
 666.718,704.372,"Due to bleeding in the left-sided retroperitoneal space, the surgeon transitions to a transperitoneal approach to visualize the ureter, aiming to locate its course within the surgical field."
@@ -53,8 +49,6 @@ start,end,text
 1218.471,1236.731,"A vertical incision is made in the posterior cuff of the vagina to create additional space for specimen removal. After the specimen is removed, the surgeon inspects the vaginal cuff to ensure it is hemostatic before beginning closure."
 1237.231,1267.562,"The laparoscopic setup includes four 5mm trocars. An ovicral suture on a CT2 needle is back-loaded through one of the lower quadrant ports to fit into the abdominal cavity, as the needle is too large for a 5mm trocar."
 1268.062,1289.033,"The surgeon closes the vaginal cuff using an ovicral suture in a running fashion, performing intracorporeal knot tying. The suture is carefully placed to include sufficient vaginal mucosa, ensuring the prevention of cuff dehiscence."
-1289.533,1308.576,"Total laparoscopic hysterectomy has been found to have a higher incidence of vaginal cuff dehiscence when compared to either total abdominal, laparoscopic assisted vaginal, or total vaginal hysterectomy. Vaginal cuff closure is the third most common place for ureteric injury in a laparoscopic hysterectomy."
-1309.036,1393.557,"It's important to remember that when you're closing the vaginal cuff angles, you don't want to place your stitches too far lateral into the sidewall as you run the risk of either ligating or kinking the ureters."
 1394.057,1469.181,"The surgeon closes the vaginal cuff using a running suture technique. After taking bites and pulling the needle through, the surgeon drops the needle and uses the suture alone to avoid danger in the abdominal cavity. The hand over hand technique is demonstrated to pull the suture through, with needle drivers kept to the right of the suture to prevent accidental locking."
 1469.681,1489.71,"The surgeon demonstrates a technique for loading the needle using self-righting needle drivers. The needle is placed on a flat surface, pressed down, and locked into the needle driver for proper loading."
 1490.21,1517.663,"The surgeon demonstrates taking posterior bites during vaginal cuff closure, ensuring incorporation of the peritoneum into each suture to achieve hemostasis and prevent bleeding from this vascular structure."

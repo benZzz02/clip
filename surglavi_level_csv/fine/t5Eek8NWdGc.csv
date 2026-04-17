@@ -1,12 +1,4 @@
 start,end,text
-0.551,3.914,"The robotic surgical system is used to perform a spleen-preserving distal pancreatectomy, focusing on the removal of the distal portion of the pancreas while preserving the spleen."
-4.414,14.621,A thirty-five-year-old female was found to have a distal pancreatic mass on a CT angio performed for a PE in the postpartum period.
-15.121,28.765,She was found to have a distal pancreatic mass on subsequent dedicated pancreatic CT scan consistent with a probable solid pseudopapillary tumor.
-29.265,33.026,The DaVinci XI robotic system is utilized for the spleen-preserving distal pancreatectomy procedure.
-33.526,44.61,"A peri-umbilical camera port is placed, providing a view of the surgical field, while a right lateral port is utilized for a fenestrated tip-up grasper to retract surrounding tissues."
-45.11,51.082,"A left lateral abdominal robotic port is utilized to insert a fenestrated grasper, aiding in the retraction of tissues during the robotic spleen-preserving distal pancreatectomy."
-51.582,61.067,A left mid-abdominal port is utilized for robotic stapling and the application of a vessel sealer during the procedure.
-61.567,71.892,A 5mm assistance port is placed in the left lower quadrant to facilitate suction and improve exposure during the pancreatectomy procedure.
 72.312,78.374,"The surgeon dissects the gastrocolic omentum, revealing the pancreas located in the retroperitoneal space."
 78.874,94.143,"The surgeon continues the dissection laterally up to the lowest short gastric vessels and medially to expose the pancreas proximal to the pancreatic mass, revealing the anatomical structures surrounding the pancreas."
 94.643,104.588,"The surgeon lifts the inferior border of the pancreas and peripancreatic tissues, continuing lateral dissection to further expose the pancreas."
@@ -19,7 +11,6 @@ start,end,text
 176.029,184.634,"The surgeon continues dissection, taking some of the vascular supply to the periphery of the inferior spleen, as part of the pancreatectomy procedure."
 185.134,196.001,"The surgeon performs a medial dissection to expose the distal inferior branch of the splenic vein, visible along the superior border of the pancreas."
 196.501,212.308,"The surgeon continues dissection both anteriorly and posteriorly to the splenic vein branch, aiming to remove the distal pancreas along with the specimen."
-212.808,229.196,It's important not to leave any segments of the distal pancreas in place because these can lead to a pancreatic leak post-operatively.
 229.696,245.365,"The surgeon carefully dissects along the pancreatic tissue, maintaining close proximity to the pancreas while preserving the splenic venous and arterial branches."
 245.865,278.223,"The surgeon continues dissection both anterior and posterior to the distal splenic vessels, carefully lifting the pancreatic tail out with the specimen."
 278.723,322.623,"The surgeon uses a vessel sealer to dissect and transect the tail of the pancreas, which extends behind the splenic vein, carefully separating it from surrounding structures."
@@ -28,4 +19,3 @@ start,end,text
 408.864,418.888,The surgeon highlights a cuff of normal pancreatic tissue that is visible proximal to the splenic tumor.
 419.388,432.327,"The surgeon places the fully mobilized specimen into an endo-catch bag and extracts it through the stapling port, which is slightly expanded for removal."
 432.827,443.352,The surgeon places a XIX Blake drain through a left lateral abdominal incision. The spleen appears well vascularized at the completion of the procedure.
-443.852,448.824,Final pathology revealed solid pseudopapillary tumor of the pancreas.

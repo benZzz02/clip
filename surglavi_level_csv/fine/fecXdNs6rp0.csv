@@ -1,11 +1,7 @@
 start,end,text
-0.833,7.236,"In this presentation, we will discuss the surgical technique for a patient undergoing a laparoscopic sleeve gastrectomy."
-7.736,18.88,The patient is a forty-two-year-old female who has struggled with obesity for most of her adult life. Her preoperative BMI was thirty-seven point eight and her comorbidities include hypertension and obstructive sleep apnea requiring CPAP.
-19.38,26.459,Her preoperative EGD revealed chronic gastritis with H. pylori for which she completed treatment prior to her operation.
 26.959,39.033,"The patient is positioned supine with arms extended, and an orogastric tube is inserted post-intubation. The surgeon makes a small stab incision in the left subcostal region and inserts a Veress needle."
 39.533,46.762,The surgeon insufflates the abdominal cavity to fifteen millimeters of mercury and replaces the varus needle with a twelve millimeter port using an optical trocar.
 47.262,69.438,"The surgeon places the remaining ports under direct visualization: a 12mm left peri-umbilical port for the laparoscope, a 5mm right subcostal trocar positioned approximately two fingerbreadths below the liver edge, and a 15mm port in the right hemiabdomen between the right subcostal port and the umbilicus."
-69.938,79.101,It is important not to place the fifteen millimeter port to cephalad as this will make articulation of the first staple fire difficult due to the proximity to the gastric antrum.
 79.601,93.733,The surgeon performs a bilateral TAP block by injecting diluted liposomal bupivacaine into the plane between the internal oblique and transverse abdominis muscle layers in four quadrants for postoperative pain control.
 94.233,103.925,"The patient is positioned in reverse Trendelenburg, and a Nathanson liver retractor is inserted through a subxiphoid stab incision, visibly elevating the liver with a table-mounted retractor."
 104.425,110.051,"The surgeon carefully positions the liver retractor, ensuring it is not wedged directly between the liver lobes to prevent tearing and bleeding."
@@ -14,7 +10,6 @@ start,end,text
 141.11,148.191,"The surgeon uses a grasper to apply tension to the stomach near the dissection plan, while the assistant retracts the fat and vessels along the greater curvature."
 148.691,156.525,"The surgeon uses a bipolar sealing energy device to dissect along the edge of the stomach, progressing towards the fundus and dividing the gastroepiploic vessels."
 157.025,165.769,"The surgeon carefully dissects close to the gastric edge, ensuring the preservation of the gastroepiploic blood supply to the omentum and spleen, avoiding division too far laterally."
-166.269,176.798,It also allows easier removal of the specimen at the end of the operation.
 177.298,189.446,"The surgeon approaches the spleen, using a bipolar sealing device to apply double burns for hemostasis of the short gastric vessels. After ensuring hemostasis, the cut function is activated medially. Additional dissection is performed to address any posterior attachments."
 189.946,198.638,"The surgeon carefully avoids deep posterior dissection to prevent division of branches of the left gastric artery, which are visible supplying the gastric sleeve."
 199.138,213.966,"The surgeon reaches the spleen and focuses on the inferior greater curvature attachments, dissecting towards the pylorus. The dissection is performed from the assistant's side of the table, using techniques similar to those previously employed."
@@ -34,7 +29,6 @@ start,end,text
 462.048,485.412,"The surgeon performs the second staple fire, which is crucial for determining the tightness of the sleeve gastrectomy, ensuring the staple line is appropriately aligned along the lesser curvature."
 485.912,515.044,"The surgeon removes migratory crotch stitches to prevent bunching at the corners of staple fires during the sleeve gastrectomy. Black staple cartridges are used initially for the thicker antrum, followed by purple cartridges for the thinner tissue as the procedure progresses from the body of the stomach to the fundus."
 515.544,526.054,"The surgeon applies staple lines reinforced with buttress material, using sixty-millimeter staple cartridges to secure the gastric sleeve along the stomach."
-526.554,543.762,"The cartridge colors and staple type will vary depending on which institution you may be operating. At every fire, you want to ensure that the crotch of the stapler is meeting the crotch of the previous staple line."
 544.262,562.271,"The surgeon carefully aims the tip of the stapler towards the inferior phrenic artery while approaching the gastroesophageal junction, ensuring precise alignment to avoid disrupting the junction or incorporating the esophageal wall within the staple line. The stapler is positioned to prevent leaving an excessive dog ear by avoiding a lateral approach."
 562.771,594.482,"The surgeon ensures that the lateral and posterior stomach are retracted during the final staple fire to prevent folding at the staple site. After closure, the stapler tips are visualized to confirm no tissue attachment, minimizing the risk of leaks due to improper staple firing."
 594.982,624.107,The surgeon inspects the completed staple line and uses laparoscopic shears to cut and separate the stomach specimen from the newly formed gastric sleeve.
@@ -43,4 +37,3 @@ start,end,text
 685.568,700.061,"The surgeon pulls the stomach specimen into the trocar and subsequently removes the trocar. A clamp is used to stretch the fascia, facilitating the removal of the gastric specimen from the surgical site."
 700.561,717.963,"The surgeon extends the initial skin incision to facilitate the removal of the stomach specimen. The stomach is carefully extracted by alternating retraction between the staple line side and the greater curvature side, ensuring the specimen does not become stuck or tear at the incision site."
 718.463,731.891,"The surgeon uses a commercially available fascial closure device to close the specimen retraction site, addressing the stretched fascia resulting from the specimen removal."
-732.391,741.107,"After the conclusion of this procedure, the patient was admitted for a single night hospital stay. She was placed on a stage two bariatric diet and was discharged the following day."

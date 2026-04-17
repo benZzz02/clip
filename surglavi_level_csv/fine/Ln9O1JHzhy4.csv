@@ -1,14 +1,4 @@
 start,end,text
-0.797,8.521,We present a robotic repair of a complex colovesical fistula with chronic bladder wall abscess due to diverticulitis.
-9.021,12.503,Our patient is an eighty-two-year-old woman with a history of diverticulitis.
-13.003,17.665,She presented with recurrent urinary tract infections and intermittent pneumaturia.
-18.165,23.487,"On exam, her vitals were within normal limits and her abdomen was soft and non-tender."
-23.987,32.438,CT scans showed air tracking from the sigmoid colon to the bladder consistent with the colovesical fistula. with associated chronic bladder wall abscess.
-32.938,37.02,"During cystoscopy, the surgeon visually inspects the bladder interior, confirming the presence of the colovesical fistula without any signs of malignancy."
-37.52,43.062,Preoperative colonoscopy showed benign stricture and no evidence of malignancy.
-43.562,48.804,"The CT image displays the colovesical fistula, marked by an arrow, indicating the abnormal connection between the sigmoid colon and the bladder."
-49.304,51.426,"The operating room setup is displayed, showing the arrangement of surgical instruments, equipment, and sterile drapes prepared for the colectomy procedure."
-51.926,55.907,The patient cart is positioned on the patient's left side in the operating room.
 56.407,58.836,"The video displays the placement of surgical ports on the patient's abdomen, which are used for instrument access during the colectomy procedure."
 59.336,61.638,"The video displays three labeled working ports on the patient's abdomen, indicating their positions for the colectomy procedure."
 62.138,66.522,The assistant stands on the patient's right side and utilizes the labeled port for surgical access.
@@ -31,6 +21,3 @@ start,end,text
 412.78,446.292,"The surgeon closes the bladder resection and cystotomy sites using a running suture technique, applying two layers to ensure secure closure of the surgical sites."
 446.792,454.579,"The surgeon performs an end-to-end colorectal anastomosis, connecting the previously mobilized segments of the colon and rectum."
 455.079,461.845,"The surgeon places a surgical drain in the pelvic cavity, ensuring proper positioning for postoperative fluid drainage."
-462.345,467.91,Pathology showed inflamed bladder and colon tissue without evidence of malignancy.
-468.41,474.143,The Foley catheter was removed on post-update twelve after a CT cystogram showed no evidence of a leak.
-474.643,481.355,This is an example of where the robotic platform facilitated a minimally invasive repair of a complex colovesical fistula.

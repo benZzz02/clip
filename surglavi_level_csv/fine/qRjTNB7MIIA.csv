@@ -1,14 +1,4 @@
 start,end,text
-0.763,8.228,"The robotic surgical system is used to perform a parasophageal hernia repair, with visible attention to repairing an injury to the posterior vagus nerve during the procedure."
-8.728,13.092,This is a ninety-three-year-old female with history of chronic anemia and a large hiatal hernia.
-13.592,19.336,"She also complains of intermittent chest pain, heartburn, and regurgitation."
-19.836,25.2,"She has history of cholecystectomy, appendectomy, and arthrectomy."
-25.7,31.34,The upper GI series shows a large parasophageal hernia.
-31.84,35.722,"Pre-op gastric emptying study was performed, which was normal."
-36.222,38.464,The decision was made to proceed robotically.
-38.784,42.126,"The video shows the placement of trocars, which are inserted into the abdominal wall to facilitate robotic surgical access."
-42.626,51.932,The patient was placed in supine position and the room set up is depicted.
-52.432,59.801,The patient was placed on steep reverse dendrimer and after Lysol adhesions in the midline.
 60.301,64.863,"The surgeon reduces the stomach into the abdominal cavity, visually repositioning it from its previous location."
 65.363,71.906,"The surgeon begins the initial dissection from the patient's left side, moving towards the right, using robotic instruments."
 72.406,81.249,"The surgeon divides the short gastric vessels superiorly, approaching the left crus of the diaphragm."
@@ -19,7 +9,6 @@ start,end,text
 139.048,142.749,The surgeon identifies the anterior vagus nerve during the dissection process.
 143.249,148.054,"The surgeon focuses on the hernia sac, which has been identified and is being dissected free from surrounding tissues."
 148.554,182.439,"The surgeon performs retraction and intersection, continuing dissection with excessive traction from the left side. The left posterior vagus nerve is inadvertently dissected free during this process."
-182.939,219.006,intersected
 219.506,230.35,The surgeon identifies the injury to the vagus nerve and prepares to perform a repair procedure.
 230.85,238.973,The surgeon identifies the anterior vagus nerve and ensures its preservation during the procedure.
 239.473,249.499,"The surgeon cleans the edges of the vagus nerve and approximates them using floral PDAs, ensuring precise alignment of the nerve tissue."
@@ -30,5 +19,3 @@ start,end,text
 334.385,347.233,"The surgeon fashions the fundoplication and secures it using serial cell sutures, completing the wrapping of the stomach around the esophagus."
 347.733,357.921,"The surgeon performs a pexy of the fundoplication to the diaphragm, securing the fundoplication in place using sutures."
 358.421,366.947,An intraoperative endoscopy is performed to visually assess the identity and integrity of the recently completed fundoplication.
-367.348,371.031,The patient already proceeded well post-op.
-371.531,378.256,"The patient also underwent a two-month post-op gastric emptying study, which was normal."

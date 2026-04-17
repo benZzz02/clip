@@ -1,5 +1,4 @@
 start,end,text
-4.728,10.393,This operation was performed for a previous episode of perforated diverticulitis.
 10.893,16.378,The surgeon leaves the lateral adhesions intact while visually identifying the left ureter.
 16.878,22.022,"The vermiculation of the bowel is visible, showing rhythmic contractions along the intestinal wall."
 22.522,34.269,The surgeon verifies the ureter's normal anatomical position before reducing the lateral attachments to mobilize the sigmoid colon.
@@ -9,7 +8,6 @@ start,end,text
 50.615,55.477,"The surgeon prepares to transect the mesentery, a step taken before dividing the colon, with visible attention to the surrounding anatomical structures."
 55.977,60.984,"The robotic third arm is used to facilitate exposure, providing a clear view of the surgical field."
 61.484,69.987,"The surgeon uses a vessel sealing device to dissect the mesentery proximally, progressing until reaching the disease-free segment of the colon."
-70.487,81.57,"A high ligation or a larger sigmoid artery may require a vascular stapler, but in most cases, the vessel sealing device is sufficient for hemostasis."
 82.07,91.232,"The surgeon mobilizes the left colon, extending its length to facilitate the proximal colon's reach into the pelvis."
 91.732,104.742,"The surgeon injects indocyanine green intravenously and activates the fluorescence lens of the da Vinci robot, providing a visual map of the colonic blood supply."
 105.242,109.866,"The surgeon uses the robotic system to accurately identify the point of transection on the colon, with clear visualization of the targeted area."
@@ -24,4 +22,3 @@ start,end,text
 168.283,174.527,"The surgeon occludes the colon proximal to the anastomosis and fills the pelvis with saline to perform a leak test, checking for any visible leaks at the anastomosis site."
 175.027,182.502,"The surgeon over-sews the staple line with several silk interrupted sutures, reinforcing the anastomosis regardless of the leak test results."
 183.002,187.971,"The surgeon removes the needles and suture material from the surgical site, followed by the extraction of the specimen from the operative field."
-188.471,189.313,Thank you for watching.

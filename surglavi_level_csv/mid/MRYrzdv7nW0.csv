@@ -1,8 +1,4 @@
 start,end,text
-0.806,18.67,"Urgent robotic mesocolic excision for obstructing proximal transverse colon cancer. We present a patient who is a sixty nine year old male, came in with colonic obstruction, BMI twenty five ASA two and hemoglobin eight point two."
-0.806,18.67,"Urgent robotic mesocolic excision for obstructing proximal transverse colon cancer. We present a patient who is a sixty nine year old male, came in with colonic obstruction, BMI twenty five ASA two and hemoglobin eight point two."
-19.17,37.97,"CAT scan demonstrate obstructing cancer at the proximal transverse colon with distended small intestine, stomach, NG tube was placed and evacuated almost one point five liters of fluid, taken urgently to the OR."
-19.17,37.97,"CAT scan demonstrate obstructing cancer at the proximal transverse colon with distended small intestine, stomach, NG tube was placed and evacuated almost one point five liters of fluid, taken urgently to the OR."
 38.47,56.058,"The video shows the placement of four trocars for robotic access into the abdominal cavity, accommodating the distended small intestine and limited space within the cavity."
 38.47,56.058,"The surgeon demonstrates the placement of four trocars for robotic surgery, entering the abdominal cavity with limited space due to the distended small intestine."
 56.558,94.119,"The surgeon attempts a purse string suture in the ileum to decompress the distended small intestine, visible in the operative field. Another suture is placed to expose the base of the mesentery, using robotic instruments without laparoscopic trocars."
@@ -13,7 +9,6 @@ start,end,text
 132.924,165.674,"The surgeon identifies the inferior border of the pancreas and proceeds to locate the midcolic vessels. The vein is clipped first, followed by cephalic and medial lateral dissection around the duodenum and the superior aspect of the pancreas."
 166.174,197.725,The surgeon divides the mid colic artery and continues cephalad dissection to identify the gastrocolic trunk. Further dissection reveals the right gastroepiploic artery.
 175,211.015,"The surgeon continues cephalad dissection to identify the gastrocolic trunk and the right gastroepiploic vessels, with the stomach visible in the surgical field."
-198.225,211.015,Stomach.
 211.515,240.329,"The surgeon divides the transverse colon using ICG fluorescence imaging, while the omentum and distal ileum are approached laterally. The mesentery is divided, followed by the division of the distal ileum."
 211.515,240.329,"The surgeon divides the transverse colon using ICG fluorescence imaging, followed by the division of the omentum and distal ileum. The mesentery is separated using an immediate lateral approach, and the distal ileum is further divided."
 240.829,268.775,"The surgeon performs mobilization from bottom up, focusing on the ascending colon and cecum, followed by the adenum."
@@ -22,5 +17,3 @@ start,end,text
 269.275,299.348,"The surgeon sutures the transverse colon and ileum, positioning them in the right upper quadrant to stabilize and prepare for anastomosis. The ileum is divided, and a colotomy and enterotomy are performed."
 299.848,334.008,"The surgeon performs a side-to-side isoperistaltic anastomosis using a 3-0 absorbable V-lock suture, leaving the mesenteric defect open."
 299.848,334.008,"The surgeon performs a side-to-side isoperistaltic anastomosis using a 3-0 absorbable V-lock suture, leaving the mesenteric defect open."
-334.508,362.372,"The surgeon divides the stage suture and uses ICG to assess the bowel and blood supply. The specimen is extracted from the stapler port, revealing the mesocortical excision site. The extraction site is visible from the second port, protected by a wound protector."
-334.508,362.372,"The surgeon divides the stage suture and uses ICG to assess the bowel and blood supply. The specimen is extracted from the stapler port, revealing the mesocortical excision site. The extraction site is visible from the second port, protected by a wound protector."

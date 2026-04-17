@@ -1,0 +1,37 @@
+task,version,accuracy,f1,average_precision
+Cholec80 Phase,eval_4.3_epoch_50,41.72,29.44,
+Cholec80 Phase,SurgCLIP_beta,57.98,39.42,
+Cholec80 Phase,SurgCLIP,61.29,50.53,
+AutoLaparo Phase,eval_4.3_epoch_50,55.91,49.47,
+AutoLaparo Phase,SurgCLIP_beta,55.72,45.95,
+AutoLaparo Phase,SurgCLIP,69.14,56.37,
+StrasBypass70 Phase,eval_4.3_epoch_50,31.94,25.84,
+StrasBypass70 Phase,SurgCLIP_beta,31.24,26.05,
+StrasBypass70 Phase,SurgCLIP,32.37,30.78,
+HeiChole Phase,eval_4.3_epoch_50,31.80,23.84,
+HeiChole Phase,SurgCLIP_beta,56.95,44.00,
+HeiChole Phase,SurgCLIP,63.84,55.15,
+BernBypass70 Phase,eval_4.3_epoch_50,15.75,15.77,
+BernBypass70 Phase,SurgCLIP_beta,18.30,15.06,
+BernBypass70 Phase,SurgCLIP,23.90,19.68,
+GraSP Phase,eval_4.3_epoch_50,35.43,31.85,
+GraSP Phase,SurgCLIP_beta,34.77,27.98,
+GraSP Phase,SurgCLIP,41.49,34.94,
+GraSP Step,eval_4.3_epoch_50,24.41,15.61,
+GraSP Step,SurgCLIP_beta,14.15,11.14,
+GraSP Step,SurgCLIP,26.28,16.53,
+SARRARP50 Action,eval_4.3_epoch_50,29.46,11.32,
+SARRARP50 Action,SurgCLIP_beta,13.94,7.62,
+SARRARP50 Action,SurgCLIP,17.42,7.76,
+CholeT50 Triplet mAP,eval_4.3_epoch_50,,,3.97
+CholeT50 Triplet mAP,SurgCLIP_beta,,,4.17
+CholeT50 Triplet mAP,SurgCLIP,,,5.28
+Cholec80 Tool mAP,eval_4.3_epoch_50,,,33.05
+Cholec80 Tool mAP,SurgCLIP_beta,,,36.77
+Cholec80 Tool mAP,SurgCLIP,,,40.80
+HeiChole Tool mAP,eval_4.3_epoch_50,,,28.15
+HeiChole Tool mAP,SurgCLIP_beta,,,31.47
+HeiChole Tool mAP,SurgCLIP,,,36.79
+GraSP Tool mAP,eval_4.3_epoch_50,,,48.08
+GraSP Tool mAP,SurgCLIP_beta,,,43.06
+GraSP Tool mAP,SurgCLIP,,,45.97

@@ -1,13 +1,9 @@
 start,end,text
-1.613,3.635,"The robotic surgical system is used to perform a left hepatectomy, involving the removal of the left portion of the liver."
-4.135,10.06,We present the case of a sixty-seven-year-old female who initially presented with abdominal pain.
-10.56,24.772,"After appropriate workup, including CT scans and MRIs, the patient was found to have ipsilateral left-sided biliary dilatation and an intrapatic mass consistent with intrapatic cholangiocarcinoma."
 25.272,34.905,"The surgeon suspends the gallbladder, takes down the round ligament, and mobilizes adhesions in the surgical field."
 35.405,44.333,"A stitch is placed on the gallbladder to retract the liver, facilitating the dissection of the hepatoduodenal ligament."
 44.833,54.443,Sponges are placed around the liver to minimize traction and prevent iatrogenic injury to the liver capsule during mobilization and retraction.
 54.943,65.896,"An ultrasound image is displayed, clearly showing the dilated left-sided bile ducts and the associated intrapatic mass."
 66.396,75.645,"The surgeon performs a formal oncologic portal and celiac lymphadenectomy, carefully dissecting and removing lymph nodes for staging and therapeutic purposes."
-76.145,82.31,The patient had been administered indesign and green preoperatively in the holding area about one hour prior to incision.
 82.81,90.494,"The surgeon uses the stitch on the gallbladder to retract the liver, aiding in the identification of the common hepatic duct and the left and right branches."
 90.994,99.818,"The surgeon uses a robotic vessel sealer to dissect the left portal vein and the hepatic artery on the left side, carefully separating these vascular structures from surrounding tissue."
 100.318,108.002,"Fluorescence imaging is used to visualize the bile duct, highlighting its proximity to surrounding structures."
@@ -15,13 +11,11 @@ start,end,text
 120.705,132.037,"The surgeon applies locking plastic clips to the hepatic arterial branches supplying the left lateral and left medial sectors, securing these vessels as demonstrated in the video."
 132.537,140.623,"The surgeon uses imaging techniques to clearly visualize the portal bifurcation, proceeding to dissect the left branch of the portal vein."
 140.643,153.687,"The surgeon controls the left portal vein and hepatic artery using short silk ties followed by locking plastic clips, securing these vessels effectively."
-154.187,165.195,This technique has evolved over the many years of doing robotics and essentially we have eliminated using staplers for this portion of the procedure.
 165.215,174.822,"The surgeon demonstrates the clear demarcation between the left and right hemilivers after achieving inflow control on the left side, highlighting the distinct separation of the liver segments."
 175.322,183.542,"The surgeon identifies the left hepatic duct within the liver parenchyma, focusing on its anatomical location and relation to surrounding structures."
 184.042,193.844,"The surgeon uses robotic monopolar scissors to precisely dissect the left branch of the portal vein, enhancing visibility of the portal bifurcation."
 194.344,204.706,"The surgeon encircles the left hepatic duct with silk ties, ligates it, and then transects the duct using robotic instruments."
 205.206,211.428,"The surgeon identifies and controls the left hepatic vein, focusing on its anatomical location and ensuring proper management within the surgical field."
-211.928,215.208,We follow the
 215.708,238.14,"The surgeon dissects the superior aspect of the liver, taking down the falciform ligament and opening the coronary ligament to expose and identify the left hepatic vein."
 238.64,249.76,"The surgeon temporarily controls the left hepatic duct using umbilical tape and locking plastic clips, securing the duct in place."
 250.26,279.831,"The surgeon performs parenchymal transection using a robotic bipolar vessel sealing device in the right hand and a bipolar fenestrated instrument in the left hand, providing energy to both hands for effective tissue manipulation."
@@ -32,13 +26,10 @@ start,end,text
 322.834,327.107,"The surgeon divides the left hepatic vein using surgical instruments, completing the transection of this vascular structure."
 327.607,336.459,"The surgeon completes the parenchymal transection in a cephalad direction, finalizing the separation of liver tissue."
 336.959,343.75,"The surgeon switches the vessel sealer from the right hand to the left hand, adjusting the instrument's position for continued operation."
-344.25,351.117,We believe the robotic platform facilitates ambidextrous dissection.
 351.617,356.963,"The surgeon applies hemostatic agents to control ongoing bleeding in the surgical field, demonstrating their use to achieve temporary hemostasis."
 357.463,365.97,The surgeon uses a robotic vessel sealing device to detach the caudate lobe from the vena cava.
 366.47,378.859,"The surgeon identifies an additional left hepatic vein branch coming off the middle hepatic vein as they progress along the vena cava, noting that it has not yet been controlled."
-379.359,381.56,And this is demonstrated here.
 382.06,390.23,"The surgeon uses robotic instruments to encircle the hepatic vein, which is then clipped and divided."
 390.73,402.781,"The surgeon completes the left hepatectomy using silk ties and locking plastic clips on the parenchyma, avoiding the use of stapling devices."
 403.281,409.442,The surgeon uses fabric specimen bags to carefully remove the excised liver specimen from the surgical field.
-409.942,411.964,which is our preference.
 412.464,423.432,"The surgeon achieves hemostatic control by applying bipolar electrical saline-coupled electrocautery and hemostatic agents to the surgical site, ensuring effective management of bleeding."

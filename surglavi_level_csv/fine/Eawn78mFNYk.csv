@@ -1,52 +1,25 @@
 start,end,text
-0.875,10.862,"Hello, my name is Dr. Eric Smith and I'm going to share with you my technique for a robotic sleeve gastrectomy utilizing the Exide DaVinci Surgical System."
-11.362,13.323,I use a technique called camera hopping.
-13.463,16.625,So you notice it says the camera is left of the umbilicus.
 16.865,22.809,"Four trocars are positioned in a straight line just above the umbilicus, similar to the setup used for a bypass procedure."
 23.129,29.065,"The camera is positioned through the trocar located just to the left of the umbilicus, providing a view from the surgeon's perspective as they look at the patient."
 29.565,39.587,"The surgeon positions the robotic arms on either side of the working area, with grasping arms flanking the vessel sealer used for tissue manipulation during the gastrectomy procedure."
 39.667,46.708,"The surgeon begins dissection at the mid portion of the stomach, progressively working upwards towards the upper portion of the fundus."
-47.208,59.005,"I think it's really important to have very subtle movements for adequate exposure, but to minimize any issues with collision, although XI has really solved most of those issues."
 59.505,66.17,"The surgeon exposes the posterior aspect of the fundus, utilizing precise movements to reveal the anatomical structure."
-66.67,77.657,"I think you really have to have good exposure of the fundus and exposure of the left cruz to make sure these patients don't have a retained fundus, which I believe leads to increased problems with reflux."
 77.697,87.383,"The surgeon uses the fourth robotic arm to pull the tissue upward while the first arm pulls down and laterally, effectively exposing the left crus of the diaphragm."
 87.883,103.093,"The surgeon exposes the angle of His, then switches the positions of the fourth and first arms to mobilize the fat pad off the angle of His, facilitating the descent of the fundus."
-103.293,116.622,This is another clip to really focus on this portion of the procedure and this is a situation where maybe the fundus isn't as decompressed and I think this causes some issues for people especially when you're starting out the robotic experience.
 117.122,125.307,"The surgeon uses the first robotic arm positioned lower to navigate through filmy adhesions attached to the pancreas, enhancing visibility and access to the surgical site."
-125.807,128.009,And then I call this finding the dimple.
 128.509,135.514,"The surgeon splays the stomach out while lifting it up and laterally, revealing a distinct dimple in the surrounding fat tissue."
 136.014,150.292,"The surgeon navigates into the avascular plane, separating fatty tissue from the posterior aspect of the fundus, and slides up towards the left crus."
-150.792,151.953,It's a really easy movement.
-151.993,152.714,Then I'll switch.
 152.774,163.382,"The surgeon uses the fourth arm to bring down and the first arm to lift up, completing the exposure of the left crus and mobilizing the angle of His, revealing the anatomical structures involved in the gastrectomy."
 163.702,165.343,"The surgeon takes the instrument straight across the avascular plane, separating the fatty tissue from the posterior aspect of the fundus towards the left cruz."
-165.404,166.885,It's a really easy move.
 167.385,173.637,"The surgeon uses wristed instruments to manipulate the surgical field, grasping a large fat pad with the fourth arm for better exposure."
-174.137,176.018,to make sure you completely free it up.
-176.518,178.939,I think this keeps tension off of your staple line.
-178.959,182.181,It keeps your staple line from tucking back up underneath the left cruz.
 182.681,194.027,"The surgeon checks the surgical area near the gastroesophageal junction and the base of the left crus, ensuring no additional tissue remains to be cleaned off."
-194.427,201.717,"And then once I've done that, I know I'm not gonna have any issues with tension on that staple line or a retained fundus."
 202.217,210.608,"The surgeon mobilizes the remaining portion of the greater curvature of the stomach, using a sealing device to occlude and divide the visible vessels along the curvature."
 211.108,217.73,"The surgeon uses the E-100 generator to efficiently seal vessels along the greater curvature of the stomach, enhancing the speed of the sealing process."
 218.23,222.372,"The surgeon continues to mobilize the greater curvature of the stomach, moving towards the pylorus, ensuring the tissue is adequately separated."
-222.532,229.134,"Now I'll be honest with you, I'm not somebody who says that I measure the distance from my pylorus routinely."
-229.194,231.255,I think everyone's stomach is shaped differently.
-231.755,238.018,I think you have U-shaped stomachs and kind of backwards L or hockey stick shaped stomachs.
-238.518,241.779,And that really dictates how close you get to the pylorus.
-241.799,244.18,"If I had to guess, I'm probably close to four centimeters."
-244.68,245.36,but it varies.
 245.621,247.742,"The surgeon visually inspects the stomach to confirm that it has been adequately mobilized, ensuring it is free from surrounding attachments."
 248.182,253.486,"The surgeon adjusts the camera position to the right trocar, located just to the right of the umbilicus, providing a new angle for the gastrectomy procedure."
 253.986,259.645,"The surgeon inserts a 40 French bougie into the esophagus, preparing to use a green load stapler for the gastrectomy procedure."
 260.145,264.127,"The surgeon uses the SureForm stapler, a device designed to automate and simplify the stapling process during the gastrectomy procedure."
-264.627,270.589,"So when I used to use a handheld stapler, I would routinely use a black load, and then I would start to downstep from that."
-271.089,278.082,And what I've found is I've probably used a black load less than five times in the thousands of cases that I have done.
-278.582,284.405,"I think now with utilizing the shear form, we want to use the robotic technology to our advantage."
-284.905,294.409,"And so personally, I would rather have a tight staple on because I know the robot will not allow me to fire a stapler through tissues that's too thick."
-294.909,300.732,"So as in the past, we were more liberal in allowing bleeding because we did not want our staple lines to de-hiss."
-301.232,305.334,I think the robot allows us to be a little bit more aggressive and have a more hemostatic staple line.
-305.794,312.463,So I routinely start with a green and I immediately go to blue unless I get multiple pauses during that first fire.
 312.963,320.854,"The surgeon slides behind the specimen side of the stomach, elevating and moving laterally to expose the upper portion of the stomach."
 321.254,324.641,"The surgeon slides the stapler into position on the stomach, preparing to create a staple line."
 325.141,330.505,"The surgeon continues to fire the stapler towards the angle of His, positioning it just lateral to this anatomical landmark."
@@ -54,19 +27,8 @@ start,end,text
 334.209,341.215,"The surgeon carefully positions the stapler to avoid completing the staple line on or near the esophagus, noting the small rim of tissue available for stapling."
 341.715,348.263,"The surgeon places the gastric specimen to the side and begins suturing the staple line along the stomach, ensuring secure closure of the surgical site."
 348.343,350.645,"The surgeon uses a 2-0 absorbable V-lock suture to secure the staple line, ensuring the closure is reinforced."
-350.685,351.527,It's an eighteen-inch.
 352.027,357.554,"The surgeon performs the first two throws to imbricate or tuck in the corner of the staple line, ensuring the tissue is securely folded and sutured."
 358.054,362.873,"The surgeon secures the omentum by suturing it back to the staple line, ensuring it is attached along the length of the stapled area."
-363.373,365.034,"have people ask me, so why do you do this?"
-365.054,366.075,I think there's two reasons.
-366.115,375.281,"Number one, as surgeons, we know anytime we can place nice, healthy, well-vascularized fat onto a stapled line, it can't do anything but help healing."
-375.781,379.083,"I'm not sure that that has much of an impact on leaks, but it definitely can't hurt."
-379.123,382.165,"But more importantly, I think it keeps the sleeve nice and straight."
-382.245,386.088,"I think a lot of patients after sleeve, the reason they have more nausea"
-386.588,394.53,"is because that natural turn or bend at the angularis incisora, especially with the swelling and edema of recent trauma from firing a stapler."
 395.03,408.133,"The surgeon grasps the cut edge of the omentum and brings it over to the staple line, adjusting the tension to avoid strain on the spleen or sleeve."
-408.633,422.477,"And I think in suturing and robotics and anything, the easy thing to do and learn is ultimately learn to throw four or five throws at a time so you're not dealing with all the redundant suture in your way because we're working in a tighter space robotically."
 422.977,424.921,The surgeon performs the final throw in the suturing process and locks the suture to secure the tissue.
-425.421,427.063,I'm not worried about the V-lock backing up.
 427.103,435.455,"The surgeon applies additional hemostatic measures to the corner of the staple line, a common area where bleeding may be observed."
-435.955,438.92,"I appreciate you taking the time to watch, and thanks again."

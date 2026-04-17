@@ -1,7 +1,4 @@
 start,end,text
-0.985,13.415,"In this video, we will present the robotic treatment of a patient with hemorrhagic syndrome type V. A sixteen-year-old female patient with a medical history of rheumatoid arthritis and atrial fibrillation was diagnosed with hemorrhagic syndrome."
-13.915,22.462,"ERCP confirmed the presence of a cholecystocolonic fistula, thus confirming the presence of a type V-A SENDES-MEDICI syndrome."
-22.962,31.876,We decided to use the robotic approach using the DAVINCI XI surgical system.
 32.376,43.919,"Upon entering the abdominal cavity, the surgeon encounters severe inflammatory adhesions between the colon and the gallbladder and proceeds with adhesiolysis to separate these structures."
 44.399,56.302,"The surgeon opens the colon during adhesiolysis due to the presence of a cholecystocolonic fistula, revealing the fistula connection between the gallbladder and colon."
 56.802,61.985,"The surgeon uses monopolar scissors to carefully mobilize the colon from the gallbladder, separating the two structures with precise dissection."
@@ -17,9 +14,7 @@ start,end,text
 146.984,160.287,"The surgeon uses barbed sutures to perform a running suture on the dissected borders of the colon opening, allowing for continuous traction during closure."
 160.787,169.393,"The surgeon completes the inner layer and proceeds to reinforce the closure with a second outer layer using previously placed stitches, ensuring the colon transversum is securely closed."
 169.893,178.278,"The surgeon ties the two stitches of the outer layer, completing the closure of the colon with visible sutures securing the tissue."
-178.778,181,"Next, a cholecystectomy is performed."
 181.5,191.892,The surgeon performs a small wedge resection of liver segments IVb and Vb due to the absence of a clear plane between the gallbladder and the liver.
-192.392,200.534,"The gallbladder is sent for pathology, however, the frozen section couldn't show the presence of malignancy."
 201.034,204.915,"The surgeon addresses the fistula between the gallbladder and the common bile duct, preparing to manage this connection."
 205.415,211.776,"The surgeon dissects the hepatoduodenal ligament to isolate the common bile duct, carefully separating it from surrounding structures."
 212.276,221.213,"The surgeon opens the common bile duct anteriorly at the level of the fistula between the gallbladder and the common bile duct, exposing the interior of the duct."
@@ -27,7 +22,6 @@ start,end,text
 232.441,236.844,"The surgeon extracts a large stone from the distal part of the common bile duct, which is visibly opened and isolated from surrounding structures."
 237.344,243.088,The surgeon isolates the distal common bile duct from surrounding structures in preparation for closing the stump.
 243.588,250.657,"The surgeon uses a stapler to close the stump of the common bile duct, which has a large caliber."
-251.157,260.581,The bile duct is also a central pathology.
 261.081,265.724,"The surgeon prepares to perform a Roux-en-Y hepaticojejunostomy, indicating the start of the reconstruction phase following the isolation and transection of the bile duct."
 266.224,281.313,The surgeon partially splits the thick omentum and transects the small bowel approximately thirty centimeters distal to the ligament of Treitz.
 281.813,288.68,"The surgeon lifts the small bowel in an anti-mesocolic orientation and performs an end-to-side hepatic incision ostomy, creating a visible connection between the bowel and hepatic tissue."
@@ -37,7 +31,6 @@ start,end,text
 324.605,338.043,"After completing the posterior layer, the surgeon creates a small enterotomy and begins suturing the anterior layer with a second stitch."
 338.543,349.391,"The surgeon sutures the interior layer from medial to lateral, beginning at the same point where the posterior layer suturing commenced, using a continuous technique."
 349.891,352.694,The surgeon uses the previously placed suture for traction while continuing the suturing process.
-353.194,365.583,"Of course, due to the large caliber of the common balded, there is no risk of taking the posterior layer while suturing the anterior layer."
 366.083,368.442,"The completed anastomosis is visible, showing the joined sections of the bowel with sutures securing the anterior and posterior layers."
 368.942,373.605,"The surgeon secures the sutures with a hemolog clip, completing the fixation process."
 374.105,382.129,The surgeon restores FENST by creating an enteroenterostomy approximately sixty centimeters distal to the hepatic jejunostomy.
@@ -47,6 +40,3 @@ start,end,text
 407.025,416.613,"The surgeon completes the inner layer of the anastomosis in a running fashion using absorbable sutures, ensuring a continuous and secure closure."
 417.113,429.994,"The surgeon uses a VLOG-O absorbable wire to complete the outer layer on the anterior side of the anastomosis, finalizing the surgical repair."
 430.494,435.599,"The surgeon completes the anastomosis, finalizing the connection between the bowel segments."
-436.099,440.764,Operative time was two hundred and forty minutes with a blood loss of thirty milliliters.
-441.264,443.225,The patient was discharged on day five.
-443.606,447.009,Pathology showed the presence of cholecystitis without malignancy.

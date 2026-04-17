@@ -1,45 +1,30 @@
 start,end,text
-5.35,8.875,This is a case of biliopancreatic diversion with duodenal switch.
-9.375,15.779,I found that breaking this procedure into five steps is probably the easiest way of performing it robotically.
-15.839,26.645,"This is a very pleasant, thirty-four-year-old female who presented initially acutely to the hospital with right-sided heart failure and pulmonary hypertension and a BMI of eighty-four."
-27.145,38.532,She underwent cardiac optimization and went through the bariatric process and subsequently underwent a biliopancreatic conversion with a duodenal switch.
 39.032,41.094,"The video shows the placement of surgical ports on the patient's abdomen, which are used for robotic instruments during the duodenal switch procedure."
 41.594,49.46,"The surgeon places four 8mm trocars and a 12mm stapling trocar in the right mid clavicular line, preparing for the robotic duodenal switch procedure."
 49.96,53.823,"The assist port is marked with a pink star, indicating its location in the surgical field."
 54.323,56.484,"The Nathanson liver retractor, marked in green, is positioned to elevate the liver, providing clear access to the surgical field."
 56.904,59.025,"The initial phase of the duodenal switch procedure is performed laparoscopically, utilizing previously placed trocars for instrument access."
-59.305,62.787,I simply found this to be the easiest way to find our limbs.
 63.267,71.571,"The surgeon identifies the cecum and measures the ileum, running it back 150 centimeters to establish the common channel."
-72.071,90.837,as you can see initially this is our initial experience it was run without markers on the graspers however we do that right now with markers on the graspers to get a better accurate measurement of exactly a hundred and fifty centimeters which would
 91.337,118.863,"The surgeon places clips to form the common channel, marking the proximal part of the ileum with one ten-millimeter clip and the distal part with two clips. The bowel is run, and the placement of clips is visible."
 119.363,126.411,"The surgeon uses a clip applier to place two clips distally and one clip proximally on the ileum, marking anatomical orientation for the duodenal switch procedure."
 126.911,135.202,"The surgeon visually confirms the orientation of the common channel, marked by clips, with the proximal end identified by one clip and the distal end by two clips."
 135.702,143.905,"The surgeon measures and runs the ileum an additional two hundred centimeters, resulting in a total alimentary limb length of three hundred and fifty centimeters."
 144.405,156.089,"The surgeon marks the ileum by placing a stitch distally and a single clip proximally, preparing for the next step in the procedure."
 156.489,165.668,"The surgeon uses clips to orient the ileum for the duodenal-ileal anastomosis, with the proximal part marked by one clip and the distal part marked by two clips, visually establishing the anatomical layout for the procedure."
-166.168,181.633,Performing this maneuver laparoscopically saves the surgeon having to scrub back in and either undock the robot or reposition the robot or reorientate it.
 182.133,194.018,"A surgical clip is placed on the ileum, followed by a stitch placed distally. The surgeon then pulls the loop of bowel to adjust its position."
 194.518,207.564,"The camera view shows the area just to the right and below the eight-millimeter trocar, which is positioned at the right mid-axillary line."
-208.064,225.256,"And therefore, as will be shown later, the bowel can simply be pulled later on and it is oriented easily to create our duodenal ileal anastomosis."
 225.756,267.597,"The ileum is visibly tacked to the abdominal wall, allowing the robotic system to be docked in preparation for performing the sleeve gastrectomy."
 268.097,271.6,"The surgeon creates the sleeve gastrectomy over a 36 French bougie, guiding the stapler along the stomach to form the sleeve."
-271.98,274.102,We do leave the sleeve a little bit more generous.
-274.482,280.547,"However, it is pretty much performed like a routine sleeve gastrectomy."
-281.047,296.54,And we have not noticed an increase in reflux compared to our routine sleeves in our duodenal switches.
 297.04,298.584,"The surgeon performs the final firing of the stapler to complete the sleeve gastrectomy, ensuring the staple line is secure."
 298.864,304.82,"The surgeon begins the sleeve gastrectomy by using a green load 60mm stapler, followed by blue loads for subsequent stapling."
 305.32,311.625,"The surgeon retracts the orogastric tube and initiates the division of the duodenum, preparing for the duodenal switch procedure."
 312.125,328.595,"The surgeon carefully dissects the vessels and perineal reflection cephalad to the duodenum, ensuring minimal dissection around the duodenum to preserve its blood supply."
 329.095,340.6,"The surgeon utilizes a robotic system and a vessel sealer extend device to facilitate the duodenal switch procedure, enhancing precision and efficiency in handling tissues."
-341.1,354.908,"And again, we can see this is performed in this patient with a BMI of eighty-four of over five hundred and twenty pounds."
 355.408,360.111,"A Ray-Tec gauze is positioned in the surgical field, ready to be used to manage any bleeding that may occur during the procedure."
 360.572,379.194,"The surgeon uses a Ray-Tec to pack the area around the duodenal division site to manage minimal bleeding, allowing for improved visualization before proceeding with the surgery."
 379.694,391.602,"The surgeon detaches the duodenal attachments, facilitating the anterior lifting and scooping of the duodenum."
-392.102,399.953,So we do this part under direct visualization.
-400.453,404.717,"and it's done one centimeter, five millimeter at a time."
 405.217,417.447,"The surgeon performs a division, using ICG Green dye to identify the common bile duct in challenging cases, ensuring precise visualization of the duct superiorly."
 417.947,425.754,"The surgeon completes the division of the duodenal attachments, which appears to be straightforward, with minimal bleeding observed in the surgical field."
-426.254,430.569,"And we place a,"
 431.069,449.215,The surgeon places a Penrose drain around the structure and prepares to use a 60mm SureForm stapler with a blue load cartridge for the next step.
 449.715,458.295,The surgeon introduces a quarter inch Penrose Drain into the surgical field.
 458.795,465.523,"The surgeon uses a stapler to slide staples across the duodenum, effectively transecting it."
@@ -59,8 +44,5 @@ start,end,text
 634.005,645.873,"The surgeon uses a varical suture to align the biliopancreatic limb with the common channel or alimentary limb, preparing to create the enteroenterostomy."
 646.373,653.776,The surgeon uses scissors to create small and precise enterotomies in the bowel tissue.
 654.276,664.519,"The surgeon prepares to create a side-to-side enteroenterostomy using a sixty millimeter stapler, aligning the biliopancreatic limb with the alimentary limb."
-665.019,677.223,"If you've noticed throughout the case, the assistants basically will suction minimally and for the most part, that eight millimeter trocar is only really used to introduce sutures."
-677.723,689.991,So this is very reproducible and it can be done by simply one surgeon and if need be and we have done that by an assistant or a tech.
 690.491,692.632,"The surgeon closes the mesenteric defect, suturing the tissue to prevent herniation and ensure proper alignment of the intestinal segments."
-693.132,701.99,It's not shown here and what we do here is we do a methylene blue leak test as well as air leak test.
 702.49,710.272,"The surgeon sleeves the fundus and stomach, removing the portion of the antrum, followed by closing the twelve millimeter port site."

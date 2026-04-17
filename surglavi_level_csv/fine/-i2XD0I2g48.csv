@@ -1,10 +1,8 @@
 start,end,text
-1.134,14.758,"Hi, today we are seeing a case of lab cholecystectomy done in a fifty one year old female, BMF thirty four, non-hypothyroid and hypertensive."
 15.258,32.888,The surgeon begins the cholecystectomy by marking the anterior and posterior lines of dissection above the Rouvière's sulcus.
 33.388,74.677,"The surgeon makes an incision over the peritoneum, initiating the dissection process in the cholecystectomy procedure."
 75.177,90.522,"After dividing the peritoneum, the surgeon uses a Maryland dissector to carefully lower the fibro-fatty tissue from the gallbladder medially and inferiorly towards the common bile duct (CBD)."
 91.022,104.139,"The surgeon uses a surgical instrument to grasp a small bunch of tissue near the gallbladder, applying a short pulse to manipulate the tissue and push it medially."
-104.639,113.381,caution not to use cautery when we are medially because there is a chance that there is a biliary tree on the medial side.
 113.401,124.863,"The surgeon uses a Maryland dissector to lower the fibro fatty tissue on the medial side of the gallbladder, carefully separating it from surrounding structures."
 125.363,135.162,"The surgeon exposes the cystic artery, with a visible lymph node situated over it, alongside the cystic duct."
 135.662,142.086,"The surgeon identifies the branch of the cystic artery leading to the cystic duct, visible within the surgical field."
@@ -24,7 +22,6 @@ start,end,text
 352.738,359.901,"The surgeon uses electrocautery to buzz the tissue effectively before pulling, ensuring proper separation and minimizing bleeding."
 360.401,370.324,"The surgeon encounters bleeding after pulling a small branch, as the electrocautery device did not properly coagulate the tissue."
 370.824,399.932,"The surgeon applies manual compression and uses bipolar electrocautery to control bleeding above the Rouvière's sulcus, ensuring hemostasis in the area."
-400.432,422.738,Yeah.
 423.238,453.481,"The surgeon continues dissection around the cystic duct, carefully skeletonizing it by removing surrounding fibro-fatty tissue and fibers to facilitate secure clipping."
 453.981,483.015,"The surgeon prepares to place a clip around the cystic duct, ensuring it is fully skeletonized from surrounding fibro-fatty tissue for secure clipping."
 483.515,512.666,"The surgeon carefully delineates fibers around the cystic duct, identifying potential small blood vessels. Using electrocautery, the surgeon buzzes the area without applying traction, ensuring the convexity is kept away from medial vital structures."

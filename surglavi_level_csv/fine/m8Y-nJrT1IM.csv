@@ -1,15 +1,10 @@
 start,end,text
-1.073,8.167,"The surgeon performs a laparoscopic sigmoidectomy and partial cystectomy, utilizing ICG fluorescence to enhance visualization of anatomical structures during the procedure."
-8.667,23.556,We present a case of a sixty-five year old male patient who underwent colonoscopy with findings of complete obstruction caused by a lesion located thirty centimeters from the anal verge. Biopsy showed infiltrative adenocarcinoma.
-24.056,41.548,"Further testing included CT with no evidence of metastasis and a possible rectovesical fistula. Cystoscopy demonstrated bladder dome retraction. Biopsy, however, was without evidence of malignancy."
-42.048,51.899,We can see here a CT scan showing a possible rectovesical fistula.
 52.399,73.111,"The surgeon uses a harmonic scalpel to divide adhesions between the colon and the abdominal wall, separating the structures to improve surgical access."
 73.611,92.898,"The surgeon performs a posterior dissection of the bladder, fully detaching it from the anterior abdominal wall to access the retropubic space, or Retzius space."
 93.398,110.473,"The surgeon mobilizes the bladder, ensuring it is free from surrounding tissues to facilitate a tension-free closure."
 110.973,150.797,"The surgeon performs a cystostomy on the bladder dome, using an ultrasonic scalpel to dissect the suspicious area with safety margins. The area, previously localized through cystoscopy, is visible upon opening the bladder, with a gross margin of approximately one centimeter maintained to ensure adequate reservoir capacity."
 151.297,156.999,"The Follies catheter is visibly positioned within the bladder, providing a clear view of its placement."
 157.499,183.49,"The surgeon performs vesicle closure using a running suture technique in two separate planes of mucosa and musculature, entirely intracorporeal, with a 2-0 Vicryl suture."
-183.99,231.521,"At present, there are no clear guidelines as to the most suitable suture material available for the closure of urinary bladder wall defects. However, the accepted practice is to use absorbable suture material, as the healing process seems to take three to four weeks and non-absorbable sutures have lithogenic properties."
 232.021,268.542,"The surgeon closes the second plane of the bladder wall with a running suture using V-lock, completing the closure of the outer layer after the inner layer was sutured with Vicryl."
 269.042,290.987,"The surgeon ties the two threads of the suture together at the end of the vesicle closure, completing the intracorporeal suturing process."
 291.487,300.653,"The surgeon performs a leak check by introducing saline solution into the bladder, observing for any signs of leakage around the suture lines."
@@ -17,5 +12,3 @@ start,end,text
 326.791,343.141,"The surgeon assesses tissue perfusion using endocyanin green dye, which highlights areas of optimal blood flow to identify the best site for bowel division."
 343.641,359.632,The surgeon performs an end-to-end circular anastomosis of the bowel and places a low-pressure suction drain in the pelvis.
 360.132,364.354,"The surgeon performs an anastomotic air leak test, observing for any bubbles or air escape at the site of the bowel anastomosis."
-364.854,369.357,"The video displays a normal cystoscopy examination three weeks after the operation, showing the interior of the bladder with no visible abnormalities."
-369.857,384.524,"Definitive histopathological report showed a well-differentiated infiltrative adenocarcinoma with mild tumor budding, perineural invasion but no lymphovascular invasion, and free surgical margins."

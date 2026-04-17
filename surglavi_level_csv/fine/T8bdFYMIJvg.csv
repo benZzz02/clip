@@ -1,13 +1,8 @@
 start,end,text
-0.597,4.24,This video will demonstrate a laparoscopic appendectomy for acute appendicitis.
-4.3,8.122,The appendix is an organ at the base of the colon called the cecum with no discrete function.
-8.583,12.125,It is fed by a single artery called the appendiceal artery.
-12.625,17.169,"Occasionally, it can become obstructed, leading to acute appendicitis."
 17.669,23.333,The surgeon places trochars or ports into the patient's abdominal cavity to establish access for the laparoscopic appendectomy procedure.
 23.763,28.986,"The laparoscopic view reveals small hernias or holes in the abdominal wall, visible as incidental findings during the appendectomy procedure."
 29.486,34.65,"The inflamed and dilated appendix is visible in the left portion of the screen, situated among the loops of the small bowel."
 35.15,42.434,"The surgeon observes dilated blood vessels on the surface of the inflamed appendix, which is surrounded by a white exudate or inflammatory rind."
-42.934,44.996,"In the next clip, you will see a normal appendix."
 45.496,49.578,"The appendix appears normal, with no visible inflammatory rind, dilation, or engorgement of blood vessels."
 49.698,54.381,"The surgeon observes the appendix, which appears soft and pliable, indicating its normal state amidst the surrounding small bowel."
 54.881,60.764,"The surgeon begins dissection of the inflamed appendix using both blunt and sharp techniques, visible amongst the surrounding small bowel."
@@ -16,7 +11,6 @@ start,end,text
 79.87,89.656,"The surgeon uses a suction irrigator device to localize the source of bleeding, followed by the application of an electrosurgical instrument to control the bleeding."
 90.156,97.22,"The surgeon uses an electrosurgical instrument to divide attachments, exposing the base of the appendix for further dissection."
 97.72,104.904,"The surgeon uses a suction device along the mesentery of the appendix, clearing fatty tissue surrounding the appendix where the appendiceal artery is located."
-105.404,112.054,It can be difficult to localize this artery prior to dividing it given the amount of inflammation and sometimes bleeding is encountered.
 112.554,119.8,"The surgeon applies clips to control bleeding from dilated blood vessels, resulting in minimal blood loss."
 120.3,127.207,"The surgeon divides the artery and proceeds to sharply dissect the remainder of the appendix using a cautery device, ensuring precise separation from surrounding tissues."
 127.707,136.473,"After controlling the artery, the surgeon divides it and rapidly continues the dissection towards the base of the appendix, revealing the anatomical structures involved."
@@ -26,7 +20,6 @@ start,end,text
 181.998,185.88,"The surgeon divides the final mesenteric attachments to the appendix using surgical instruments, completing the dissection process."
 186.38,193.985,"The surgeon positions the stapling device at the base of the appendix, ensuring that a small portion of the cecum is included in the removal."
 194.485,197.956,"The surgeon confirms the complete removal of the appendix, ensuring no residual tissue remains attached to the cecum."
-198.456,206.681,This avoids the complication of a partial appendectomy and a potential diagnostic dilemma in the future if appendicitis were to recur.
 207.181,211.605,"The surgeon places the removed appendix into a specimen retrieval bag, isolating it from the rest of the abdominal cavity."
 212.105,223.783,The surgeon inspects the staple line at the base of the appendix and irrigates the region to check for any bleeding and remove any remaining infectious fluids.
 224.283,234.787,"The surgeon irrigates the pelvis, lifting the uterus to access deeper areas where pus may accumulate due to gravity."

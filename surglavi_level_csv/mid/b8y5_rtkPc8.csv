@@ -1,6 +1,4 @@
 start,end,text
-0.412,18.412,"The surgeon demonstrates the placement of trocars for a right hemicolectomy, with the robotic system docked on the right side of the patient, preparing for a complete mesocolic excision using a medial to lateral approach."
-0.412,18.412,"The surgical team prepares for a right hemicolectomy using a medial to lateral approach. Trochars are visibly placed, and the robotic system is docked on the right side of the patient."
 18.912,39.944,"The surgeon elevates the great omentum and transverse colon to the upper abdomen, revealing the pancreas and duodenum. The iliocolic vein and superior mesenteric vein are identified, while the small intestine is positioned to the left side of the abdomen using a sponge."
 18.912,39.944,"The surgeon elevates the great omentum and transverse colon to the upper abdomen, revealing the pancreas and duodenum. The iliocolic vein and superior mesenteric vein are identified, while the small intestine is repositioned to the left side of the abdomen using a sponge."
 40.444,124.782,The surgeon makes an incision in the visceral peritoneum above the superior mesenteric vein using monopolar scissors. The ileocolic vein is identified and surrounded completely before clipping. The robotic end of wrist aids in angulating the instruments to clip the ileocolic vein close to the trunk of the superior mesenteric vein.
@@ -27,4 +25,3 @@ start,end,text
 531.554,565.602,The surgeon completes the dissection of the mesocolon towards the terminal ileum. Approximately ten centimeters of the distal ileum are removed as part of the right hemicolectomy procedure.
 566.102,601.165,"The surgeon mobilizes the colon from the lateral abdominal wall, with the assistant pulling the colon medially. The right hemicolon is fully mobile and luxated through a small supraumbilical incision, where it is removed and an open end-to-end anastomosis is performed."
 588.366,601.665,"The surgeon luxates the fully mobilized right hemicolon through a small supraumbilical incision for removal. An open end-to-end anastomosis is performed, and the intact specimen reveals a central proportion of dissected vessels."
-601.665,608.294,The specimen is completely intact and shows a nice central proportion of the dissected vessels. Thanks for watching.

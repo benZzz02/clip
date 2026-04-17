@@ -1,15 +1,4 @@
 start,end,text
-0.962,8.184,We will be presenting a case of robotic-assisted resection of an intragastric tumor. Thank you for the opportunity to present our work.
-8.684,18.367,"This is a fifty-seven-year-old female who presented after a preoperative EGD performed for opaline weight loss, which found a gastric mass at the cardia."
-18.767,26.389,"She subsequently had EUS and biopsy, which was concerning for a five-by-three leiomyoma near the gastroesophageal junction."
-26.889,39.041,She was recommended for a total gastrectomy due to inability of endoscopic resection and she came to us for a second opinion.
-39.541,41.724,Our robotic ports were placed as such.
-42.224,47.449,"Four robotic ports are visible, with an air seal placed 15 centimeters sub-xiphoid, facilitating access for the robotic-assisted resection of the intragastric tumor."
-47.949,51.549,"The surgeon uses a Genzyme retractor to retract the liver through the air seal port, providing clear access to the surgical field."
-52.049,59.035,"Three ports, highlighted in red, are converted to intragastric ports and accessed using an eleven millimeter Versastep device."
-59.535,64.78,The surgeon places intragastric ports by endoscopically insufflating the stomach to fifteen millimeters of mercury.
-65.1,69.944,"The surgeon desufflates the abdomen, causing the stomach to move closer to the abdominal wall, facilitating juxtaposition between these structures."
-69.944,73.968,"Under endoscopic visualization, the surgeon enters the stomach using an eleven millimeter Versastep, with the intragastric ports already in place."
 74.468,78.296,The surgeon performs an endoscopy to visually confirm the location of the tumor within the stomach.
 78.796,83.962,"The radially dilating Versastep devices are seen entering the stomach under endoscopic visualization, with the intragastric ports clearly visible."
 84.342,91.23,"Robotic ports are placed over the Versastep ports on the stomach wall, utilizing the intragastric ports to enhance traction during the procedure."
@@ -33,10 +22,3 @@ start,end,text
 354.096,357.979,"The surgeon desufflates the stomach, reducing its volume, and then insufflates the abdomen, increasing the intra-abdominal space."
 358.479,367.225,"The surgeon closes the intragastric ports using interrupted sutures with 3-0 silk, securing the closure of the ports."
 367.725,373.509,"The surgeon performs a leak test by insufflating air endoscopically through the stomach, observing for any signs of air escape or leakage."
-374.009,376.03,Patient had an uneventful recovery.
-376.53,380.994,"She had a gastrographic swallow on post-op day one, which was negative for any leaks."
-381.494,387.058,"Her diet was advanced, and she was discharged home on post-op day two on a full liquid diet."
-387.558,390.282,She had minimal pain and required no narcotics.
-390.782,394.788,We maintained her on a PPI to decrease gastric secretions.
-395.288,399.394,Our final path was consistent with a leiomyoma.
-399.894,401.476,Thank you so much for your attention.

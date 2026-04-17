@@ -1,13 +1,10 @@
 start,end,text
-1.283,7.464,"The surgeon performs a totally robotic right colectomy using a hanging technique, executing a complete mesocolic excision with precise robotic control."
-7.964,18.867,"We present a patient, a seventy-one-year-old female, who was found to have well-differentiated neuroendocrine tumor in the right colon during screening colonoscopy."
 19.367,39.672,"The surgeon places ports in the left upper quadrant, aligning them in a straight line with eight centimeters spacing towards the right lower quadrant."
 40.172,63.323,The transverse colon is sutured to the abdominal wall to free robotic instruments for dissection and exposure. The right colon is also sutured to the abdominal wall for proper suspension and exposure.
 63.823,87.388,"The surgeon opens the mesenteric envelope and dissects the tumors using a medial-lateral approach. The duodenum is exposed, and the ileocolic vessels are identified."
 87.888,112.535,"The surgeon clips and divides the ileocolic vein originating from the superior mesenteric vein. The distal ileum is identified, and the mesentery is divided to address adhesions in the pelvis."
 113.035,124.579,"The surgeon frees the small intestine, preparing it for anastomosis later in the operation."
 125.079,144.84,"With the robotic fourth arm providing proper exposure, the surgeon continues the dissection in a cephalad direction, identifying the right colic vein, which is then clipped and divided using robotic clips."
-145.34,153.407,And so important to note that we did not use any laparoscopic assisted instruments during this procedure.
 153.907,167.998,"The surgeon identifies the right colic artery, clips it, and divides it, completing the separation of this vessel from surrounding tissues."
 168.498,182.462,"The surgical field shows the pancreas and duodenum in close proximity, with clear visualization of their anatomical relationship."
 182.962,189.345,"The surgeon continues dissection on top of the pancreas and duodenum, carefully separating tissue layers in this region."
@@ -31,5 +28,3 @@ start,end,text
 528.005,537.808,"The surgeon uses indocyanine green (ICG) fluorescence to assess the blood supply of the constructed anastomosis, ensuring adequate perfusion."
 538.308,543.509,"The surgeon removes all sutures from the anastomosis site, confirming proper blood supply to the area."
 543.869,550.773,"The specimen is extracted through the stapler port, with four visible incisions on the abdominal surface."
-551.273,562.44,"The specimen is displayed with complete mesocolic excision, showing the omentum and mesentery attached to the right colon and transverse colon."
-562.94,572.977,"T-three N-zero M-zero, we were able to examine up to thirty-three lymph nodes. Well-differentiated neuroendocrine tumor. Patient discharged home post-op day three with no complications."

@@ -1,18 +1,10 @@
 start,end,text
-0.677,8.545,Welcome. This demonstrating video is about the five standardized steps for robotic left upper lobectomy with robotic stage.
-9.045,21.037,"The surgery was performed for a sixty-three-year-old man with smoking history, emphysema and CEOS in whom we discovered a central over nodule in the left upper lobe which fixes on TEP scanner."
 21.477,31.727,"The surgeon utilizes four robotic arms, each inserted through 8mm trocars, along with a 12mm utility incision to facilitate the pulmonary lobectomy procedure."
-32.027,35.331,"The surgeon performs an anticlockwise dissection during the robotic left upper lobectomy, using robotic arms to manipulate and separate tissue in the surgical field."
-35.831,40.876,Every step is summarized with the main surgical time and operating mean duration.
-41.376,45.457,The step one. This step has a mean duration of ten minutes.
 45.957,53.478,"The surgeon performs dissection in an anticlockwise direction, beginning at the pulmonary ligament zone one."
 53.978,62.8,"The surgeon maintains the exposure for the pulmonary ligament section while performing lymphadenectomy on lymph nodes at station nine, using robotic arms introduced through trocars."
-63.3,68.141,In step two. In this step the mean duration is about twenty minutes.
 68.641,86.737,"The surgeon approaches zone II, exposing the posterior hilum to facilitate dissection of the posterior side of the left pulmonary vein and the mediastinal artery."
 87.237,118.144,"The surgeon performs lymph node dissection at stations VII and X, maintaining the same exposure technique used previously for accessing the posterior hilum and pulmonary ligament."
-118.644,124.268,Step three. This step has a mean duration of ten minutes.
 124.768,155.016,"The surgeon exposes the upper hilum, providing access to the superior side of the mediastinal artery and facilitating lymphadenectomy at stations ten, five, and six."
-155.516,160.441,Step four. This step has a mean duration of ten minutes.
 160.941,169.469,"The surgeon retracts the lung towards the posterior pleural side to gain access to the anterior hilum, known as zone four."
 169.969,193.035,"The surgeon performs dissection around the mediastinal artery and lymph nodes at stations ten and eleven, using the exposure achieved in previous steps."
 193.535,344.191,"The surgeon performs a complete lymph node dissection in stations eleven and twelve, with robotic instruments controlling the artery, vein, and bronchus before sectioning."
@@ -20,6 +12,3 @@ start,end,text
 393.581,402.894,"The surgeon applies a nail veil sheet over the sutured lung zone to provide aerostasis, ensuring the lung tissue is sealed and preventing air leaks."
 403.394,412.36,The surgeon places the resected lung specimen into an angiobag for extraction following the complete resection.
 412.86,417.322,"The surgeon places a pleural chest tube into the thoracic cavity, ensuring proper positioning for postoperative drainage."
-417.822,422.723,This final step lasts approximately for a mean duration of forty minutes.
-423.223,431.626,Post-operative course was unfeintful and the patient was discharged at day three after surgery with normal chest radiography.
-432.126,442.309,Pathology concluded to a one point two centimeter adenocarcinoma with no gene mutations and no lymph node metastasis.

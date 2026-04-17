@@ -1,9 +1,4 @@
 start,end,text
-14.66,18.901,"The video shows the standard port placement for a laparoscopic low anterior resection, with trocars inserted into the abdominal wall at specific locations to facilitate surgical access."
-19.401,29.783,"In a patient with a narrow pelvis, the surgeon introduces an additional suprapubic port to facilitate the insertion of the endogias stapler for rectal transection."
-30.283,39.635,The surgeon considers placing an additional port in the left iliac fossa to facilitate anterior retraction of the rectum in patients with a redundant and bulky sigmoid colon.
-40.135,52.952,"The surgeon utilizes the left iliac fossa port for specimen retrieval, and it may also serve as the site for an ileostomy if required."
-53.452,76.727,Dormantal additions to the previous LSCS car are being lised here.
 77.227,101.108,"The surgeon uses a suprapubic trans-fascial suture to hitch up the uterus, taking a bite onto the fundus to facilitate anterior exposure during the procedure."
 101.608,104.331,"The video shows the rectal growth, which is visible within the surgical field."
 104.831,115.04,The surgeon identifies the rectal growth located in the upper third peritonealized part of the rectum on the anterior wall.
@@ -19,14 +14,10 @@ start,end,text
 229.729,235.975,"The left colic artery is visible, arising from the inferior mesenteric artery (IMA) and traveling in a cephalad direction."
 236.475,248.582,"The surgeon identifies the inferior mesenteric artery, a major vessel arising anteriorly from the aortic surface, located between the duodenum and the iliac bifurcation."
 249.082,258.928,The surgeon considers two options for ligating the inferior mesenteric artery (IMA): high ligation at its aortic origin or ligation distal to the left colic artery.
-259.428,264.15,"Oncologically, the outcomes are similar with either of the approaches."
-264.65,267.66,"However, for an ultra-low LAR,"
-268.16,278.843,"when the level of the anastomosis is at the level of the pelvic diaphragm, high ligation is better as it allows the rectum to reach deeper into the pelvis."
 279.343,293.342,"In the standard low anterior resection, the surgeon performs low ligation of the inferior mesenteric artery below the left colic artery, approximately four to five centimeters from the anal verge."
 293.842,302.487,"The surgeon performs a low ligation of the inferior mesenteric artery (IMA) distal to the left colic artery, preparing for resection of an upper rectal growth."
 302.987,306.229,"The surgeon clears the fibrofatty tissue surrounding the inferior mesenteric artery, revealing the artery's structure within the surgical field."
 306.729,311.831,"The surgeon excises the lymph nodes located at the origin of the inferior mesenteric artery (IMA), including them with the surgical specimen."
-312.331,319.338,"In this kind of a low ligation, if the IMA and the IMV are close together, it's okay to"
 319.838,335.17,The surgeon clips the inferior mesenteric vein (IMV) at the duodenojejunal (DJ) flexure to relieve tension on the rectum during pelvic anastomosis.
 335.67,350.941,"The surgeon divides the inferior mesenteric artery (IMA) at the level of the aorta to relieve tension, allowing the rectum to reach the pelvic anastomosis."
 351.441,363.956,"The surgeon skeletonizes the inferior mesenteric artery (IMA), removing surrounding fibro-fatty tissue and pushing lymph nodes at the IMA origin upwards to accompany the specimen."
@@ -34,10 +25,8 @@ start,end,text
 460.866,480.092,"The surgeon uses a gauze piece placed anterior to the ureter as a guide to divide the lateral peritoneal fold of the sigmoid colon, freeing it from surrounding tissues following the medial to lateral dissection."
 480.592,484.089,"The surgeon makes an incision on the lateral peritoneal fold, continuing the dissection to further mobilize the sigmoid colon."
 484.589,496.237,"The surgeon extends the flap in a cephalic direction, mobilizing the descending colon and sigmoid colon up to the splenic flexure in a lateral to medial fashion."
-496.737,512.172,When we do the high ligation of the inferior mesenteric artery it's much easier to do this mobilization of the descending colon sigmoid and the splenic flexure in a medial to lateral fashion but when we do the low ligation our preference is to do it
 512.672,516.034,"The surgeon continues the dissection from lateral to medial, focusing on mobilizing the sigmoid colon by dividing the lateral peritoneal fold."
 516.534,534.601,"The surgeon uses the previously identified ureter as a guide while observing the white line of Toldt, which separates the colonic mesentery from the retroperitoneal fascia and Gerota's fascia."
-535.101,537.778,By a combination of
 538.278,572.48,"The surgeon performs blunt and sharp dissection along the white line of Toldt, visibly mobilizing the descending colon up to the splenic flexure."
 572.98,580.443,The surgeon completes the lateral to medial mobilization of the splenic flexure and shifts focus to the supracolic compartment.
 580.563,616.119,The surgeon separates the omentum from the distal transverse colon and divides the gastrocolic and splenocolic ligaments to complete the mobilization of the splenic flexure.
@@ -51,7 +40,6 @@ start,end,text
 750.794,774.42,"The surgeon continues the posterior dissection, maintaining proximity to the mesorectal fascia. The loose areolar tissue over the presacral fascia and hypogastric nerves remains intact, visible in the surgical field."
 774.92,778.083,"The surgeon continues the sequential stepwise approach, maintaining the dissection plane close to the mesorectal fascia while preserving the integrity of the hypogastric nerves and surrounding areolar tissue."
 778.203,847.145,"The surgeon performs posterior dissection, followed by division of the posterolateral tissues, and completes the lateral release, ensuring separation of these tissue planes."
-847.645,879.552,Thank you.
 880.052,883.216,"The surgeon navigates below the tumor, maintaining proximity to the mesorectal fascia while preserving the surrounding areolar tissue and hypogastric nerves."
 883.636,895.905,"The surgeon joins the peritoneal incisions on both sides in the cul-de-sac and continues the dissection into the rectovaginal space, carefully navigating the anatomical structures."
 896.405,931.317,"The surgeon carefully dissects in the rectovaginal septum, noting the thin mesorectum anteriorly and bulky mesorectum posteriorly. The dissection is performed close to the posterior vaginal wall, ensuring the mesorectal fat remains on the anterior rectum while avoiding injury to the posterior vaginal wall."
@@ -61,7 +49,6 @@ start,end,text
 953.568,955.229,"The surgeon identifies and prepares to dissect the middle rectal vessels within the rectovaginal space, ensuring careful separation from surrounding tissues."
 955.729,973.916,"The surgeon carefully divides the lateral ligaments using a harmonic device, maintaining proximity to the mesorectum and avoiding the lateral pelvic wall to prevent injury to the nerve plexus."
 974.416,1001.145,"The surgeon uses a harmonic device to divide the right-sided lateral ligaments, taking care to avoid the lateral pelvic wall and nerve plexus."
-1001.645,1007.928,"In this case, we are dealing with the upper rectal growth, so we are planning a partial TME."
 1008.428,1060.481,"The surgeon divides the mesorectum five centimeters below the lower border of the tumor, exposing the rectal wall in preparation for transection using an endo-GIS stapler."
 1060.981,1071.844,"The surgeon meticulously transects the mesorectum five centimeters below the tumor, carefully avoiding injury to the rectal wall during the dissection."
 1072.344,1087.663,"The surgeon carefully exposes the rectal wall from the anterolateral side, noting the thin anterior mesorectum and bulky posterior mesorectum, and proceeds with dissection towards the posterior mesorectum."
@@ -69,7 +56,6 @@ start,end,text
 1120.78,1136.658,The surgeon identifies a point of transection in the sigmoid colon approximately ten centimeters proximal to the tumor. The sigmoid mesentery is visibly divided in preparation for further surgical steps.
 1137.158,1138.699,"The surgeon reaches the colon wall, preparing for further surgical manipulation."
 1139.199,1146.501,"The surgeon assesses the blood supply to the sigmoid and descending colon, which is now reliant on the left colic artery and the marginal artery following the dissection."
-1147.001,1152.003,If in case we go for a high ligation it will be dependent solely on the marginal artery.
 1152.503,1164.65,"The surgeon carefully performs the transection of the sigmoid mesentery, ensuring not to approach too closely to the colon wall."
 1165.15,1172.856,"The surgeon prepares the remaining segment of the colon for anastomosis, ensuring it is properly positioned and viable for connection."
 1173.356,1182.623,"The surgeon transitions the sigmoid mesentery after delivering the specimen through the left iliac fossa incision, preparing for further steps in the procedure."
@@ -83,9 +69,7 @@ start,end,text
 1333.81,1340.073,"The surgeon delivers the rectal specimen through a three-centimeter incision in the left iliac fossa, completing the extraction from the pelvic cavity."
 1340.573,1352.179,The surgeon removes the segment of the rectum containing the tumor and places the anvil of a 28mm circular stapler at the transected end of the rectum.
 1352.679,1360.223,"Following anal dilatation, the surgeon introduces a 28mm circular stapler into the rectal stump, preparing for anastomosis."
-1360.723,1363.864,Being careful during the
 1364.364,1371.068,"The surgeon carefully locks the anvil and pin of the circular stapler to avoid the vagina, then closes the stapler."
-1371.568,1376.992,We prefer using an end-to-side anastomosis for LAR whenever possible.
 1377.012,1392.77,"The surgeon ensures proper orientation of the colon specimen to avoid rotation while performing the anastomosis, taking care to exclude any mesenteric fat from the circular staple line on the colon side."
 1393.27,1414.305,"The completed anastomosis is visible with the colon showing no twist or tension as it enters the pelvis. The surgeon tests the anastomotic integrity by instilling methylene blue into the rectum, confirming the absence of leaks."
 1414.805,1423.262,"The surgeon brings out the ileostomy through the left iliac fossa incision, which was previously used to deliver the specimen."

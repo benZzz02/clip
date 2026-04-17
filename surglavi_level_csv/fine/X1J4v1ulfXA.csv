@@ -1,10 +1,6 @@
 start,end,text
-12.353,25.645,This patient has a four point three centimeter left adrenal pheochromocytoma. She was appropriately alpha blocked and subsequently beta blocked and finally fluid loaded prior to the operation.
-12.353,25.645,This patient has a four point three centimeter left adrenal pheochromocytoma. She was appropriately alpha blocked and subsequently beta blocked and finally fluid loaded prior to the operation.
 26.145,29.408,"The surgeon begins the adrenalectomy procedure by mobilizing the splenic flexure, detaching it from surrounding tissues to gain access to the left adrenal gland."
 26.145,29.408,"The surgeon begins the procedure by mobilizing the splenic flexure, detaching it from surrounding structures."
-29.908,37.295,She is a very thin patient and therefore the planes are very easy to identify.
-29.908,37.295,She is a very thin patient and therefore the planes are very easy to identify.
 37.795,47.593,"The surgeon rolls the colon away from the left kidney, progressively revealing the retroperitoneal space."
 37.795,47.593,"The surgeon rolls the colon away from the left kidney, progressively revealing the retroperitoneal space."
 48.093,59.297,"The surgeon transects the thin areolar plane, revealing the anterior surface of the left adrenal gland for the first time during the procedure."
@@ -22,12 +18,8 @@ start,end,text
 96.68,109.488,"The surgeon dissects the thin layer of tissue overlying the adrenal gland, revealing its medial and lateral borders."
 109.988,117.812,The surgeon identifies the adrenal vein on the medial side of the adrenal gland and carefully isolates it from surrounding tissues.
 109.988,117.812,"The surgeon isolates the adrenal vein located on the medial side of the adrenal gland, ensuring careful separation from surrounding tissues."
-118.312,128.832,It is well known that the dissection of the adrenal vein is the most critical step as bleeding here could be very difficult to control.
-118.312,128.832,It is well known that the dissection of the adrenal vein is the most critical step as bleeding here could be very difficult to control.
 129.332,136.215,"The surgeon encircles the adrenal vein and applies two clips on the proximal side and one clip on the distal side, securing the vein before division."
 129.332,136.215,The surgeon encircles the adrenal vein and places two clips on the proximal side and one clip on the distal side to secure it.
-136.715,152.881,This is done prior to any further dissection of the gland to prevent catecholamine release that would affect the patient's hemodynamics.
-136.715,152.881,This is done prior to any further dissection of the gland to prevent catecholamine release that would affect the patient's hemodynamics.
 153.381,158.377,"The surgeon sharply transects the adrenal vein, which has been previously isolated on the medial side of the adrenal gland."
 153.381,158.377,"The surgeon sharply transects the adrenal vein, which has been previously isolated and clipped, completing the separation of the vein from the adrenal gland."
 158.877,164.241,"Following the control of the adrenal vein, the surgeon proceeds to dissect the adrenal gland from its surrounding structures, carefully separating it from adjacent tissues."
@@ -48,5 +40,3 @@ start,end,text
 218.328,232.674,"The surgeon irrigates and aspirates the surgical bed after freeing the gland, inspecting the area to ensure hemostasis is achieved."
 233.174,240.018,"The surgeon places the adrenal gland into an impermeable sac for removal, marking the completion of the operation."
 233.174,240.018,"The surgeon places the gland into an impermeable sac for removal, marking the completion of the operation."
-240.518,241.298,Thank you for watching.
-240.518,241.298,Thank you for watching.

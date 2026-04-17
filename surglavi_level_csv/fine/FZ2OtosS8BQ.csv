@@ -1,8 +1,4 @@
 start,end,text
-1.148,11.915,"The case is a eighty-five-year-old male who presented with rectal bleeding and constipation. Colonoscopy showed the mass in rectosigmoid colon, which was proven to be an adenocarcinoma by biopsies."
-12.415,18.078,CT scan revealed the proliferative mass in rectosigmoid colon without any distant metastasis.
-18.578,27.463,"Therefore, laparoscopic lower anterior resection with complete mesorectal excision was planned."
-27.963,32.022,"Four trocars are visibly placed in the abdominal wall, positioned for laparoscopic access to the surgical site."
 32.522,45.648,"The laparoscopic view reveals the mass in the rectosigmoid colon, visibly attached to the dome of the bladder."
 46.148,63.753,"The surgeon uses hook cautery to dissect the mesorectal tissue, carefully separating it from surrounding structures."
 64.253,101.424,"The surgeon opens the retroperitoneal mesenteric window, isolating both the inferior mesenteric artery and vein, visible within the surgical field."
@@ -15,4 +11,3 @@ start,end,text
 297.47,350.335,"The surgeon repairs the superior wall of the bladder using a single layer continuous suture, ensuring the tissue edges are approximated and secured."
 350.835,358.777,"The surgeon performs colorectal anastomosis using a circular stapler, joining the transected ends of the colon and rectum."
 359.277,368.599,"The surgeon performs an air leak test on the repaired bladder, confirming the absence of air leaks in the suture line."
-369.099,372.38,The patient was discharged uneventfully on sixth post-operative day.

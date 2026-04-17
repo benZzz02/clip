@@ -1,6 +1,4 @@
 start,end,text
-0.111,11.444,Present the case of a sixty-five-year-old gentleman who presented to the office with worsening pain and an enlarging hernia in the incision at his subxiphoid region.
-11.944,17.897,"The surgeon performs a laparoscopic abdominal wall reconstruction, utilizing a transversus abdominis release technique to address the hernia."
 18.397,23.962,"The surgeon accesses the abdomen under direct vision in the left upper quadrant using a 5mm OptiView® port, providing a clear view of the internal structures."
 24.302,30.368,"The surgeon identifies dense adhesions in the abdominal cavity and places three additional ports to facilitate the lysis of adhesions, preparing to take down the jejunostomy."
 30.768,42.259,"The surgeon incises the posterior sheath of the rectus muscle on one side, just lateral to the linea alba, as part of the abdominal wall reconstruction."
@@ -18,7 +16,6 @@ start,end,text
 226.924,242.023,"The surgeon completes the dissection at the midline under the xiphoid process, releasing the subxiphoid fat to expose the central tendon of the diaphragm."
 242.523,247.807,"The surgeon extends the dissection inferiorly into the space of Retzius, visually connecting the two previously established dissection planes."
 248.307,259.675,"The surgeon inspects the abdominal viscera and contents for any injury, then slightly desufflates the abdomen and reconnects the medialized posterior rectus sheaths."
-260.075,266.695,This was done using two number two
 267.195,277.137,"The surgeon uses V-lock sutures, running them from superior to inferior and from the inferior aspect to the midline, securing the tissue layers in place."
 277.637,288.23,"The surgeon ties the two ends together, effectively closing the posterior rectus sheath and forming a complete visceral sac."
 288.73,315.745,"The surgeon inspects the posterior rectus sheath for any holes created by previous port placements or during dissection. These holes are closed using figure-of-eight sutures or clips, completing the visceral sac and ensuring coverage of the abdominal contents."
@@ -27,7 +24,4 @@ start,end,text
 350.119,363.902,The surgeon places a 20x25 cm ventral light echo mesh into the retromuscular space and secures it using tacks.
 364.402,367.103,"The surgeon removes the balloon through the surgical port, completing the step of extracting the device from the abdominal cavity."
 367.603,376.964,"The surgeon removes the surgical ports from the abdominal wall, closes the skin incisions, and the patient is extubated in the operating room."
-377.464,379.725,This was his immediate post-op appearance.
 379.765,382.085,The surgeon applies Dermabond adhesive to secure one of the surgical drains in place.
-382.585,386.826,"Post-operatively, he did very well. We followed our enhanced recovery pathway."
-387.326,392.067,"He went home on post-op day four, and he was doing very well in his two-week post-op visit."

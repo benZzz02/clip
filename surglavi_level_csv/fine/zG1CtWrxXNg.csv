@@ -1,8 +1,4 @@
 start,end,text
-2.46,8.222,"The surgeon performs a laparoscopic robotic-assisted resection of a large epiphrenic diverticulum, utilizing robotic instruments to carefully excise the diverticulum from the surrounding esophageal tissue."
-8.722,13.903,Our patient is a seventy-seven year old female who presented with chronic cough and dysphagia.
-14.403,23.946,Workup was consistent with achalasia and a large epiphrenic diverticulum as seen on this upper GI study.
-24.446,30.546,Endoscopy was performed at the beginning of the case to evaluate the anatomy.
 31.046,41.55,"The video displays a massive diverticulum located in the distal esophagus, characterized by a wide-based opening."
 42.05,50.252,"The surgeon performs a laparoscopic resection of the massive epiphrenic diverticulum, utilizing robotic assistance to carefully excise the diverticulum from the distal esophagus."
 50.752,60.459,"The surgeon ligates the short gastric vessels to free the greater curvature of the stomach, preparing the area for further dissection."
@@ -11,9 +7,7 @@ start,end,text
 85.657,98.304,"After completing the crural dissection, the surgeon identifies the epiphrenic diverticulum, which is visible in the distal esophagus."
 98.804,115.232,"The surgeon continues proximal dissection of the esophagus, utilizing the alveolar tissue planes within the mediastinum to separate the esophagus from surrounding structures."
 115.732,122.357,"The surgeon carefully dissects the epiphrenic diverticulum away from its pleural attachments, ensuring the pleural cavity remains intact."
-122.857,133.445,"If, however, a pleural rent is made, it will be sutured closed at a later time in the case."
 133.945,150.878,"The surgeon continues the dissection until the proximal edge of the epiphrenic diverticulum is identified, allowing for its complete reduction out of the chest cavity."
-151.378,166.426,Complete and careful dissection is imperative to ensure no portion is left behind.
 166.926,180.308,"The surgeon mobilizes the diverticulum from the mediastinum and divides it using two fires of a blue load stapler, ensuring reinforced staple lines are applied."
 180.808,200.853,A 44 French bougie is inserted into the esophagus to maintain its lumen and prevent narrowing before the diverticulum is divided.
 201.353,214.035,The surgeon inspects the staple line on the divided diverticulum and removes the specimen from the abdominal cavity.
@@ -24,7 +18,6 @@ start,end,text
 265.611,278.45,"The surgeon carefully preserves the anterior vagus nerve as it crosses the esophagus, ensuring it remains intact during the procedure."
 278.95,288.575,"The surgeon extends the myotomy onto the stomach for a distance of two to three centimeters, reaching approximately to the edge of the diverticulum."
 289.075,295.878,"The surgeon demonstrates the preservation of the anterior vagus nerve as it crosses the esophagus, ensuring it remains intact during the procedure."
-296.378,302.781,"The surgeon performs laparoscopic curl closure followed by toupee fundoplication, manipulating the stomach and esophagus to create a partial wrap around the esophagus using visible laparoscopic instruments."
 303.281,333.173,"The surgeon completes the corral closure using an endoscopic suturing device, applying barbed proline suture to secure the tissue."
 333.673,338.537,"The surgeon wraps the gastric fundus posteriorly around the esophagus to initiate the fundoplication, ensuring the esophagus is encircled by the fundus."
 339.037,342.821,"The surgeon grasps the stomach near the short gastric vessels, preparing for further manipulation or dissection."
@@ -33,6 +26,3 @@ start,end,text
 365.432,379.719,"The completed toupee fundoplication is visible, showing the fundus wrapped around the posterior aspect of the esophagus, secured with sutures."
 380.219,391.365,"An endoscopic view reveals the removal of the diverticulum, showing an intact staple line and a wide open gastroesophageal junction."
 391.865,397.683,"The postoperative upper gastrointestinal tract is visualized, showing the anatomical configuration and any changes following the hepatectomy procedure."
-398.183,404.208,The patient had an uncomplicated post-operative course and was discharged post-op day three.
-404.708,410.093,She was seen in clinic on post-op day thirteen and reported complete resolution of symptoms.
-410.593,415.297,Pathology showed benign squamous mucosa with acute and chronic inflammation.

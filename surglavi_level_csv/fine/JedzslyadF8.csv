@@ -1,16 +1,10 @@
 start,end,text
-4.836,10.617,This is a multi-port cholecystectomy performed for symptomatic cholelithiasis.
-11.117,15.198,"To minimize costs to the hospital, I only dock three robotic arms."
 15.698,22.12,"The gallbladder is retracted over the liver using an atraumatic grasper inserted through a five millimeter port, providing clear exposure of the surgical field."
 22.62,26.2,"The operation is performed using the Endoscope Plus camera, providing a detailed view of the surgical field during the robotic cholecystectomy."
 26.7,34.496,"The surgeon demonstrates the use of a fluorescent lens with two modes: a standard mode displaying a black and white background, and a sensitive mode currently in use."
 34.996,43.183,"The sensitive mode of the fluorescent lens is activated, eliminating the lighting needed for a black and white background and enhancing the visibility of structures with a concentrated fluorescent green hue."
 43.683,50.389,"The surgeon uses sensitive mode on the Endoscope Plus camera to enhance visualization of lower concentrations of ICG permeated through the tissue, providing a concentrated fluorescent green image."
-50.889,53.592,This operation was relatively uncomplicated.
 54.092,56.634,"The surgeon performs a straightforward dissection to achieve the critical view of safety, using the Endoscope Plus camera for enhanced visualization."
-57.134,61.677,I routinely use endocyanin green for every cholecystectomy I perform.
-62.177,73.54,"In simple cases, the anatomy is straightforward, and the simple differentiation of the common bile duct, the common hepatic duct, and the cystic duct is reassuring to visualize."
-74.04,87.404,"However, in more complicated cases and in cases with a barren anatomy, the added visualization of the ICG and Firefly can prevent a disastrous mistake or an inadvertent injury."
 87.904,91.32,"The surgeon separates the cystic artery from the gallbladder wall, clearly delineating the artery from the surrounding tissue."
 91.82,97.284,"The surgeon dissects the space above the cystic artery to expose the critical view, revealing the anatomical structures necessary for safe identification and separation."
 97.784,101.948,"The surgeon performs dissection within the triangle of Coulomb, revealing a barren anatomy with minimal anatomical landmarks visible."
@@ -20,7 +14,3 @@ start,end,text
 128.433,131.516,"The surgeon applies clips to the cystic artery and cystic duct, securing these structures within the surgical field."
 132.016,140.162,"The surgeon uses electrocautery to transect the cystic artery and cystic duct, which have been previously clipped, within the triangle of Coulomb."
 140.662,151.432,"Before removing the gallbladder from the fossa, the surgeon inspects the dissection bed, confirming the absence of visible aberrancies or ductal Luschka leaks."
-151.932,162.361,"Careful dissection should prevent inadvertent injuries during simple cholecystectomies, but regardless of a surgeon's caution, injuries still occur throughout the world."
-162.861,177.673,"While there is clearly no supplement for a careful operation, newer technologies allow a surgeon to visualize structures that remain deep to our dissection plane, keeping us one step ahead of unpleasant surprises."
-178.173,179.855,I hope you found this video useful.
-180.335,181.136,Thank you for watching.

@@ -1,9 +1,4 @@
 start,end,text
-1.502,7.086,Robotic partial left hepatectomy for metastatic colon cancer to the
-7.586,14.532,"Fifty-five-year-old woman presents with metastatic colon adenocarcinoma to the liver, status post colon resection one year prior."
-15.032,22.357,A CT scan showed a one point six centimeter mass in the left hepatic lobe and one point eight centimeter cyst in the right side.
-22.857,33.085,The CT scan showed a lesion in segment three of the liver very close to the base of the umbilical vein
-33.585,41.57,The coronal imaging confirmed the presence of lesion in segment three of the liver as shown on the screen.
 42.07,47.933,"The surgeon begins the operation by mobilizing the liver, carefully taking down adhesions to free the organ for further surgical access."
 48.433,60.855,"The surgeon uses a robotic hook and bipolar craspers to take down the left coronary and triangular ligaments, facilitating further mobilization of the liver."
 61.355,67.361,"The surgeon uses robotic instruments to take down the falciform ligament, extending the dissection up to the hepatocarpal confluence."
@@ -27,7 +22,6 @@ start,end,text
 225.11,234.858,"The surgeon uses an extended vessel sealer to divide the deeper liver parenchyma, carefully navigating around the crossing vascular branches to prevent bleeding."
 235.358,245.102,"The surgeon carefully inserts the vessel sealer into the liver tissue, examining the area closely to avoid damaging vascular structures."
 245.102,257.585,The surgeon carefully observes the movement of the liver parenchyma to ensure there is no resistance during the placement or insertion of the vessel sealer.
-257.585,263.506,This is done to avoid bleeding or injuring the crossing vascular branches.
 264.006,281.697,"The surgeon removes the bulldogs and uses a laparoscopic linear vascular stapler to transect the portal pedicle leading to liver segments two and three, including the baldach, in an N-block fashion."
 282.197,288.301,"The surgeon uses a 60mm laparoscopic linear stapler to transect the portal pedicle, ensuring precise division of the liver parenchyma while avoiding injury to crossing vascular branches."
 288.801,296.045,"The surgeon staples along the orensis ligament, progressing toward the stump of the left hepatic vein."
@@ -41,5 +35,3 @@ start,end,text
 381.69,390.102,"The assistant uses suction to actively evacuate smoke from the surgical field, ensuring clear visibility for the ongoing procedure."
 390.602,395.144,"The surgeon administers a mark and injection to the abdomen, likely for post-operative pain management."
 395.644,400.826,"The surgeon closes the port sites under direct laparoscopic visualization, following a standard closure technique."
-401.326,409.889,The patient did very well without any internal complications. Pathology showed moderately differentiated adrenocarcinoma with mucinous feature. Surgical margins were negative.
-410.109,412.61,Patient did well and was discharged on post-operative day two.

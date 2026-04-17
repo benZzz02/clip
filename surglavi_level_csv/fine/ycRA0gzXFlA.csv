@@ -1,6 +1,4 @@
 start,end,text
-0.171,9.315,"The surgeon performs an isolated caudate lobe resection, removes a tumor from the inferior vena cava, conducts a right adrenalectomy, and dissects aortocaval lymph nodes."
-9.815,23.762,"A patient was recurrent caudate lobe hepatocellular carcinoma, inferior vena cava tumor thrombosis and aortocaval lymph node metastases after bisegmentectomy of segment V and VI."
 24.262,72.535,"The surgeon begins by mobilizing the liver and lysing adhesions, carefully separating the liver from surrounding tissues."
 73.035,188.324,"The surgeon explores the caudate lobe, visually assessing the anatomical structures and surrounding tissues for further surgical intervention."
 188.824,476.745,"The surgeon performs retro-hepatic dissection of the inferior vena cava from the caudate lobe of the liver, carefully separating the vascular structure from the surrounding liver tissue."
@@ -14,4 +12,3 @@ start,end,text
 804.107,1006.582,The surgeon repairs the inferior vena cava using a continuous running suture technique with Prolene suture material.
 1007.082,1135.231,"The surgeon begins an auto-caval lymph node dissection from the retrocaval area, carefully isolating lymphatic tissue adjacent to the inferior vena cava."
 1135.731,1173.312,"The surgeon performs a right adrenalectomy using a bipolar sealing device, carefully excising the adrenal gland from its surrounding tissue."
-1173.812,1180.112,"pathological confirmed hepatocellular carcinoma, IVC tumor thrombus and lymph node metastases."

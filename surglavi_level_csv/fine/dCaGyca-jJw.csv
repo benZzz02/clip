@@ -1,9 +1,4 @@
 start,end,text
-13.467,20.691,We present a case of a sixty-five-year-old female with stage four rectal cancer found to have segment six liver metastasis.
-21.191,23.652,The patient underwent neoadjuvant chemotherapy.
-24.152,27.334,The rectal mass responded well to the neoadjuvant chemotherapy.
-27.834,31.636,The liver metastasis partially responded to the neoadjuvant therapy.
-32.136,43.446,The patient elected for surgery.
 43.946,77.415,"The surgeon initiates a low anterior resection by mobilizing the sigmoid colon from medial to lateral using monopolar electrocautery, visibly separating the tissue with precise cautery application."
 77.915,82.057,"The surgeon identifies and preserves the ureter during the procedure, ensuring it remains intact and unharmed."
 82.557,97.704,"The surgeon uses ICG technology to visually confirm the identity of the ureter, highlighting its location and ensuring its preservation during the procedure."
@@ -25,6 +20,3 @@ start,end,text
 310.396,323.295,"The video shows the segment six metastatic lesion in the liver, which is the only abnormality observed."
 323.795,330.683,"The surgeon performs a wedge resection of the metastatic lesion in the liver using a vessel sealer, visibly excising the abnormal tissue."
 331.183,345.893,"The surgeon achieves adequate hemostasis and performs ablation on the liver margin, ensuring the tissue is treated and bleeding is controlled."
-346.393,351.037,The patient was discharged home on postoperative day five with an uncomplicated course.
-351.537,357.241,Pathology revealed a point eight centimeter rectal adenocarcinoma with surgical margins free of tumor.
-357.741,363.305,The liver metastatic lesion was also consistent with adenocarcinoma of colorectal origin.

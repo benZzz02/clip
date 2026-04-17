@@ -1,9 +1,7 @@
 start,end,text
-1.44,7.705,This robotic whipple or pancreatic duodenectomy is done in multiple segments.
 7.765,13.27,"The surgeon begins the mobilization of the ligament of Treitz using robotic instruments, carefully manipulating the surrounding tissue to expose and free the ligament."
 13.35,26.134,"The surgeon liberates the fourth portion of the duodenum and the first portion of the jejunum from the retroperitoneal space, continuing the dissection process."
 26.634,49.734,"The surgeon uses a vessel sealer to perform dissection, which functions as both a bipolar artery device and scissors, carefully navigating around the superior mesenteric vein and artery."
-50.234,60.907,"traverse into the remainder of the small bowel, so a hasty maneuver in this area can potentially have devastating consequences."
 61.407,69.527,"The surgeon carefully mobilizes the jejunum from the retroperitoneal space, using precise dissection techniques to separate the tissue."
 70.027,90.864,"The surgeon prepares for the mobilization and coparization of the duodenum, aiming to remove and resect the segment as part of the specimen and distal margin."
 91.324,97.27,"The surgeon uses a GIA stapler with a tan load to perform a surgical action, likely involving tissue approximation or division."
@@ -12,7 +10,6 @@ start,end,text
 140.479,144.462,"The surgeon divides the antrum, using surgical instruments to separate it from surrounding tissues."
 144.962,152.03,"The lesser sac is visibly opened, and the surgeon passes a vessel sealer behind the stomach, preparing for further dissection or sealing of vessels."
 152.53,157.853,"The surgeon creates a tunnel for the GIA stapler to divide the antrum, preparing the tissue for further division."
-158.353,166.376,"The vessel sealer can angulate as well as reticulate, and so it's a really great tool in this situation."
 166.876,182.938,"The surgeon carefully places the GIA stapler and uses it to divide the stomach, ensuring precise alignment and division after thorough evaluation."
 183.438,194.405,The surgeon ensures that no surrounding tissue is inadvertently grasped by the GIA stapler before proceeding with the division of the antrum.
 194.905,196.386,"The GIA stapler is activated, visibly firing to divide the stomach tissue."
@@ -21,34 +18,23 @@ start,end,text
 209.514,213.259,"The surgeon uses a purple load of the GIA stapler to continue the division of the stomach, ensuring precise placement and operation."
 213.759,230.153,"The surgeon uses a bipolar instrument to grasp the gastrodial artery, which is visibly branching off the common hepatic artery. Further mobilization of the hepatic artery is observed."
 230.653,244.187,"The surgeon performs a lymph node dissection along the hepatic artery, which is clipped at the gastrodial artery, extending the dissection proximally towards the celiac axis."
-244.687,255.13,"Again, the speed of the recording is increasing for the sake of time."
-255.63,265.713,"The eventual lymph node harvest, as I'll mention again later, is we were able to get thirty lymph nodes, all of which were benign."
 266.213,270.741,"The surgeon performs dissection at the level of the hepatic duct, with visible manipulation of surrounding tissues."
 271.241,282.293,"The surgeon grasps the cystic duct, which is positioned at the entrance of the gallbladder into the hepatic duct, adjacent to the common bile duct."
-282.793,285.954,making the common bile duct.
 286.454,294.416,"The surgeon grasps the cystic duct to achieve retraction, enhancing visualization of the surrounding area, including the portal vein."
 294.456,301.097,"The portal vein is visible to the right of the spatula cautery, highlighted during the dissection."
 301.537,314.165,"The surgeon identifies the hepatic artery with a branch extending to the right lobe of the liver, specifically the right hepatic artery, visible on the right side of the surgical field."
 314.665,323.251,The surgeon identifies the lymph nodes and the portal vein as structures tethering the common hepatic duct and common bile duct.
 323.731,342.167,"Using robotic instruments, the surgeon slides a spatula underneath the junction of the common hepatic duct and cystic duct, utilizing the reticulating capability of the tools for precise manipulation."
 342.667,349.869,"The surgeon uses a bipolar instrument to divide the common hepatic duct, with a stent visible within the duct."
-350.369,359.191,"The stent was, of course, placed preoperatively to fix her biliaria, her jaundice and her biliaria obstruction."
 359.691,369.481,The surgeon uses a bipolar grasper to shield the portal vein from potential cautery injury during the procedure.
 369.981,388.357,"After completing the division of the common hepatic duct, the portal triad and its surrounding lymph nodes become clearly visible."
 388.857,406.307,"The robotic instruments are used to carefully and meticulously dissect the hepatic ducts and portal vein, which are closely involved with each other."
-406.807,415.58,"Seeing that this patient has pancreatic cancer, we are very fastidious about lymph node dissections."
-416.08,430.811,in order to appropriately not only stage the patient to make the adjuvant therapy of radiation and chemo potentially more effective.
 431.311,433.954,"The surgeon begins the division of the pancreas, using surgical instruments to carefully separate the pancreatic tissue."
 434.454,445.899,"The surgeon exposes the superior mesenteric vein below the caudal border of the left segment of the liver, revealing the anatomical relationship between these structures."
 446.399,454.368,"The surgeon uses a suction device to shield the superior mesenteric vein while performing cautery on the pancreas, ensuring protection of the vein during the procedure."
 454.868,464.659,"The surgeon cauterizes the inferior pancreaticoduodenal artery using a bipolar device, effectively minimizing blood loss during the procedure."
-464.699,467.473,The robotic approach
-467.973,473.358,really makes us much more cautious and more cognizant of the blood loss.
 473.378,478.543,"The surgeon approaches the pancreatic duct, with a visible hint of the duct's structure appearing in the surgical field."
-479.043,482.226,We'll see it better in a second with the clear fluid that gave it away.
 482.726,490.633,"The surgeon further mobilizes and divides the pancreas, enhancing the visualization of the cut surface of the organ."
-491.133,496.655,"It's hard to appreciate maybe, but this was somewhat of a"
-497.155,502.461,hard pancreas or woody pancreas.
 502.961,505.784,"The surgeon approaches the cranial aspect of the pancreatic division, focusing on the area where the pancreatic duct is visible."
 506.284,512.931,"The surgeon is visualizing the superior pancreaticoduodenal artery, focusing on its anatomical location and relation to surrounding structures."
 513.431,515.934,"The surgeon achieves hemostasis at the cut surface of the pancreas, ensuring control of bleeding in the surgical field."
@@ -59,12 +45,10 @@ start,end,text
 564.402,586.537,"The surgeon continues to divide the attachments of the duodenum, facilitating further mobilization from the third to the fourth portion of the duodenum."
 587.037,612.19,"The surgeon carefully manipulates the delicate structures of the duodenum, using hand and wrist rotation to maintain a cautious dissection plane."
 612.69,628.141,"The surgeon retracts the tissue, revealing a possible hint of the jejunum as dissection continues."
-628.641,640.488,This is what we performed in the initial mobilization of the ligament triads in order to make this part of the procedure much easier.
 640.988,646.911,"The surgeon carefully peaks underneath the root of the mesentery, revealing underlying structures as the dissection progresses."
 646.931,670.953,"The surgeon repositions cranially to re-identify the superior mesenteric vein, following it caudally to visually locate and harvest lymph nodes along its path."
 671.453,688.985,"The surgeon mobilizes tissue underneath the root of the mesentery, navigating between the portion below the transverse mesocolon and the portion above it, highlighting the complexity of the operation."
 689.485,694.228,"The surgeon utilizes an open approach, revealing the surgical field for further dissection and exploration of the abdominal cavity."
-694.728,696.469,It's somewhat difficult to see.
 696.969,705.314,"The surgeon passes the jejunum blindly underneath the superior mesenteric vein and superior mesenteric artery, navigating through the complex anatomical space beneath the root of the mesentery."
 705.814,720.85,"The surgeon visually identifies the structure, securely grasping it and pulling it towards them with precision."
 721.35,747.01,"The surgeon retracts the jejunum from underneath the superior mesenteric vein (SMV) and superior mesenteric artery (SMA), focusing on the upper aspect of the abdomen."
@@ -73,66 +57,27 @@ start,end,text
 774.396,782.618,"The surgeon uses a vessel sealer to immobilize the tissue at a high position, facilitating the surgical process."
 783.118,806.836,The surgeon uses a GIA stapler with gray vascular loads to capture and secure the small blood vessels leading directly into the uncinate process.
 807.336,836.695,"The surgeon meticulously harvests lymph nodes along the lateral aspect of the superior mesenteric artery, which is clearly visible in the surgical field."
-837.195,848.682,preserving the basic oncological principles of this operation.
-849.182,855.166,You can see that the superior metatarsal artery is right there.
-855.666,863.271,We have previously taken a large branch.
 863.771,866.395,The surgeon observes the artery visibly pulsating in the surgical field.
 866.895,877.023,The surgeon identifies a small arterial branch adjacent to the superior mesenteric artery and prepares to divide it using a GIA stapler.
-877.523,892.033,This is a view that you can only get with this particular approach.
 892.533,895.169,"The view shows the superior metatarsal artery extending cranially, with visible pulsation indicating blood flow."
 895.669,926.585,"The surgical field extends to the level of the porta hepatis, with attention to the vascular supply to achieve the widest possible radial margin."
-927.085,942.631,The possibility of resection of the superior mesenteric vein with reconstruction exists now with this approach.
-943.131,945.992,Now we move on to the reconstruction phase of this operation.
 946.492,955.253,"The surgeon demonstrates the posterior fixation of the pancreas, showing the anatomical positioning and attachment of the pancreas in relation to surrounding structures."
 955.753,972.936,"The surgeon approaches the duct of the pancreas to perform an anastomosis with the mucosa of the jejunum, indicating the completion of the previous step involving the jejunum."
 973.436,987.214,"The surgeon places the posterior stitch first during the reconstruction phase, ensuring optimal positioning for the anastomosis between the pancreas duct and jejunum mucosa."
-987.714,993.179,visualize the structures.
 993.679,1020.002,"The pancreatic duct appears decompressed with a stent, measuring approximately three millimeters in diameter. A suture is visible in the surgical field."
-1020.502,1028.908,"which looks fairly large, but it's theoretically the size of a hair."
-1028.928,1037.963,The actual
-1038.463,1065.185,three-dimensional view afforded by the console is even better than what we're seeing on the monitor now but even with this you can tell that literally every byte is precisely placed millimeter by millimeter and the
 1065.685,1078.51,"The surgeon ties the sutures with precise tension and cuts them, ensuring secure closure of the tissue."
-1079.01,1094.212,The ability to do this robotically is greatly enhanced by the fact that the
 1094.712,1100.657,"The surgeon uses a robotic instrument to grasp and manipulate the needle at various angles, demonstrating precise control over its positioning within the surgical field."
-1101.157,1126.697,"Not only does the optics afford great magnification, but the optics on the console, again, are much greater than the ones that we see on the screen here."
-1127.197,1148.134,between the wristedness of the instruments and the ability to see this really affords the perfect combination that allows us to do this operation.
-1148.634,1155.711,Here we are performing the
 1156.211,1184.937,"The surgeon places sutures at the ten o'clock position on the pancreas and then, after cleaning the camera, takes a suture bite on the jejunum."
 1185.437,1192.299,"The surgeon withdraws the suture to the appropriate length and ties it securely, completing the suturing process."
 1192.799,1213.698,"The surgeon places a suture at the two o'clock position, taking a healthy bite on the jejunum without tying it to avoid obscuring the placement of the next stitch."
 1214.198,1242.91,"The surgeon ties the previously placed suture, securing it in position on the jejunum."
 1243.41,1255.8,"The surgeon places the final suture at the twelve o'clock position on the jejunum and ties it securely, completing the suturing process."
-1256.3,1262.085,There are some people that use stents.
-1262.585,1276.751,We haven't found them to be necessary.
 1277.251,1295.756,"The surgeon places the last suture of the pancreaticojejunostomy anastomosis, preparing to pass the V-lock suture that was initially started."
 1296.256,1314.97,"The surgeon uses the same suture to create the top row, relieving tension and further buttressing the pancreatic anastomosis."
 1315.47,1339.403,"The surgeon uses a B-lock suture, visible with small barbs designed to prevent slipping, eliminating the need for a traditional knot at the end."
-1339.903,1343.361,The anastomosis is
 1343.861,1367.806,"The pancreatic anastomosis is completed, and the surgical focus shifts to the hepaticojejunostomy, which involves the bile duct and is visually facilitated by its larger size."
-1368.306,1372.617,"With this particular anastomosis, there is no"
 1373.117,1396.583,"A drain is placed near the hepatic duct, which is visible in the surgical field."
 1397.083,1405.064,"The video shows a comparison between the bile duct and the pancreatic duct, highlighting the significantly larger size of the bile duct."
 1405.524,1426.783,The surgeon creates a small incision in the jejunum to perform a single-layer interrupted anastomosis.
 1427.283,1456.665,"The surgeon begins the biliary anastomosis at the five o'clock position, methodically placing six to eight sutures around the circumference of the duct."
-1457.165,1472.555,The protraction is vital in this operation in order to see exactly what we're running.
-1473.055,1484.971,"Anastomose, if you could tell, the robot allows us not only to forehand or to backhand"
-1485.471,1515.585,a suture but it actually in the last stitch you could tell that we could literally use the left hand and not only forehand but also backhand this suture making it somewhat easier to do this with the robot than almost open
-1516.085,1542.896,"And as you can tell, it allows the surgeon to be as dynamic as his situation requires."
-1543.396,1550.238,This procedure is
-1550.738,1558.48,"very straightforward, once appropriately set up as almost as with any surgery."
-1558.98,1576.189,The other thing that people don't realize is the ergonomics are easier in many regards to the surgeon and that you don't feel the same strain
-1576.689,1610.029,as you might feel and this procedure we traditionally perform with two surgeons and in this case my partner Dr. Jorge Leyva assisted me with this operation
 1610.529,1640.848,"The surgeon inspects the anastomosis site, identifying areas where adjunctive sutures need to be placed to ensure proper connection and stability."
-1641.348,1672.815,The drains were left in for almost eleven days and the amylase was checked very early in this serous fluid and did not show any signs of a pancreatic fistula.
-1673.315,1705.694,the completion of the hepatic oediginostomy and signaled the end of this operation with regards to this video but still there was a gastroediginostomy that was created patients
-1706.194,1729.855,post-operative course was not like the traditional Ripple patient in that she spent half a day in the ICU just for the sake of
-1730.355,1734.497,"For precautionary sake, she did very well and was transferred to the floor."
-1734.517,1746.683,"On post-operative day two, the energy tube was removed and an upper GI was performed."
-1747.183,1749.384,"To follow her, she did her surgery."
-1749.504,1751.326,I emptied the stomach very well.
-1751.826,1756.869,And she was started on a diet on post-operative day two.
-1757.369,1760.23,And her diet was advanced on post-operative day three.
-1760.25,1768.235,And she was sent home with some oral pain medication.
-1768.735,1771.457,She did very well.
-1771.957,1773.277,Thank you very much for watching.
-1773.297,1776.239,"If you have any comments, it would be appreciated."

@@ -1,5 +1,4 @@
 start,end,text
-2.805,7.929,The laparoscopic type C-I radical hysterectomy.
 8.429,14.614,"The surgeon begins the procedure with a left pelvic lymphadenectomy, using laparoscopic instruments to carefully remove lymphatic tissue from the left pelvic region."
 15.114,100.77,"The surgeon performs adhesiolysis to clear adhesions and improve exposure of the left pelvic area, facilitating access for the hysterectomy procedure."
 101.27,121.307,"The surgeon coagulates and cuts the left round ligament using laparoscopic instruments, ensuring clear separation from surrounding tissues."
@@ -16,7 +15,6 @@ start,end,text
 620.994,624.297,The genitofemoral nerve is visualized and preserved during the dissection.
 624.797,1046.53,"The surgeon removes lymphatic and fatty tissue circumferentially around the external iliac vessels, ensuring complete clearance of these structures."
 1047.03,1147.775,"The surgeon meticulously dissects the variable anatomy of the parietal branches of the internal iliac artery and vein in the prespinous region, carefully navigating around these structures."
-1148.275,1151.363,"The surgeon performs a right pelvic lymphadenectomy, carefully dissecting lymphatic tissue from the surrounding anatomical structures in the pelvic region."
 1151.863,1249.623,"The surgeon removes the right pelvic lymph nodes using meticulous dissection techniques, similar to those used for the lymphatic and fatty tissue around the external iliac vessels."
 1250.123,1253.208,"The surgeon develops the vesicovaginal space, carefully dissecting between the bladder and the vagina to create a clear surgical plane."
 1253.708,1331.157,"The surgeon coagulates and cuts the peritoneum of the vesicovaginal fold from left to right, extending towards the round ligaments."
@@ -61,7 +59,6 @@ start,end,text
 2463.867,2477.175,"After dissecting and lateralizing both dorsal parametria from the mesorectal envelope, the surgeon uses atraumatic forceps to grasp the rectum and pull it cranially."
 2477.675,2529.71,"The surgeon identifies the rectovaginal plane and safely dissects the rectum away from the dorsal vagina, ensuring clear separation between these anatomical structures."
 2530.21,2588.908,"The surgeon performs radical resection of the dorsal parametria, working close to the rectum, using precise dissection techniques."
-2589.408,2592.63,Management of paraculpia.
 2593.13,2697.943,"The surgeon uses the harmonic ACE device to resect the paraculpia along with the medial vascular portion of the deep layer of the vesico-cervical ligament, carefully separating these structures from surrounding tissues."
 2698.443,2699.725,"The surgeon performs a colpotomy, creating an incision in the vaginal wall to facilitate access to the pelvic cavity."
 2700.225,2705.729,"The surgeon excises the uterus along with the proximal portion of the vagina, completing the removal in a standard surgical fashion."
@@ -80,5 +77,3 @@ start,end,text
 3425.075,3427.437,"The surgeon performs vaginal closure, suturing the vaginal cuff following the completion of the hysterectomy procedure."
 3427.937,3526.207,"The surgeon closes the vaginal cuff using two figure-of-eight sutures with 2-0 absorbable intracorporeal sutures, securing the tissue edges together."
 3526.707,3681.537,"The final view shows the paravisceral space cleared of lymphatic and fatty tissue, revealing the obturator nerve, parietal branch of internal iliac vessels, ventral part of the sciatic nerve, intrapelvic ischial spine, and sacrospinous ligament."
-3682.037,3683.559,This specimen.
-3684.059,3694.991,"The image shows the resected proximal vagina along with the dorsal and ventrolateral parametria, all removed in a single block."

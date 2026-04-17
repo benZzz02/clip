@@ -1,11 +1,9 @@
 start,end,text
-5.37,10.254,I've wanted to make a video like this for a while on how I do a laparoscopic cholecystectomy.
 10.754,13.996,The surgeon marks the planned incision sites on the patient's abdomen prior to making the incisions for the laparoscopic cholecystectomy.
 14.036,21.701,"The surgeon decides to proceed with a vertical incision, marking the skin before making the cut."
 22.201,27.605,"The surgeon uses a scalpel to make a vertical incision, cutting down almost to the fascia layer."
 28.105,32.848,"The surgeon uses S retractors to sweep the adipose tissue away from the fascia at the midline, exposing the underlying anatomical structures."
 33.348,38.49,"The surgeon demonstrates careful handling of the scalpel blade, ensuring it does not catch on the skin during the incision process."
-38.99,41.21,It's fairly rare that I use Coker clamps in patients.
 41.29,44.532,"The surgeon cuts the fascia under direct vision, revealing the underlying anatomical structures."
 45.032,50.233,"The surgeon uses two hemostats to grasp the thin peritoneum and opens it sharply, revealing the underlying structures."
 50.253,53.254,"The surgeon uses an S-retractor to sweep open the thin peritoneum, revealing underlying structures without the need for sharp dissection."
@@ -19,22 +17,13 @@ start,end,text
 79.846,84.27,"The surgeon places the second stitch across the exposed fascia, using retractors to maintain clear visibility of the surgical field."
 84.77,87.872,"An S retractor is placed back into the opening, effectively exposing the fascia for further surgical access."
 87.892,92.66,"The surgeon places the second stitch within the fascial opening, using a hemostat to hold the stitch tails together."
-93.16,100.487,At the end of the case I'll place one stitch in between those two and if necessary I'll place even more sutures than that.
 100.987,104.39,"The surgeon places an additional retractor inside the abdominal cavity, using it as a shoehorn to aid in exposure."
 104.47,110.936,"The surgeon demonstrates the adjustable collar on the Hassan Trocar, setting it to the appropriate length and locking it in place within the abdominal cavity."
-111.436,113.419,Here I adjusted it a little bit more.
 113.919,119.144,The surgeon secures the collar of the Hassan Trocar in place using stay sutures and connects the insufflation tubing to facilitate abdominal cavity access.
-119.644,125.269,"For me, where you place the trocars and their trajectories are extremely important."
 125.769,131.614,"The surgeon places the epigastric port high on the abdomen, just below the lower edge, directing it towards the cystic duct for optimal access during the cholecystectomy procedure."
 132.114,139.561,"The surgeon adjusts the trajectory of the epigastric port, directing it laterally to avoid the falciform ligament during the cholecystectomy procedure."
-140.061,145.827,We then turned the table to the patient's left and did not need to use any reverse Tranelenburg.
-146.327,150.608,"I'll place my left hand very close to the right, usually five to six centimeters away."
-151.108,158.271,"If it gets further away, it's not the right angle, and then you have to operate with your left arm up in the air, which is not very comfortable."
 158.771,162.712,"The surgeon positions the instruments close to the costal margin, maintaining proximity to the anatomical boundary during the procedure."
-163.212,166.873,"In this patient, I could have been just a little bit closer to the costal margin."
 167.373,170.714,"The surgeon demonstrates the positioning of the trocar, indicating that it cannot be directed medially during the procedure."
-171.214,175.327,It has to go in a lateral direction away from you.
-175.827,179.47,Otherwise your trocars end up too close together on the inside.
 179.97,183.913,"The surgeon places the lateral trocar in the abdominal wall, ensuring minimal torquing to maintain stability during the cholecystectomy procedure."
 184.413,187.255,"The surgeon positions the trocar in a skive fashion, angling it slightly to optimize placement within the abdominal wall."
 187.595,196.362,"The surgeon demonstrates the placement of a trocar with its tip moving from a posterior to an anterior trajectory, resembling an upside-down orientation."
@@ -58,9 +47,6 @@ start,end,text
 287.233,296.155,"The surgeon adjusts the grip on the gallbladder to increase retraction, improving the exposure of the gallbladder for further dissection."
 296.655,302.216,"The surgeon freezes the frame to demonstrate the direction of retraction required for the cystic duct, highlighting the orientation and tension needed for optimal exposure."
 302.536,305.477,"The surgeon positions an instrument in line with the cystic duct, aligning it for optimal manipulation during the cholecystectomy procedure."
-305.677,308.678,Here I could have had my instrument a little closer to the rib cage.
-309.178,316.652,You don't want your left hand too low in the abdomen because then you can't provide the proper retraction angle.
-317.152,320.494,This makes exposure much more difficult.
 320.994,330.898,The surgeon visualizes the cystic artery and begins clearing adipose tissue from the gallbladder neck to better expose the cystic duct and cystic artery.
 331.379,344.583,"The surgeon manipulates the gallbladder back and forth to assess the optimal side for dissection, then proceeds to carefully free the lateral peritoneal attachments."
 345.083,353.068,"The surgeon uses a hook to dissect into the proper plane, moving it back and forth to separate tissues, followed by using a quarter to divide the tissues further."
@@ -68,7 +54,6 @@ start,end,text
 358.131,361.773,"The gallbladder is now freed from its attachments, and the surgeon positions the left hand at an optimal angle for further manipulation."
 362.273,366.196,"The surgeon works on the medial aspect of the gallbladder, carefully freeing up the peritoneal attachments using precise dissection techniques."
 366.696,370.503,"The surgeon uses a hook instrument to finely dissect the tissues around the gallbladder, carefully separating them from surrounding structures."
-371.003,376.466,"Sometimes I use a Maryland dissector, but for a case like this, that was not necessary."
 376.966,387.171,"The surgeon clears fat and tissues from the anterior and posterior sides of the cystic duct, using precise dissection techniques to expose the duct."
 387.671,392.414,"The surgeon uses a hook to gently push the cystic artery, revealing the dissection plane for further surgical progress."
 392.914,397.344,"The surgeon begins the cystic artery mobilization technique, manipulating the cystic artery to facilitate further dissection."
@@ -82,18 +67,14 @@ start,end,text
 443.932,450.474,"The surgeon uses Grasper jaws to carefully expose and enlarge the window underneath the gallbladder, improving visibility of the surgical field."
 450.974,460.563,"The surgeon assesses the anatomy, noting that the cystic plate is not fully cleared, which prevents achieving a true critical view of safety."
 461.063,474.554,"The surgeon continues to free the gallbladder by dividing lateral peritoneal attachments and working on the medial aspect, aiming to achieve a true critical view of safety."
-475.054,480.269,This video is run at two times speed and minimally edited.
 480.769,488.735,"The surgeon uses hook cautery to further free attachments on the medial aspect of the gallbladder, with the cystic duct appearing slightly prominent."
-489.235,493.878,At this point we began discussing whether or not the true critical view of safety had been achieved.
 494.378,510.462,"The surgeon continues to free the gallbladder from the cystic plate, inadvertently creating a small opening in the gallbladder, resulting in bile drainage."
-510.962,512.023,hooked up.
 512.523,519.189,"The surgeon carefully uses a hook cautery to free the gallbladder from the liver, ensuring precise dissection to separate the gallbladder from its attachments."
 519.309,521.631,"The decompressed gallbladder is visibly easier to manipulate, allowing for smoother dissection and freeing of attachments using hook cautery."
 522.131,525.415,"The surgeon carefully dissects the artery away from the gallbladder wall, further separating these structures."
 525.915,527.636,"The surgeon uses a five millimeter clip applier, likely to secure structures such as the cystic duct or artery during the cholecystectomy procedure."
 527.856,532.941,"The surgeon places a clip on the artery and slides another clip onto the neck of the gallbladder, securing these structures during the cholecystectomy procedure."
 533.441,539.83,"The surgeon uses a suction irrigator to remove spilled bile from the surgical field, ensuring a clear view of the gallbladder and surrounding structures."
-540.33,542.231,I do routine intraoperative clangograms.
 542.291,547.753,"The surgeon uses scissors to perform a cystic ductotomy, making an incision in the cystic duct."
 548.253,549.754,"Bile is visibly returning, indicating the presence of bile flow in the surgical field."
 550.254,554.175,The surgeon gently milks the cystic duct to ensure there are no stones present within it.
@@ -109,7 +90,6 @@ start,end,text
 596.584,600.925,"The surgeon observes the alignment of two clips on the cystic duct, noting that they are not as well aligned as the three clips previously placed."
 601.425,605.126,The surgeon cuts the cystic duct and cystic artery after ensuring proper alignment of the clips on these structures.
 605.626,611.288,"The surgeon frees the gallbladder from the gallbladder fossa, carefully separating it from the underlying liver tissue."
-611.788,616.229,There's not really any secret or magic to this part of the case.
 616.729,620.23,"The surgeon uses the left hand to pull the gallbladder away from the liver, creating tension to facilitate further dissection."
 620.73,625.134,"The surgeon grasps the gallbladder on its lateral aspect, preparing to work on this area during the cholecystectomy procedure."
 625.634,628.257,"The surgeon uses improved retraction techniques to enhance visibility and access to the gallbladder, facilitating its separation from the gallbladder fossa."
@@ -120,7 +100,6 @@ start,end,text
 662.472,668.28,"The surgeon grasps the gallbladder on its lateral aspect and frees up some lateral attachments, improving exposure and mobility of the gallbladder."
 668.78,676.466,"The surgeon returns to the medial aspect of the gallbladder, freeing peritoneal attachments to improve exposure of a small vessel in the gallbladder fossa."
 676.966,686.933,"The surgeon places their left hand underneath the gallbladder to stabilize it, freeing attachments to better visualize the posterior vessel. The hook is used to carefully dissect the vessel from surrounding tissue."
-687.194,696.731,"You could argue that there's probably just a small vessel that can be cauterized, but I get concerned about a potential biliary communication."
 697.231,710.261,"The surgeon carefully dissects the lateral attachments of the gallbladder, revealing a small vessel. Using hook cautery, a window is created around the vessel for better visualization."
 710.761,716.924,"The surgeon applies a clip to a small vessel located close to the liver, securing it to prevent bleeding during the cholecystectomy procedure."
 717.424,724.436,"The surgeon attempts to cauterize a small vessel near the gallbladder using a hook cautery, taking care not to dislodge the previously placed clip on the vessel."
@@ -134,8 +113,4 @@ start,end,text
 770.134,777.798,The surgeon moves the laparoscopic scope to the epigastric trocar and places the gallbladder into a specimen bag for removal.
 778.298,781.86,"The surgeon uses a suction irrigator to clean the abdominal cavity, removing any residual bile and ensuring a clear surgical field."
 782.36,787.808,"The surgeon uses small aliquots of fluid to dilute and remove residual bile from the surgical field, ensuring clear visibility and preventing bile leakage."
-788.308,790.29,a bottle can be very irritating for the patient.
-790.69,797.738,"This patient was not in reverse Trenellenberg, but if your patient is and you irrigate a lot, it will run down into the pelvis."
 798.238,804.444,The surgeon visually inspects the gallbladder fossa before removing the upper trocars under direct vision.
-804.944,805.965,And that's the end of the case.
-806.226,807.267,Thank you very much for watching.

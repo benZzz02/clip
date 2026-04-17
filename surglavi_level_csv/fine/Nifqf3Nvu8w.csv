@@ -1,10 +1,4 @@
 start,end,text
-1.404,14.993,"In this video, we will demonstrate a robotic-assisted lingula sparing left upper lobectomy with segmental plane identification using near-infrared fluorescence imaging."
-15.493,22.218,"The patient is an eighty-six-year-old male with a past medical history of emphysema and extensive smoking history, as well as diabetes and hypertension."
-22.718,29.47,The CT scan identifies a two-centimeter left upper lobe nodule central in position in the apical anterior-posterior division.
-29.97,33.234,This was shown preoperatively by CT biopsy to be an adenocarcinoma.
-33.655,39.684,His preoperative workup identified an FEV-I of forty-three percent of predicted and a DLCO of seventy-eight percent of predicted.
-40.184,48.63,Perfusion to the left lung on VUQ scan was twenty-eight point six percent and decision was made to pursue segmentectomy and possible lobectomy.
 49.13,63.504,"The surgeon employs a three-arm robotic approach, utilizing a grasping retractor in the furthest right assistant robotic port, a monopolar cautery in the right working arm, and a fenestrated bipolar grasper in the left working arm."
 64.004,71.043,"The surgeon begins the initial dissection by opening the superior anterior hilum, exposing the anatomical structures within this region."
 71.543,82.972,The surgeon identifies the level X and level V AP window lymph nodes during the robotic pulmonary lobectomy procedure.
@@ -17,7 +11,6 @@ start,end,text
 145.829,159.05,"The surgeon performs initial dissection to remove the level ten lymph nodes located in the posterior hilum, using precise techniques to separate the lymphatic tissue from surrounding structures."
 159.55,166.174,The surgeon identifies the inferior pulmonary vein and the level seven lymph nodes in the surgical field.
 166.674,174.559,The surgeon removes the level seven lymph nodes from the posterior hilum and places them in a container for frozen section analysis.
-175.059,177.241,These returned as benign lymph nodes.
 177.741,190.234,"The surgeon approaches the level ten lymph nodes to identify the interlobar pulmonary artery, with the lung retracted anteriorly and the posterior pleura opened."
 190.734,195.936,The surgeon uses a spatula cautery as a fine dissector to carefully manipulate and separate tissue in the surgical field.
 196.436,203.339,"The surgeon identifies the posterior hilar interlobar pulmonary artery, visible within the surgical field."
@@ -33,9 +26,7 @@ start,end,text
 318.829,334.052,"The surgeon uses a robotic stapler to pass a vascular load posterior to the previously dissected pulmonary artery, maintaining direct control over the instrument."
 334.552,348.195,"Following the division of the truncus artery, the surgeon performs additional hilar dissection to open the mediastinal pleura, revealing a posterior branch of the pulmonary artery."
 348.695,360.184,"The surgeon performs additional dissection to identify and free the posterior apical and anterior bronchus, carefully separating these structures from surrounding tissues."
-360.684,363.447,This is clearly shown here.
 363.947,380.018,"The surgeon uses a robotic stapler to ligate the posterior branch of the pulmonary artery under direct control, preparing for the upcoming bronchus division."
-380.518,396.764,manipulation.
 397.264,415.232,"The surgeon divides the bronchus under direct control, using a surgical stapler to ensure precise separation of the bronchial tissue."
 415.732,439.56,"Following the division of the bronchus, veins, and artery, the surgeon isolates the vascular supply of the apical anterior and posterior divisions. Endocyanin green is infused intravenously, revealing the intersegmental plane with perfusion visible only to the lingula."
 440.06,447.282,"The video shows a stark contrast between perfused and non-perfused lung tissue, clearly indicating the intersegmental plane with perfusion limited to the lingula."
@@ -47,5 +38,3 @@ start,end,text
 535.798,545.7,The surgeon places the resected lung specimen into a surgical retrieval bag and removes it through an access incision.
 546.2,551.465,"The completed resection of the lung is visible, showing the area where non-perfused lung tissue has been removed."
 551.965,559.087,The tumor is visually identified within the apical anterior and upper division of the lung.
-559.587,569.07,"Post-operative course was uncomplicated, and he was discharged home on post-operative day number four."
-569.57,581.373,"This was an invasive adenocarcinoma, papillary dominant histological type, two point three centimeters in size, stage T, one B, and zero, with negative margins, grossly and microscopically."

@@ -3,6 +3,3 @@ start,end,text
 16.904,33.304,"The surgeon uses the robotic console to manipulate the camera, accessing purple pegs on the far side of a sphere, while placing color-coded and shape-coded pegs in a specific order."
 33.804,43.971,"The camera view shifts downwards, displaying surgical instruments positioned towards the top of the screen. The surgeon adjusts and re-clutches the instruments to maintain optimal control."
 44.471,64.242,"The operator uses the camera to obtain a full view of the purple socket located on the far side of the sphere, while grasping the purple peg with the instrument."
-64.742,75.242,"Another scope swap could be indicated on the second green peg placement. However, we thought we had a decent enough view here to get the peg in place without doing the scope swap."
-75.742,89.375,"And this speaks a bit to the limitations of a virtual reality simulation and robotic surgery, that some of these exercises can in fact be gamified. As we showed, you don't need to swap the scope the second time in order to complete the exercise."
-89.875,97.382,"Scoring well on this exercise requires avoiding drops, keeping your instrument in view, and moving efficiently."

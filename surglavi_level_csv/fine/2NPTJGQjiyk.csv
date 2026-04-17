@@ -1,13 +1,4 @@
 start,end,text
-5.828,9.866,"The robotic-assisted procedure involves making a colotomy to remove a benign polyp from the colon, utilizing robotic instruments for precise manipulation and excision."
-10.25,15.012,We present a case of a seventy-one year old female who presented with a large polyp of the transverse colon.
-15.432,20.094,She had a colonoscopy for anemia and they found a four centimeter polyp in the proximal transverse colon.
-20.594,27.377,"The surgeon performs a partial piecemeal polypectomy on the large polyp located in the proximal transverse colon, revealing a tubulovillous adenoma without signs of dysplasia or malignancy."
-27.877,32.178,"To completely remove the lesion, she was referred to GI for endoscopic mucous resection."
-32.478,39.045,"This, however, was unsuccessful due to the inability to elevate the lesion completely from the submucosal plane."
-39.545,42.85,She was thereafter referred to our service for surgical intervention.
-43.35,51.141,"The surgical team proceeds with a minimally invasive robotic approach to perform a colotomy, identifying and excising the lesion, followed by closure of the tissue."
-51.562,55.723,We wanted to avoid a more invasive segmental resection.
 56.223,59.005,"During exploration, a previously placed tattoo mark is visible on the tissue surface."
 59.505,63.367,"During the intraoperative colonoscopy, the surgeon identifies the lesion within the colon."
 63.867,70.91,"The surgeon attempts to elevate the lesion using a submucosal injection of saline, but the elevation proves difficult, as previously noted."
@@ -29,7 +20,6 @@ start,end,text
 168.841,179.222,"The surgeon utilizes robotic instrumentation to perform suturing with consistent tissue bites and continuous motion, effectively maneuvering the suture through the excision site."
 179.722,183.484,"The surgeon gently pulls on the suture, lifting the tissue at the polypectomy site to facilitate closure."
 183.984,188.406,"The surgeon takes full thickness bites with the suture, carefully reloading the suture without dropping the needle, as part of the closure process at the polypectomy site."
-188.906,191.648,This helps maintain a continuous and efficient motion.
 192.148,197.23,"The surgeon closes the defect from the polypectomy site to the corner using a continuous suturing technique, ensuring the tissue edges are approximated securely."
 197.73,210.028,"The surgeon uses robotic instrumentation to take additional full-thickness bites in a reverse fashion at the corner of the defect, ensuring the suture is securely locked."
 210.528,212.249,"The surgeon closes the colotomy by suturing the incision site, ensuring the tissue edges are approximated and secured."
@@ -41,8 +31,4 @@ start,end,text
 259.158,261.703,"The surgeon reaches the quarter of the defect using a running V-lock suture technique, continuing the precise placement of sutures along the tissue."
 262.203,269.411,"The surgeon reverses the motion of the robotic platform to lock the suture securely in place, ensuring the stitch is tight and stable."
 269.911,285.306,"The surgeon inspects the suture line for gaps and places interrupted vicryl sutures to reinforce the closure, ensuring a secure and continuous tissue approximation."
-285.806,286.527,"Once closed,"
 286.992,295.719,"The surgeon performs a vinyl colonoscopy to visually confirm that the lumen is not narrowed, ensuring it is widely patent and the closure is appropriate."
-296.219,301.964,We present a case involving a robotic-assisted colotomy for identification and excision
-302.464,308.887,of a large polyp of the colon that was otherwise not amenable for endoscopic removal.
-309.387,325.573,"The robotic platform affords excellent visualization, exposure, and access to accomplish this task with minimally invasive approach in a safe and reproducible fashion, therefore avoiding need of a segmental colectomy."

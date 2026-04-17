@@ -1,33 +1,10 @@
 start,end,text
-1.08,5.745,"The robotic arms of the Da Vinci X system are positioned to perform a right hemicolectomy, focusing on the surgical area of the colon."
-6.245,15.96,"Presented by Dr. Somshekhar SP, Head of the Department and Consultant Surgical Oncologist, Manipal Comprehensive Cancer Center, Bangalore."
-16.46,25.983,A forty nine year old male with a ECOG of zero presented with loss of weight and generalized weakness since six months and change in the bowel habit since three months.
-26.483,30.904,On examination he had pallor. Abdominal examination was not significant.
-31.284,35.504,Hemoglobin on presentation was seven point two.
-36.004,42.81,"On imaging, the ultrasound of the abdomen showed a mass lesion in the right iliac fossa arising from the ascending colon."
-43.31,55.86,CT scan showed a circumferential thickening of ascending colon with full thickness wall involvement of three point five centimeters and length of the involved segment around seven centimeters with luminal narrowing and fat stranding.
-56.36,60.206,There was no evidence of any ascites or metastasis.
-60.706,62.567,Serum CEA was one point six.
-62.847,66.289,Colonoscopy confirmed the findings with lumen compromised.
-66.789,81.108,Biopsy revealed it to be a moderately differentiated adenocarcinoma grade two with clinical stage as three B. Robotic right hemicolectomy with ileotransverse anastomosis was planned on the Da Vinci X system.
-81.608,112.33,"Principles of a right hemicolectomy include thorough inspection of the abdomen and assessment of operability, mobilization of hepatic flexure of colon, identification of vascular pedicles and ligation, mobilization of colon from right lateral parietal wall identification and preservation of right ureter, careful dissection of the duodenum, transaction of terminal ileum and transverse colon with adequate margins, and ileotransverse anastomosis."
-112.83,125.979,"The surgeon identifies the main vascular pedicles for a right hemicolectomy, including the right branch of the middle colic artery, right colic artery, and ileocolic artery, which are branches of the superior mesenteric artery."
-126.479,132.564,"The patient is positioned supine on the operating table in preparation for robotic docking, which is part of the setup for the robotic right hemicolectomy procedure."
-133.064,135.886,Ports put are shown in the following diagram.
-136.386,140.244,"The camera port is positioned in the subumbilical line to the left, providing a view for the robotic right hemicolectomy procedure."
-140.744,146.371,"The surgeon positions the R-I port in the supraumbilical region, just below the costal arch, as part of the setup for the robotic-assisted colectomy procedure."
-146.871,154.601,"The surgeon places R-II in the suprapubic region on the left side and R-III in the right iliac fossa, indicating the positioning of robotic ports for the procedure."
-155.101,164.055,The assistant port is positioned in a triangulated manner between the R-I port in the supraumbilical region and the R-II port in the suprapubic region on the left side.
-164.555,167.936,The following is the OR setup for robotic right hemicolectomy.
-168.436,175.877,The instrument cart is at the right shoulder of the patient while assistant and scrub nurse are to the left.
 176.377,186.059,"In the initial part of the dissection, the surgeon uses hot shears at the supraumbilical port (R-I), a vessel sealer at the suprapubic port (R-II), and a tip-up prograsp at the right iliac fossa port (R-III) to manipulate and dissect tissue."
 186.559,202.972,"The surgeon begins the dissection by visualizing the hepatic flexure of the colon, followed by mobilization of the hepatic flexure using surgical instruments."
 203.472,216.535,"The surgeon begins dissection from the right ascending colon, following the white line of Toldt to medially mobilize the ascending colon."
-217.035,221.576,But we prefer hepatic mobilization first.
 222.076,229.338,"The surgeon proceeds towards the right lateral parietal wall to mobilize the hepatic flexure of the colon, using surgical instruments to separate the colon from the surrounding tissue."
 229.838,238.102,"The surgeon continues the dissection, revealing the underlying duodenum medially as the hepatic flexure is mobilized."
 238.602,244.288,"The surgeon meticulously dissects around the duodenum using monopolar hot shears, carefully separating the tissue while maintaining precision."
-244.788,256.999,Iatrogenic injury has to be avoided.
 257.499,264.9,"The surgeon visualizes the right branch of the middle colic vein during the procedure, highlighting its location within the surgical field."
 265.4,292.447,"The surgeon proceeds with the dissection of the greater omentum from the mesocolon, with the head of the pancreas clearly visible below the duodenum."
 292.947,312.203,"The surgeon visualizes the branching pattern of the middle colic vein, highlighting its anatomical layout within the surgical field."
@@ -43,21 +20,4 @@ start,end,text
 433.477,457.758,"The surgeon uses a vessel sealer to ligate the right branch of the middle colic pedicle, securing the vessel within the surgical field."
 458.258,466.901,"The surgeon lifts the entire transverse colon, elevating it to expose underlying structures and facilitate further dissection."
 467.401,481.205,"The surgeon mobilizes the splenic flexure of the colon by dissecting towards the left side, continuing the procedure after ligating the ileocolic pedicle."
-481.705,490.04,This mobilization in turn would reduce the tension on the anastomosis.
 490.54,504.853,"The surgeon completes the mobilization of the colon, extending from the terminal ileum to the splenic flexure, ensuring the entire section is free and ready for further surgical steps."
-505.353,513.38,"The surgeon completes the intracorporeal dissection and mobilization, followed by making a right-sided lower transverse abdominal incision."
-513.88,517.808,"The surgeon uses a wound guard to extract the specimen through the right-sided lower transverse abdominal incision, following the complete mobilization of the colon."
-518.308,532.255,One has to be careful during the extraction not to handle the tumor directly which in turn can cause spillage and recurrence at a later date.
-532.755,546.54,"The surgeon performs a side-to-side ileocolic anastomosis using a surgical stapler, aligning the ileum and colon for connection."
-547.04,552.529,The total operative time in this case was two hundred and ten minutes with console time of sixty five minutes.
-553.029,562.437,Blood loss was around ninety ml and patient recovered uneventfully in the post operative period.
-562.937,570.619,The final histopathology report was adenocarcinoma low-grade moderately differentiated of a size of ten by six by two centimeters.
-571.119,572.559,Margins were all uninvolved.
-573,578.341,Tumor invaded the subserosal adipose tissue but not extended to the serosal surface.
-578.821,580.462,There was no lymphovascular invasion.
-580.962,582.302,Lymph nodes were uninvolved.
-582.802,585.944,"The surgeon extracts approximately twenty-five lymph nodes during the colectomy procedure, visually confirming their removal from the surgical field."
-586.444,592.346,"MSI being high, the patient had a stage IIa right-sided colonic malignancy, i.e."
-592.586,594.167,PT-N-M-M.
-594.447,603.351,"Hence, patient was kept on observation and is on a regular follow-up."
-603.851,604.211,Thank you.

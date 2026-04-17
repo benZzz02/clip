@@ -1,17 +1,9 @@
 start,end,text
-0.171,6.317,"The surgeon performs a laparoscopic right hemicolectomy, excising the mesocolon completely to remove a sequel tumor with associated phlegmon."
-6.477,19.43,"A sixty-seven years old female, previously fit and well, presented to our emergency department with a two-week history of lower abdominal pain, localizing more to right lower quadrant. In view of the elevated inflammatory markers and anemia, a CT abdomen was organized."
-19.59,31.481,"The laparoscopic view reveals marked inflammatory changes and fat stranding in the right iliac fossa. Two small fluid collections are visible adjacent to the terminal ileum and anterior abdominal wall, accompanied by local lymphadenopathy. The ileocecal valve and terminal ileum appear thickened."
-31.601,39.728,"However, the appendix could not be identified. The differential diagnosis included either endocytosis with abscess formation or a cecal tumor with focal perforation."
-40.028,52.747,The patient was successfully managed with intravenous antibiotics. Her symptoms improved and a repeat CT scan four days later showed improvement in the inflammation. The patient was discharged on day five with a prolonged course of antibiotics.
-52.887,66.436,"She subsequently underwent a colonoscopy, which unfortunately showed a bulky eight centimeter cecal tumor involving the entire cecal pole and the ileocecal valve. Histopathology confirmed a diagnosis of moderately differentiated adenocarcinoma."
-66.936,73.402,Staging CT was negative for distance metastasis. The patient subsequently proceeded to a laparoscopic right hemicolectomy.
 73.902,90.713,"The surgeon induces pneumoperitoneum and observes the cecum firmly adherent to the anterior lateral abdominal wall. Omental adhesions are divided using harmonic shears, leaving the cecum end block."
 91.213,127.467,"The surgeon begins dissection by identifying the ileocolic pedicle. A surgical window is created near the mesenteric root, positioned between the ileocolic vessels and the superior mesenteric vein."
 127.967,152.988,"The surgeon carefully dissects the ileocolic vein down to its junction with the superior mesenteric vein, using a right angle instrument and Maryland forceps to isolate the vein from surrounding tissues."
 153.488,176.478,"The surgeon clips the ileocolic vein at its confluence with the superior mesenteric vein, securing the vessel in preparation for further dissection."
 176.978,186.726,"The surgeon identifies the ileocolic artery passing anterior to the ileocolic vein. Due to the favorable anatomical positioning, the artery is double clipped at its origin from the superior mesenteric artery."
-187.226,212.992,High ligation of ileocolic vessels maximizes the oncological outcome for the patient by ensuring complete removal of regional lymphatic vessels and lymph nodes.
 213.492,240.664,"The surgeon continues the dissection of the ascending colonic mesentery, moving in a cranial direction using a medial to lateral approach, revealing the anatomical structures and tissue planes involved."
 241.164,250.767,"The surgeon identifies and divides the right colic artery, completing the vascular dissection in the region."
 251.267,268.635,"The surgeon divides the distal small bowel mesentery using harmonic shears. Subsequently, the small bowel is transected with an Echelon 60 stapler, 25 centimeters from the ileocecal valve."
@@ -23,9 +15,3 @@ start,end,text
 392.358,427.219,"The surgeon closes the incision and re-establishes pneumoperitoneum. An isoperistaltic ileocolic site-to-site anastomosis is performed, ensuring the anastomosis is well vascularized and free of tension."
 427.719,445.324,The surgeon places two stay sutures and creates enterotomies in both the ileum and colon using hook diathermy and Maryland forceps. The anastomosis is completed with an Echelon-60 stapler.
 445.824,557.077,"The surgeon closes the enterotomy in two layers, first using interrupted Vicryl stitches for the inner layer, followed by a second serosal layer with running self-locking sutures."
-557.577,569.563,"A 15 French plate drain is visibly placed in the right iliac fossa at the conclusion of the procedure. The drain output appears milky white, raising concerns about a chyle leak in the early post-operative phase."
-570.063,579.055,"This was managed conservatively. Following a period of bowel rest and parenteral nutrition, the output from the surgical drain decreased and the drain was removed on day twelve."
-579.555,587.261,The patient was discharged home on post-operative day thirteen. She made full recovery and started her adjuvant chemotherapy one month after the surgery.
-587.461,600.57,"Histology from the surgical specimen confirmed a diagnosis of moderately differentiated adenocarcinoma. There were forty-four lymph nodes in the specimen, all tumor-free. However, tumor deposits were noticed in the retroperitoneal tissue."
-601.07,607.315,"Overall staging was of T-four, N-one-C, V-one, L-one, P-N-one, R-O."
-607.735,634.159,"It has been suggested that complete mesocholic excision in right hemicolectomy might lead to improved oncological outcomes, as it yields higher number of resected lymph nodes and a better tumor clearance margin. Laparoscopic approach to right hemicolectomy with CME can be challenging due to variability in vascular anatomy. However, in experienced hands, it is feasible and safe, resulting in a more extensive lymphadenectomy and a better oncological radicality."

@@ -1,8 +1,5 @@
 start,end,text
-0.985,9.968,The surgeon performs a transanal submucosal dissection for a large lower rectal adenoma using the Thunderbit tissue management system.
-10.468,19.491,"The patient was a eighty-six years old female, complained of anal discomfort with intermittent bleeding for two months."
 19.991,31.765,"The digital rectal exam and colonoscope reveal a well-defined tumor approximately four centimeters in size, with a soft consistency, extending from the dentin line to the lower rectum."
-32.265,36.528,Biopsy revealed adenoma with low-grade dysplasia.
 37.028,45.894,"The surgeon performs submucosal dissection of a large lower rectal adenoma using a traditional trans-anal approach, assisted by the Thunderbit tissue management system."
 46.394,52.478,"The surgeon uses an anal retractor to clearly expose the margin of the tumor, revealing its well-defined edges within the lower rectum."
 52.978,61.927,"The surgeon injects normal saline mixed with 2% lidocaine around the tumor to elevate the submucosa, enhancing the visibility and accessibility of the tumor margins."
@@ -15,6 +12,3 @@ start,end,text
 131.51,136.756,"The surgeon ligates the pedicle of the tumor using a clamp, securing the structure within the surgical field."
 137.256,143.764,"The surgeon uses the Thunderbit device to transect the pedicle of the tumor, following its previous ligation."
 144.264,152.843,"The surgeon suture ligates the stump using 3-0 Vicryl, securing the tissue with visible stitches."
-153.343,159.293,The whole procedure was performed smoothly within thirty minutes with minimal blood loss.
-159.793,164.101,The patient was discharged one day after the surgery.
-164.601,170.931,The final pathology proved cecil serrated adenoma with free surgical margin.

@@ -1,9 +1,5 @@
 start,end,text
-1.11,20.196,"I'm sharing a case of Crohn's disease, patient with fibrous stenotic Crohn's disease and multiple obstructions. He was kind of debating between ongoing medical therapy or surgery, but because of the recurrent obstructions, he decided for surgery with the knowledge that medications don't typically help that much with that."
-1.14,7.984,"I'm sharing a case of Crohn's disease, patient with fibrous stenotic Crohn's disease and multiple obstructions."
-8.484,20.249,"He was kind of debating between ongoing medical therapy or surgery, but because of the recurrent obstructions, he decided for surgery with the knowledge that medications don't typically help that much with that."
 20.517,42.104,"The surgeon visually inspects the bowel, identifying and marking areas with visible strictures, potentially indicating diseased sections for future strictureplasty or resection."
-20.549,22.391,"So in my initial look,"
 22.891,27.376,"The surgeon runs the bowel, visually inspecting and marking areas that appear diseased, likely characterized by fibrous stenosis or other abnormalities."
 27.416,28.497,"The surgeon identifies a visible stricture in the small bowel, characterized by a narrowed segment of the intestine."
 28.538,31.582,"The surgeon marks both sides of the bowel stricture, preparing for a potential strictureplasty procedure."
@@ -11,45 +7,31 @@ start,end,text
 35.174,41.719,"The surgeon runs the bowel, visually inspecting it to assess areas for potential strictureplasties or resections, marking sections that appear diseased."
 41.739,52.864,"The surgeon examines the colon and small intestine, which appear relatively normal, but notes a tight stricture at the ileocecal valve that was previously impassable by endoscopy."
 42.604,61.574,"The surgeon observes the colon and small intestine, noting their relatively normal appearance. However, a tight stricture is identified at the ileocecal valve, which was previously inaccessible via endoscopy and confirmed by MRI findings. The surgical plan includes performing an ileocolic resection."
-53.364,55.366,And that correlated to findings on MRI.
-55.526,61.611,So my plan was to do an ileocolic resection and then with whatever proximal disease was found.
 62.074,80.328,"The surgeon identifies a Meckel's diverticulum in the area of the Crohn's disease stricture. The mesentery is being mobilized adjacent to the strictures, with visible tissue manipulation."
 62.111,68.617,The surgeon identifies a Meckel's diverticulum located near the area of the stricture caused by Crohn's disease in the small intestine.
-69.117,77.164,"And something I hadn't seen before, but on final pathology, there was actually Crohn's disease in the Meckel's right adjacent to where these strictures are."
 77.204,80.362,"The surgeon is mobilizing the mesentery of the small intestine, carefully separating it from surrounding tissues to facilitate the resection."
 80.828,101.378,"The surgeon mobilizes the Meckel's diverticulum to tent the ileocolic pedicle, initiating a medial to lateral dissection for the Crohn's resection."
 80.862,89.445,"The surgeon manipulates the Meckel's diverticulum to tent the ileocolic pedicle, initiating a medial to lateral dissection."
 89.945,98.148,"The surgeon performs a Crohn's disease resection using a medial to lateral approach, similar to the technique used for right-sided cancer resections."
-98.648,103.551,"I don't do as high of a ligation of the iliocolic pedicle, but I"
 101.878,123.116,"The surgeon thins out the ileocolic pedicle, performing a mesenteric resection to isolate the artery and vein. The artery and vein are taken separately in this procedure."
-104.051,113.233,tend to do more of a mesenteric resection because of the data that shows that the mesentery mediates the recurrence of disease.
 113.733,116.754,"The surgeon thins out the iliocolic pedicle, carefully manipulating the tissue to refine the structure during the resection process."
-117.254,121.694,I don't do this routinely to isolate the artery and the vein. Sometimes I take them together.
 121.734,133.674,The surgeon isolates and takes the vein separately from the artery during the procedure.
 123.136,152.333,"The surgeon identifies the artery after previously isolating the vein. The bowel is visually inspected, confirming no other areas of disease. The planned procedure involves an ileocolic resection and a resection near the Meckel's diverticulum and stricture, located approximately two feet from the ileocolic anastomosis."
-134.174,139.719,What wasn't shown in this is that I ran the entire bowel proximally and there was no other area of disease.
-140.219,152.39,So I know I'm doing an ileocolic resection and likely just another resection of the area where the meccles and the stricture was since it's just a small location and about two feet away from the ileocolic anastomosis.
 152.833,190.174,"The surgeon takes the colon mesentery while preserving the right colic vessels, approaching the junction of the ascending colon and cecum. The lateral mobilization is performed, joining the previously completed medial dissection."
 152.89,174.781,"The surgeon dissects the colon mesentery while preserving the right colic vessels, approaching the junction of the ascending colon and the cecum."
 175.281,177.124,"The surgeon performs lateral mobilization of the bowel, carefully separating the tissue from surrounding structures to facilitate the ileocolic resection."
 177.144,190.228,"The surgeon joins the previously completed medial dissection, connecting it to the lateral mobilization of the bowel."
-190.674,212.172,"I don't usually mobilize the hepatic flexure for ileocolic resections because the most common area of recurrence is going to be at that ileocolic anastomosis. And if subsequent surgery is needed, I like to have as little scar tissue in that area as possible. So doing an intracorporeal anastomosis, you don't need to mobilize the hepatic flexure in order to gain length for your anastomosis."
-190.728,199.355,I don't usually mobilize the hepatic flexure for ileocolic resections because the most common area of recurrence is going to be at that ileocolic anastomosis.
-199.415,204.519,"And if subsequent surgery is needed, I like to have as little scar tissue in that area as possible."
 204.579,212.206,"The surgeon performs an intracorporeal anastomosis without mobilizing the hepatic flexure, demonstrating that sufficient bowel length can be achieved for the anastomosis without additional mobilization."
 212.672,258.848,"The surgeon completes the dissection of the terminal ileum mesentery, marking the division site with cautery under white light. The stapling is performed through the suprapubic port, which is used for specimen extraction, minimizing incision size to reduce hernia risk."
 212.706,222.57,"The surgeon completes the dissection of the terminal ileum mesentery, ensuring the mesentery is fully separated from surrounding tissues."
 223.07,224.291,"The surgeon assesses the perfusion of the bowel segments following the ileocolic resection, ensuring adequate blood flow to the anastomosis site."
 224.311,236.117,"The surgeon marks the intended division site on the bowel using cautery, providing a visible reference point with white light after the ICG washout."
 236.617,243.08,"The surgeon uses a stapler through the suprapubic port to perform the stapling, preparing for specimen extraction from the same port."
-243.14,258.878,So there's only one incision larger than eight millimeters to keep the risk of hernia down.
 259.348,326.122,"The surgeon staples the small bowel and aligns the isoparasaltic ileocolic anastomosis. A colotomy and enterotomy are performed, followed by the insertion of a stapler through the suprapubic port. The initial staple load is adjusted with a second stapler to extend the anastomosis by an additional centimeter to centimeter and a half."
 259.378,269.384,"The surgeon uses a stapler to transect the small bowel, completing the division of the intestinal segment."
 269.884,278.068,"The surgeon lines up the isoparasaltic ileocolic anastomosis and creates a colotomy, preparing the bowel for connection."
 278.088,287.168,"The surgeon performs an enterotomy, creating an opening in the small bowel."
 287.668,292.65,The surgeon reintroduces the stapler through the suprapubic port to continue the stapling process on the small bowel.
-293.15,295.851,I did make this a little bit on the small side.
-296.351,301.313,"I typically try to keep these around three and a half, four centimeters."
 301.813,307.255,"The surgeon assesses the first firing of the stapler, noting that the small bowel has been pushed away during the stapling process."
 307.755,326.153,The surgeon applies an additional staple load to extend the anastomosis by approximately one to one and a half centimeters.
 326.622,393.99,"The surgeon begins suturing the common channel closed, starting at the near corner to ensure complete closure. The suturing is performed in a two-layer fashion, extending towards the far corner and then imbricating the entire section back down."
@@ -63,10 +45,7 @@ start,end,text
 411.572,421.323,"The surgeon continues to dissect the mesentery attached to the Meckel's diverticulum, separating it from the bowel wall."
 421.823,431.898,"The surgeon creates a window into the true small bowel mesentery, revealing the underlying structures and tissues for further dissection."
 432.398,437.841,"The surgeon moves proximally towards the area of diseased small bowel, preparing for further resection."
-438.202,444.346,I have certainly come across Meckel's in the past that I have incidentally found and left alone.
 444.846,453.311,"The surgeon observes the small bowel segment with abnormal thickening and scarring to the retroperitoneum, deciding to proceed with resection of this area."
-453.811,458.614,"You know, it's entirely possible that the Meckel's was also a source of his obstructions."
-459.114,464.662,"But like I said, the final pathology actually confirmed that there was Crohn's within the Meckels."
 465.162,494.883,"The surgeon proceeds with dividing the small bowel for the second resection, using surgical instruments to carefully separate the bowel segment."
 495.349,574.737,"The surgeon lines up a side-to-side antiparastaltic anastomosis, creating otomies in the small bowel. A stapler is used to form a wide anastomosis, followed by suturing the common channel closed using a baseball stitch technique, starting at the near corner and running out and around with a transition stitch over the top."
 495.383,503.229,"The surgeon aligns the small bowel segments for a side-to-side antiparastaltic anastomosis, preparing to join the resected sections."
@@ -77,17 +56,8 @@ start,end,text
 546.231,553.375,"The surgeon begins a baseball stitch at the near corner of the anastomosis, running the suture out and around to secure the tissue edges."
 553.875,567.832,"The surgeon places a transition stitch over the top of the anastomosis site, completing the closure of the surgical area."
 568.332,574.777,"The surgeon performs an inverting Lembert suture technique to secure the bowel anastomosis, folding the edges inward to reinforce the closure."
-575.237,614.655,"This patient did very well, was actually discharged on the morning of post-operative day one. They have recently come back to the office and they are feeling very good, no longer with the sensation of early satiety and bloating and the nausea associated with the obstructions that he had been having very frequently. He has been referred back to his gastroenterologist to get on suppressive therapy to help prevent early recurrence or any subsequent need for additional surgery in the future."
-575.277,580.601,"This patient did very well, was actually discharged on the morning of post-operative day one."
-581.101,598.053,"They have recently come back to the office and they are feeling very good, no longer with the sensation of early satiety and bloating and the nausea associated with the obstructions that he had been having very frequently."
-598.553,614.706,He has been referred back to his gastroenterologist to get on suppressive therapy to help prevent early recurrence or any subsequent need for additional surgery in the future.
 615.155,650.669,"The surgeon provides a final view of the completed anastomosis, including the iliacolic anastomosis, which is separated by approximately two feet from the other anastomosis. The surgical field shows no other visible disease, and the omentum is used to cover the area. Specimens are extracted through the Fann and Steele suprapubic port site."
-615.206,616.367,Just a final look here.
 616.588,626.915,"The surgeon visually inspects the completed anastomosis, observing the connection between the resected bowel segments."
 627.415,629.536,"The surgeon displays the ileocolic anastomosis, showing the connection between the ileum and colon following resection."
-629.596,631.437,"Again, they're separated by about two feet."
-631.457,638.56,And just a quick look again.
-638.58,640.02,There was no other disease.
 640.12,642.021,"The surgeon drapes the omentum over the ileocolic anastomosis, ensuring it is fully covered."
 642.521,648.004,The surgeon extracts the resected bowel specimens through the Fann and Steele Superpubic Ports site.
-648.504,650.685,And I hope you enjoyed.

@@ -1,15 +1,8 @@
 start,end,text
-0.996,7.518,This video is a demonstration of a laparoscopic ovarian cystectomy of a persistent simple cyst.
-8.018,12.74,The patient is a thirty-two year old female with a three year history of primary infertility.
-13.24,19.042,The four centimeter left ovarian simple cyst has been unchanged for at least two years.
-19.542,27.704,The patient has also had progressive dysmenorrhea suggestive of endometriosis and a laparoscopy was planned to assess and treat the endometriosis
-28.123,33.308,and the decision was made to remove the cyst at the same time.
 33.808,38.332,"During the laparoscopic inspection of the pelvis, the ovary containing the four-centimeter simple cyst is visible."
-38.832,44.216,The patient also had stage two endometriosis extensively throughout the pelvis.
 44.716,48.46,"The surgeon opens the ovary at the area with the thinnest appearance, preparing to access the cyst within."
 48.96,57.442,"The surgeon uses monopolar scissors with a pure cutting current to incise the outer surface of the ovary, revealing the underlying tissue."
 57.942,73.64,"The surgeon attempts to reach the plane between the ovarian cyst and the ovary wall, carefully manipulating the tissue to separate the cyst from the surrounding ovarian structure."
-74.14,89.423,"Though ideally the cyst could be removed without rupture, in reality this rarely can be achieved."
 89.923,98.426,"The surgeon uses right-angled forceps to assist in opening the plane between the ovarian cyst and the ovary wall, facilitating further dissection."
 98.926,114.651,"The surgeon continues to open the outer ovarian wall, revealing the thicker and wider area of the ovarian cortex beneath."
 115.151,123.957,"The surgeon incidentally enters the cyst while attempting to separate it from the ovary, revealing the cyst's interior contents."
@@ -28,7 +21,6 @@ start,end,text
 281.641,292.225,"The surgeon carefully manipulates the ovarian cyst wall, avoiding excessive pulling or incorrect directional force to prevent tearing of the ovarian cortex, which could result in bleeding and damage to the ovarian tissue."
 292.725,296.866,"The surgeon continues the dissection process around the cyst, aiming for complete removal by carefully separating the cyst from the ovarian cortex."
 297.366,302.948,"The surgeon encounters a segment of the cyst that is densely adherent to the ovarian cortex, requiring careful dissection to separate the structures without causing damage."
-303.448,307.641,In these cases it is sometimes easier to open the cyst wall.
 308.141,313.432,"The surgeon carefully dissects a single layer of tissue away from the ovarian cortex, minimizing potential damage and bleeding."
 313.932,348.06,"The surgeon continues the dissection process, carefully separating the cyst from the ovarian cortex to avoid tearing and minimize bleeding."
 348.56,362.813,"The surgeon assesses the cyst, noting that it is densely adherent to the ovarian cortex, making further removal without causing significant damage visually challenging."
@@ -42,4 +34,3 @@ start,end,text
 521.711,539.497,"The surgeon inspects the internal surfaces of the ovarian bed, which are fully hemostatic and do not require suturing."
 539.997,551.669,"The surgeon ties off the suture at the end of the procedure, completing the re-approximation of the ovarian edges."
 552.169,561.824,"The surgeon wraps the ovary in a sheet of interseed following irrigation, aiming to reduce further adhesion formation."
-562.324,563.787,The procedure is now complete.

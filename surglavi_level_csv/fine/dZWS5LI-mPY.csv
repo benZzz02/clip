@@ -7,8 +7,6 @@ start,end,text
 15.241,20.148,"The robotic camera is positioned in arm three, slightly off the midline, while arm four is equipped with a fenestrated bipolar instrument."
 20.648,24.149,"The laparoscopic assistant port is positioned between robotic arms three and four, facilitating access for the assistant during the gastrectomy procedure."
 20.648,24.149,"The laparoscopic assistant port is positioned between robotic arms three and four, visible alongside the surgical setup."
-24.649,34.132,"We leave this as a twelve millimeter port in the event that we need to hop the stapler over later in the case to achieve the correct angle, but this is rarely necessary if we're using a robotic stapler."
-24.649,34.132,"We leave this as a twelve millimeter port in the event that we need to hop the stapler over later in the case to achieve the correct angle, but this is rarely necessary if we're using a robotic stapler."
 34.632,37.413,"The surgeon enters the lesser sac opposite the incisura, utilizing robotic instruments positioned through the established ports."
 34.632,37.413,"The surgeon enters the lesser sac opposite the incisura, using robotic instruments positioned through the established ports."
 37.913,47.358,"With the lesser sac widely open, the anesthesia team advances a lighted 40-french bougie with a gastro-protraction device, known commercially as a gastro-sail, into the stomach."
@@ -19,16 +17,11 @@ start,end,text
 60.027,62.989,"The surgeon divides the short gastric vessels along the length of the greater curvature of the stomach, using surgical instruments to separate these vessels from surrounding tissues."
 63.489,68.673,"The surgeon detaches the posterior attachments of the stomach from the pancreas and retroperitoneum, typically without using energy devices."
 63.489,68.673,"The surgeon dissects and removes the posterior attachments to the pancreas and retroperitoneum, typically without using energy devices."
-69.173,97.82,Care must be taken to avoid inadvertently opening the gastropathic ligament or injuring the left gastric vessels by going too close to the lesser curve.
 69.173,97.82,"The surgeon carefully navigates near the lesser curve to avoid opening the gastropathic ligament or injuring the left gastric vessels, ensuring precise dissection in the exposed lesser sac."
 98.32,104.865,"The surgeon navigates the close proximity of the spleen and stomach, carefully dissecting the tissue between these structures to avoid injury."
 98.32,104.865,"The surgeon navigates the close proximity of the spleen and stomach during dissection, carefully maneuvering to avoid injury to these adjacent structures."
 105.365,113.591,"The surgeon continues the dissection towards the angle of His, exposing the length of the left crus of the diaphragm to visually assess for any significant hernia."
 105.365,113.591,"The surgeon continues the dissection towards the angle of His, exposing the length of the left crus to visually assess for any significant hernia."
-114.091,120.596,It should be noted that any thermal injuries on the stomach must be removed in the specimen.
-114.091,120.596,It should be noted that any thermal injuries on the stomach must be removed in the specimen.
-121.096,123.366,"Also, this high on the stomach"
-121.096,123.366,"Also, this high on the stomach"
 123.866,150.798,"The surgeon withdraws the sail portion of the gastro-sail retraction device, ensuring it does not obstruct the surgical field, while leaving the bougie in place."
 123.866,150.798,"The surgeon withdraws the sail portion of the gastro-sail retraction device while leaving the bougie in place, ensuring unobstructed access to the surgical field."
 151.298,178.345,"The surgical team works to expose the entire length of the left crus of the diaphragm, ensuring the dissection is complete and visually confirming the absence of significant hernia."

@@ -1,17 +1,4 @@
 start,end,text
-0.532,8.3,The following video demonstrates the technique of a robotic adrenalectomy with Firefly as a strategic approach to optimize key surgical steps of this operation.
-8.721,15.639,"It is presented by the Department of Surgery from the University of Arizona College of Medicine and Banner University Medical Center in Phoenix, Arizona."
-16.139,25.688,This is a thirty-three year old obese female with an elevated serum aldosterone and aldosterone to renin ratio consistent with primary hyperaldosteronism.
-26.188,32.073,A preoperative adrenal vein sampling localized the increased aldosterone production to the right adrenal gland.
-32.573,35.714,She was therefore recommended to undergo a right adrenalectomy.
-36.214,52.542,"The robotic surgical system is utilized to enhance visualization and facilitate liver retraction and instrument manipulation in an obese patient. Wristed instruments improve dissection ability, and Firefly technology is employed to visually identify the border of the adrenal gland and the adrenal vein."
-53.042,60.311,"The patient is positioned in the left lateral decubitus position with the surgical bed flexed at the level of the superior aspect of the anterior superior iliac spine, preparing for the right adrenalectomy procedure."
-60.811,68.119,"The video shows the placement of trocars for a robotic right adrenalectomy using the da Vinci XI system, with positions similar to those used in laparoscopic procedures."
-68.619,76.946,"The surgeon positions the lateralmost trocar more medially, aligning all four trocars in a linear fashion approximately six centimeters apart and a few finger breadths away from the costal margin."
-77.446,79.447,"The camera is inserted into the third trocar, providing a view of the surgical field for the robotic right adrenalectomy."
-79.947,85.631,"Trocars two and four are utilized as the main working ports, while the instrument in trocar one is employed for liver retraction during the robotic right adrenalectomy."
-86.072,90.175,"The robotic surgical system is docked perpendicular to the operating table over the patient's right side, preparing for the robotic right adrenalectomy."
-90.675,97.342,The surgeon prepares for the use of Firefly by mixing twenty-five milligrams of indocyanine green with ten cc's of saline.
 97.842,102.627,"The surgeon begins the procedure by mobilizing the liver, using instruments inserted through the trocars positioned in a linear fashion along the patient's right side."
 103.127,110.434,"The surgeon divides adhesions from a previous cholecystectomy, using instruments inserted through the robotic trocars."
 110.934,131.398,"The surgeon mobilizes the right triangular ligament and retroperitoneal attachments of the liver, using instruments through the trocars positioned on the patient's right side."
@@ -19,11 +6,9 @@ start,end,text
 138.128,144.337,"Wristed instruments are used to facilitate the dissection, allowing precise manipulation and separation of tissue layers."
 144.837,154.06,"The surgeon uses the fourth robotic arm to retract the adequately mobilized liver cephalad, exposing the anterior surface of the adrenal gland."
 154.56,158.261,"The fourth robotic arm is used to retract the liver, eliminating the need for an assistant, and providing a clear view of the surgical field."
-158.761,168.915,In obese patients this is particularly useful as there is no struggle with assistant fatigue while retracting a heavy liver.
 169.415,181.908,"The surgeon begins the dissection of the adrenal gland by opening Girauda's fascia at the superior medial aspect of the kidney, using wristed instruments for precise manipulation."
 182.408,197.818,"The surgeon continues lateral dissection, removing retroperitoneal fat from the superior aspect of the kidney, revealing the underlying anatomical structures."
 198.318,203.987,"During the dissection, the surgeon injects four cc's of indocyanine green solution intravenously, which may enhance visualization of vascular structures."
-204.007,210.37,This will be taken up by the adrenal gland within minutes.
 210.87,216.855,"The surgeon uses the Firefly imaging system to identify the inferior border of the adrenal gland, highlighting the structure with fluorescence."
 217.355,225,"The surgeon identifies the border of the adrenal gland, ensuring precise dissection to avoid entering the gland itself, which could lead to bleeding and complicate the procedure."
 225.5,230.444,"The surgeon continues dissection posterior to the adrenal gland, revealing the underlying psoas muscle."
@@ -31,8 +16,6 @@ start,end,text
 235.57,247.397,"The surgeon uses the left hand to retract the adrenal gland and retroperitoneal fat anteriorly, placing the retroperitoneal fat along the medial border of the adrenal gland under tension to facilitate dissection."
 247.897,252.28,The surgeon opens Girota's fascia medially to initiate the medial dissection of the adrenal gland.
 252.761,260.606,"The robotic camera provides enhanced visualization during the medial dissection, allowing the surgeon to divide arterial vessels and identify the adrenal vein adjacent to the adrenal gland."
-261.026,264.209,The robotic camera provides an approximately ten times zoom factor.
-264.569,271.254,"In addition, when seated at the surgeon console, the surgeon sees a three-dimensional image which unfortunately cannot be appreciated during this video."
 271.754,279.721,"The surgeon uses the Firefly imaging system to identify the inferior medial border of the adrenal gland, preparing for the dissection of the retroperitoneal fat at the gland's medial aspect."
 280.221,287.867,"The surgeon carefully dissects the medial tissue surrounding the adrenal gland, ensuring the gland itself is not violated to prevent unnecessary bleeding."
 288.367,301.201,"The surgeon uses improved visualization from the robotic camera to identify a safe location for retracting the adrenal gland without directly grasping it, ensuring minimal risk of damage to the gland."
@@ -54,8 +37,3 @@ start,end,text
 502.402,515.263,"The surgeon continues the lateral dissection to the level of the peritoneal reflection, clearing tissue in this area."
 515.763,523.306,"The surgeon completes the procedure by clearing retroperitoneal fat from the psoas muscle and the superior aspect of the kidney, ensuring these areas are free of fatty tissue."
 523.806,529.309,"The dissection extends laterally to the peritoneal reflection and medially towards the inferior vena cava, clearing retroperitoneal fat in these areas."
-529.809,538.953,"In summary, utilization of Firefly for robotic adrenalectomy allows for better visualization of the border of the adrenal gland throughout the procedure, allowing the surgeon to avoid dissecting into the gland."
-539.453,541.857,"The Firefly imaging system aids in the identification of the adrenal vein, enhancing visualization during the robotic adrenalectomy."
-542.357,550.326,"The use of robotics for this case improves the overall visualization, and the wristed instruments improve the ease of dissection without significant tissue manipulation."
-550.807,557.415,Robotic adrenalectomy with Firefly is a useful technique to enhance visualization and facilitate a safe and clean dissection of the adrenal gland.
-557.715,558.016,Thank you.

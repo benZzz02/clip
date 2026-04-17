@@ -1,11 +1,4 @@
 start,end,text
-0.135,7.24,robotic-assisted repair of a giant pyrosophageal hiatal hernia in a patient with scoliosis.
-7.74,16.126,This is a seventy-five-year-old female patient with three episodes of intractable nausea and emesis with prior history of GERD.
-16.626,26.493,"Workup included abdominal CT scan which showed large type IV hiatus hernia, partial volvulus of the stomach, herniation of the colon into the chest with partial obstruction."
-26.993,31.754,"Upper endoscopy showed esophagitis, hiatal hernia, and possible gastric volvulus."
-32.254,37.375,Esophageal manometry showed hypomotility disorder.
-37.875,44.616,"The surgeon inserts a 12mm trocar supraumbilically, slightly left of the midline, to accommodate the robotic camera for the hernia repair procedure."
-45.116,49.437,The surgeon places four additional trocars in the left upper quadrant to facilitate access for the robotic instruments during the hernia repair procedure.
 49.937,54.023,"The surgeon uses a Nathanson retractor to retract the left lobe of the liver anteriorly, providing clear exposure of the surgical field."
 54.523,55.766,"The surgeon exposes the hiatus, revealing the anatomical structures involved in the hiatal hernia repair."
 56.027,77.665,"A large parasophageal hernia is visible, with the entire stomach herniated into the posterior mediastinum and rotated, showing the greater curvature adjacent to the right pleura."
@@ -21,7 +14,6 @@ start,end,text
 168.942,180.477,"The surgeon reduces the hernia from the right side into the abdomen, positioning it at the gastroesophageal junction level."
 180.977,221.98,"The surgeon extends the mobilization of the esophagus toward the left side, both anteriorly and posteriorly, to achieve adequate intra-abdominal length."
 222.48,229.304,"During the dissection on the left side, the surgeon observes the aorta curving into the left chest, with the esophagus oriented in the same direction, highlighting their spatial relationship."
-229.804,232.545,This finding was consistent with the patient's history of scoliosis.
 233.045,251.723,"The surgeon mobilizes the esophagus away from the aorta by dissecting the areolar attachments, straightening the esophagus to achieve additional intra-abdominal length."
 252.223,274.596,The surgeon begins closing the diaphragmatic defect after successfully mobilizing the esophagus and positioning the gastroesophageal junction well into the abdomen.
 275.096,293.716,"The surgeon performs primary closure of the diaphragmatic defect using five interrupted O-silk sutures, securing the tissue edges together."
@@ -31,7 +23,3 @@ start,end,text
 353.49,366.034,"The surgeon performs a floppy Nissen fundoplication around a 56 French bougie, wrapping the stomach around the esophagus to create a valve mechanism."
 366.534,381.874,"The surgeon uses three 2-0 silk stitches to create a wrap, with the most distal stitch securing the wrap to the esophagus."
 382.374,388.064,"The surgeon performs an upper endoscopy, visually inspecting the repaired area at the conclusion of the hernia repair procedure."
-388.564,390.367,Operative time was a hundred and seventy-three minutes.
-390.468,392.271,Estimated blood loss was twenty cc's.
-392.351,393.633,Length of stay was two days.
-393.773,394.775,Complications none.

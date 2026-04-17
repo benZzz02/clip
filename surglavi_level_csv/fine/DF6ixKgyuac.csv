@@ -1,13 +1,4 @@
 start,end,text
-0.878,4.179,Cadaveric simulation in preparation for technical challenge.
-4.4,13.664,"The robotic surgical system is used to perform a distal tracheal and left main stem resection and reconstruction, with the patient supported by ECMO during the procedure."
-14.164,20.166,The patient initially presented when she was fifteen years old with complete obstruction of her left main stem.
-20.666,29.882,The CT demonstrates complete atelectasis of the left lung with an endobronchial lesion in the proximal left main stem.
-30.382,48.19,She underwent endobronchial excision of a benign granular cell tumor with complete re-expansion of the lung but had persistent disease and over the course of the next year and a half demonstrated subtle increase in size.
-48.69,53.757,The surgical view provides an additional perspective showing the flattened appearance of the aortic wall.
-54.257,60.042,We plan for a robotic reception of the left trachea and main stem bronchus with primary reconstruction.
-60.542,65.587,"The surgical team prepares to collapse the right lung and separate the left lung, planning to proceed with the procedure using ECMO support."
-66.087,73.129,"Given the novel nature, we perform the procedure as a simulation on a cadaver."
 73.629,76.312,"The video shows the dissection of a cadaver, focusing on anatomical structures relevant to the esophagectomy procedure."
 76.812,89.062,"The surgeon dissects the subcranial space, removing subcranial lymph nodes to expose the left atrium and left main stem bronchus, with the esophagus visibly overlying these structures."
 89.562,91.785,"A Penrose drain is placed around the distal trachea, providing visual identification and retraction of the tracheal structure during the procedure."
@@ -19,13 +10,11 @@ start,end,text
 129.672,136.105,"The surgeon practices suturing skills by reconstructing the area just below the carina, following the transection of the left main stem from the trachea."
 136.605,154.062,"The surgeon places a stay suture on the distal right main stem, securing the structure in preparation for further surgical steps."
 154.562,164.164,"The surgeon performs the initial knot by threading the suture needle through the loop, securing the suture in place."
-164.664,178.446,"The suture is barbed, so theoretically, it should not be able to become loose once it has been tightened."
 178.946,183.218,"The surgeon completes the circumferential anastomosis, visually confirming the closure of the esophageal tissue around the surgical site."
 183.718,194.685,"The surgeon ligates the two ends of the suture together, completing the connection between the anatomical structures."
 195.185,205.372,"The surgeon inspects the circumferential anastomosis, observing a technical error at the posterior aspect."
 205.872,211.165,"The trachea is elevated and visually highlighted by an arrow, indicating its position relative to surrounding structures."
 211.665,213.966,"The surgeon observes that the knot in the suture is not tight, indicating a potential issue with the barbed suture's ability to maintain tension."
-214.466,220.909,With the lessons learned we proceeded a week later with the definitive resection.
 221.409,225.451,"The surgeon begins to open the pleura located beneath the azygos vein, using surgical instruments to carefully separate the pleural tissue."
 225.951,232.598,"The surgeon dissects the right tracheobronchial angle, with the vagus nerve visibly highlighted by an arrow in the surgical field."
 233.098,238.439,"The surgeon dissects the subcranial packet of lymph nodes, clearing the subcranial space and revealing the anatomical structures within."
@@ -40,10 +29,7 @@ start,end,text
 307.074,322.157,"The surgeon completely divides the left main stem bronchus, with the surrounding anatomical structures visible in the surgical field."
 322.657,327.854,"The surgeon secures additional margins on the anterior side, ensuring clear boundaries around the surgical site."
 328.354,341.339,"The surgeon resects the left main stem and distal trachea, removing these sections as part of the esophagectomy procedure."
-341.839,345.74,And on the proximal.
 346.24,351.962,"The surgeon resects the distal trachea, carefully separating it from surrounding tissues."
-352.462,358.361,"Although we initially planned to implant the left main stem to the distal trachea,"
-358.861,364.063,became apparent that it would work better being implanted in the bronchus intermedius.
 364.563,375.908,"The surgeon places a stay suture on the left lateral aspect of the trachea, securing the tissue in preparation for further surgical manipulation."
 376.408,392.455,"The surgeon places a stay suture on the left lateral aspect of the left main stem bronchus, securing the tissue in preparation for further surgical manipulation."
 392.955,401.682,"The surgeon performs a bronchotomy in the bronchus intermedius, focusing on a completely cartilaginous region."
@@ -58,16 +44,6 @@ start,end,text
 523.353,532.578,"The surgeon ties the meeting ends of the running sutures, completing the reconstruction of the airway."
 533.078,542.223,"The surgeon ties the stay sutures on the left main stem and bronchus intermedius, effectively removing tension from the anastomosis site."
 542.723,544.725,"The surgeon inflates the lung to visually inspect for any air leaks, ensuring the integrity of the reconstructed airway."
-545.225,546.347,There are none.
 546.847,551.572,"The bronchoscopic view reveals the location of the tracheal anastomosis, showing the site where the trachea has been surgically connected."
 552.072,556.056,"The video shows the neocarina formed between the left main stem and bronchus intermedius, highlighting the reconstructed airway following the anastomosis."
 556.556,560.78,"The surgeon visually identifies the right upper lobe takeoff, highlighting its anatomical position in relation to the surrounding structures."
-561.28,564.362,The patient was weaned from ECMO and extubated in the operating room.
-564.622,567.784,She was admitted to the ICU and transferred to the floor the next day.
-568.284,574.148,Drains were removed sequentially and she was discharged on hospital day six with this x-ray on discharge.
-574.648,577.91,She was seen for follow-up a week and a half following discharge.
-578.33,581.132,This is her left chest and this is her right chest.
-581.632,583.893,She was cleared to return to school.
-584.393,590.617,"In summary, this video demonstrates the utility of cadaveric simulation in preparation for a novel procedure."
-591,596.503,The exercise allowed us to practice technical skills as well as identify potential opportunity for errors.
-597.003,600.825,We feel the exercise was critical to the success of this procedure.

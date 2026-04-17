@@ -1,7 +1,4 @@
 start,end,text
-8.93,17.633,"Robotic surgery is increasingly being used for rectal cancer. In particular, technically difficult cases are being accessed using robot."
-8.93,24.356,"Robotic surgery is increasingly being used for rectal cancer. In particular, technically difficult cases are being accessed using robot. Here we describe a standardized approach to performing N-block hysterectomy for locally advanced rectal cancer."
-17.933,24.356,Here we describe a standardized approach to performing N-block hysterectomy for locally advanced rectal cancer.
 24.856,34.987,"After docking the robotic system, the surgeon isolates the femur's enteric artery at the pelvic brim, carefully avoiding damage to the surrounding hypogastric nerves."
 24.856,49.28,"After docking the robotic system, the surgeon isolates the femur's enteric artery at the pelvic brim, ensuring the hypogastric nerves are not damaged. The eye tree is isolated cleanly, two centimeters from its origin at the abdominal aorta."
 35.487,49.28,"The surgeon isolates the iliac artery, cleaning it two centimeters from its origin at the abdominal aorta."
@@ -9,15 +6,12 @@ start,end,text
 49.78,63.874,"The surgeon performs ligation of the isolated artery using Hem-o-lok clips, followed by division with monopolar scissors, demonstrating precise control and technique."
 64.374,79.239,"The surgeon secures the artery and proceeds with cranial dissection using a medial collateral approach, applying traction and counter traction in front of Gerota's fascia to facilitate the procedure."
 64.374,85.858,"The surgeon secures the artery and proceeds with cranial dissection using a medial collateral approach. Traction and counter-traction are applied in front of Gerota's fascia, with gentle traction to minimize tissue trauma."
-79.719,85.858,Care has to be taken to apply gentle traction in order to minimize tissue trauma.
 86.358,103.007,"The surgeon isolates the inferior mesenteric vein at its origin near the lower border of the pancreas. Locking clips are applied to secure the vein, followed by division using a monopolar scissor."
 86.358,103.007,The surgeon isolates the inferior mesenteric vein at its origin near the lower border of the pancreas. The vein is secured with locking clips and divided using a monopolar scissor.
 103.507,117.958,"The surgeon performs precise dissection laterally, cranially, and caudally using low voltage monopolar scissors, applying traction and counter traction to carefully separate tissue layers."
 103.507,117.958,"The surgeon performs precise dissection laterally, cranially, and caudally using a low voltage monopolar scissor, employing traction and counter traction techniques to carefully separate tissue layers."
 118.458,137.083,"The surgeon performs dissection in front of the rotous fascia, minimizing the risk of trauma to the left ureter and glidal vessel. The robotic left hand applies careful traction to aid in the procedure."
 118.458,137.083,"The surgeon performs dissection in front of the Girotus fascia, minimizing the risk of trauma to the left ureter and glidal vessels. The robotic left hand applies careful traction to aid in the procedure."
-137.583,149.512,"as no tactile feedback is seen with robotic surgery, so the care has to be taken not to cause tissue trauma by excessive traction."
-137.583,149.512,"as no tactile feedback is seen with robotic surgery, so the care has to be taken not to cause tissue trauma by excessive traction."
 150.012,165.165,"The surgeon completes dissection behind the left colon and at the top of the pancreas, then proceeds with lateral mobilization of the left colon to achieve full mobilization of the splenic flexure."
 150.012,165.165,"The surgeon completes the dissection behind the left colon and at the top of the pancreas, then begins lateral mobilization of the left colon to achieve full mobilization of the splenic flexure."
 165.665,194.52,"Following complete mobilization of the left colon, the surgeon uses traction and counter-traction with robotic arms to focus on rectal dissection. The dissection begins posteriorly between the two hypogastric nerves using a very low voltage monopolar diathermy, taking care to avoid damage to the nerves."
@@ -32,7 +26,6 @@ start,end,text
 278.838,295.878,"The surgeon continues the rectal dissection on the right posterolateral side, avoiding mobilization of the specimen from the left side."
 278.838,328.086,"The surgeon continues the rectal dissection on the right posterolateral side, avoiding mobilization from the left. The dissection progresses past Valdai's fascia, with care taken to prevent injury to the left hypogastric nerve."
 296.378,328.086,"The surgeon completes the posterior dissection by connecting previously dissected areas, taking care to avoid injury to the left hypogastric nerve. The dissection progresses past Valdai's fascia using established techniques."
-328.586,347.297,"At this stage, no attention is focused on doing N block hysterectomy as this was anteriorly placed tumor tethering the back wall of uterus and MRI has suggested this to be a T-IV-D lesion."
 328.586,403.507,"The surgeon isolates the round ligaments and mobilizes the uterus from the back of the bladder to access the vasculature. A bipolar energy device in the left robotic hand ensures a complete vascular seal, creating a bloodless plane. The right vasculature is sealed using the bipolar energy source, and the tibiovarian vasculature is divided with a combination of bipolar energy and a monopolar scissor in the right robotic hand."
 347.797,365.269,"The surgeon isolates the round ligaments and mobilizes the body of the uterus from the posterior aspect of the bladder, providing access to the uterine vasculature from both superior and inferior positions."
 365.769,403.507,"The robotic surgical system uses a bipolar energy device in the left hand to seal the vasculature, creating a bloodless plane. The right vasculature is sealed with the bipolar energy source, followed by the division of the tibiovarian vasculature using a combination of bipolar energy and monopolar scissors in the right hand."

@@ -1,8 +1,6 @@
 start,end,text
-2.633,25.859,"Hello, this is a robotic distal pancreatectomy for a solid pseudocapillary neoplasm in a young male with BMI of fifty-five. I try to do robotic distal pancreatectomy the same way every time, same stepwise manner."
 26.359,37.94,"The surgeon opens the lesser sac and mobilizes the stomach away, creating space for further dissection."
 38.44,50.689,"The surgeon opens the gastrocolic omentum and dissects the short gastric vessels, revealing the tumor located in the pancreas."
-51.189,60.877,"Unless I'm doing a spleen preserving, then I don't need to take all the short gastric. But if I'm doing a splenectomy, I take all the short gastric so I don't have to worry about them later."
 61.377,67.074,The video shows a large tumor located in the proximal body of the pancreas.
 67.574,80.639,"The surgeon manipulates the splenic flexure, which appears challenging to mobilize. After completing the dissection of the short gastric vessels, the spleen is visible in the surgical field."
 81.139,89.202,"The surgeon completes the dissection, revealing the left crus of the diaphragm in the surgical field, marking the end of this part of the pancreatectomy procedure."
@@ -12,8 +10,6 @@ start,end,text
 129.008,156.875,"The surgeon mobilizes the pancreas away from the transverse colon and splenic flexure, isolating the pancreas-spleen complex. The inferior part of the pancreas is carefully separated from surrounding structures."
 157.375,178.907,"The surgeon mobilizes the splenic flexure, starting from lateral to medial, with the flexure extending across the spleen."
 179.407,191.664,"The surgeon prepares for a splenectomy due to the presence of a bulky tumor encasing the vessels, which makes spleen preservation challenging."
-192.164,202.386,I guess I could have done a spleen preserving with resection of the vessels.
-202.886,219.046,"This is a plant fracture, keeps going all the way up. I needed a skilled colorectal surgeon to mobilize the splank flexure for me. Redundant splank flexure there."
 219.146,229.71,"The surgeon completes the mobilization of the omega loop, separating it entirely from the omentum."
 230.21,246.453,"The surgeon has mobilized the surrounding structures, allowing the pancreas to become visible. The inferior mesenteric vein (IMV) is observed joining nearby, and the surgeon begins searching for the splenic vein."
 246.953,262.683,"The surgeon isolates the splenic vein and splenic artery, dividing them before proceeding to divide the pancreas and detach its lateral attachments."
@@ -32,4 +28,3 @@ start,end,text
 467.94,493.877,The surgeon uses a white load stapler for the vein and continues to mobilize the pancreas and spleen from the retroperitoneum.
 494.377,511.688,"The surgeon points to the tumor, identified as a five-centimeter solid pseudopapillary neoplasm, with surrounding tissue showing no signs of malignancy in twelve lymph nodes and clear margins."
 512.188,533.115,"The surgeon places a drain near the surgical site and removes the remaining portion of the spleen, completing the procedure."
-533.615,534.79,And that's it. Thank you for watching.

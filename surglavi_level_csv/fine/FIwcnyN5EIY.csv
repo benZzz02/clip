@@ -1,5 +1,4 @@
 start,end,text
-0.351,6.114,This video presents a robotic right hemicolectomy for a patient with Gelatitis syndrome.
 6.614,10.717,"The Da Vinci SI robotic system is utilized with standard port placement for the procedure, showing the setup of robotic arms and instruments in the surgical field."
 11.217,26.965,"The laparoscopic view reveals the transverse colon transposed between the liver and diaphragm, contributing to intermittent bowel obstruction symptoms."
 27.465,32.826,"The surgeon reduces the transverse colon and hepatic flexure back into the abdominal cavity using robotic instruments, correcting their transposed position between the liver and diaphragm."
@@ -13,7 +12,6 @@ start,end,text
 124.572,137.476,"The surgeon separates the duodenum from the mesocolon, carefully dissecting the tissue planes to maintain clear anatomical boundaries."
 137.976,150.43,"The robotic arms are used to triangulate the tissues, facilitating the continuation of dissection superiorly, providing access to the lesser sac."
 150.93,172.525,"The robotic system provides counter-traction by pulling down Girota's fascia, aiding in the dissection process."
-173.025,185.925,"Again, three-D vision and endo-wrist instruments allow the surgeon to stay in the correct anatomical"
 186.425,202.194,"The surgeon visually identifies the entrance into the lesser sac, with surrounding tissues and anatomical landmarks clearly visible."
 202.694,208.337,"The surgeon uses an energy sealing device to divide the omentum and the mesocolon, separating these structures with precision."
 208.357,215.669,"The surgeon uses the endo-wrist vessel sealer to extend the dissection, facilitating access to the lesser sac by sealing and dividing vessels within the surgical field."
@@ -33,12 +31,6 @@ start,end,text
 403.816,422.502,"The surgeon inserts the stapler and applies traction on the stage suture, guiding the colon and small bowel into the stapler to create a secure anastomosis."
 423.002,433.68,"The surgeon closes the enterotomy with a running suture using 3-0 suture material, applying two layers to ensure secure closure of the incision."
 434.18,448.615,"The surgeon uses robotic instruments to perform straightforward suturing on the anastomosis site, ensuring precise closure of the tissue layers."
-449.115,473.944,Precise placements of the sutures and minimal tissue trauma results in improved healing.
-474.444,481.67,There is a concern about the risk of intraoperative contamination because of the intracorporeal anastomosis.
-482.17,490.456,"However, careful surgical technique can minimize this."
 490.956,511.673,"The surgeon completes the second layer of suturing over the initial suture layer, effectively burying it to ensure a watertight anastomosis."
-512.173,516.924,We do not prepare the bowel with laxatives for these procedures.
-517.424,533.475,"However, in some centers, routine bowel preparation is practiced to reduce the risk of infection."
 533.975,560.057,"Following the completion of the anastomosis, the surgeon administers an ICG bolus to assess perfusion, revealing excellent blood flow in both the small bowel and colon."
 560.557,569.008,The surgical specimen is retrieved through a four-centimeter suprapubic incision made with fine steel instruments.
-569.508,574.034,Patient was discharged on day three and then made an excellent recovery postoperatively.

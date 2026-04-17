@@ -1,10 +1,4 @@
 start,end,text
-0.491,6.033,This video will demonstrate the laparoscopic approach for a closed-loop small bowel obstruction.
-6.053,13.795,A seventy-nine-year-old female presented to the hospital with two days of abdominal pain associated with nausea and vomiting.
-14.295,17.296,She had tenderness to palpation in the lower abdomen.
-17.796,23.796,Her surgical history included a hysterectomy that had been performed many years in the past.
-24.296,31.639,A CT scan was performed which revealed a distended loop of intestine concerning for a closed-loop obstruction.
-32.139,37.5,"Given these findings, the patient was brought to the operating room for a laparoscopic exploration."
 38,43.883,"The surgeon observes ischemic bowel in the pelvis, characterized by necrotic and hemorrhagic mesentery."
 44.383,60.566,"The surgeon uses a ligature device to transect the adhesion from the patient's prior hysterectomy, unraveling it to relieve the closed-loop obstruction in the intestine."
 61.066,68.889,"The surgeon transects the remaining end of the adhesion band, allowing the bowel to be delivered from the pelvis."
@@ -25,14 +19,12 @@ start,end,text
 162.008,167.149,"The surgeon removes a small piece of bowel from the patient's abdomen under direct visualization, ensuring the specimen is completely extracted from the surgical field."
 167.649,171.43,"The surgeon creates a window at the anti-mesenteric border of the small intestine at the other staple line, similar to the previous step."
 171.93,181.393,"The surgeon aligns the bowel in an anti-peristaltic fashion, preparing the tissue for the formation of the intracorporeal anastomosis."
-181.893,186.415,The use of an assistant is integral to this portion of the procedure.
 186.915,195.215,"The surgeon uses two graspers to carefully position the stapler through the intestine, ensuring the bowel remains securely aligned with the stapler."
 195.715,201.518,"The surgeon forms the common channel by aligning the bowel in the correct position, preparing for the intracorporeal anastomosis."
 202.018,207.961,"The surgeon reintroduces the stapler into the intestine to lengthen the common channel, ensuring precise alignment of the bowel for the intracorporeal anastomosis."
 208.461,214.164,"The surgeon measures the final length of the common channel, which is approximately ten centimeters."
 214.664,220.529,"The surgeon removes the stapler, revealing the anastomosis site, which is inspected and shows no signs of bleeding."
 221.029,227.095,"The surgeon uses graspers to hold the bowel in place while closing the common enterotomy with a stapler, ensuring the bowel remains aligned during the stapling process."
-227.595,233.321,The importance of forming an initially long common channel is seen here.
 233.821,240.327,"After closing the stapler, the surgeon examines both sides of the bowel to confirm that the closure is complete and secure."
 240.827,250.988,"The surgeon uses the stapler to close approximately seventy-five percent of the common enterotomy, visibly reducing the opening in the bowel."
 251.488,255.989,"The surgeon reintroduces the stapler to complete the anastomosis, ensuring the bowel segments are securely joined with no visible bleeding."
@@ -50,12 +42,3 @@ start,end,text
 343.479,350.541,"The surgeon removes the wound protector from the patient's abdomen through the twelve millimeter port site, completing the procedure."
 351.041,358.464,"The surgeon observes the large fascial defect, noting its potential as a future site for herniation."
 358.964,373.052,"The surgeon uses an endoclosed device with an absorbable suture to close the fascial defect in a figure of eight pattern, ensuring secure closure of the tissue."
-373.552,377.915,"The video displays the patient's postoperative abdomen, showing the external appearance following the surgical procedure."
-378.415,384.038,"The surgeon highlights the left upper quadrant incision, marked by a red circle, which serves as the extraction site for the small bowel resection."
-384.538,388.02,"The surgical specimen is displayed at the bottom of the screen, providing a clear view of the resected tissue."
-388.52,391.902,This patient had an uneventful postoperative course.
-392.402,397.497,"On postoperative day one, she was passing flatus and tolerating liquids."
-397.997,402.64,Her diet was advanced and she was discharged to her home on post-operative day three.
-403.02,406.583,The patient returned to the office two weeks later with no complaints.
-407.083,411.566,This video demonstrated a minimally invasive technique in the emergent setting.
-412.066,416.609,"With proper experience, this is safe and leads to improved patient outcomes."

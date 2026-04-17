@@ -1,9 +1,4 @@
 start,end,text
-2.334,11.538,Here we present a case of hand-assisted laparoscopic surgery for rectal cancer.
-12.038,16.419,Fifty-eight female patient underwent screening colonoscopy.
-16.739,22.261,A four-centimeter mass is identified fifteen centimeters from the anal verge during the rectal examination.
-22.521,26.383,Biopsy showed moderately differentiated adenocarcinoma.
-26.643,32.737,CT scan showed no distant metastasis.
 33.237,42.483,"The surgeon performs a six-centimeter transumbilical incision, creating an entry point for hand-assisted laparoscopic surgery."
 42.983,50.767,"The surgeon inserts a hand port through the transumbilical incision, providing access to the abdominal cavity for manual manipulation during the procedure."
 50.787,61.559,"Three working trocars are inserted into the abdominal cavity, providing access for surgical instruments."
@@ -18,5 +13,3 @@ start,end,text
 267.914,290.393,"The surgeon performs an anastomosis using a circular stapler, joining the bowel ends following the resection of the rectum."
 290.893,298.258,"The surgeon performs a leak test on the anastomosis site, confirming the absence of leaks."
 298.758,302.302,"The surgeon closes the surgical wounds, completing the procedure."
-302.802,307.166,"The surgical specimen is displayed, showing the excised section of the rectum following the procedure."
-307.666,308.027,Thank you.

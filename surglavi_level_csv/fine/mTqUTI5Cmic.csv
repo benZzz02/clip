@@ -1,6 +1,4 @@
 start,end,text
-0.511,7.413,"Today I am presenting a case of laparoscopic cholecystectomy in a female, fifty years, with acute calculus cholecystitis."
-7.913,11.955,"The surgeon inserts a 10mm port at the umbilicus, which serves as the camera port for the laparoscopic cholecystectomy procedure."
 12.295,19.789,"The surgeon places a second 10mm port at the epigastrium, a third 5mm port at the midclavicular line, and a fourth 5mm port at the anterior axillary line, establishing access points for the laparoscopic cholecystectomy."
 20.289,49.733,"The surgeon retracts the gallbladder using a 5mm port at the anterior axillary line, holding it at the Hartmann's pouch. Dissection begins at the cystic duct, removing fibro-fatty tissue and visceral peritoneum to skeletonize the duct."
 50.233,62.575,"The surgeon focuses dissection on the posterior part of Calot's triangle, where no vascular or vital structures are present, ensuring a safer approach in this area."
@@ -16,4 +14,3 @@ start,end,text
 234.162,240.765,The surgeon removes the gallbladder specimen through the 10mm port at the epigastrium using a gallbladder extractor.
 241.265,245.049,"The surgeon removes the gallbladder from the gallbladder fossa, carefully separating it from the liver bed due to acute calculus cholecystitis."
 245.549,258.122,"The surgeon irrigates the operated area and surrounding tissues with normal saline, inspecting for any signs of bleeding or bile leakage."
-258.622,259.403,Thank you very much.

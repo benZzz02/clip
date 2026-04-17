@@ -1,15 +1,7 @@
 start,end,text
-2.012,8.258,"The laparoscopic robotic-assisted procedure involves transgastric resection of a gastric gastrointestinal stromal tumor (GIST), utilizing robotic instruments to access and excise the tumor through the stomach wall."
-8.758,19.227,"This is a seventy-one year old male with hyperlipidemia and obesity that consulted for nausea, vomiting and left upper quadrant pain."
-19.727,31.735,"During the workup, a US and a CT scan showed a four centimeter submucosal lesion protruding into the gastric lumen at the gastroesophageal junction."
-32.235,36.42,The endoscopic ultrasound confirmed the diagnosis.
-36.92,43.987,Laparoscopic robotic assisted resection of gastroesophageal junction submucosal tumor was planned.
 44.487,47.47,"The surgeon places trocars in the abdominal wall, establishing access points for the laparoscopic robotic instruments."
-47.97,51.855,The da Vinci robotic system is utilized for the surgical procedure.
-52.355,56.676,"The Nathanson liver retractor is positioned in the epigastrium, providing exposure for the surgical field."
 57.176,67.339,"The surgeon begins the procedure by mobilizing the short gastric vessels, starting from the mid portion of the splenic hilum and extending to the gastroesophageal junction, using laparoscopic robotic assistance."
 67.839,70.821,The surgeon uses a bipolar device and hook to perform surgical maneuvers at the gastroesophageal junction.
-71.321,81.404,We prefer these devices because they provide three hundred and sixty degrees articulation with a fine tip and this is a crucial advantage of the robot.
 81.904,85.228,"The surgeon uses a hook to dissect the left pillar of the crura, revealing the anatomical structure and separating it from surrounding tissues."
 85.728,91.753,"The surgeon resects the fat pad to achieve complete exposure of the gastric fundus, revealing the anatomical structure for further surgical manipulation."
 92.253,100.399,"The surgeon exposes the posterior aspect of the stomach, identifying a lesion that appears mostly intraluminal."
@@ -23,6 +15,3 @@ start,end,text
 195.021,230.708,"The surgeon over-sews the suture line using three PDS sutures, reinforcing the closure with precise stitching."
 231.208,254.17,"The surgeon closes the anterior gastrotomy using running 3-0 VLOG sutures, followed by interrupted 3-0 PDS sutures."
 254.67,275.864,"An intraoperative endoscopy reveals no intragastric bleeding or leaks, and a clear passage through the gastroesophageal junction."
-276.364,303.942,There was no intraoperative blood loss and no drains were used.
-304.442,310.208,The patient was discharged on the first day after surgery. No complications were recorded.
-310.708,320.037,The surgical pathology informed a gastric cardiostromal tumor histologically classified as G-I. The margins were free of disease.

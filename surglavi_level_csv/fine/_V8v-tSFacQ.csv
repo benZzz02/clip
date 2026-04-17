@@ -1,15 +1,10 @@
 start,end,text
-0.452,16.115,"This video demonstrates robotic low anterior resection with total abdominal hysterectomy, bilateral subpingo oophorectomy, and then blocked pelvic peritonectomy followed by HIPEC for the multimodality treatment of recto sigmoid cancer with peritoneal seating."
-16.615,28.484,"A seventy-eight-year-old woman experienced a change in the bowel habits and bloody stool for two months. Colonoscopy showed an ulcerative mass in the rectosigmoid colon, fifteen centimeters above the anal verge."
-28.984,36.17,MRI revealed rectosigmoid colon cancer with suspected serosal invasion and multiple pericardic lymphadenopathy.
-36.67,49.133,"The patient underwent robotic low anterior resection with total hysterectomy, bilateral salpingo-orphyrectomy, and pelvic peritonectomy."
 49.633,65.461,"The surgeon begins dissection immediately from the visceral peritoneum, using robotic instruments to carefully separate the peritoneal layer from underlying structures."
 65.961,68.142,"The surgeon exposes the right external iliac vessels, which are visible within the surgical field."
 68.482,83.578,"The surgeon identifies the right-sided round ligament crossing the external iliac vessels, along with the ovarian vessels, in the pelvic region of a female patient."
 84.078,92.146,"The surgeon clips and cuts the right round ligament, which is visible crossing the external iliac vessels."
 92.646,98.072,"The surgeon visually identifies the right ureter and gonadal vessels, which are exposed in the surgical field."
 98.572,110.32,"The surgeon identifies and mobilizes the gonadal vessels, then clips and cuts them."
-110.82,115.745,Accurate identification of the ureter is important to avoid injury.
 116.245,127.855,"The surgeon continues dissection towards the pelvic floor, carefully preserving the hypogastric nerve. The dissection proceeds along the vascular plane between the mesorectum and presacral fascia."
 128.355,152.269,The surgeon moves to the left side and performs dissection to divide the left gonadal vessels and round ligaments. The round ligament on the left side is visibly transected.
 152.769,170.234,"The surgeon identifies and mobilizes the left ureter to prevent injury, then clips and cuts the left gonadal vessels."
@@ -27,7 +22,3 @@ start,end,text
 393.717,412.587,"The surgeon connects the two outflow conduits to the outflow tubing, which is attached to the perfusion machine."
 413.087,419.067,Two thermometers are used to monitor the temperature of the fluid flowing through the inflow and outflow tubing connected to the perfusion machine during the procedure.
 419.567,449.819,"The patient undergoes HIPEC treatment for one hour with a closed technology setup, using an infusate containing Folfax, Fi-FU, Leucovarin, and Oxaliplatin at a controlled temperature of 42 degrees Celsius."
-450.319,458.026,Surgical pathology examination revealed rectal sigmoid colon cancer with metastasis and original lymph node and peritoneal seeding.
-458.526,460.787,The consult time was three hours and ten minutes.
-461.148,467.393,The duration of post-operative hospital stay was forty days due to post-operative ileus and pneumonia.
-467.893,476.3,Both these conditions improved after administration of supportive treatment. The patient was followed up for forty months and good tumor control was noted.

@@ -1,5 +1,4 @@
 start,end,text
-0.231,24.088,"A forty-year-old woman presented to the emergency department with forty-eight hours of abdominal pain, nausea and constipation, with no signs of peritonitis. She referred similar symptoms one year before, spontaneously resolved after a couple of days. She had a CT scan done in another hospital twenty-four hours earlier, showing bowel obstruction due to ileocecal interception."
 24.308,41.824,"During the urgent colonoscopy, the terminal ileum is visibly invaginated through the ileocecal valve, extending approximately fifteen centimeters, with no observable signs of ischemia."
 42.324,86.629,"The surgical team initiates an emergency laparoscopy with standard trocar positioning for a right colectomy, attempting to laparoscopically reduce the ileocecal intussusception to minimize bowel resection."
 87.129,126.255,"The surgeon observes limited bowel dilatation in the distal ileum, while the rest of the small and large bowel appears well perfused and without tension."
@@ -9,5 +8,3 @@ start,end,text
 233.975,272.588,"The surgeon completes the mobilization of the hepatic flexure, joining it with the previously dissected area. Using laparoscopic palpation, the site for colon resection is determined."
 273.088,320.688,"The surgeon uses a linear stapler to transect the transverse colon. The cecum, appendix, and distal ileum are dissected away from retroperitoneal structures. The small bowel mesentery is sealed using ultrasonic energy, and the terminal ileum is divided."
 321.188,386.012,"The surgeon performs a complete intracorporeal side-to-side staple anastomosis, using a double-layer technique to ensure secure closure of the enterotomy."
-386.512,407.221,"The surgeon extracts the specimen through a five-centimeter incision. The specimen shows benign ileocolic intussusception with mucosal and submucosal edema, pseudomembranous colitis in the cecum, and inflammatory debris in the terminal ileum, along with thirty reactive lymph nodes."
-407.721,411.103,The patient recovered well and was discharged home on day six.

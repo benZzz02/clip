@@ -1,8 +1,4 @@
 start,end,text
-1.03,5.451,"The surgeon performs a robotic-assisted radical completion cholecystectomy, utilizing robotic instruments to manipulate and dissect tissues around the gallbladder."
-5.951,13.573,"Our patient is an otherwise healthy, sixty-one-year-old female with an incidentally discovered gallbladder adenocarcinoma."
-14.073,16.334,"The video shows the configuration of trocars used for the robotic-assisted radical completion cholecystectomy, illustrating their placement on the patient's abdomen."
-16.794,24.164,The surgeon utilizes the left-sided 11mm and 5mm trocars as laparoscopic assist ports during the robotic-assisted radical completion cholecystectomy.
 24.664,36.011,"The surgeon mobilizes the duodenum after taking down adhesions, preparing to dissect to the right of the common bile duct, just posterior to the duodenum."
 36.511,50.5,"The surgeon begins dissection at the inferior border of the porta hepatis, aiming to achieve a complete lymphadenectomy."
 51,53.421,"The surgeon skeletonizes the arterial structures, carefully exposing them by removing surrounding tissue."
@@ -12,16 +8,13 @@ start,end,text
 65.985,77.259,"The surgeon skeletonizes the common hepatic artery, revealing the origin of the gastroduodenal artery."
 77.759,82.182,"The surgeon identifies the bile duct and continues lateral dissection, carefully separating surrounding tissues to expose the duct."
 82.682,93.447,"The surgeon uses the FireFly system on the robotic platform to confirm the bile duct, which fluoresces after the patient receives an intravenous injection of endocyanin green."
-93.947,98.77,The biliary system will fluoresce twenty to forty minutes after the injection.
 99.27,105.971,"The surgeon continues the dissection medially to clear the common bile duct, revealing its structure within the surgical field."
 106.471,120.757,"The surgeon dissects along the proper hepatic artery, elevating lymphatic tissue towards the liver base to skeletonize the proper hepatic artery and identify the right hepatic artery."
 121.257,127.683,"The surgeon completes the dissection of tissue between the bile duct and hepatic artery, preparing it for removal as part of the specimen."
 128.183,132.367,"The surgeon clears the space to expose the anterior aspect of the portal vein, revealing its position relative to surrounding structures."
-132.867,139.233,It is important to remember that this is the continuation of the dissection that began at the common hepatic artery earlier.
 139.733,145.25,"The surgeon performs dissection around the common bile duct and hepatic artery, crucial for achieving a thorough lymphadenectomy, with visible removal of lymphatic tissue towards the base of the liver."
 145.75,150.111,"The surgeon removes lymphatic tissue from the lateral and posterior regions of the porta hepatis, revealing the underlying anatomical structures."
 150.611,155.513,"The surgeon retracts the bile duct medially to clear the posterior tissue, facilitating the removal of lymphatic tissue in the porta hepatis."
-156.013,163.015,We are mindful of the portal vein during this step.
 163.515,172.894,"The surgeon identifies and divides an accessory branch of the cystic artery, which was initially mistaken for the main cystic artery, using robotic instruments."
 173.394,178.659,"The surgeon continues to remove lymphatic tissue located between the bile duct and the hepatic artery, ensuring thorough clearance in the porta hepatis region."
 179.159,189.067,The bile duct is visibly skeletonized laterally after the removal of lymphatic tissues from the lateral and posterior regions in the porta hepatis.
@@ -43,11 +36,6 @@ start,end,text
 332.407,337.51,The surgeon uses the ultrasonic dissector to transect the liver parenchyma while carefully preserving the surrounding vascular structures.
 338.01,350.015,"The surgeon identifies the vessels and divides the small vessels using a laparoscopic bipolar sealing device, while clipping the larger vessels."
 350.515,358.823,The surgeon uses the laparoscopic ultrasonic dissector to precisely expose vascular structures within the surgical field.
-359.323,372.832,"We found the combination of the ultrasonic dissector, the bipolar vessel sealer, and clips for larger vessels to be very effective in the minimally invasive approach to liver resection."
-373.332,383.543,"Our patient did well post-resection of her T-B gallbladder adenocarcinoma, which was discovered incidentally after cholecystectomy for symptomatic cholelithiasis."
-384.043,388.487,"Her liver and cystic duct stump margins were negative, as were all of her lymph nodes."
-388.987,392.151,She was discharged home on post-operative day number three.
-392.651,402.175,She is now six months post-op with no evidence of recurrent cancer.
 402.675,405.718,The surgeon places the specimen into an EndoCatch bag and removes it from the surgical field.
 406.218,408.199,"The surgeon achieves hemostasis, ensuring that there is no active bleeding in the surgical field."
 408.699,413.303,"The final appearance of the porta hepatis is displayed, showing the completed dissection with clear anatomical structures and no visible bleeding."

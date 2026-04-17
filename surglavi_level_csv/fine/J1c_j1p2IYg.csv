@@ -1,8 +1,4 @@
 start,end,text
-1.567,12.273,"In this video, we are presenting a case of laparoscopic left hemicolectomy with fluorescence angiography in a patient with intestinal"
-12.773,24.359,"Incidentally, a type II intestinal malrotation is diagnosed by CT scan in a sixty-three years old woman patient with acute diverticulitis of the sigmoid colon."
-24.859,31.788,"During the laparoscopic left hemicolectomy, indocyanine green fluorescence angiography is utilized to assess the vascular supply to the colon."
-32.288,37.389,"The abdominal X-ray reveals the presence of intestinal malrotation, showing abnormal positioning of the intestines."
 37.889,44.191,"The patient is positioned in supine decubitus with legs open on the operating table, preparing for the laparoscopic procedure."
 44.691,50.892,The surgeon creates a pneumoperitoneum using a Veress needle inserted into the left hypochondrium.
 51.392,55.733,"The operating table is adjusted to the Trendelenburg position with the patient's right side tilted down, optimizing the surgical field for the procedure."
@@ -20,5 +16,3 @@ start,end,text
 341.712,351.516,"Fluorescence angiography is performed, revealing that the remaining colon is fully vascularized."
 352.016,369.818,"The surgeon performs an end-to-end anastomosis using a circular stapler, joining the divided segments of the colon."
 370.318,388.426,"At the end of the surgery, the surgeon performs a fluorescence angiography to assess the vascularization of the remaining colon segment."
-388.926,395.189,"On postoperative day one, a self-limiting occult random failure was observed, but anastomotic leakage did not occur."
-395.609,398.05,Postoperative hospital stay was eight days.

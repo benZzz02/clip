@@ -1,15 +1,4 @@
 start,end,text
-0.945,8.01,The video shows a step-by-step robotic right hemicolectomy and right lower-pore partial nephrectomy.
-8.51,21.738,"The patient is an eighty-two-year-old woman with arterial hypertension and complete left bundle branch block and Parkinson's disease, who presented with an history of abdominal distension and pain since months."
-22.238,30.664,"During December, two thousand nineteen, a colonoscopy was performed and the right colon adenocarcinoma was identified."
-31.164,38.791,"At CT scan, a mass in the lower pore of the right kidney was identified, suggesting for renal cell carcinoma."
-39.291,50.762,No distant metastases were observed.
-51.262,56.977,"The patient is positioned supine, and robotic trocars are visibly placed in the abdominal region for the procedure."
-57.477,71.128,"A 12mm trocar is placed in the suprapubic area, preparing for a mini laparotomy for extraction."
-71.628,75.652,"The surgeon operates using the DaVinci XI robotic console, controlling robotic instruments to perform the procedure on the patient positioned supine."
-76.152,86.531,"The robotic surgical system is positioned on the patient's right side, while the assistant surgeon and scrub nurse are stationed on the left side of the operating table."
-87.031,96.723,The main surgical steps are shown.
-97.223,101.148,"The surgeon begins the right hemicolectomy, utilizing robotic instruments to resect the right side of the colon."
 101.648,106.828,"The robotic system targets the hepatic flexure, focusing on this specific area of the colon for surgical intervention."
 107.328,124.447,"The robotic setup includes bipolar forceps in the first arm, scissors in the third arm, a tip-up clamp in the fourth arm, and the second arm is utilized for optimal camera positioning."
 124.947,134.723,"The surgeon gently lifts the right colon upwards, revealing the alocholic vessels beneath."
@@ -28,12 +17,9 @@ start,end,text
 349.241,356.235,"The surgeon sections the ileocolic artery and vein at their origin near the superior mesenteric vein and artery, completing the vascular division in this area."
 356.735,360.362,"The surgical field shows the absence of the right colic artery and vein, indicating their anatomical variation or previous ligation."
 360.862,413.643,"The surgeon sections the right branch of the middle colic vein and artery at their origin, completing the vascular dissection in the surgical field."
-414.143,424.211,It is difficult to differentiate between high-thigh complete mesocolic adhesion and complete mesocolic adhesion with central vascular ligation.
 424.711,433.45,"The surgeon removes lymphoadipose tissue covering the superior mesenteric vein and artery, as well as the middle colic vessels, revealing these structures during the DII colectomy."
 433.95,448.341,"The surgeon performs dissection and resection of the lymphoadipose tissue covering the superior mesenteric vein, targeting nodal group II-I-VI, and proceeds with the dissection of Henlein's trunk."
 448.841,466.344,"The surgeon completes the dissection and divides the transverse colon and terminal ileum using an endostepla instrument, which is positioned in the third robotic arm."
-466.844,476.307,"The usual trochanter placement for robotic right kidney surgery is shown in red, which is different from that used in this case, shown in blue."
-476.807,496.081,"This makes surgery slightly more difficult, but allows to perform both procedures with no need of changing patient or trochanter position."
 496.581,511.357,"The surgeon performs dissection and release of the second adrenal portion, revealing the renal pedicle beneath."
 511.857,538.339,"The surgeon performs dissection around the renal pedicle to visually identify the right renal artery, preparing it for future clamping."
 538.839,548.409,"The surgeon exposes the inferior pole of the kidney, identifying the margins of the lesion and marking them with diathermy."
@@ -43,7 +29,6 @@ start,end,text
 590.555,597.765,"The surgeon removes the arterial clamp from the right renal artery, restoring blood flow to the kidney."
 598.265,606.272,The surgeon checks for correct kidney reperfusion and confirms the absence of active bleeding before removing the specimen. The specimen is then placed into a bag for retrieval.
 606.772,611.057,"The surgeon applies a hemostatic agent to the site of the tumorectomy, ensuring control of any potential bleeding at the resection margins."
-611.557,617.202,"The surgeon performs a side-to-side isoperistaltic ileocolic anastomosis, aligning the ileum and colon to create a continuous passage between the two sections."
 617.702,634.442,"Indocyanine green dye is applied to assess the vascularization of the ileum and colon, highlighting the blood supply to these areas in preparation for the anastomosis."
 634.942,648.747,"The robotic surgical system is configured with bipolar forceps in the first arm, a needle holder in the third arm, a tip-up instrument in the fourth arm, and the camera positioned in the second arm."
 649.247,654.349,"The surgeon begins posterior reinforcement of the anastomosis site using a running three-hole absorbable suture, ensuring secure closure of the tissue."
@@ -57,5 +42,3 @@ start,end,text
 725.58,734.919,"The surgeon performs anterior reinforcement using a running three-hole absorbable barbed suture, securing the tissue with precise stitching."
 735.419,754.426,"The surgeon uses the epiprone to cover the staple side-to-side anastomosis, ensuring the anastomotic site is shielded."
 754.926,767.362,Two specimens are placed in separate endo bags and extracted through a funnestine incision.
-767.862,770.607,Final pathology is shown.
-771.107,775.815,Postoperative course was uneventful and patient was discharged on postoperative day six.

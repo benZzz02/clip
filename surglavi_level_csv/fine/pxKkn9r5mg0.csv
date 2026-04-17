@@ -1,8 +1,4 @@
 start,end,text
-0.878,8.596,We present a video of laparoscopic panproctocolectomy and alloanal pouch for ulcerative colitis.
-9.096,17.919,A forty-two years old male with symptoms refractory to medical therapy for ulcerative colitis was offered one stage ilioanal pouch.
-18.419,26.962,"The patient is positioned on the operating table, which is adjusted to allow steep Trendelenburg and head-up positions with side-to-side tilt."
-27.462,30.803,A 10mm optical port is inserted at the umbilicus for laparoscopic access.
 31.163,40.016,"The surgeon places a ten millimeter port in the right iliac fossa, along with three additional five millimeter ports in the abdominal region, as depicted in the video."
 40.516,47.923,"The surgeon performs a left-sided resection, ligating the inferior mesenteric artery and vein, which are visibly isolated and secured during the procedure."
 48.423,54.968,"The surgeon begins dissection at the sacral promontory, making an incision in the parietal peritoneum to access deeper anatomical structures."
@@ -30,7 +26,6 @@ start,end,text
 261.521,268.132,"The surgeon initiates dissection posteriorly behind the superior rectal artery, carefully separating the surrounding tissue in this anatomical region."
 268.632,276.925,"The surgeon uses a diathermy device to perform precise dissection in front of the presacral fascia, carefully preserving the hypogastric nerves visible in the surgical field."
 277.425,295.575,"The surgeon marks the anterior dissection at the level of the peritoneal reflection, indicating the precise location for further surgical intervention."
-296.075,300.976,A plaget can be very helpful to provide counter traction.
 301.476,309.938,"The surgeon performs circumferential dissection down to the pelvic floor, continuing the proctectomy within the total mesorectal excision (TME) plane."
 310.438,317.08,"The surgeon completes the mobilization of the rectum by releasing the left lateral sidewall, ensuring the rectum is fully freed from surrounding tissues."
 317.58,335.46,"The surgeon continues anterior dissection within the Denonvilliers fascia, carefully maneuvering to protect the hypogastric nerves visible in the surgical field."
@@ -38,7 +33,6 @@ start,end,text
 356.864,365.218,"The surgeon continues the dissection behind the seminal vesicles, progressing anteriorly with careful manipulation of the surrounding tissues."
 365.718,372.388,"The surgeon uses a harmonic scalpel to complete the circumferential dissection at the level of the pelvic floor, ensuring precise tissue separation."
 372.888,375.512,"The surgeon dissects the rectal tube, following the complete mobilization of the rectum from the left lateral sidewall."
-376.012,389.663,It is important at this stage to perform a rectal examination to assess the level of rectal transaction.
 390.163,396.911,"The surgeon divides the rectum in an anterior-posterior direction using a roticulating endo-GIA stapler, completing the transaction at the specified level."
 397.411,402.358,"The surgeon uses two firings of a 45mm stapler to further divide the rectum, ensuring precise transection at the targeted level."
 402.858,413.458,The surgeon extracts the specimen through the umbilicus and constructs an ileal J pouch using a linear cutter stapler.
@@ -48,5 +42,3 @@ start,end,text
 441.969,447.399,"The surgeon carefully orients the small bowel to ensure it is positioned correctly, preparing for the next stage of the procedure."
 447.899,466.947,"The surgeon follows the line of the small bowel mesentery from the duodenal jugular flexure to the ileoanal anastomosis, visually tracing the anatomical pathway."
 467.447,472.692,"The surgeon performs an intraoperative sigmoidoscopy to visually inspect the anastomosis site, ensuring proper alignment and integrity of the constructed pouch."
-473.192,478.417,"Postoperatively, the histology confirmed ulcerative colitis with no malignancy."
-478.717,481.7,"Following stoma training, the patient was discharged home."

@@ -1,8 +1,4 @@
 start,end,text
-1.205,13.17,"The surgeon performs a laparoscopic small bowel resection, addressing a small bowel obstruction caused by an internal hernia. Intracorporeal anastomosis is utilized to reconnect the bowel segments."
-13.67,29.415,"This is a forty-five year old female with history of hysterectomy in the past who presented with lower abdominal pain, distension and obstipation and found to have a complete small bowel obstruction on her CT scan."
-29.915,39.058,"During the diagnostic laparoscopy, a strangulated loop of ileum is observed within an internal hernia caused by adhesion."
-39.558,53.057,"The video shows the laparoscopic lysis of adhesions, followed by a small bowel resection. The surgeon performs a primary anastomosis using intracorporeal technique, with visible manipulation of the bowel and surrounding tissues."
 53.557,70.495,"The laparoscopic view reveals a small bowel obstruction caused by an internal hernia, with a tight adhesion visible between the sigmoid colon and the lateral pelvic wall."
 70.995,83.938,"The surgeon identifies a necrotic loop of ileum, which appears dark and discolored, indicating tissue death due to strangulation within the internal hernia."
 84.438,149.403,"The surgeon uses an energy device to perform lysis of adhesion, releasing the tight adhesion between the sigmoid colon and the lateral pelvic wall."
@@ -17,6 +13,3 @@ start,end,text
 350.078,353.541,"The surgeon inspects the anastomosis site within the small bowel, confirming the absence of bleeding at the sutured junction."
 353.561,383.129,"The surgeon closes the opening of the anastomosis using a GIA stapler, reinforcing the closure with 2-0 Ethibond sutures in a simple, interrupted pattern."
 383.629,402.695,"The surgeon closes the mesentery defect using a Tuo Etaban suture in a simple running fashion, ensuring the defect is securely sealed."
-403.195,408.938,This patient tolerated the procedure very well and had very minimal discomfort after the surgery.
-409.438,419.102,"Two days after the laparoscopic operation, she was started on diets and had bowel activity and went home on the following day."
-419.602,429.686,"Laparoscopic small bowel resection with intracorporeal anastomotic technique led to less postoperative pain, faster recovery, and less hospital stay."

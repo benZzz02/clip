@@ -1,6 +1,4 @@
 start,end,text
-0.091,7.093,In this video we show our technique of Indocyanin green guided robotic assisted left hemipartectomy.
-7.593,18.197,The patient suffered from a HGC which was located in the left liver and is colored in green in this three-D reconstruction.
 18.697,25.339,"The surgical team places trochars in the abdominal wall, including an additional trochar for the assistant and another for the Pringle maneuver, which is used to control blood flow to the liver during the procedure."
 25.839,29.767,"The robotic surgical system is positioned over the patient's right shoulder, ready to assist in the hepatectomy procedure."
 30.267,43.149,"The surgeon uses an ultrasound probe to identify the intrahepatic location of the tumor, marking the resection margins on the liver surface."
@@ -12,7 +10,6 @@ start,end,text
 92.342,101.249,"The surgeon loops the extrahepatic segment IV arteries, similar to the previous dissection, ensuring they are isolated from surrounding tissue."
 101.749,123.519,"The surgeon identifies the left branch of the portal vein, surrounds it with a surgical loop, and then clips and cuts the vessel."
 124.019,131.992,"The surgeon identifies the left hepatic bile duct outside the liver, then clips and cuts the duct to separate it from surrounding structures."
-132.492,144.525,"Under fluorescence imaging, the demarcation line between the left and right liver is visible after the patient receives indocyanine green intravenously."
 145.025,151.493,"The surgeon marks the parenchymal dissection line on the liver, using visual cues from the indocyanine green fluorescence imaging to guide the demarcation between the left and right liver segments."
 151.993,161.574,"The surgeon mobilizes the left liver from the diaphragm, detaching it from surrounding structures to facilitate further dissection."
 162.074,171.646,"A small lesion is visible in the left hepatic vein, which is being addressed using robotic surgical tools."
@@ -29,4 +26,3 @@ start,end,text
 344.88,358.938,"As the parenchymal dissection nears completion, a vessel loop is observed around the middle hepatic vein. The middle hepatic vein is clearly identified, clipped, and cut for removal."
 359.438,373.312,"The surgical specimen is placed into a retrieval bag and extracted from the patient through a phallus sealant station. The specimen shows no capsular lesions, and the resection margin is visibly one centimeter."
 373.812,379.578,"Two surgical drains are visible in the abdominal cavity, positioned to facilitate fluid drainage post-hepatectomy."
-380.078,380.919,Thanks for watching.

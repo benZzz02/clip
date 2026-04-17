@@ -1,11 +1,4 @@
 start,end,text
-0.56,6.023,Robotic resection of a gallbladder remnant post laparoscopic cholecystectomy by the Leahy Hospital Group.
-6.523,13.146,This was a fifty-seven year old female six years after a laparoscopic cholecystectomy performed for biliary colic.
-13.646,17.368,She did well until earlier this year when she had recurrent epigastric pain.
-17.868,24.331,LFTs were normal and preoperative imaging revealed remnant gallbladder and cystic duct with multiple stones.
-24.831,30.911,The MRCP coronal cuts display a gallbladder remnant with visible stones inside.
-31.411,37.674,She was counseled appropriately and taken to the operating room for a robotic resection of her gallbladder remnant.
-38.174,41.296,"The surgeon establishes pneumoperitoneum and inserts robotic instruments into the abdominal cavity, preparing for the robotic cholecystectomy procedure."
 41.796,54.322,"The surgeon begins the operation by using robotic instruments to take down omental adhesions, separating the omentum from the underlying structures."
 54.822,57.784,"The robotic camera reveals a bulbous structure identified as the gallbladder remnant, visible within the surgical field."
 58.284,60.952,The surgeon identifies the tubular structure adjacent to the gallbladder remnant as the common bile duct (CVD).
@@ -30,4 +23,3 @@ start,end,text
 296.151,297.851,"The surgeon inspects the operative bed, examining the area for any remaining structures or abnormalities following the dissection and preparation for cystic duct transection."
 298.152,302.133,"The surgical field is inspected to confirm hemostasis, with no visible bile leak observed."
 302.633,305.494,The common bile duct (CBD) is visibly intact with no signs of bile leakage.
-305.974,308.795,Patient has done very well without recurrence of his symptoms.

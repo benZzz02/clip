@@ -1,10 +1,7 @@
 start,end,text
-1.455,17.68,This is a video of a patient that presented to the hospital with chief complaint of upper GI bleed. She had a CT scan of her abdomen and pelvis which demonstrated a radiopaque object in the first part of the duodenum.
 18.18,28.929,The video shows an AGD procedure revealing significant inflammation on both the anterior and posterior walls of the first part of the duodenum.
-29.429,38.357,ICG was injected during endoscopy and she was scheduled for exploration the second day.
 38.857,65.812,"The surgeon performs a duodenotomy, guided by laparoscopic ultrasound, targeting the location of the radiopaque object identified in the first part of the duodenum."
 66.312,74.435,"The surgeon performs a laparoscopic ultrasound, revealing a radiopaque structure within the duodenum."
-74.556,87.341,"Unfortunately, TilePro wasn't working either, which made it a little bit difficult for the surgeon on the console to see what the bedside assistant is seeing."
 87.841,121.296,"The surgeon inserts a Maryland dissector into the first part of the anterior wall of the duodenum, attempting to locate the radiopaque object. Two laparoscopic instruments are used to aid in pinpointing the object, but the presence of significant edema makes the task challenging."
 121.796,132.548,"The surgeon repeats the laparoscopic ultrasound to locate the radiopaque object, while the CT scan shows a collapsed duodenum."
 132.548,153.893,"The surgeon extends the duodenotomy in the first part of the duodenum, attempting to locate the radiopaque object, but its precise location remains unclear."
@@ -12,7 +9,6 @@ start,end,text
 170.377,184.371,"The surgeon extends the duodenotomy transversely, adjusting the incision to accommodate the vertically oriented radiopaque object within the duodenum."
 184.871,226.193,"The falciform ligament is removed to create a falciform flap for covering the repair. An ultrasound is repeated, revealing the radiopaque object located on the posterior wall of the duodenum."
 226.693,257.893,"Using ultrasound guidance, the surgeon identifies the radiopaque foreign body, a chicken bone, on the posterior wall of the duodenum. An incision is made on the mucosa of the posterior wall to access the object."
-258.393,265.295,And this probably took us around an hour and a half to locate this. It's just simplified here.
 265.795,290.158,The surgeon uses a 3-0 Vicryl suture to close the mucosal defect on the posterior wall of the duodenum.
 290.658,324.947,The surgeon places a 2-0 silk suture in the middle of the duodenum to align it for closure. The closure technique involves using a 3-0 V-lock suture in a running fashion.
 325.447,395.712,"The surgeon completes the second layer of sutures and reinforces it with a third layer using silk sutures, which secures the falciform flap. The multiple layers make it challenging to pass the scope."

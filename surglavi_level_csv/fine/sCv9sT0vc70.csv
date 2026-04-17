@@ -1,10 +1,4 @@
 start,end,text
-1.08,8.524,We herein present a case of a robotic right colectomy with complete mesocolic excision and intracorporeal anastomosis.
-9.024,17.048,"The surgical team utilizes a novel bottom-to-up approach for the robotic right colectomy, with a suprapubic trocar visibly placed for instrument access."
-17.548,23.823,"The patient is positioned supine on the operating table with a slight Trendelenburg and left tilt, facilitating access to the surgical site for the robotic right colectomy."
-24.323,36.294,"The robotic surgical cart is docked from the patient's right side, and four 8mm robotic trocars are placed in a horizontal line approximately 2-3 centimeters above the pubic area."
-36.794,40.538,"A twelve millimeter assistant port is inserted in the patient's left flank, complementing the existing suprapubic trocar placements for the robotic right colectomy procedure."
-41.038,50.688,"The DaVinci XI robotic system is utilized for the full robotic procedure, with the robotic arms positioned and ready for the colorectal surgery."
 51.188,68.312,The robotic arm pushes the cecum cranially while the surgeon detaches the mesenteric root using a bottom-to-up approach along the Garrotus fascia.
 68.812,83.794,"The surgeon uses bipolar forceps in the left hand and a monopolar hook in the right hand, manipulating tissues within the surgical field."
 84.294,95.08,"The surgeon continues cranial dissection until the third portion of the duodenum is visualized, using robotic instruments to carefully separate tissue layers."
@@ -26,4 +20,3 @@ start,end,text
 319.935,340.328,"The surgeon performs a stapled side-to-side ileocolic anastomosis, joining the terminal ileum to the colon using surgical staples."
 340.828,374.845,"The surgeon closes the enterotomies using a double layer barbed Romney suture, securing the intestinal openings with precise stitching."
 375.345,390.578,The specimen is extracted through a small incision created by connecting the two paramedian suprapubic trocars.
-391.078,395.562,The final view shows the specimen with the area of mesocolic excision clearly visible.
