@@ -33,7 +33,7 @@ def parse_args():
 
     parser.add_argument("--text_model_name", type=str, default="marcobombieri/surgicberta")
     parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
-    parser.add_argument("--embed_dim", type=int, default=512)
+    parser.add_argument("--embed_dim", type=int, default=256)
     parser.add_argument("--image_size", type=int, default=224)
     parser.add_argument("--max_length", type=int, default=256)
     parser.add_argument("--num_frames", type=int, default=1, help="Use 1 for per-second single-frame scoring.")
@@ -167,6 +167,12 @@ def preprocess_frame(frame_np: np.ndarray, image_size: int) -> torch.Tensor:
     return tensor
 
 
+def build_model_input(single_frame_tensor: torch.Tensor, model_num_frames: int) -> torch.Tensor:
+    if model_num_frames <= 1:
+        return single_frame_tensor
+    return single_frame_tensor.unsqueeze(1).repeat(1, int(model_num_frames), 1, 1, 1)
+
+
 def frame_index_from_time(timestamp: float, fps: float, num_frames: int) -> int:
     frame_idx = int(round(float(timestamp) * float(fps)))
     return min(max(frame_idx, 0), max(num_frames - 1, 0))
@@ -225,7 +231,8 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
     outside_scores = []
 
     for idx, (timestamp, frame_idx, frame_np) in enumerate(zip(sampled_times, frame_indices, frames_np)):
-        image_tensor = preprocess_frame(frame_np, args.image_size).to(device)
+        image_tensor = preprocess_frame(frame_np, args.image_size)
+        image_tensor = build_model_input(image_tensor, args.num_frames).to(device)
         image_features = model.encode_image(image_tensor)
         score = float((logit_scale * image_features @ text_features.t()).squeeze().detach().cpu().item())
 
