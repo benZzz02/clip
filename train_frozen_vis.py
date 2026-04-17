@@ -3,6 +3,7 @@ import math
 import argparse
 import contextlib
 import time
+from collections import Counter
 
 import torch
 import torch.nn.functional as F
@@ -677,6 +678,20 @@ def train():
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
         samples_cache_version=CONFIG["samples_cache_version"],
     )
+
+    if rank == 0:
+        level_counter = Counter(
+            str(sample.get("level", "unknown")).lower()
+            for sample in train_dataset.samples
+        )
+        print(f"训练样本总数: {len(train_dataset)}")
+        print(
+            "各层级样本数: "
+            + ", ".join(
+                f"{level}={level_counter.get(level, 0)}"
+                for level in ("fine", "mid", "coarse")
+            )
+        )
 
     train_sampler = DistributedMixedLevelBatchSampler(
         train_dataset,
