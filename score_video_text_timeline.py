@@ -257,7 +257,7 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
                 "time": timestamp,
                 "frame_index": int(frame_idx),
                 "score": score,
-                "in_gt": bool(gt_start <= timestamp <= gt_end),
+                "in_reference_window": bool(gt_start <= timestamp <= gt_end),
                 "image_relpath": f"frames/{frame_filename}",
             }
         )
@@ -271,8 +271,8 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
         "video_path": video_path,
         "caption": sample["caption"],
         "level": sample.get("level"),
-        "gt_start": gt_start,
-        "gt_end": gt_end,
+        "reference_start": gt_start,
+        "reference_end": gt_end,
         "window_start": window_start,
         "window_end": window_end,
         "duration": duration,
@@ -281,7 +281,7 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
         "outside_mean_score": outside_mean,
         "top_time": score_points[top_idx]["time"],
         "top_score": score_points[top_idx]["score"],
-        "top_in_gt": score_points[top_idx]["in_gt"],
+        "top_in_reference_window": score_points[top_idx]["in_reference_window"],
         "points": score_points,
     }
 
@@ -295,7 +295,7 @@ def score_color(score: float, min_score: float, max_score: float) -> str:
     return f"rgba(22, 101, 52, {alpha:.3f})"
 
 
-def build_svg(points: List[Dict], gt_start: float, gt_end: float, min_score: float, max_score: float) -> str:
+def build_svg(points: List[Dict], reference_start: float, reference_end: float, min_score: float, max_score: float) -> str:
     width = 960
     height = 260
     left = 40
@@ -317,8 +317,8 @@ def build_svg(points: List[Dict], gt_start: float, gt_end: float, min_score: flo
     def y_pos(s: float) -> float:
         return top + (max_score - s) / score_span * plot_h
 
-    gt_left = x_pos(max(min(gt_start, end_t), start_t))
-    gt_right = x_pos(max(min(gt_end, end_t), start_t))
+    ref_left = x_pos(max(min(reference_start, end_t), start_t))
+    ref_right = x_pos(max(min(reference_end, end_t), start_t))
 
     polyline = " ".join(f"{x_pos(p['time']):.1f},{y_pos(p['score']):.1f}" for p in points)
     top_point = max(points, key=lambda point: point["score"])
@@ -345,15 +345,15 @@ def build_svg(points: List[Dict], gt_start: float, gt_end: float, min_score: flo
         )
 
     return f"""
-<svg viewBox="0 0 {width} {height}" class="timeline-svg" role="img" aria-label="timeline score plot">
+  <svg viewBox="0 0 {width} {height}" class="timeline-svg" role="img" aria-label="timeline score plot">
   <rect x="0" y="0" width="{width}" height="{height}" fill="#ffffff"/>
-  <rect x="{gt_left:.1f}" y="{top}" width="{max(gt_right - gt_left, 2):.1f}" height="{plot_h}" fill="rgba(34,197,94,0.16)"/>
+  <rect x="{ref_left:.1f}" y="{top}" width="{max(ref_right - ref_left, 2):.1f}" height="{plot_h}" fill="rgba(34,197,94,0.12)"/>
   {''.join(ticks)}
   <line x1="{left}" y1="{height-bottom}" x2="{width-right}" y2="{height-bottom}" stroke="#0f172a" stroke-width="1.2"/>
   <line x1="{left}" y1="{top}" x2="{left}" y2="{height-bottom}" stroke="#0f172a" stroke-width="1.2"/>
   <polyline fill="none" stroke="#2563eb" stroke-width="3" points="{polyline}"/>
   <circle cx="{x_pos(top_point['time']):.1f}" cy="{y_pos(top_point['score']):.1f}" r="5.5" fill="#dc2626"/>
-  <text x="{x_pos(top_point['time']):.1f}" y="{top + 12}" text-anchor="middle" font-size="12" fill="#991b1b">top {top_point['score']:.2f}</text>
+  <text x="{x_pos(top_point['time']):.1f}" y="{top + 12}" text-anchor="middle" font-size="12" fill="#991b1b">best match {top_point['score']:.2f}</text>
   {''.join(time_labels)}
 </svg>
 """.strip()
@@ -364,11 +364,19 @@ def render_sample_html(result: Dict, sample_id: str) -> str:
     scores = [point["score"] for point in points]
     min_score = min(scores)
     max_score = max(scores)
-    svg = build_svg(points, result["gt_start"], result["gt_end"], min_score, max_score)
+    svg = build_svg(
+        points,
+        result["reference_start"],
+        result["reference_end"],
+        min_score,
+        max_score,
+    )
+    top_matches = sorted(points, key=lambda point: point["score"], reverse=True)[: min(3, len(points))]
+    low_matches = sorted(points, key=lambda point: point["score"])[: min(3, len(points))]
 
     cards = []
     for point in points:
-        border = "#16a34a" if point["in_gt"] else "#cbd5e1"
+        border = "#16a34a" if point["in_reference_window"] else "#cbd5e1"
         if math.isclose(point["time"], result["top_time"], abs_tol=1e-6):
             border = "#dc2626"
         cards.append(
@@ -378,7 +386,7 @@ def render_sample_html(result: Dict, sample_id: str) -> str:
               <div class="frame-meta">
                 <div><strong>{point['time']:.1f}s</strong></div>
                 <div>score {point['score']:.3f}</div>
-                <div>{'GT' if point['in_gt'] else 'outside'}</div>
+                <div>{'reference window' if point['in_reference_window'] else 'outside window'}</div>
               </div>
               <div class="score-bar-wrap">
                 <div class="score-bar" style="width:{0 if math.isclose(max_score, min_score) else 100*(point['score']-min_score)/(max_score-min_score):.1f}%; background:{score_color(point['score'], min_score, max_score)};"></div>
@@ -391,10 +399,34 @@ def render_sample_html(result: Dict, sample_id: str) -> str:
         return "N/A" if value is None else f"{value:.3f}"
 
     verdict = (
-        "Peak score falls inside GT window."
-        if result["top_in_gt"]
-        else "Peak score falls outside GT window."
+        "The best-matching moment falls inside the reference window."
+        if result["top_in_reference_window"]
+        else "The best-matching moment falls outside the reference window."
     )
+
+    def render_focus_cards(title: str, focus_points: List[Dict], accent: str) -> str:
+        items = []
+        for point in focus_points:
+            items.append(
+                f"""
+                <div class="match-card" style="border-color:{accent};">
+                  <img src="{html.escape(point['image_relpath'])}" alt="{html.escape(title)} at {point['time']:.1f}s"/>
+                  <div class="frame-meta">
+                    <div><strong>{point['time']:.1f}s</strong></div>
+                    <div>score {point['score']:.3f}</div>
+                    <div>{'reference window' if point['in_reference_window'] else 'outside window'}</div>
+                  </div>
+                </div>
+                """.strip()
+            )
+        return f"""
+        <div class="panel">
+          <div class="title" style="font-size:18px;">{html.escape(title)}</div>
+          <div class="matches">
+            {''.join(items)}
+          </div>
+        </div>
+        """
 
     return f"""<!doctype html>
 <html lang="en">
@@ -481,6 +513,23 @@ def render_sample_html(result: Dict, sample_id: str) -> str:
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
     }}
+    .matches {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }}
+    .match-card {{
+      background: #fff;
+      border: 3px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }}
+    .match-card img {{
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #e2e8f0;
+    }}
     .frame-card {{
       background: #fff;
       border: 3px solid var(--line);
@@ -525,19 +574,23 @@ def render_sample_html(result: Dict, sample_id: str) -> str:
       <p class="caption">{html.escape(result["caption"])}</p>
       <div class="path">video: {html.escape(result["video_path"])}</div>
       <div class="meta-grid">
-        <div class="meta"><div class="meta-label">GT Window</div><div class="meta-value">{result["gt_start"]:.1f}s - {result["gt_end"]:.1f}s</div></div>
+        <div class="meta"><div class="meta-label">Reference Window</div><div class="meta-value">{result["reference_start"]:.1f}s - {result["reference_end"]:.1f}s</div></div>
         <div class="meta"><div class="meta-label">Scored Window</div><div class="meta-value">{result["window_start"]:.1f}s - {result["window_end"]:.1f}s</div></div>
-        <div class="meta"><div class="meta-label">Top Time</div><div class="meta-value">{result["top_time"]:.1f}s</div></div>
-        <div class="meta"><div class="meta-label">Top Score</div><div class="meta-value">{result["top_score"]:.3f}</div></div>
-        <div class="meta"><div class="meta-label">Inside Mean</div><div class="meta-value">{fmt_optional(result["inside_mean_score"])}</div></div>
-        <div class="meta"><div class="meta-label">Outside Mean</div><div class="meta-value">{fmt_optional(result["outside_mean_score"])}</div></div>
+        <div class="meta"><div class="meta-label">Best Match Time</div><div class="meta-value">{result["top_time"]:.1f}s</div></div>
+        <div class="meta"><div class="meta-label">Best Match Score</div><div class="meta-value">{result["top_score"]:.3f}</div></div>
+        <div class="meta"><div class="meta-label">Mean In Window</div><div class="meta-value">{fmt_optional(result["inside_mean_score"])}</div></div>
+        <div class="meta"><div class="meta-label">Mean Outside</div><div class="meta-value">{fmt_optional(result["outside_mean_score"])}</div></div>
       </div>
     </div>
 
     <div class="panel">
       {svg}
       <div class="verdict">{html.escape(verdict)}</div>
+      <div class="path" style="margin-top:8px;">Higher scores mean the frame is more semantically consistent with the text. The shaded region is only a source reference window, not strict ground truth.</div>
     </div>
+
+    {render_focus_cards("Top Matched Frames", top_matches, "#dc2626")}
+    {render_focus_cards("Lowest Matched Frames", low_matches, "#64748b")}
 
     <div class="panel">
       <div class="title" style="font-size:18px;">Sampled Frames</div>
@@ -559,10 +612,10 @@ def render_index(entries: List[Dict]) -> str:
             <tr>
               <td><a href="{html.escape(entry['html_relpath'])}">{html.escape(entry['sample_id'])}</a></td>
               <td>{html.escape(entry['caption'])}</td>
-              <td>{entry['gt_start']:.1f}s - {entry['gt_end']:.1f}s</td>
+              <td>{entry['reference_start']:.1f}s - {entry['reference_end']:.1f}s</td>
               <td>{entry['top_time']:.1f}s</td>
               <td>{entry['top_score']:.3f}</td>
-              <td>{'yes' if entry['top_in_gt'] else 'no'}</td>
+              <td>{'yes' if entry['top_in_reference_window'] else 'no'}</td>
             </tr>
             """.strip()
         )
@@ -619,10 +672,10 @@ def render_index(entries: List[Dict]) -> str:
         <tr>
           <th>Sample</th>
           <th>Caption</th>
-          <th>GT Window</th>
-          <th>Top Time</th>
-          <th>Top Score</th>
-          <th>Top In GT</th>
+          <th>Reference Window</th>
+          <th>Best Match Time</th>
+          <th>Best Match Score</th>
+          <th>Best Match In Window</th>
         </tr>
       </thead>
       <tbody>
@@ -680,11 +733,11 @@ def main():
                 {
                     "sample_id": sample_id,
                     "caption": sample["caption"],
-                    "gt_start": result["gt_start"],
-                    "gt_end": result["gt_end"],
+                    "reference_start": result["reference_start"],
+                    "reference_end": result["reference_end"],
                     "top_time": result["top_time"],
                     "top_score": result["top_score"],
-                    "top_in_gt": result["top_in_gt"],
+                    "top_in_reference_window": result["top_in_reference_window"],
                     "html_relpath": f"{sample_id}/index.html",
                 }
             )
