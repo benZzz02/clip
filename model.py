@@ -208,6 +208,7 @@ class VLP(nn.Module):
         temporal_dropout=0.1,
         temporal_hidden_dim=768,
         local_temperature=0.07,
+        selection_pooling="similarity",
         level_frame_temperatures=(0.6, 0.9, 1.2),
     ):
         super().__init__()
@@ -223,6 +224,7 @@ class VLP(nn.Module):
         self.num_frames = max(1, int(num_frames))
         self.temporal_hidden_dim = int(temporal_hidden_dim)
         self.local_temperature = float(local_temperature)
+        self.selection_pooling = str(selection_pooling).lower()
 
         self.frame_pool = None
         if self.num_frames > 1:
@@ -247,10 +249,14 @@ class VLP(nn.Module):
             bias=False,
         )
         self.frame_local_projection = nn.Linear(self.frame_token_dim, embed_dim, bias=False)
+        self.selection_text_query_projection = nn.Linear(self.text.hidden_size, embed_dim, bias=False)
+        self.selection_frame_key_projection = nn.Linear(self.frame_token_dim, embed_dim, bias=False)
 
         self.logit_scale = nn.Parameter(torch.log(torch.tensor(1 / 0.07)))
         nn.init.normal_(self.video_projection.weight, std=pooled_dim ** -0.5)
         nn.init.normal_(self.frame_local_projection.weight, std=embed_dim ** -0.5)
+        nn.init.normal_(self.selection_text_query_projection.weight, std=embed_dim ** -0.5)
+        nn.init.normal_(self.selection_frame_key_projection.weight, std=embed_dim ** -0.5)
 
         self.register_buffer(
             "level_frame_temperatures",
@@ -411,6 +417,21 @@ class VLP(nn.Module):
         return video_global_hidden, frame_tokens
 
     def _compute_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+        if self.selection_pooling == "xpool":
+            return self._compute_xpool_frame_selection_weights(
+                frame_tokens=frame_tokens,
+                token_hidden=token_hidden,
+                attention_mask=attention_mask,
+                level_ids=level_ids,
+            )
+        return self._compute_similarity_frame_selection_weights(
+            frame_tokens=frame_tokens,
+            token_hidden=token_hidden,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+        )
+
+    def _compute_similarity_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
         batch_size = frame_tokens.size(0)
         dtype = frame_tokens.dtype
         device = frame_tokens.device
@@ -455,6 +476,40 @@ class VLP(nn.Module):
             max=1.0,
         )
 
+        return frame_weights, confidence.detach()
+
+    def _compute_xpool_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+        batch_size = frame_tokens.size(0)
+        dtype = frame_tokens.dtype
+        device = frame_tokens.device
+
+        token_mask = attention_mask.bool()
+        text_mask = token_mask.unsqueeze(-1).to(dtype=token_hidden.dtype)
+        pooled_hidden = (token_hidden * text_mask).sum(dim=1) / text_mask.sum(dim=1).clamp(min=1e-6)
+
+        query = F.normalize(self.selection_text_query_projection(pooled_hidden), dim=-1)
+        keys = F.normalize(self.selection_frame_key_projection(frame_tokens), dim=-1)
+        raw_scores = torch.einsum("bd,btd->bt", query, keys)
+
+        frame_temps = self._get_level_values(
+            level_ids,
+            self.level_frame_temperatures,
+            1.0,
+            batch_size,
+            device,
+            dtype,
+        )
+        frame_weights = self._normalize_scores(
+            raw_scores,
+            temperatures=frame_temps,
+        )
+
+        top2 = raw_scores.topk(k=min(2, raw_scores.size(-1)), dim=-1).values
+        if top2.size(-1) == 1:
+            confidence = top2[:, 0]
+        else:
+            confidence = top2[:, 0] - top2[:, 1]
+        confidence = (confidence / 0.25).clamp(min=0.0, max=1.0)
         return frame_weights, confidence.detach()
 
     def _project_video_global(self, video_global_hidden):
@@ -591,6 +646,12 @@ class VLP(nn.Module):
             p.requires_grad = True
 
         for p in self.frame_local_projection.parameters():
+            p.requires_grad = True
+
+        for p in self.selection_text_query_projection.parameters():
+            p.requires_grad = True
+
+        for p in self.selection_frame_key_projection.parameters():
             p.requires_grad = True
 
         for p in self.text.text_projection.parameters():

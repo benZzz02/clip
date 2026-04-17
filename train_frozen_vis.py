@@ -254,6 +254,13 @@ def parse_args():
     )
     parser.add_argument("--local_temperature", type=float, default=0.07)
     parser.add_argument(
+        "--selection_pooling",
+        type=str,
+        default=os.environ.get("SELECTION_POOLING", "similarity"),
+        choices=["similarity", "xpool"],
+        help="Frame selection pooling strategy for text-conditioned video reweighting",
+    )
+    parser.add_argument(
         "--level_frame_temperatures",
         type=lambda s: parse_float_list(s, expected_len=3),
         default=(0.6, 0.9, 1.2),
@@ -541,6 +548,7 @@ def train():
         "rebuild_samples_cache": args.rebuild_samples_cache,
         "samples_cache_version": args.samples_cache_version,
         "local_temperature": args.local_temperature,
+        "selection_pooling": args.selection_pooling,
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
@@ -560,6 +568,7 @@ def train():
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
         num_frames=CONFIG["num_frames"],
         local_temperature=CONFIG["local_temperature"],
+        selection_pooling=CONFIG["selection_pooling"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
     ).to(device)
 
@@ -633,6 +642,7 @@ def train():
             print(f"标注目录: {ANNOTATIONS_FOLDER}")
         print(f"batch层级配比: {LEVEL_BATCH_SIZES}")
         print(f"local_temperature: {CONFIG['local_temperature']}")
+        print(f"selection_pooling: {CONFIG['selection_pooling']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
@@ -748,6 +758,7 @@ def train():
                     "use_samples_cache": args.use_samples_cache,
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
+                    "selection_pooling": args.selection_pooling,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
                     "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
