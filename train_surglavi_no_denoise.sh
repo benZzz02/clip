@@ -37,6 +37,4 @@ CUDA_VISIBLE_DEVICES=0,1,2 TORCH_DISTRIBUTED_DEBUG=DETAIL TORCH_SHOW_CPP_STACKTR
   --local_temperature 0.15 \
   --level_frame_temperatures "0.35,0.8,1.6" \
   --train_window_expand_ratio 1.0 \
-  --selection_loss_weight 0.0 \
-  --enable_htg true \
-  --htg_loss_weight 0.1
+  --selection_loss_weight 0.0

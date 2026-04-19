@@ -65,13 +65,11 @@ USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
 REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-true}"
 SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-nfs_v1}"
 
-# No-method baseline: disable expanded-window reweighting and HTG.
+# No-method baseline: disable expanded-window reweighting and selection loss.
 LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
 LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.0}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.0}"
-ENABLE_HTG="${ENABLE_HTG:-false}"
-HTG_LOSS_WEIGHT="${HTG_LOSS_WEIGHT:-0.0}"
 
 SAVE_DIR="${SAVE_DIR:-/data/surglavi_checkpoint/${EXP_NAME}}"
 SAVE_EVERY="${SAVE_EVERY:-5}"
@@ -135,7 +133,5 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
-    --enable_htg "$ENABLE_HTG" \
-    --htg_loss_weight "$HTG_LOSS_WEIGHT" \
     ${INIT_CHECKPOINT:+--init_checkpoint "$INIT_CHECKPOINT"} \
     ${RESUME_FROM_CHECKPOINT:+--resume_from_checkpoint "/data/surglavi_checkpoint/peskavlp_text_bioclinicalbert_vis_imagenet_no_method/surglavi_epoch_20.pt"}
