@@ -1,74 +1,36 @@
 start,end,text
-1.502,4.543,"I am Dinesh Kansal from Delhi, India."
-5.043,12.065,"The surgeon identifies a single pan-mural fibroid located laterally on the right side, measuring 6.7 centimeters in size."
-12.565,15.746,Da Vinci XI robot.
 16.246,26.569,"The primary port is inserted blindly, while the additional ports are placed under direct visual guidance."
 27.069,30.219,"A midline port is placed for the camera, facilitating visualization of the surgical field."
 30.719,59.133,"The surgical setup includes one port on the left and two ports on the right, referred to as the third and fourth arms, along with an assistant port positioned slightly above. Docking is completed using a port clutch, and the telescope is inserted. All ports are eight millimeters in diameter."
 59.633,93.064,"The robotic arms are attached to the ports, and instruments are inserted. The surgeon confirms the correct positioning of the ports, ensuring they are neither too deep nor too shallow, with a visible marker indicating the middle position."
-93.564,102.991,The assistant will insert and take out the instruments as required if they require cleaning or changing.
-103.491,108.495,I go to the surgeon's console to start the surgery.
-108.995,118.435,"The surgeon has a wonderful high-definition,"
 118.935,125.416,"The bedside assistant injects vasopressin into the surgical field, preparing the area for further dissection during the myomectomy procedure."
 125.816,128.797,"The surgical field shows blanching of the tissue, indicating the effect of vasopressin injection."
 129.297,140.56,"The surgeon makes a vertical incision using monopolar scissors, known as hot shears, on the uterine tissue."
 141.06,148.353,The screen displays an indicator on the right side and another at the lower part near the third robotic arm.
 148.853,178.958,"The surgeon activates cutting or coagulating energy to dissect down to the correct plane of the fibroid, revealing the fibroid's distinct tissue layer."
 179.458,207.673,"The surgeon uses a fenestrated bipolar grasper in the left hand while enlarging the incision, with high-definition vision providing detailed visualization of the tissue texture."
-208.173,214.877,But in this surgery we really need bipolar energy.
 215.377,220.081,The fibroid is visibly emerging from the uterine tissue following the vertical incision made with monopolar scissors.
 220.581,235.315,"The surgeon performs blunt dissection in the correct plane around the fibroid, using visible instruments to separate the tissue layers."
-235.815,237.436,On the right side we have two arms.
 237.816,240.919,"The surgeon utilizes the fourth robotic arm for retraction, aiding in the exposure of the surgical field during the myomectomy procedure."
 241.419,243.921,"The surgeon activates the fourth robotic arm, which is used for retraction during the myomectomy procedure."
-244.001,251.066,The third arm becomes inactive or it freezes in the same place and vice versa.
 251.566,258.051,The fourth robotic arm is visibly retracting tissue while the third and first arms actively perform surgical maneuvers on the myoma.
 258.551,264.691,"The surgical team reaches the submucosal part of the fibroid, revealing the fibroid's surface beneath the uterine lining."
 265.191,296.405,"The surgeon identifies tiny feeding vessels at the vascular connections of the fibroid and applies slight energy to cauterize them, avoiding the myometrium."
 296.905,300.189,"The surgeon uses the robotic arms to detect the myoma from various directions, maneuvering the instruments to identify the fibroid's position within the uterine tissue."
-300.689,321.832,Sometimes we do use the dead site assistance detection also but here we can very well manage with our arms.
-322.332,334.478,Usually the bleeding is lesser in robotic surgery compared to laparoscopic or open because the smaller vessels are also seen very well in this.
-334.978,354.425,"And as the movements are at the rest of the instrument, the movements at the port are very less and hence there is less stretching of the abdominal wall and hence these patients hardly complain of any pain post-operatively."
 354.925,369.849,"The surgeon demonstrates the 360-degree rotational movements of the wrist of the robotic instrument, allowing precise manipulation within the surgical field."
 370.349,375.23,"The fibroid is visibly emerging from the myoma bed, indicating the progression of its removal during the myomectomy procedure."
 375.73,385.448,"The fibroid is placed aside, and the surgeon begins suturing the myoma bed using robotic instruments."
-385.948,388.551,We could avoid opening the endometrium.
-389.051,398.6,The movement of the fingers is downsized as it goes to the tip of the instrument.
-399.1,401.042,Camera control is in surgeon's hand.
-401.362,407.248,"When we control the camera, the instruments freeze and vice versa."
-407.748,409.97,We can toggle with our left foot.
-410.47,414.692,"For the right, both the arms."
-415.192,419.574,And energy is in control with the right foot.
-420.074,431.238,"If we press the bipolar, then the monopolar is not activated because the foot will be kept either on the monopolar pedal or bipolar pedal."
-431.738,446.738,"So hence, precision and safety is very well managed in robotic surgery."
-447.238,458.886,We could see there is no use of suction till now.
 459.386,470.334,"The surgeon uses a bark suture to close the U-triangle in two layers, demonstrating the suturing technique on the visible tissue."
 470.834,479.921,"The surgeon uses a V-lock suture, threading the needle through the loop to secure the suture in place."
 480.421,511.943,"The surgeon tightens the suture, achieving a precise approximation of the tissues, effectively closing the dead space and ensuring good anastasis. This marks the completion of the first layer closure for a deep and large fibroid."
 512.443,517.304,"The surgeon demonstrates precise wrist movements while suturing, showcasing the dexterity and control afforded by robotic instruments."
 517.804,523.645,"The surgeon precisely inserts the needle at specific points during suturing, demonstrating controlled and accurate placement."
-524.145,529.287,This is the difference when we compare with laparoscopic surgery.
-529.787,549.277,So the suturing is definitely precise and better with robotics.
 549.777,581.447,"The surgeon completes the first layer of suturing and begins the second layer using continuous sutures. The robotic system allows precise manipulation of the needle, facilitating base wall sutures with an inside-out, outside-in technique."
 581.947,590.793,"The surgeon uses precise suturing techniques to minimize exposure of the myometrium and suture material, showcasing the advantages of robotic wrist movements during the procedure."
-591.293,599.379,The peritoneal cavity prevents diminished chances of adhesion formation.
 599.879,601.76,"The surgeon completes the first suture layer using robotic assistance, ensuring precise placement within the surgical field."
 602.021,612.552,"The surgeon cuts the thread, and the bedside assistant removes the needle from the surgical field, preparing to provide a new suture for continued stitching."
 613.052,639.527,"The surgeon begins the second suture layer in a continuous fashion, using robotic manipulation to precisely place the sutures within the myometrium."
 640.027,641.462,"The surgeon completes the suturing process, ensuring the myometrium and suture are minimally exposed to the outside environment."
-641.962,643.523,This patient wanted to bectamine.
-643.703,645.725,She had completed her family.
 646.225,656.452,"The surgeon uses bipolar coagulation on the right fallopian tube, followed by cutting the tube with surgical scissors."
 656.952,659.534,"The surgeon performs bipolar coagulation on the left fallopian tube, followed by cutting with scissors."
-660.034,662.215,She was interested in preserving her uterus.
-662.255,664.677,She was a young patient.
-665.177,671.501,You can see the activity on the screen on either side depending upon the instrument
-671.935,674.796,which is energized.
 675.296,687.041,"The surgeon receives the specimen, which has been extracted through morcellation, a technique used to fragment and remove large tissue masses."
-687.541,689.582,These patients had a wonderful recovery.
-689.862,698.746,"She was discharged the next day and on the fifth day, we removed her staples and she went to her own country."
-699.246,707.028,She was an international patient.
-707.528,709.169,Just small two bits.
-709.669,715.712,We will carefully take them out.
-716.212,723.675,The patient after fifth day was very happy when she went home pain-free.
-724.035,724.435,Thank you.

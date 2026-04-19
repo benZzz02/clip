@@ -1,7 +1,4 @@
 start,end,text
-0.746,7.948,"This video shows a step-by-step laparoscopic simple hysterectomy for gynecological cancer performed in Valencia, Spain."
-8.448,12.87,The video describes the following step to perform the procedure.
-13.37,19.331,"The surgeon introduces a V-care manipulator into the uterine cavity, facilitating the mobilization of the uterus for improved access during the laparoscopic hysterectomy."
 19.831,33.908,"The surgeon begins the hysterectomy by sectioning the round ligament at an intermediate point between the lateral pelvic wall and the uterus, using laparoscopic instruments."
 34.408,37.909,"The surgeon sections the ovarian vessels as the second step of the laparoscopic hysterectomy procedure, following the introduction of the V-care manipulator for uterine mobilization."
 38.409,41.211,"The surgeon pulls the ovary upward and lateralizes it, positioning it away from the uterus to facilitate further dissection."
@@ -14,7 +11,6 @@ start,end,text
 161.58,165.644,"The surgeon pushes the uterus inward while pulling up the anterior peritoneum, creating tension to facilitate further dissection."
 166.144,185.931,"The surgeon incises the peritoneum transversely, one centimeter below the basic uterine flexor, revealing underlying anatomical structures."
 186.431,190.535,"The surgeon performs blunt dissection in the vesicouterine space, carefully separating the tissue layers to expose the area between the bladder and the uterus."
-191.035,229.253,Special care should be paid at this moment in cases of women with previous cesarean sections.
 229.753,233.574,The surgeon coagulates the uterine arteries located at the lateral aspect of the uterus using an electrocautery device.
 234.074,255.483,"The surgeon aligns the cap of the uterine manipulator with the anatomical point where the anterior peritoneum is pulled up, ensuring proper positioning during the hysterectomy procedure."
 255.983,295.93,"The lumen of the uterine artery is visible, and the surgeon coagulates and sections the contralateral uterine artery."
@@ -23,10 +19,7 @@ start,end,text
 304.072,316.937,"The surgeon prepares the anterior vaginal margin, ensuring it is positioned to avoid suturing the bladder during the vaginal cuff closure."
 317.437,329.933,"During the lateral colporomy, the surgeon performs the incision, and minor bleeding is visible at the surgical site."
 330.433,366.752,"The surgeon coagulates and sections the utero sacral ligament, visibly separating it from surrounding tissues."
-367.252,403.412,you
 403.912,411.195,"The surgeon removes the surgical specimen through the vaginal canal, completing the hysterectomy procedure."
 411.695,456.366,"The surgeon closes the vaginal cuff using two X-points sutures in each vaginal angle with Vicryl-II-O, completing the hysterectomy procedure."
-456.866,530.202,Thank you.
 530.702,567.192,"The surgeon continues suturing medially, bringing each X-point together at the midline of the vaginal cuff using Vicryl-II-O."
 567.692,571.285,"The final view of the pelvis is shown at the end of the hysterectomy procedure, with the surgical area appearing clean and the vaginal cuff closure completed."
-571.785,573.811,And we hope this video has been useful for you.

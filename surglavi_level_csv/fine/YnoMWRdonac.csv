@@ -1,5 +1,4 @@
 start,end,text
-1.95,10.959,"laparoscopic truncal vagotomy, and gastrojejunostomy."
 1.95,10.959,"The surgeon performs a laparoscopic truncal vagotomy followed by a gastrojejunostomy, using laparoscopic instruments to access and manipulate the stomach and jejunum."
 11.459,28.525,"The surgeon transects the gastrohepatic ligament, revealing the underlying right crus of the diaphragm."
 11.459,19.006,"The surgeon begins the dissection by transecting the gastrohepatic ligament, separating it from the surrounding structures."
@@ -34,8 +33,6 @@ start,end,text
 371.961,384.951,"Following the completion of the vagotomy, the surgeon opens the lesser sac, preparing the area for the gastrojejunostomy procedure."
 385.451,402.164,"The surgeon identifies the posterior wall of the stomach, preparing for further surgical manipulation."
 385.451,402.164,"The surgeon identifies the posterior wall of the stomach, preparing for the gastrojejunostomy procedure."
-402.664,407.113,as well as the ligament of trites.
-402.664,407.113,as well as the ligament of trites.
 407.613,430.767,"The surgeon measures and counts the small bowel starting from the ligament of Treitz, extending approximately fifty to sixty centimeters distally."
 407.613,430.767,The surgeon measures and counts approximately fifty to sixty centimeters of the small bowel starting from the ligament of Treitz.
 431.267,461.986,"A stay suture is placed between the loop of jejunum and the posterior wall of the stomach, preparing for the gastrojejunostomy."

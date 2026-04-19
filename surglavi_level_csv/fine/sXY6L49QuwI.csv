@@ -1,7 +1,4 @@
 start,end,text
-0.861,13.61,"The video demonstrates a single-port robotic approach to trans-anal minimally invasive surgery (SPR-TAMIS), showcasing the setup and positioning of the robotic instruments through a single access point."
-14.11,18.574,"The single-port robotic system is positioned and deployed at the operative field, ready for the minimally invasive surgical procedure."
-19.074,30.618,"The robotic boom rotates over 360 degrees around the remote center of the cannula, allowing access to all quadrants of the operative field."
 31.118,44.186,"The robotic system is docked to a 25mm multi-channel trocar, which contains a 3D camera and three working arms, positioned within the operative field."
 44.686,51.89,"The surgeon inserts the 3D camera into the trocar, followed by the insertion of three robotic working arms, preparing the robotic system for the procedure."
 52.39,62.12,"The robotic system recognizes the loaded instrument, which is then advanced into the operative field through the single-port setup."
@@ -10,27 +7,21 @@ start,end,text
 88.58,91.422,"The surgeon uses monopolar scissors to mark the lesion, visible within the operative field."
 91.922,98.566,"The surgeon prepares to excise the lesion in a full thickness fashion, using robotic instruments visible in the operative field."
 99.066,107.01,A holographic image displays the position of the camera and three robotic working arms at the six o'clock position within the operative field.
-107.51,116.895,This allows the surgeon to have spatial awareness of the positioning of all instruments throughout the operation.
 117.395,122.28,"The video shows a three-dimensional view of the operative field, highlighting the spatial arrangement and articulation of the surgical instruments."
 122.78,127.683,"The surgeon enters the plane between the muscularis propria and the perirectal fat, carefully dissecting these tissue layers."
 128.183,138.429,"The mesorectum is visibly left intact during the procedure, preserving the tissue for potential radical resection if invasive cancer is detected."
 138.929,147.706,"The surgeon uses finely articulated instruments to orient the scissors correctly within the operative field, ensuring precise cutting along the intended plane."
 148.206,156.672,"A blood vessel is visible entering through the muscularis propria into the perirectal fat, demonstrating its anatomical course within the surgical field."
 157.172,167.98,"The surgeon performs sharp dissection in a full thickness manner around the entire circumference of the lesion, maintaining precision in the operative field."
-168.48,184.526,"Not seen in the view of the robotic camera, but noted on the holographic image, a third arm is utilized for retraction in order to properly orient the lesion and provide access for resection."
-185.026,202.169,"For those experienced in trans-anal endoscopic microsurgery, immediately one can recognize the benefit of being able to move the camera and the arms so freely."
 202.669,218.205,"The video displays the distinct layers of the rectal wall, including the mucosa, submucosa, muscularis propria, and perirectal fat, clearly visible during the surgical procedure."
 218.705,231.937,The inner circular and outer longitudinal layers of the muscularis propria are clearly visible.
 232.437,250.305,"The surgeon uses a bipolar instrument for retraction around the lesion, demonstrating its capability for coagulation if needed."
-250.805,274.147,"While this lesion is located in the distal rectum, the length of the robot allows easy access into the upper rectum if need be for more proximally located lesions."
 274.647,288.679,"The surgeon uses monopolar scissors to transect the residual blood supply entering the disc excision site, completing the dissection."
 289.179,293.883,"The surgical field shows a defect in the rectal wall, which appears hemostatic, indicating no active bleeding."
 294.383,305.757,"Following irrigation with a dilute betadine solution, an assistant uses a port to introduce a 3-0 Vicryl suture into the operative field."
-306.257,317.233,Again noted is the full robotic capability that we are familiar with with other robotic platforms facilitating a full thickness closure.
 317.733,332.242,"The surgeon uses a third robotic arm to retract tissue, enhancing visualization of the surgical field."
 332.742,352.5,"The surgeon performs an instrument tie using the SP robotic arms, demonstrating the ease of manipulation and precision with the robotic system."
 353,379.795,"The surgeon closes the defect using a running full thickness suture, with full thickness bites clearly visible. This technique is used to complete the anastomosis."
 380.295,389.298,"The surgeon manages a long length of suture endoluminally, which eliminates the need for multiple sutures during the procedure."
 389.798,399.334,Two hands tighten the suture while a third robotic arm retracts tissue for optimal visualization. The video fast forwards to the completion and tying of the final knot in the suture.
 399.834,408.703,"The surgeon uses scissors to cut the suture, marking the completion of the operation."
-409.203,415.028,"The video displays the clean margins of the excised specimen, indicating successful removal of the targeted tissue."

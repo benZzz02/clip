@@ -1,22 +1,11 @@
 start,end,text
-0.959,8.626,The manuscript describes a technique for robotic-assisted pancreatic
-9.126,14.971,The represented patient is a forty-two-year-old female with a prior history of IPMN who presented with an acute onset of pancreatitis.
-15.392,22.759,Diagnostic imaging including CT scan and endoscopic ultrasound revealed a complex septate of heterogeneous mass measuring three point three centimeters.
-23.259,24.74,Biochemical workup was normal.
-25.22,30.854,She was recommended for robotic RAPD.
-31.354,36.296,"The patient is positioned supine on a split leg table, with the right arm tucked and pressure points padded, preparing for the robotic-assisted pancreaticoduodenectomy."
-36.796,39.937,The operating table is rotated 45 degrees to facilitate the positioning and use of the surgical robot during the procedure.
-40.437,44.259,The XI robotic system is positioned and docked from the side of the operating table.
-44.759,49.121,"The robotic and assistant ports are visibly placed on the patient's abdomen, aligned according to a pre-determined configuration."
 49.621,52.602,"The surgeon places the liver retractor through the leftmost lateral port, positioning it to provide optimal exposure of the surgical field."
 53.102,60.166,"The liver retractor is positioned to retract the gallbladder and elevate the liver superiorly, maintaining this position throughout the resection phase."
-60.666,64.549,"The surgeon initiates the resection phase by entering the lesser sac, using surgical instruments to carefully access this anatomical space."
 65.049,69.872,"The surgeon accesses the lesser sac by dissecting through the greater omentum below the gastroepiploic pedicle, revealing the underlying anatomical structures."
 70.372,74.054,"The assistant applies gentle caudal counter-retraction on the exposed surgical field, aiding in maintaining optimal visibility and access during the procedure."
 74.554,78.937,"The surgeon continues the dissection along the greater curvature of the stomach, moving towards the pylorus, with visible tissue separation and manipulation."
 79.437,82.679,"The surgeon completes the mobilization of the colon, separating it from the underlying duodenum, revealing the anatomical structures beneath."
 83.179,87.301,"The surgeon preserves the gastroepiploic pedicle, ensuring it remains intact without transection during the current phase of the procedure."
-87.801,89.782,"The surgeon performs Cokerization of the duodenum, a maneuver that involves mobilizing the duodenum by freeing it from surrounding tissues to facilitate further dissection."
 90.282,93.223,"The surgeon grasps and transects the lateral fibers of the duodenum, separating them from surrounding structures."
 93.483,97.485,"The bedside assistant applies gentle medial counter-retraction to the duodenum, aiding in the exposure of the surgical field."
 97.985,102.347,"The surgeon continues mobilization of the duodenum, focusing on its third and fourth portions, and extends the dissection towards the ligament on the right side."
@@ -83,12 +72,10 @@ start,end,text
 532.63,539.394,"The surgeon carefully ties the middle suture that straddles the main pancreatic duct, ensuring that the duct is not accidentally ligated during the process."
 539.894,544.497,"The surgeon uses a pancreatic duct stent to assess the patency of the duct, ensuring it remains open and unobstructed."
 544.997,551.583,"The surgeon switches to monopolar scissors to perform the aneurotomy, carefully cutting through the tissue with precision."
-552.083,554.585,This is then replaced to the needle driver.
 555.085,561.27,"The surgeon uses interrupted 5-0 PDS sutures to approximate the jejunal mucosa to the pancreatic duct, ensuring precise alignment between these structures."
 561.77,564.893,"The surgeon places a minimum of six sutures around the pancreatic duct, ensuring secure approximation of the jejunal mucosa to the duct."
 565.393,578.805,"The surgeon places additional sutures to accommodate the larger size of the pancreatic duct, ensuring secure approximation of the jejunal mucosa to the duct."
 579.305,597.604,The surgeon inserts a pancreatic duct stent through the aneurotomy site before placing anterior interrupted 5-0 PDS sutures to approximate the jejunal mucosa to the pancreatic duct.
-598.104,602.498,"Once the anastomosis is complete,"
 602.998,629.582,"The surgeon reutilizes three old silk sutures to secure the anterior layer of the pancreaticojejunostomy, following the placement of the posterior layers."
 630.082,635.367,"The surgeon performs a hepaticojejunostomy approximately ten centimeters distal to the previously completed pancreaticojejunostomy, connecting the hepatic duct to the jejunum."
 635.867,640.272,"The surgeon performs the anastomosis in a single layer, using either interrupted or running sutures to connect the tissues."
@@ -121,8 +108,3 @@ start,end,text
 849.22,852.223,"The surgeon uses a falciform ligament flap to cover the gastroduodenal artery (GDA) stump, ensuring protection and stability of the surgical site."
 852.584,854.846,"The surgical instruments are carefully removed from the operative field, and the robotic surgical system is undocked from the patient."
 855.226,858.553,"The surgeon closes the fascia and incisions in layers, using sutures to secure each layer of tissue."
-859.053,861.374,The total operative time was two hundred twenty five minutes.
-861.874,863.876,Estimated blood loss was twenty five mLs.
-864.376,866.197,There was no post operative complications.
-866.697,875.762,The final pathology revealed invasive moderately differentiated endocarcinoma arising from branch duct IPMN.
-876.262,882.765,The manuscript provides the detailed steps of a robotic assisted pancreatic duodenectomy as performed at the University of Pittsburgh Medical Center.

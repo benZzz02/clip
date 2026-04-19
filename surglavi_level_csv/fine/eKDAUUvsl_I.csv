@@ -1,9 +1,4 @@
 start,end,text
-1.697,13.563,"minimally invasive Ivor Lewis esophagectomy for esophageal cancer after gastric bypass, performed by the Division of Minimally Invasive Surgery at the University of Florida."
-14.063,30.84,"Our patient is a fifty-five year old female, five years status post laparoscopic gastric bypass surgery, who was referred to our institution after endoscopy revealed a seven centimeter esophageal adenocarcinoma located at thirty centimeters from the incisors."
-31.34,39.409,"Her PET-CT showed no distant disease, and an endoscopic ultrasound showed a T-III-N-I lesion."
-39.909,51.383,"The patient received neoadjuvant chemoradiation, and a good response was observed on her follow-up PET-CT with a decrease in maximum SUV."
-51.883,54.545,"The surgeon demonstrates the placement of abdominal ports, inserting them through the patient's abdominal wall to facilitate access for minimally invasive instruments."
 55.045,62.05,"After completing adhesiolysis, the surgeon identifies the roux limb and the gastric remnant situated below it."
 62.55,70.415,"The surgeon frees the liver from the roux limb, allowing for retraction and exposure of the diaphragmatic hiatus."
 70.915,76.234,"The surgeon dissects the gastric pouch and roux limb away from the gastric remnant, carefully separating these structures to proceed with the esophagectomy and gastric bypass procedure."
@@ -27,7 +22,6 @@ start,end,text
 200.451,207.074,"The surgeon carefully shapes the gastric conduit, ensuring symmetry in its formation, as the conduit is constructed from the mobilized gastric remnant."
 207.574,218.156,"The surgeon sutures the distal end of the esophageal specimen to the end of the gastric conduit, preparing for its delivery into the thoracic cavity."
 218.656,225.122,"The surgeon places a sixteen French jejunostomy tube into the roux limb and secures it to the abdominal wall, ensuring proper positioning and fixation."
-225.622,231.968,"The patient is positioned in the left lateral decubitus position, with visible thoracic port placements on the left side of the chest, preparing for the next stage of the procedure."
 232.468,242.338,"The surgeon divides the inferior pulmonary ligament and incises the pleura along the azygos vein, continuing until the vein arches over the esophagus."
 242.838,251.281,"The surgeon delivers a Penrose drain into the chest cavity to aid in the mobilization of the thoracic esophagus, ensuring the conduit remains symmetrical."
 251.781,257.903,"The surgeon mobilizes the esophagus circumferentially up to the level of the azygos vein, ensuring complete separation from surrounding structures."
@@ -39,6 +33,3 @@ start,end,text
 295.037,301.141,"The surgeon creates a gastrotomy in the gastric conduit to accommodate a 25mm EEA stapler, preparing for anastomosis."
 301.641,304.043,"The surgeon performs a stapler anastomosis, connecting the proximal esophagus to the gastric conduit using a circular stapler."
 304.543,312.24,"The surgeon closes the gastrotomy in the gastric conduit using a stapler, and the completed esophagogastric anastomosis is visible, demonstrating the connection between the esophagus and gastric conduit."
-312.74,320.324,An esophagram performed on post-operative day number four demonstrates a well-formed conduit and no evidence of a leak.
-320.824,327.127,Final pathology revealed no residual tumor and negative surgical margins with eighteen negative lymph nodes.
-327.587,330.949,The patient did well and was discharged on post-operative day number seven.

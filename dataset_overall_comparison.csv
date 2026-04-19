@@ -1,0 +1,13 @@
+dataset,peskavlp_overall_accuracy,pretrained_overall_accuracy,delta_overall_accuracy,better_overall_accuracy,peskavlp_overall_f1_average,pretrained_overall_f1_average,delta_overall_f1_average,better_overall_f1_average,peskavlp_overall_mAP,pretrained_overall_mAP,delta_overall_mAP,better_overall_mAP
+autolaparo_phase,0.5642908054,0.3851389879,0.1791518175,peskavlp,0.4534413606,0.3092159854,0.1442253752,peskavlp,,,,missing
+bern_bypass70_phase,0.1430670969,0.2563096711,-0.1132425743,pretrained,0.1536299558,0.1747167707,-0.0210868148,pretrained,,,,missing
+cholec80_instrument,,,,missing,,,,missing,0.3739166256,0.3979385981,-0.0240219725,pretrained
+cholec80_phase,0.5040061493,0.5311437393,-0.0271375901,pretrained,0.3787542530,0.3722736459,0.0064806071,peskavlp,,,,missing
+cholect50_triplet,,,,missing,,,,missing,,,,missing
+grasp_instrument,,,,missing,,,,missing,0.4360382070,0.4186645054,0.0173737016,peskavlp
+grasp_phase,0.2369163345,0.1461873791,0.0907289554,peskavlp,0.2149471444,0.1249224361,0.0900247082,peskavlp,,,,missing
+grasp_step,0.1412453085,0.0504930415,0.0907522671,peskavlp,0.0968512991,0.0417691313,0.0550821678,peskavlp,,,,missing
+heichole_instrument,,,,missing,,,,missing,0.3462889625,0.3460242294,0.0002647331,peskavlp
+heichole_phase,0.4857422663,0.6339074831,-0.1481652169,pretrained,0.3521633400,0.4183720667,-0.0662087267,pretrained,,,,missing
+sarrarp50_phase,0.1371191136,0.0840258541,0.0530932595,peskavlp,0.0849620096,0.0548710980,0.0300909116,peskavlp,,,,missing
+stras_bypass70_phase,0.2140192591,0.2929065094,-0.0788872502,pretrained,0.2256056246,0.2278926408,-0.0022870162,pretrained,,,,missing

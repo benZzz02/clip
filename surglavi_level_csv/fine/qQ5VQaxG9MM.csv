@@ -1,10 +1,4 @@
 start,end,text
-1.903,10.998,Robotic approach in morbidly obese patients with low rectal cancer may confer advantages over laparoscopic approach.
-11.498,23.683,"This is a fifty-year-old male patient, diagnosed case of stage III low rectal cancer, received neoadjuvant chemoradiotherapy, underwent surgery ten weeks post-treatment. His BMI was forty."
-23.863,37.029,"He had a palpable rectal mass five centimeters from anal verge located posteriorly. He had an endoscopy done, which showed a lesion, as shown in the picture. His biopsy showed moderately differentiated adenocarcinoma."
-37.529,54.824,This patient showed good response to the chemoradiotherapy and had a palpable ridge at the previous site of tumor. We have pre-treatment MRI image as shown in the picture. We have post-chemoradiotherapy MRI image. CT staging revealed no metastasis.
-55.324,58.735,MDT decision was to proceed with surgery.
-59.235,71.117,"For this procedure, robotic XI system with integrated table motion was used. This diagram shows the standard port placement for all robotic TME procedures performed in our institution."
 71.617,94.87,"An additional 5mm port is placed between robotic ports R1 and R3 to assist with exposing the small bowel. The assistant uses gauze to push the bowel, providing the robotic console surgeon with better exposure to the medial side of the mesentery for dissection."
 95.37,120.205,"The patient is positioned with a head-down tilt of twenty-two degrees and a right-side tilt of seven to nine degrees. The surgeon exposes the medial side of the mesentery by placing the greater omentum above the transverse colon, clearing the pelvis of small bowel, and moving the small bowel medially using small gauze."
 120.705,135.398,"The surgeon begins the dissection using a medial to lateral approach, starting at the sacral promontory, with the robotic XI system facilitating the procedure."
@@ -14,7 +8,6 @@ start,end,text
 173.496,187.112,"The surgeon identifies the pancreas cranially as a landmark to access above the lesser sac, facilitating the mobilization of the splenic flexure, which is crucial for achieving a tension-free anastomosis."
 187.612,202.535,"The surgeon begins lateral mobilization using monopolar diathermy, cutting along the white line while placing gauze to prevent small bowel injury. The splenic flexure is routinely mobilized during total mesorectal excisions (TMEs)."
 203.035,216.958,"The surgeon develops the plane above the colon, staying close to the transverse colon and separating the greater omentum within the embryological plane using monopolar diathermy."
-217.458,240.237,The advantage of having integrated table motion for this particular step of the operation is very obvious as obese patients often have difficulty getting access to supracolic compartment. Patient is placed head up position at this stage to facilitate dropping the colon and open lesser sac as shown.
 240.737,264.636,"The surgical field shows a clear view of the pancreas. The surgeon dissects the mesotransverse colon at the level of the pancreas to minimize the risk of marginal artery injury. The splenic flexure is completely released, demonstrating successful mobilization."
 265.136,282.347,"The surgeon begins the total mesorectal excision (TME) by dissecting between the hypogastric nerves located at the back of the superior rectal artery, identifying the posterior plane between these nerves."
 282.847,299.79,"The surgeon uses gentle traction and counter traction with a paintbrush-like movement of the monopolar diathermy to facilitate dissection. The assistant introduces suction to minimize smoke produced by the diathermy, especially in the presence of chemo radiation."
@@ -31,4 +24,3 @@ start,end,text
 561.767,572.014,"The surgeon uses a stapling device with a green cartridge to perform two firings on the completely mobilized rectal tube, demonstrating the technique required for effective closure."
 572.514,603.033,"After the first firing of the stapler, the surgeon introduces the second staple line using the same curvature, aiming for posterior cuts. The robotic camera operator ensures the staple line extends beyond the lower end of the rectal tube."
 603.533,624.658,"The surgeon performs a CDH-XXIX anastomosis at the coloanal junction, with a covering loop ileostomy created to protect the anastomosis as per standard protocol."
-625.158,641.887,"The removed specimen showed complete TME grade III, as graded by the pathologist. Histopathology showed no residual tumor with two positive lymph nodes out of fourteen, which makes it stage III YPT-Zero N-I-B M-Zero."

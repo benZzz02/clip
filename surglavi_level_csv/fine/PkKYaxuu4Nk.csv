@@ -1,17 +1,5 @@
 start,end,text
-1.05,7.453,I am sharing a case of a low rectal cancer in a female patient.
-1.05,15.997,I am sharing a case of a low rectal cancer in a female patient. Initial staging was a T four N two and she underwent neoadjuvant therapy with actually total neoadjuvant therapy.
-7.953,15.997,Initial staging was a T four N two and she underwent neoadjuvant therapy with actually total neoadjuvant therapy.
-16.497,22.48,This is a CT scan leading up to the surgery after completion of TNT.
-16.497,22.48,This is a CT scan leading up to the surgery after completion of TNT.
-22.98,31.511,"The video shows a loop of sigmoid colon positioned anteriorly over the pelvis, near the location of the rectal cancer."
-22.98,31.511,"The video shows a loop of sigmoid colon positioned anteriorly, flopped down onto the pelvis, in proximity to the rectal cancer."
-31.592,40.998,"The surgeon observes the invasion of the rectal cancer into the posterior wall of the vagina, visible as the camera backs up to provide a clearer view of the affected area."
-31.592,43.619,"The surgeon observes invasion of the rectal cancer into the posterior wall of the vagina, visible as the camera backs up to provide a clearer view of the affected area."
-41.498,46.641,"And so I knew this area was going to be a challenge. Uh, I was prepared to do a posterior vaginectomy."
-43.639,46.641,"Uh, I was prepared to do a posterior vaginectomy."
 47.141,62.012,"The surgical team sets up for a standard low anterior resection, examining the pelvic area where the loop of sigmoid colon is visibly adhered to the pelvic structures."
-47.141,58.53,"Um, but, uh, we just set up like we're going to do a standard low interior resection, taking a look at things. down in the pelvis."
 58.55,77.238,The surgeon observes the loop of sigmoid colon adhered to the pelvic region and begins the procedure by suspending the uterus.
 62.512,77.238,"The surgeon begins the procedure by suspending the uterus, preparing the surgical field for further dissection."
 77.738,103.007,"The surgeon begins the medial to lateral dissection of the sigmoid colon, which is positioned anteriorly in the pelvis near the rectal cancer."
@@ -30,7 +18,6 @@ start,end,text
 237.607,252.223,"The surgeon approaches the medial dissection area, using a sponge to assist in the process."
 252.723,279.196,"The surgeon begins dissection of the left-sided total mesorectal excision (TME) plane, carefully separating tissue layers in the pelvic region."
 252.723,279.196,"The surgeon begins dissecting the left-sided total mesorectal excision (TME) plane, carefully separating the mesorectal tissue from surrounding structures."
-279.696,293.512,"At this point in the dissection, I'm doing my standard two lefts and one right. As you see, when I get lower in the dissection, I actually switch the camera from three to two and I do two rights and one left."
 279.696,346.418,"The surgeon performs the right side of the total mesorectal excision (TME) dissection, transitioning to a posterior approach. The camera angle is adjusted to provide a clear view of the dissection process."
 293.852,346.418,"The surgeon performs right-sided and posterior dissection within the total mesorectal excision (TME) plane, manipulating tissue to separate anatomical structures in the pelvic region."
 346.918,366.498,"The surgeon continues dissection down the right side, encountering a loop of sigmoid colon that obscures the view. The surgeon then shifts focus to the left-hand side, preparing to address the anterior section."
@@ -43,29 +30,19 @@ start,end,text
 450.35,477.305,"The surgeon identifies a tumor with improved retraction, observing its invasion towards the vagina."
 477.805,495.933,The surgeon successfully navigates around the tumor without needing to perform a full thickness resection into the vagina. Frozen sections of the margin on the staying side are sent during the procedure and return negative.
 477.805,495.933,"The surgeon navigates around the tumor without needing to penetrate the full thickness of the vagina. Frozen sections of the margin on the staying side are sent for analysis, which return negative results."
-495.993,502.435,"Unfortunately, final pathology also had a negative circumferential radial margin."
 495.993,566.52,"The surgeon continues the total mesorectal excision (TME) dissection, moving posteriorly below the previously addressed area, ensuring careful separation of tissue layers."
 502.935,566.52,"The surgeon continues the total mesorectal excision (TME) dissection, moving posteriorly below the previously challenging area near the vagina."
 567.02,594.118,"The surgeon navigates through the rectovaginal septum below the tumor ingress, observing the restoration of normal tissue planes while continuing circumferential dissection."
 567.02,594.118,"The surgeon navigates the RV septum below the tumor ingrowth, where the tissue planes appear normal again, and continues circumferential dissection."
-594.618,604.326,I've decided that I'm basically going to have to do a collianal anastomosis. I hadn't decided yet whether or not I wanted to staple or if I was going to do a hand sewn.
-594.618,604.326,I've decided that I'm basically going to have to do a collianal anastomosis. I hadn't decided yet whether or not I wanted to staple or if I was going to do a hand sewn.
-604.826,637.765,"In the end, I did decide to staple because I had a good margin below the tumor. Although I'm not a big fan of staplers, I do use them when I'm this low down because it's hard to sew from above, but I do think there are a little bit of advantages over a hand sewn polo anal in terms of the functional outcome when an anastomosis is that low."
-604.826,637.765,"In the end, I did decide to staple because I had a good margin below the tumor. Although I'm not a big fan of staplers, I do use them when I'm this low down because it's hard to sew from above, but I do think there are a little bit of advantages over a hand sewn polo anal in terms of the functional outcome when an anastomosis is that low."
 638.265,682.778,"The surgeon continues the total mesorectal excision (TME) down to the pelvic floor, using a vessel sealer for hemostasis and tissue grasping, allowing for efficient removal of tissue."
 638.265,682.778,"The surgeon continues the total mesorectal excision (TME) down to the pelvic floor, using a vessel sealer for enhanced hemostasis and tissue grasping, allowing for efficient removal of tissue."
-683.278,696.249,"Again, what I didn't show was the high ligation of the IMV and the full mobilization of the splenic flexor to get the anastomosis to come together without tension. I'm just focusing on the pelvic dissection."
 683.278,696.249,"The surgeon focuses on pelvic dissection, having previously completed high ligation of the inferior mesenteric vein (IMV) and full mobilization of the splenic flexure to facilitate tension-free anastomosis."
 696.749,714.264,"The surgeon staples the tissue, makes a Pfannenstiel incision, and places a wound protector. The specimen is extracted, and the anvil is positioned before re-docking the robotic system for the anastomosis."
 696.749,752.084,"The surgeon staples the rectum using arm three of the robotic system, ensuring the staple line is well below the tumor. A fan and steel incision is made, and a wound protector is placed to extract the specimen. The anvil is positioned, and the robot is re-docked for the anastomosis. The vessel sealer is used on the anterior rectum for palpation from below."
 714.764,752.084,"The surgeon uses a vessel sealer on the anterior rectum to palpate from below, ensuring the position is well below the tumor. The stapling is performed from arm three, where the ileostomy will be placed, with two firings of the stapler."
 752.584,764.913,"The surgeon examines the pelvic dissection, noting that the stapling is flush with the levator muscles, ensuring a clean and precise alignment."
 752.584,769.457,"The surgeon extracts the specimen and examines the pelvic dissection, noting that the stapling is flush with the levator muscles."
-764.933,780.405,"I was pretty happy with that. Again, I took some margins along that vaginal area with adherence and the frozen sections came back negative. So now we're ready for the anastomosis."
 769.957,780.405,"The surgeon takes margins along the vaginal area with adherence, and the frozen sections return negative, indicating no tumor presence. The surgical field is now prepared for the anastomosis."
 780.445,809.902,"The surgeon manually places the End-to-End Anastomosis (EEA) stapler and carefully brings the spike out, ensuring the vagina is not inadvertently caught. The surgeon then returns to the robotic console to release the stapler and aligns it with the anvil from below to complete the anastomosis."
 780.445,824.773,"The surgeon manually places the EEA stapler and brings the spike out, carefully palpating the vagina to avoid accidental capture. The surgeon then returns to the robotic console to release the stapler and aligns it with the anvil to create the anastomosis. A leak test is performed to ensure the integrity of the connection."
 810.402,824.773,"The surgeon performs a leak test on the newly created anastomosis, checking for any visible signs of leakage at the surgical site."
-825.273,839.443,"And I'm happy with that. But given the very low anastomosis and the upfront total neoadjuvant therapy, this patient was counseled on the plan for diverting leukoleostomy that is done at this time through arm"
-825.273,846.528,"And I'm happy with that. But given the very low anastomosis and the upfront total neoadjuvant therapy, this patient was counseled on the plan for diverting leukoleostomy that is done at this time through arm Number three, hospital course is very smooth discharge on post-operative day three."
-839.943,848.57,"Number three, hospital course is very smooth discharge on post-operative day three. I hope you enjoyed."

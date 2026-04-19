@@ -1,10 +1,6 @@
 start,end,text
-1.052,10.821,This is Chet Hamel from the Oregon Clinic presenting a laparoscopic cholecystectomy in a patient with a cholecystocolic fistula discovered at the time of surgery.
 11.321,18.267,"Upon entry into the abdomen, the hepatic flexure of the colon is observed to be in close proximity to the gallbladder."
-18.767,22.673,"Initially, it was assumed that the colon could be separated from the gallbladder."
 23.173,33.101,"The surgeon clears away surrounding tissue at an accelerated speed, revealing the absence of a clear plane between the gallbladder and the hepatic flexure of the colon."
-33.601,40.286,My default for difficult cholecystectomies with unclear anatomy is to perform a top-down dissection.
-40.786,44.65,"However, this is obviously not possible in this situation."
 45.15,52.213,"The colon is visibly adhered to the liver, with no clear separation between the colon and the gallbladder."
 52.713,59.875,"The surgeon prepares to transect the gallbladder, a maneuver used in cholecystectomies when anatomical clarity is lacking."
 60.375,66.017,"The interior of the gallbladder is visualized, providing guidance for the ongoing dissection."
@@ -17,9 +13,7 @@ start,end,text
 114.913,119.894,"The left and right hepatic ducts are visible, with contrast material flowing into the duodenum, indicating successful cholangiography."
 120.394,126.215,"The surgeon shifts focus to the gallbladder fundus and proceeds to remove a small segment of the colon, using robotic instruments to carefully excise the tissue."
 126.715,130.776,"The surgeon positions an endogia stapler across the side wall of the colon, preparing to transect the tissue."
-131.276,137.702,as close to the liver as possible to ensure that there is no significant narrowing of the colon lumen.
 138.202,142.806,"The surgeon dissects the remaining colon and gallbladder fundus free from the liver, separating these structures from the hepatic tissue."
-143.306,152.391,"Although usually unnecessary in a straightforward cholecystectomy, ultrasonic cheers can be helpful in difficult cholecystectomies."
 152.891,156.674,"During the dissection, the surgeon encounters a large gallstone within the gallbladder, visible amidst the surrounding tissue."
 157.174,161.277,The gallstone is placed aside for later removal along with the other specimens.
 161.777,171.978,"The extracted specimen shows the colon and gallbladder adhered together, with a visible fistula tract connecting the two structures."

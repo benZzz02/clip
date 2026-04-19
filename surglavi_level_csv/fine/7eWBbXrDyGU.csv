@@ -1,11 +1,9 @@
 start,end,text
-2.409,7.851,"Okay, this is going to be a fairly typical sleeve gastrectomy as accomplished using a robot assistant."
 8.351,11.953,"The surgeon places surgical trocars into the abdominal cavity, preparing for robotic-assisted sleeve gastrectomy."
 12.453,15.074,"The camera provides a view of the normal gallbladder, showing its typical pear-shaped structure and smooth surface."
 15.574,19.816,"The surgeon uses a liver retractor to elevate the liver, providing clear access to the upper stomach area for the gastrectomy procedure."
 20.316,26.352,The camera view shows a normal-looking hiatus without any visible signs of a hiatal hernia.
 26.852,32.643,"The stomach is visible in the foreground of the surgical field, partially obscured by the omentum."
-32.663,35.845,We'll get that uncovered as the case moves along.
 36.345,38.327,"The surgical team places robotic instruments into the abdominal cavity, preparing for the gastrectomy procedure."
 38.827,43.831,"A grasper is visible in the surgical field, positioned to manipulate tissues, with additional instruments soon entering the view."
 44.331,49.496,"The vessel sealing device is visible on the right side of the screen, attached to the robotic arm, ready for use in the gastrectomy procedure."
@@ -13,14 +11,10 @@ start,end,text
 63.546,69.633,The surgeon uses a blade running down the center of the robotic instrument's jaws to cut the tissue held within them.
 70.133,73.597,"The surgeon manipulates robotic instruments to work on the greater curvature of the stomach, using a vessel sealing device and graspers visible on the screen."
 74.097,77.541,"The surgical team uses instruments to carefully dissect and access the free space behind the stomach, maneuvering around the greater curvature."
-77.561,80.657,That's going to show up just momentarily. There we go.
 81.157,85.54,"The surgeon takes one or two bites in the upper or proximal direction along the greater curve of the stomach, using a surgical device to manipulate the tissue."
 86.04,88.422,"The surgeon divides blood vessels within the fatty tissue located near the greater curve of the stomach, using precise cutting techniques."
 88.442,95.666,"The robotic surgical tool is maneuvered to change direction and proceed downward along the greater curvature of the stomach, utilizing its flexibility for precise navigation."
-95.686,99.429,You hear a little bit of music in the background now.
-99.869,108.027,"We like to listen to kind of classic rock in the operating room, so hopefully it's not intrusive for you on this video. We've included it here."
 108.527,124.393,"The surgeon uses a vessel sealer to divide blood vessels and mobilize the stomach, moving distally towards the pylorus, with the surgical field oriented towards the left."
-124.893,134.321,"Now, this video is pretty heavily edited to show just the key points of the operation. The original length of this particular operation was about forty-two minutes."
 134.821,146.146,"The surgeon mobilizes the greater curvature of the stomach, moving in a proximal direction, and takes several bites along the greater curve using surgical instruments."
 146.646,156.792,The surgeon temporarily moves the fat pad aside to improve visibility of the surgical field during the gastrectomy procedure.
 157.292,180.21,"Robotic instruments are used to manipulate spanning tissue, uncovering the upper part of the stomach. The surgeon continues to use a vessel sealer to mobilize the greater curve of the stomach, progressing around the fundus."
@@ -29,7 +23,6 @@ start,end,text
 222.185,250.728,"The robotic arm slides underneath the stomach to expose the high posterior short gastric vessels, referred to as the 'pocket' in this practice."
 251.228,272.898,"The surgeon uses the robotic vessel sealer to delicately dissect the pocket area, revealing a small blood vessel. The instrument's flexible angles allow careful mobilization of the stomach away from the spleen, minimizing traction to prevent bleeding."
 272.918,280.279,"The surgeon continues the dissection, revealing the diaphragm and the hiatus as the procedure progresses."
-280.779,292.855,I've been feeling it since.
 293.355,322.428,"The surgeon navigates past the delicate area near the spleen, revealing the hiatus and the anterior border of the left cruce. Tissue is cleared from the front side of the hiatus and the base, ensuring no redundant stomach tissue remains at the top end. The dissection progresses with further mobilization of the tissues."
 322.928,340.888,"The surgeon repositions the stomach, which has been fully mobilized along the greater curvature, laying it out in its normal anatomical orientation in preparation for the stapling process."
 341.388,364.723,"The surgical assistant, Dr. Alvarez, manually operates the Ethicon surgical stapler to perform the stapling of the stomach, as the robotic stapler technology was not utilized in this procedure."

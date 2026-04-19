@@ -1,18 +1,4 @@
 start,end,text
-0.091,9.301,We describe a case of robotic inducing in green fluorescence-guided total mesorectal estrogen with colon anastomosis for a locally advanced rectal cancer.
-9.761,15.968,"The patient is a seventy-eight years old female presented with abdominal pain, cedropanic anemia, and rectal bleeding."
-16.468,20.652,"She has a BMI of twenty-three point five, which is classified as a score of two."
-20.913,23.415,She had no previous abdominal surgery.
-23.915,34.379,"The colonoscopy showed an adenocarcinoma of the lower rectum, approximately two centimeters from the dentata line, that the pretreatment MRI staged as CT, three, eight, and zero."
-34.879,37.92,The CT scan showed no sign of distant metastasis.
-38.42,44.256,"After discussion in a multidisciplinary meeting, a long course neoadjuvant chemoradiation therapy was indicated."
-44.756,52.365,The restaging MRI performed eight weeks after the completion of neoadjuvant therapy show a moderate response stage as T two and zero.
-52.865,58.872,We assess the surgical difficulty by using the OMART score and we calculate a score of two over ten.
-59.372,66.005,"An up-to-down TME was planned with ENSO, coloana, and osmosis in order to achieve safe margins."
-66.505,70.166,"The DAVINCI XI robotic system is positioned and docked on the left side of the patient, ready for use in the surgical procedure."
-70.346,79.15,"Four robotic ports are positioned diagonally from the right femoral head to the left midclavicular line, crossing over the left subcostal margin."
-79.65,81.931,A 5mm LCR assistant port is utilized during the procedure.
-82.391,85.532,"The surgeon targets the left iliac vessel, likely using the robotic system for precise navigation and visualization."
 86.032,89.253,"The surgeon initiates the procedure using a middle to lateral approach, with the robotic system positioned on the left side of the patient."
 89.753,118.705,"The surgeon sets the target for a single docking procedure using the DAVINCI XI robotic system, positioned on the left side of the patient."
 119.205,124.977,"The surgeon dissects the inferior mesenteric artery approximately 1.5 centimeters from the aorta, using robotic instruments positioned through ports placed diagonally across the abdomen."
@@ -32,7 +18,3 @@ start,end,text
 512.198,519.76,"The surgeon prepares the bulbar stump for anastomosis construction, ensuring the lymphadenectomy is respected."
 520.26,536.337,The surgeon verifies the vascularization of the colonic stumps using induced fluorescence angiography before dividing the colon for the end-to-end anastomosis.
 536.837,580.979,"The surgeon performs an attention-free coloanal anastomosis using twelve single stitches of Vicryl-TRIO, carefully suturing the colon to the anal canal."
-581.479,584.202,The operative time was two hundred thirty minutes.
-584.702,589.087,The histological exam showed a PT three and zero carcinoma.
-589.587,591.809,The postoperative period was uneventful.
-592.129,595.312,The ileostomy was closed eight weeks after surgery.

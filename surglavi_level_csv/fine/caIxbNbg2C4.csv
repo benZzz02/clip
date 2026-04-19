@@ -1,7 +1,5 @@
 start,end,text
-1.499,6.343,This video depicts a robotic abdominal perineal
 6.843,14.808,"The surgeon gains access to the peritoneal cavity, with multiple robotic trocars visibly inserted into the abdominal wall."
-15.308,27.057,The patient had locally advanced rectal cancer involving the anal sphincter muscles and therefore neoadjuvant chemoradiation was administered preoperatively.
 27.557,44.25,"The surgeon observes radiation-related changes along the right pelvic side wall, with visible adhesions involving the upper rectum, sigmoid colon, and terminal ileum attached to the pelvic structures."
 44.75,62.437,"The surgeon uses a hook cautery to carefully lyse adhesions and attachments in the area of the right pelvic side wall, where radiation-related changes are visible in the upper rectum, sigmoid colon, and terminal ileum."
 62.937,74.542,The surgeon exercises caution to avoid injuring the small intestine during the robotic low anterior resection procedure.
@@ -9,8 +7,6 @@ start,end,text
 95.688,102.35,"The surgeon frees the small bowel from the pelvis, ensuring it is completely mobilized before proceeding with the next steps of the low anterior resection."
 102.85,122.816,"The surgeon utilizes a third robotic arm to assist in the rectal dissection, enhancing precision and control during the procedure."
 123.316,142.66,"The small bowel is visibly moved out of the pelvis, and the surgeon incises the peritoneum along the right lateral edge of the sigmoid and rectum. A plane is developed between the mesorectum and retroperitoneal structures."
-143.16,162.524,We like to keep the anatomical fusion planes intact when possible. In this particular video it was a little more difficult due to the radiation changes making things more prone to stick together.
-163.024,174.174,"Nonetheless, persistence and careful detail when paying attention to where these anatomic planes are facilitates dissection."
 174.674,184.717,"The surgeon uses a hook cautery to carefully lyse dense adhesions, which are limiting progress in the dissection of the rectal area."
 185.217,203.493,"A lighted ureteral stent is visible, intended to facilitate dissection. The stent is malpositioned, located only in the very distal ureter."
 203.993,222.466,"The surgeon continues dissection to open the holy plane, while progress is slow. Attention shifts to the lateral attachments of the sigmoid colon, where careful separation is performed."
@@ -24,7 +20,6 @@ start,end,text
 447.707,505.945,"The surgeon is approximately 2.5 centimeters from the anal verge, working through post-radiation changes. Traction and counter-traction are used to reveal normal anatomic planes, with the assistant providing additional counter-traction to aid in the dissection."
 506.445,550.95,"The surgeon uses a third robotic arm to wrap around and lift the colon, providing anterior traction on the rectum and elevating it out of the pelvis. This maneuver enhances exposure in the confined pelvic space, allowing additional instruments to open the natural anatomic planes posteriorly."
 551.45,581.055,"The surgeon demonstrates a technique to rapidly reach low areas in the pelvis, initially dissecting directly posteriorly, then circumferentially around the lateral stalks, and finally moving anteriorly."
-581.555,626.244,"It can be difficult to get a suction down into the male pelvis that low. And when that happens, it is sometimes helpful to use a folded up ratex."
 626.744,649.678,"The surgeon places a folded ratex into the pelvis to absorb and remove remaining areas of fluid, facilitating clearer visualization of the surgical field."
 650.178,684.917,"The surgeon uses a hook to achieve hemostasis while following the normal anatomic planes. An air seal device is employed to clear smoke in the confined surgical space, with an 8mm port positioned in the right upper quadrant serving as the air seal device."
 685.417,708.753,"The surgeon applies lateral tension toward the right lateral stalk, developing the anatomical plane in this region."
@@ -32,10 +27,7 @@ start,end,text
 767.637,801.693,"The surgeon focuses on the anterior dissection of the mesorectum, using a robotic arm to provide counter-traction by pulling the prostate anteriorly, facilitating the dissection process."
 802.193,870.718,"The surgeon follows the normal anatomical planes within the narrow male pelvis, utilizing robotic trocars to facilitate dissection without arm collisions using the DaVinci XI robot."
 871.218,915.433,"The surgeon performs circumferential dissection in a to-and-fro manner, progressively reaching down to the pelvic floor, with visible manipulation of surrounding tissues."
-915.933,938.291,One thing to keep in mind is that whenever you think you've gone low enough you can almost always go lower. The arm provides additional counter traction in a small space that would be very difficult to do laparoscopically.
 938.791,1038.1,"The surgeon exposes the seminal vesicle and vas deferens during anterior dissection. Dissection proceeds along the right side, revealing muscle fibers of the levator ani."
 1038.6,1113.145,"The surgeon reaches the pelvic floor and performs additional posterior dissection to further expose the area, utilizing robotic assistance for precise maneuvering."
 1113.645,1142,"The surgeon performs final adjustments in the intra-abdominal portion of the low anterior resection before transitioning to the perineal portion, which will be conducted in an open fashion with the patient in the lithotomy position."
-1142.5,1159.55,"At the end of the This case took about four hours total. The patient was discharged on post-operative day three, was not readmitted, and did not have complications."
-1160.05,1218.577,"Final pathology was T three N zero adenocarcinoma of the rectum with zero out of fourteen nodes examined. Having cancer, zero nodes were positive. And despite neoadjuvant chemoradiation, there was still a focus of about two centimeter tumor of adenocarcinoma as described. All margins were free of resection, were free of tumor."
 1219.077,1285.007,"The surgeon identifies the ureter within the retroperitoneum, visible with blinking illumination. The planned site for colonic transection is marked using Firefly imaging, and a stapling device is used for the transection. A colostomy is brought out through a trocar site in the left lower quadrant, with lateral attachments being released to gain additional length for the colostomy."

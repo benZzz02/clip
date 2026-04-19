@@ -1,16 +1,12 @@
 start,end,text
-0.959,9.403,"This is the case of a seventy-eight years old woman with an indeterminate middle lobe lesion, highly suspicious of primary lung cancer."
-9.903,15.486,"After preoperative workup, we decided to offer this patient a uniportal middle lobe lobectomy."
 15.986,21.028,The surgeon performs the procedure through a single three-centimeter incision located in the fifth right intercostal space.
 21.528,25.812,"The surgeon begins dissection of the pulmonary hilum after confirming the resectability of the middle lobe, using surgical instruments to carefully separate the hilum structures."
 26.312,33.015,"The surgeon identifies the pulmonary veins, with one vein visibly originating from the middle lobe."
-33.436,37.138,"However, the anatomy seems different from the standard."
 37.638,45.002,"The surgeon carefully dissects the pulmonary veins, identifying and understanding the vessels originating from the middle lobe through a single incision in the fifth right intercostal space."
 45.502,63.575,"The surgeon observes an aberrant anatomy in the pulmonary region, noting the unusual arrangement of the pulmonary structures."
 64.075,83.132,"The surgeon uses thoracoscopic instruments and an ultrasonic scalpel to open the nearly completed major fissure, revealing the underlying lung tissue."
 83.632,86.415,"The surgeon identifies a vascular anomaly in the pulmonary region, noting the aberrant anatomy of the pulmonary veins, with one vein visibly originating from the middle lobe."
 86.855,104.452,"The surgeon identifies a branch from the lower lobe that visually drains into the middle lobe vein, highlighting the aberrant anatomy observed during the dissection."
-104.952,114.655,"In the drawing, we can better understand the unusual anatomy, with the aberrant branch emerging from the lower lobe and draining to the middle lobe vein."
 115.155,123.577,"The surgeon identifies the middle lobe vein and the vein draining the superior part of the lower lobe, noting that they share the same trunk."
 124.077,138.168,"The surgeon uses a right angle forceps to dissect the vein, preparing it for secure ligation with a vascular load."
 138.668,148.078,"The surgeon carefully manipulates the tissue to protect the superior part of the vein, ensuring it is not damaged during the procedure."
@@ -24,8 +20,6 @@ start,end,text
 260.112,273.761,"The surgeon continues to liberate the middle lobe by dissecting within the minor fissure using hook electrocautery and endoscopic instruments, carefully separating tissue layers."
 274.261,280.585,"The surgeon advances the dissection to confirm the presence of any additional middle lobe veins, carefully navigating the area between the middle lobe artery and its bronchus."
 281.085,287.93,"The surgeon identifies a vascular anomaly, observing a branch from the middle lobe draining into the superior lobe vein during the dissection of the minor fissure."
-288.43,289.871,This is an important remark.
-290.338,298.322,"Whenever you find an anatomical anomaly, you should always have extra caution, since these anomalies often come in pairs."
 298.822,316.413,The surgeon uses an ultrasonic scalpel to ligate small vascular branches in the pulmonary region.
 316.913,324.078,"The surgeon confirms that all middle lobe veins have been ligated, revealing the middle lobe artery and bronchus clearly in the surgical field."
 324.578,339.368,"The surgeon approaches the middle lobe bronchus and uses a surgical stapler to transect the bronchus, ensuring a safe and precise separation of the structure."
@@ -37,7 +31,6 @@ start,end,text
 432.319,438.202,"The surgeon opens the pleura inferiorly to the azygos vein, exposing the underlying structures for further dissection."
 438.702,451.349,"The surgeon dissects the space beneath the previously divided artery, carefully removing lymph nodes from stations four and two."
 451.849,469.883,"The surgeon performs an anterior lymphadenectomy at station seven, carefully dissecting and removing lymph nodes from the specified anatomical location."
-470.383,471.809,"Now, the final result."
 472.309,474.656,"The surgeon exposes the pulmonary hilum, highlighting the remaining veins visible in the surgical field."
 475.156,478.246,"The surgeon exposes two inferior lobe veins and the superior lobe vein within the pulmonary hilum, highlighting their anatomical positions and relationships."
 478.746,484.863,"The surgeon performs an intercostal nerve blockade, followed by the insertion of a 24 French chest tube into the thoracic cavity."

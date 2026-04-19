@@ -1,6 +1,4 @@
 start,end,text
-0.572,10.944,"Hi, my name is Dr. Jennifer Young. I'm the co-director of robotic surgery at Stone Springs Hospital. This is a video of a da Vinci robotic prostatectomy."
-11.444,17.012,That is removal of the prostate gland as a treatment for prostate cancer.
 17.512,24.075,"The robotic instruments are positioned inside the pelvis, beginning the radical prostatectomy procedure."
 24.575,29.478,"The surgeon has dropped the bladder, revealing the prostate gland within the pelvic cavity during the robotic prostatectomy procedure."
 29.978,39.002,"The surgeon retracts the right vas deferens while isolating the external iliac vein, using robotic instruments within the pelvic cavity."
@@ -12,7 +10,6 @@ start,end,text
 81.174,88.781,"The surgeon uses electrocautery to fulgurate the superficial dorsal venous complex, controlling bleeding in the area."
 89.281,98.609,"The surgeon identifies a vein responsible for draining blood from the prostate, which connects to the pelvic veins and ultimately returns blood to the heart."
 99.109,107.416,"The surgeon removes the periprostatic or anterior pelvic fat, enhancing the exposure of the prostate for further dissection."
-107.916,117.523,We also send this fat off for analysis because sometimes lymph nodes are found in it and we want to see whether or not prostate cancer has spread to those lymph nodes.
 118.023,121.266,"The surgeon exposes the endopelvic fascia, revealing the connective tissue layer surrounding the prostate within the pelvic cavity."
 121.766,131.31,The surgeon incises the tissue surrounding the prostate to facilitate its dissection from the adjacent pelvic muscles.
 131.81,139.873,"The surgeon uses electrocautery to cut the puboprostatic ligament, separating it from the surrounding tissue."
@@ -28,15 +25,12 @@ start,end,text
 227.488,235.515,"The assistant outside the patient pulls on the catheter, elevating it to enhance exposure of the surgical field, aiding in the dissection between the bladder neck and the prostate."
 236.015,243.561,"The surgeon performs posterior dissection, carefully separating the tissue between the back of the prostate and the bladder, with the prostate visible at the top of the screen and the bladder at the bottom."
 244.061,249.436,"The surgeon dissects down to the level of the vas deferens and seminal vesicles, revealing these structures in the surgical field as part of the prostatectomy procedure."
-249.936,264.425,Here it's important to be sure we take all the cancer out but preserve the back of the bladder as well as nerves for erection and some for continence are in this area.
 264.925,270.168,"The surgeon secures the vas deferens using an absorbable clip, ensuring stability within the surgical field."
 270.668,279.295,"The surgeon performs dissection on the opposite side to elevate the seminal vesicles and vas deferens, located posterior to the prostate."
 279.795,294.926,"The surgeon clips and transects blood vessels supplying the prostate, then continues the posterior dissection by carefully separating the rectum from the prostate."
 295.426,300.19,The surgeon incises the deep dorsal vein complex after completing the dissection down to the level of the vas deferens and seminal vesicles.
 300.69,310.28,"The surgeon maintains the suspension suture in place, visibly supporting the urethra or bladder tube against the inside of the pubic bone."
-310.78,317.447,This is thought to help decrease leakage after catheter removal.
 317.947,328.193,"The surgeon performs nerve-sparing dissection of the neurovascular bundle on the right side, carefully separating it from the prostate tissue."
-328.693,337.137,It's important to use as little heat as possible to try to minimize trauma to the nerves.
 337.637,348.326,"The surgeon carefully dissects the neurovascular bundle from the prostate, focusing on the nerves that insert along the prostate surface."
 348.826,353.47,"The surgeon transitions to dissecting the prostatic pedicle, focusing on separating it from surrounding tissues."
 353.97,362.184,"The surgeon clips and cuts the blood vessels supplying the prostate, ensuring hemostasis during the procedure."
@@ -45,7 +39,6 @@ start,end,text
 373.799,378.866,"After completing the dissection of the neurovascular bundles on both sides, the surgeon proceeds to dissect the urethra, focusing on the area where it connects to the prostate."
 379.366,392.097,"The surgeon carefully dissects around the urethra, aiming to preserve as much of it as possible while ensuring complete removal of prostate cancer tissue."
 392.597,397.882,"The surgeon focuses on the apex of the prostate, a region where positive margins are frequently observed, ensuring careful dissection to minimize the risk of leaving cancerous tissue."
-398.382,402.646,This means when some cancer may be left behind.
 403.146,412.473,"The surgeon performs a delicate dissection around the urethra, aiming to preserve its structure while ensuring complete removal of cancerous tissue."
 412.973,423.841,"The surgeon performs a pelvic lymph node dissection on both sides after freeing the prostate, carefully avoiding the obturator nerve during the procedure."
 424.341,436.069,"The surgeon performs lymph node dissection, carefully removing lymphatic tissue to assess for cancer presence and to excise potential cancerous nodes."
@@ -55,5 +48,3 @@ start,end,text
 476.104,481.993,"The surgeon completes the posterior plate of the anastomosis, visually confirming the connection between the bladder neck and urethra."
 482.493,489.885,"The surgeon brings the suture around to complete the anastomosis, visually connecting the bladder neck to the urethra."
 490.385,495.213,The surgeon brings in the string for the specimen bag and places a drain in the surgical field.
-495.713,496.914,I hope you enjoyed the video.
-497.355,505.326,We are accepting new patients at our newest office at StoneSprings Hospital or go to StoneSpringsHospital.com for more information.

@@ -1,12 +1,5 @@
 start,end,text
-1.06,12.229,"The team of Dr. K. H. Ra and Dr. S. Alip presents step-by-step pointers in performing a retro-sparing radical prostatectomy using a new robot, the Revo-i."
-12.729,18.033,"The surgery was performed in the Institute of Urology, Severance Hospital in Seoul, South Korea."
-18.533,23.882,The authors have no conflicts of interest in relation to the study and no further disclosures.
-24.382,32.734,"The Revo Eye was granted Korean Ministry of Health approval in twenty eighteen and has been used commercially in Seoul, Russia, and Kazakhstan."
-33.234,41.485,"Similar to the DaVinci, but forty two percent cheaper, the Revo Eye is poised to present accessible options for robotic surgery."
-41.985,57.652,"The Yonsei RetroSparing Radical Prostatectomy procedure is shown using a supraumbilical optical port, three robotic arms, and two assist ports located on the patient's left side, with one port measuring twelve millimeters and the other five millimeters."
 58.152,60.594,"The robotic system is docked, and the surgeon enters the abdomen through the established ports."
-61.094,62.795,Let us first orient ourselves.
 63.295,66.157,"The camera is oriented inferiorly, providing a view towards the patient's feet."
 66.657,68.398,"The left iliac artery is highlighted in red, visible within the surgical field."
 68.838,70.439,"The left iliac vein is highlighted in blue, visible in the surgical field."
@@ -16,11 +9,9 @@ start,end,text
 93.768,98.295,The Foley catheter balloon is visibly deflated within the surgical field.
 98.795,112.9,"The surgical team prepares to make the first incision, using visible lab marks on the patient's skin as a guide."
 113.4,116.703,"The surgeon incises the peritoneal reflection at the level of the vas deferens, revealing underlying structures."
-117.203,128.793,The inset shows the same maneuver performed on the da Vinci robot.
 129.293,148.637,"The surgeon traces the vas deferens proximally towards the seminal vesicle, carefully freeing it from the surrounding tissue using precise dissection techniques."
 149.137,156.803,The surgeon shifts focus to the lateral sides of the prostate after freeing the seminal vesicles and prostate base from the Denonvilliers' fascia.
 157.303,164.91,The surgeon uses a combination of sharp dissection and minimal electrocautery to carefully separate the prostatic tissue from its adjacent neurovascular bundle.
-165.41,179.512,This is important in preserving continence and potency.
 180.012,196.863,"The surgeon performs the same dissection maneuver on the contralateral side of the prostate, using a combination of sharp dissection and minimal electrocautery to separate the prostatic tissue from its neurovascular bundle."
 197.363,210.552,"The surgeon continues the dissection caudally, reaching the prostatic apex while preserving the neurovascular bundles on either side of the prostate."
 211.052,219.718,"Following meticulous lateral dissection into the prostatic apex, the surgeon shifts focus proximally to the junction between the bladder and prostate, preparing for further surgical intervention at this anatomical site."
@@ -50,12 +41,3 @@ start,end,text
 405.469,408.11,"The surgeon positions a Jackson-Pratt (JP) drain in the Douglas pouch, ensuring proper placement for postoperative fluid drainage."
 408.61,411.372,"The surgeon positions the string of the specimen bag into the surgical field, making it visible."
 411.872,422.391,"The camera is transferred to the assist port, and the string is pulled out of the optical port for specimen retrieval through the umbilicus."
-422.891,433.417,"The authors conducted thirty-three Revo-I prostatectomies and matched the cases to thirty-three patients on the following variables, including tumor characteristics and patient demographics."
-433.917,439.12,The Revo-I and DaVinci cohorts were then compared.
-439.62,441.582,Perioperative outcomes were similar.
-442.082,444.784,No major complications occurred using the Revo-I.
-445.284,453.478,"Operative times, however, were faster on the DaVinci for console time, suture time, and total operative time."
-453.978,456.782,Oncologic outcomes were equivalent for all criteria.
-457.282,466.974,Especially important are that positive margin rates and biochemical recurrence on short-term follow-up did not differ between the Revo-I and the DaVinci.
-467.474,474.403,"In conclusion, newer robots like the Revo-I can be considered as feasible alternatives to the DaVinci standard."
-474.903,475.884,Thank you for listening.

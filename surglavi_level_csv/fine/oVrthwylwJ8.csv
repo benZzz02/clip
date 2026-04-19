@@ -1,16 +1,11 @@
 start,end,text
-10.402,24.115,A colleague calls you from the operating room stating that they are concerned regarding a bowel duct injury during a lap coli. The gallbladder was long and tubular and there was immediate concern regarding a duct transection.
-24.615,29.96,This patient will require a Roux-en-Y hepatic ojejunostomy and you'll see why in a moment.
 30.46,41.468,"A tubular structure, identified as the common hepatic duct, extends towards the hilar plate. A surgical clip is visible at the confluence of the cystic duct and the common hepatic duct."
 41.968,53.516,"The surgeon observes multiple clips applied to the distal end of the bile duct, which is unusual for a laparoscopic cholecystectomy."
-54.016,65.549,"That clip corresponds to the cystic artery, it would seem. The other clips are likely on lymphatics."
 66.049,77.037,"The surgeon removes the clip from the bile duct, revealing the epithelial lining of the duct."
 77.537,82.84,"The surgeon uses forceps to pinch the common hepatic duct, visibly manipulating the tubular structure near the hilar plate."
-83.34,90.242,I went ahead and completed the cholecystectomy at this point
 90.742,105.886,"An endo loop is placed around the gallbladder, positioned away from the cut on the bile duct, in preparation for a cholangiogram."
 106.386,122.962,"A pediatric feeding tube is introduced through a separate stab incision for performing a cholangiogram under fluoroscopy. The catheter is inserted into the bile duct, with visible pulsations in the right and left hepatic arteries indicating no vascular biliary injury."
 123.462,146.482,"The surgeon secures the catheter in the bile duct using a clip while flushing the duct to ensure it remains patent, facilitating an adequate cholangiogram."
-146.982,162.694,"This demonstrates the positioning that was used in this case. I would generally stay away from leaving the left arm out and ensure the bed is positioned in a way that allows for easy introduction of a C-arm for a cholangiogram, as you never know when you might need to do an intraoperative cholangiogram during a lap coli."
 163.194,178.477,"The common hepatic duct is visibly transected, and an accessory right posterior duct is identified in the surgical field."
 178.977,212.547,"The surgeon assesses the lumen and removes the cholecystectomy specimen. The bile duct is opened for repair using scissors, revealing healthy bleeding edges from the bile duct and lumen."
 213.047,242.453,"The surgeon identifies the ligament of Treitz and runs the small bowel to find a suitable point for transection. Using surgical staplers, the bowel is divided. A suitable window for creating a retrocolic Roux limb is identified anterior to the duodenum."
@@ -22,5 +17,3 @@ start,end,text
 360.838,380.587,"The surgeon checks the anastomosis for bile leaks by flushing it with water, observing no leakage. A clean white Raytech gauze is applied to the area, confirming the absence of bile leaks as no bile is visible on the gauze."
 381.087,401.431,"The surgeon performs a side-to-side enteroenterostomy below the mesentery, carefully orienting the loops of bowel and selecting a site approximately forty centimeters from the hepatico-jejunostomy. Despite some visible wear on the bowel, the loops are successfully aligned and joined."
 401.931,430.519,"Two enterotomies are created, and a stapler is used to form a common channel. The enteroenterostomy is then closed with a running suture. The anastomosis is re-inspected using an underwater test, confirming no bile leakage."
-431.019,434.484,Drains were left which were removed uneventfully. The patient did very well.
-434.984,440.069,He has been seen in follow-up and is doing very well and has returned back to work as a construction worker.

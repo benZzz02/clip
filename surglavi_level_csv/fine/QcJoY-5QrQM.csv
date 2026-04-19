@@ -1,13 +1,8 @@
 start,end,text
-0.431,4.315,We present our technique of robotic ampulectomy.
-4.815,11.14,This is the case of a twenty-four year old female who complains of persistent right upper quadrant pain after a cholecystectomy.
-11.64,16.544,Several ERCPs and cilia ganglion blocks were performed with transient relief only.
-17.044,21.067,Manometry confirmed the diagnosis of sphincter of body dyskinesia.
 21.487,24.53,"The video shows the typical port placement for a robotic ampullectomy, with ports strategically positioned on the patient's abdomen to facilitate surgical access."
 24.99,28.473,A red circle highlights the target anatomical area for the robotic ampullectomy procedure.
 28.973,31.815,"The robotic surgical system is docked from the patient's right shoulder, positioning the robotic arms for the ampullectomy procedure."
 32.315,40.202,"The surgical setup includes three robotic arms and a twelve millimeter assistant port, which accommodates an ultrasound probe for intraoperative imaging."
-40.702,44.07,This picture demonstrates our typical OR setup.
 44.57,48.031,"The surgeon initiates the procedure with a wide Cocker maneuver, mobilizing the duodenum to expose the target anatomy indicated by the red circle."
 48.451,54.132,"The duodenum is suspended from four corners, and a laparoscopic ultrasound probe is utilized to visually localize the ampulla within the surgical field."
 54.632,61.093,"The surgeon creates a longitudinal duodenotomy, placing two stitches superiorly and inferiorly to the ampulla for stabilization."
@@ -15,7 +10,6 @@ start,end,text
 67.534,72.89,"The surgeon performs circumferential dissection around the ampulla, extending the dissection down to the level of the pancreas, with visible tissue separation and exposure of underlying structures."
 73.39,87.855,"The surgeon uses monopolar scissors to perform precise dissection around the ampulla, following the duodenotomy and suspension of the duodenum."
 88.355,99.893,"The surgeon identifies the biliary and pancreatic ducts within the exposed duodenum and carefully transects them using scissors, avoiding the use of energy devices."
-100.393,115.486,This cartoon demonstrates how the reconstruction is performed in a simplified version.
 115.986,121.691,"The surgeon uses POTS scissors to spatulate the transected common bile duct, widening the duct opening for further surgical manipulation."
 122.191,145.152,"The surgeon performs a choledochoduodenostomy, suturing the bile duct to the duodenum using interrupted V-O vial stitches."
 145.652,171.057,"The surgeon secures the common bile duct to the pancreatic duct, visually creating a new septum between these structures."
@@ -32,7 +26,3 @@ start,end,text
 362.026,387.345,"The surgeon closes the second layer of the duodenal wall using a 3-0 bicurl Connell stitch, completing the reconstruction process."
 387.845,393.074,"The final appearance of the closed dual anatomy is shown, with sutures visibly securing the reconstructed posterior wall of the duodenum."
 393.574,403.626,"The surgeon inspects the suture line along the dual anatomy and places a drain adjacent to it, ensuring proper postoperative drainage."
-404.126,408.049,The patient tolerated the procedure well and there were no immediate complications.
-408.549,413.333,The nasogastric tube was removed on post-op day one and she was started on a clear liquid diet.
-413.833,416.656,She was discharged home on post-op day four.
-417.156,421.379,She reported improvement of her symptoms in the two-week post-operative visit.

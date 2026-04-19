@@ -1,9 +1,4 @@
 start,end,text
-0.031,12.622,The patient is a forty-two year old woman with two months history of progressive left upper abdominal crampy pain. Seedy abdomen revealed a concentric narrowing of distal transverse colon.
-13.122,21.88,This was confirmed on colonoscopy to be a stenotic ulcerative cancer. Her CEA was normal.
-22.38,33.244,"The plan was to perform distal transverse colectomy, including the upper half of the descending colon, using the da Vinci robotic system."
-33.744,41.967,"The patient is positioned in reverse Trendelenburg, with the da Vinci robotic system and surgical ports visibly arranged for the procedure."
-42.467,46.793,The surgeon begins the procedure by exploring the abdominal cavity and localizing the lesion in the distal transverse colon using the da Vinci robotic system.
 47.293,59.603,"The surgeon visually examines the distal transverse colon, confirming the location of the lesion marked by an ink stain, with no evidence of carcinomatosis observed."
 60.103,69.29,"The surgeon lifts the transverse colon to expose the ligament of Treitz, then makes an incision on the mesocolon above the ligament using surgical instruments."
 69.79,80.799,"The surgeon performs dissection cranially above the pancreas and along the lateral side of the inferior mesenteric vein, using the da Vinci robotic system."
@@ -23,4 +18,3 @@ start,end,text
 294.503,335.077,"The surgeon performs an intracorporeal hand-sewn anastomosis on the enterocyte, using a running 3-0 silk suture to secure the posterior seromuscular layer."
 335.577,409.721,"The surgeon completes the remaining layers of the anastomosis using 3-0 V-lock sutures, which are visible as braided absorbable sutures that lock onto the tissue upon passage."
 410.221,414.108,"The completed anastomosis is visible, showing the connection between the mobilized sections of the colon with sutures securing the tissue."
-414.608,422.38,The patient did well postoperatively. She passed flatus on the third postoperative day and was discharged on the following day.

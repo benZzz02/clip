@@ -1,12 +1,4 @@
 start,end,text
-12.39,15.813,"Minimally invasive esophagectomy, the Brigham and Women's Hospital experience."
-16.313,20.938,We resented the case of a sixty-eight-year-old gentleman with a history of dysphagia and a fifteen-pound weight loss.
-21.438,27.243,A barium swallow study demonstrated partial distal obstruction and an endoscopy demonstrated a large distal mass that was friable.
-27.743,32.022,Pathology was consistent with a poorly differentiated adenocarcinoma her tuning positive.
-32.522,41.187,"At a CT scan, the distal esophageal mass at measure is six point five by four point two by four point one centimeters, and the EUS demonstrated T three NX lesion."
-41.687,53.531,"PET CT scan demonstrated distal esophageal mass with an SUV of thirteen point five, and hence, he was started on a neoadjuvant chemo radiotherapy treatment, which is platinum and toposide, and fifty forty centigrade."
-54.031,67.854,"He suddenly got a repeat PET CT scan that demonstrated persistent SUV avidity in the distal esophagus, but no distant lesion, and hence we planned for a noninvasive viral Lewis esophagectomy."
-68.354,72.375,The surgeon initiates the esophagectomy procedure with a laparoscopic approach in the abdominal cavity.
 72.875,80.136,"The surgeon identifies the greater curvature of the stomach and preserves a large section of the omentum, which will be used later as an omental patch."
 80.636,84.429,"The surgeon accesses the lesser sac laterally, likely using laparoscopic instruments to navigate the abdominal cavity."
 84.929,88.012,"The surgeon extends the dissection towards the short gastric vessels, continuing the laparoscopic approach within the abdominal cavity."
@@ -31,32 +23,23 @@ start,end,text
 224.055,236.148,"The surgeon places two sutures to secure the orientation of the gastric conduit, ensuring it remains properly aligned during the procedure."
 236.648,244.57,The surgeon ties the sutures and inspects the gastric conduit to ensure proper orientation and integrity before advancing it into the thoracic cavity.
 245.07,257.774,"The patient is positioned in the left lateral cubitus position. The surgeon dissects the esophagus away from the mediastinum, carefully dividing and preserving the subclinical nodal tissue to remain with the specimen."
-258.274,263.898,"Though you can resect this separately, our preferential method is to do it en bloc."
 264.398,272.139,"The surgeon carefully divides the esophagus from the posterior mediastinum, taking care to avoid injury to the thoracic duct during the dissection."
 272.639,275.2,"The surgeon clips multiple branches of tissue during the esophagectomy procedure, ensuring secure management of these structures."
-275.7,278.16,The harmonic works well as well.
 278.66,280.941,"The surgeon extends the dissection of the esophagus up to the thoracic inlet, ensuring that the subclinal nodal tissue remains with the specimen."
 281.441,289.522,"The surgeon maintains a pleural tent above the level of the esophagus vein, which is intended to cover the anastomosis site."
 289.882,293.342,"The surgeon extends the dissection as high as possible, continuing to separate the esophagus from surrounding structures in the thoracic cavity."
-293.842,296.303,making sure to protect the airway.
 296.803,307.068,"The surgeon delivers the esophageal conduit and specimen into the thoracic cavity, ensuring the staple line remains oriented towards their side."
 307.568,331.613,"The gastric conduit is carefully pulled up into the thoracic cavity, ensuring minimal length is drawn into the chest. The surgeon then divides the suture to separate the specimen from the conduit."
 332.113,336.054,"The surgeon inspects the esophagus after separating the gastric conduit and specimen, ensuring proper alignment and integrity of the esophageal tissue."
 336.554,352.077,"The surgeon uses endoshears to sharply divide the fully mobilized proximal esophagus, completing the resection of the specimen and exposing the remaining esophagus for anastomosis."
-352.577,364.662,"It's quite important to make sure that you are aware of the angle of approach and then try to get a flush, flat end."
-365.162,373.945,"You can certainly extend this high into the thoracic cavity if needed, depending on the location of your tumor."
 374.445,385.089,"The surgeon extends the posterior inferior incision by a few centimeters, places a wound protector, and delivers the specimen through the incision for pathology examination."
 385.109,398.623,"The surgeon addresses minor bleeding in the surgical field, using cautery to control and coagulate the bleeding tissue."
 399.123,403.886,"The surgeon examines the end of the esophagus after delivering the specimen, inspecting the tissue for any abnormalities or necessary adjustments."
 404.386,408.969,"The surgeon uses a Foley balloon catheter to dilate the esophageal opening, ensuring adequate expansion for the procedure."
 409.469,414.572,"The surgeon assesses the adequacy of the opening and prepares to use an EEA stapler for the anastomosis, ensuring the connection between the esophagus and stomach is properly aligned."
-415.072,418.915,Twenty-five and twenty-eight milliliter EEAs are the most common sizes utilized.
 419.415,425.105,"The surgeon places the EEA stapler into the esophageal opening and secures it with two pursing sutures, preparing for anastomosis."
 425.605,429.747,"The surgeon snugly closes the esophagus around the anvil, ensuring a secure fit for the anastomosis."
 430.247,442.553,The surgeon uses a baseball-type stitch to secure the esophageal mucosa snugly around the anvil.
-443.053,445.955,There are different techniques for this portion.
-446.455,453.005,Some surgeons opt to put these in before cutting the esophagus.
-453.505,468.781,Our preference to do this after is we can see the mucosa better.
 469.281,511.39,"The surgeon ties down the suture after completing the stitch around the opening of the esophagus, ensuring a secure closure around the anvil."
 511.89,531.839,"The surgeon ties the suture with the knot positioned externally, ensuring secure closure around the anvil."
 532.339,548.603,"The surgeon places a second purse string suture exterior to the initial one, cinching the esophagus around the base of the anvil to create a flat surface for the anastomosis."
@@ -65,7 +48,6 @@ start,end,text
 600.931,604.795,"The surgeon pulls the gastric conduit further upwards, preparing it for the anastomosis with the esophagus."
 605.295,618.425,"The surgeon divides the proximal staple line, opening the gastric conduit for further manipulation."
 618.925,622.107,"The surgeon opens the distal staple line where sutures were previously placed, revealing the underlying tissue and preparing the area for further surgical steps."
-622.607,625.528,This area will be resected in the near future.
 626.028,635.933,"The surgeon enlarges the opening to accommodate the handle of the EEA stapler, ensuring it fits properly within the surgical field."
 636.433,640.535,"The surgeon gently places the gastric conduit over the handle of the EEA stapler, ensuring proper alignment for the upcoming stapling process."
 641.035,647.585,"The surgeon advances the handle of the EEA stapler into a slightly more distal portion of the esophageal conduit, preparing for further surgical manipulation."
@@ -81,14 +63,6 @@ start,end,text
 734.316,750.126,"The surgeon ensures there is at least a centimeter of space between the current staple line and the anastomosis staple line, visually checking the distance between these two areas."
 750.626,759.631,"The surgeon covers the entire staple line with the omentum, creating a mantle patch over the surgical site."
 760.131,764.423,"The surgeon sutures the omentum onto the edges of the pleura above the staple line, securing the mantle patch in place."
-764.923,780.956,and often through the mediastinum more inferiorly.
 781.456,783.018,"The surgeon irrigates the chest cavity with cold saline solution, ensuring thorough cleansing of the surgical area."
 783.518,788.082,"The surgeon covers the entire esophageal conduit with omentum, visibly protecting it as part of the mantle patch technique."
 788.582,793.086,The surgeon places multiple chest tubes into the chest cavity to facilitate drainage following the esophagectomy procedure.
-793.586,797.718,And the case is complete.
-798.218,802.139,"Post-op, patients are started on J-tube feeds on day three."
-802.159,806.381,"On day five, they undergo a barium swallow study to make sure there's no leak."
-806.881,811.683,And they're usually discharged around day seven on tube feed support with an oral liquid diet.
-812.183,817.005,"On subsequent follow-up, once they've advanced on their normal diet, their tube feeds are discontinued at six weeks."
-817.505,822.006,And follow-up CT scans are usually every four to six months based on ultimate pathology.
-822.026,826.988,Thank you.

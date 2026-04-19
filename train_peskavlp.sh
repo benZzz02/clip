@@ -2,7 +2,7 @@
 set -euo pipefail
 
 export MODEL_FAMILY="${MODEL_FAMILY:-peskavlp}"
-export EXP_NAME="${EXP_NAME:-peskavlp_lora_3gpu_bs100}"
+export EXP_NAME="${EXP_NAME:-peskavlp_lora_3gpu_bs100_2}"
 export TOKENIZER_NAME="${TOKENIZER_NAME:-emilyalsentzer/Bio_ClinicalBERT}"
 export PESKAVLP_VISION_BACKBONE="${PESKAVLP_VISION_BACKBONE:-resnet_50}"
 export PESKAVLP_VISION_PRETRAINED="${PESKAVLP_VISION_PRETRAINED:-random}"

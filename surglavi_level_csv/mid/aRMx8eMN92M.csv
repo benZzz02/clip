@@ -1,6 +1,4 @@
 start,end,text
-0.655,15.23,"Hello, I'm sharing a right colectomy for a very large mid-ascending colon cancer. Young patient, first colonoscopy after being found to be anemic, really didn't have any symptoms surprisingly."
-0.655,15.23,"Hello, I'm sharing a right colectomy for a very large mid-ascending colon cancer. Young patient, first colonoscopy after being found to be anemic, really didn't have any symptoms surprisingly."
 15.73,41.751,"The surgeon elevates the ileocolic pedicle and initiates a medial to lateral dissection. Black-colored lymph nodes are visible, marked by a tattoo placed distal to the tumor."
 15.73,41.751,"The surgeon elevates the ileocolic pedicle and begins a medial to lateral dissection, revealing black-colored lymph nodes marked by a tattoo placed distal to the tumor."
 42.251,59.069,"The surgeon identifies the duodenum and follows the white line laterally, revealing the inferior vena cava. The ureter is also visible in the surgical field."
@@ -8,7 +6,6 @@ start,end,text
 59.569,82.838,"The surgeon isolates the ileocolic pedicle at its junction with the superior mesenteric vessels, carefully dissecting through the surrounding fatty tissue to expose the blue superior mesenteric vein."
 59.569,82.838,"The surgeon isolates the ileocolic pedicle at its junction with the superior mesenteric vessels, carefully dissecting through the surrounding fatty tissue to expose the blue superior mesenteric vein."
 83.338,105.561,"The surgeon continues the dissection around the ileocolic artery, using techniques to expose the surgical field for better visualization of the anatomical structures."
-83.338,97.336,I think there are a lot of excellent ways of getting this type of exposure. I'm still doing it in the manner that you see here. But I'm continuing to experiment with other modalities.
 97.836,151.084,"The surgeon ligates the ileocolic artery and continues the dissection, revealing the head of the pancreas. Black-stained lymph nodes are visible, and the surgeon carefully elevates tissue to stay above the superior mesenteric vein, identifying the ileocolic vein."
 105.581,151.084,The surgeon exposes the head of the pancreas and identifies black-stained lymph nodes. The ileocolic vein is visible as the surgeon carefully elevates tissue to stay on top of the superior mesenteric vein.
 151.584,187.457,"The surgeon continues the medial to lateral dissection of the ileocolic pedicle, encountering challenges due to the tumor's adherence to the sidewall. The dissection proceeds smoothly in areas with excellent exposure."
@@ -23,7 +20,6 @@ start,end,text
 294.49,347.54,"The surgeon disconnects the gastrocolic omentum just distal to the gastroepiploic vessel, ensuring its preservation. The medial dissection is joined, with the cut edge of the gastro-mental vessel visible to the left of the vessel sealer."
 348.04,417.757,"The surgeon releases the hepatic flexure and approaches the portion of the ascending colon adherent to the sidewall. Dissection is carried into the sidewall to ensure complete removal of any potential tumor invasion. The surgeon uses an inferior approach, carefully avoiding the ureter."
 348.04,402.331,"The surgeon releases the hepatic flexure and approaches the ascending colon, which is adherent to the sidewall. Dissection is performed into the sidewall to remove any potential tumor invasion, aiming for an R0 resection. The surgeon uses an inferior approach while ensuring the ureter is not compromised during the procedure."
-402.791,467.167,So I'm going and I'm looking here and And I'm coming back up and around.
 418.257,484.456,"The surgeon approaches the surgical site from an inferior angle, completing the dissection around the previously isolated right colic vessels and superior mesenteric vein."
 467.667,519.933,"The surgeon approaches from an inferior angle to complete the dissection, taking the remaining small bowel mesentery. The colon margin is divided using a stapler, which is kept in place while checking the perfusion of the tissue."
 484.956,553.594,"The surgeon takes the remaining small bowel mesentery and checks perfusion, dividing the colon margin first with a stapler inserted through the suprapubic port. Stay sutures are placed, and an isoparastaltic anastomosis is lined up. A collotomy and enterotomy are performed, preparing for specimen exteriorization through a fin and steel incision."

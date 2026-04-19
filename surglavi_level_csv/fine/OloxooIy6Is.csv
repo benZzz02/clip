@@ -1,9 +1,4 @@
 start,end,text
-1.165,9.712,The case was a thirty-two-year-old female presented with rectal bleeding. She had a history of two surgeries for ovarian C-structure and C-section.
-10.212,12.554,Her physical examination was unremarkable.
-13.054,17.858,"On colonoscopy, a submucosal mass in rectosigmoid colon was detected."
-18.358,21.04,All following biopsies were non-diagnostic.
-21.54,31.606,"Therefore, a laparoscopic low anterior resection was planned."
 32.106,82.412,"The surgeon begins the procedure by dissecting the mesentery from a caudal to cranial direction, carefully separating the mesenteric tissue from surrounding structures."
 82.912,98.7,"The surgeon opens the mesenteric window, creating an access point through the mesentery during the laparoscopic low anterior resection."
 99.2,126.362,"The surgeon isolates the inferior mesenteric vein, carefully dissecting it from surrounding tissues using laparoscopic instruments."
@@ -25,5 +20,3 @@ start,end,text
 400.667,411.357,"The surgeon observes signs of fibrosis on the rectum, which is prepared for anastomosis."
 411.857,430.773,"The surgeon checks for hemostasis, ensuring there is no active bleeding in the surgical field."
 431.273,447.388,"The surgeon performs an end-to-end colorectal anastomosis using a circular stapler, joining the prepared rectum to the colon."
-447.888,451.672,The patient was discharged uneventfully on fourth post-operative day.
-452.172,455.635,Pathological examination also confirmed our initial diagnosis.

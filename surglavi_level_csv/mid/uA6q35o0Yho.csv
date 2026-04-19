@@ -1,5 +1,4 @@
 start,end,text
-10.601,23.794,"The CT scan reveals a large splenic cyst occupying the entire left upper quadrant, displacing the stomach medially and the colon inferiorly."
 24.294,49.413,"The patient is positioned in a semi-decubitus position, with the surgical table tilted to elevate the left side, preparing for the hanging technique in laparoscopic splenectomy."
 24.294,73.439,"The patient is positioned in a semi-decubitus orientation, with the surgical table tilted to elevate the left side, resulting in an almost left lateral decubitus position. The spleen is lifted medially using a retractor or instrument, facilitating the dissection of the splenic vessels."
 49.913,73.439,"The patient is positioned in an almost left lateral decubitus position, causing the spleen to fall medially. A retractor or instrument is used to lift and hang the spleen, facilitating the dissection of the splenic vessels."
@@ -33,4 +32,3 @@ start,end,text
 639.954,682.958,"The surgeon separates inflammatory adhesions from the diaphragmatic surface of the massively enlarged spleen. After completing the splenectomy, hemostasis of the splenic bed and vascular stumps is verified by increasing blood pressure. The spleen is then retrieved through a suprapubic incision."
 657.871,682.958,"After completing the splenectomy, the surgeon checks for hemostasis in the splenic bed and vascular stumps, ensuring no bleeding is present. The spleen is then retrieved through a suprapubic incision."
 683.458,701.295,A surgical drain is placed in the splenic fossa to prevent seroma formation in the potential space left by the removal of a large spleen. The surgeon checks the drain fluid amylase before removing the drain.
-683.458,701.295,"In case of large spleens such as this, it's always preferable to leave a drain in the splenic fossa because many times a seroma tends to form in the potential space and before removal of the drain always check the drain fluid amylase."

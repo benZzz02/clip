@@ -1,5 +1,4 @@
 start,end,text
-1.283,18.867,"Totally robotic, complete mesocolic excision right colectomy with a hanging technique. We present a patient, a seventy-one-year-old female, who was found to have well-differentiated neuroendocrine tumor in the right colon during screening colonoscopy."
 19.367,39.672,"The surgeon places ports in a straight line starting from the left upper quadrant, spaced eight centimeters apart, extending towards the right lower quadrant."
 40.172,63.323,"The surgeon uses robotic instruments to switch the transverse colon and right colon to the abdominal wall, enhancing exposure and freeing the instruments for dissection."
 63.823,124.579,"The surgeon opens the mesenteric envelope and dissects the tumors using a medial-lateral approach. The duodenum is exposed, and the ileocolic vessels are identified. The ileocolic vein, branching from the superior mesenteric vein, is clipped and divided. The distal ileum is identified, and the mesentery is divided to address pelvic adhesions, freeing the small intestine for subsequent anastomosis."
@@ -12,4 +11,3 @@ start,end,text
 377.961,425.678,The surgeon performs an isoperistaltic anastomosis between the small intestine and transverse colon. Indocyanine green (ICG) is used to assess the blood supply to both structures. A 45mm stapler is then utilized to complete the anastomosis.
 426.178,512.841,"The surgeon uses the robotic fourth arm to align the anastomosis between the distal ileum and transverse colon. The common channel opening is closed with a 3-0 absorbable barbed suture, employing a canal suture technique."
 513.341,543.509,"The completed anastomosis is visible, with the barbed suture locked on itself. The surgeon uses ICG to check the blood supply of the anastomosis, confirming proper perfusion. All sutures are removed."
-543.869,572.977,"The specimen is extracted from the stapler port, showing the complete mesocolic excision. The omentum and mesentery are visible in relation to the right colon and transverse colon. The specimen is identified as a well-differentiated neuroendocrine tumor, classified as T3 N0 M0, with examination of up to thirty-three lymph nodes."

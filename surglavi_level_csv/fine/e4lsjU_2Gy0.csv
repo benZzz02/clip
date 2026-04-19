@@ -1,13 +1,9 @@
 start,end,text
-0.631,5.454,This is a robotic right hemicolectomy for a unresectable cecal polyp.
 5.534,7.295,The surgeon observes the tattooed area of the cecal polyp during the robotic right hemicolectomy.
-7.795,11.857,The first step in the operation is restoration of normal anatomy.
 12.357,21.453,The surgeon uses robotic scissors to sharply dissect and remove scar tissue along the lateral abdominal wall from a previous appendectomy.
 21.953,30.18,The surgeon begins medial to lateral mobilization of the colon by incising the peritoneum below the ileocolic pedicle using robotic instruments.
 30.2,39.508,"The surgeon uses robotic instruments to create a window beneath the ileocolic pedicle, carefully dissecting into the tissue plane to prepare for vessel division."
-40.008,45.994,"Thankfully, this patient is quite skinny, and it made it much easier."
 46.494,50.092,"The surgeon uses a robotic vessel sealer to divide the ileocolic pedicle, which is visible beneath the opened peritoneum."
-50.592,52.475,I feel it does a very nice job.
 52.975,60.244,"The surgeon continues dissection in the avascular plane, gently sweeping the duodenum and pancreas inferiorly."
 60.744,74.637,"The surgeon navigates through the avascular plane, aiming for a mostly bloodless operation while approaching the hepatic flexure."
 75.137,78.721,"The surgeon completes the takedown of the hepatic flexure, visibly separating the tissue planes in this region."
@@ -19,7 +15,6 @@ start,end,text
 126.672,174.7,"The surgeon identifies a division point on the transverse colon, preparing for a future anastomosis."
 175.2,179.262,"The surgeon prepares to divide the colon, with the administration of indocyanine green (ICG) by the anesthesiologist to enhance visualization of the tissue perfusion."
 179.582,184.645,"The surgeon places a surgical stapler across the transverse colon, visually assessing the perfusion of the colon tissue to ensure proper placement."
-185.145,200.673,Blood supply is paramount in any colon surgery and using ICG is a way to preserve and verify that you have adequate blood flow to the remaining colon.
 201.173,207.975,"The surgeon begins dividing the mesentery of the ileum, preparing the proximal transection point by carefully separating the mesenteric tissue."
 208.475,216.518,The surgeon carefully assesses the mesentery of the ileum to ensure maintained blood flow while preparing for lymph node harvest.
 217.018,254.792,"The surgeon takes down the lateral attachments of the colon, carefully separating these structures from surrounding tissues."
@@ -32,7 +27,6 @@ start,end,text
 318.749,322.356,"The surgical team prepares for the iliocolonic anastomosis, positioning instruments and aligning the ileum and colon for connection."
 322.856,339.937,The surgeon positions the transverse colon and removes sections of the omentum to create a clear space for the colotomy and the upcoming iliocolonic anastomosis.
 340.437,344.543,"The surgeon positions the ileum in opposition to the transverse colon, preparing for the anastomosis between these two sections."
-345.043,346.385,I think that looks really nicely.
 346.505,352.213,"The surgeon places a stay stitch at the apex of the surgical site, providing stability for the fourth iron during the procedure."
 352.233,363.7,"The surgeon uses a stay stitch to control tension during the iliocolonic anastomosis, ensuring precise alignment between the ileum and transverse colon."
 364.2,368.161,"The surgeon creates colotomies by aligning the two limbs of the intestine against each other, preparing for the anastomosis."
@@ -49,12 +43,8 @@ start,end,text
 451.111,456.635,"The surgeon secures the bottom corner of the anastomosis and begins suturing mucosa to mucosa, using a technique that ensures precise alignment of the tissue layers."
 457.135,464.139,"The surgeon reaches the superior apex of the anastomosis and begins a lumbar suture, stitching from the top down to the bottom of the surgical site."
 464.42,499.54,"The surgeon performs a two-layer closure of the common enterotomy using a 2-0 V-Loc suture, ensuring secure approximation of the tissue layers."
-500.04,504.921,Here I'm more worried about getting the tissue in opposition than I am narrowing.
 504.941,516.525,"The surgeon uses limber sutures to cover the common channel of a large and widely patent anastomosis, ensuring complete coverage."
 517.025,548.079,"The surgeon assesses the blood supply to the area, ensuring it appears adequate, while placing sutures across the common channel to achieve complete closure."
 548.579,550.082,"The surgeon visually inspects the anastomosis site, checking for patency and ensuring the integrity of the closure."
-550.142,551.425,It looks good.
 551.925,576.078,"The surgeon positions a segment of omentum over the anastomosis to serve as a buttress, ensuring it covers the area effectively."
 576.578,582.233,The surgeon completes the anastomosis and retrieves the specimen through a twelve millimeter port.
-582.733,584.02,And with that concludes the case.
-584.06,584.805,Thank you for watching.

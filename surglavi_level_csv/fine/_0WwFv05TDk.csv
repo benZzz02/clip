@@ -1,14 +1,4 @@
 start,end,text
-2.41,13.219,We describe a case of robotic left colectomy with staple colorectal anastomosis using indocyanine green fluorescence angiography.
-13.719,20.882,The patient is a fifty-three years old female presented with abdominal pain and cedropanic anemia.
-21.382,31.328,Surgery was indicated after colonoscopy showing an obstructive adenocarcinoma of the sigmoid colon and a CT scan showing no sign of metastasis.
-31.648,36.311,"The DaVinci XI robotic system is visibly docked on the left side of the patient, positioned for the robotic left colectomy procedure."
-36.811,42.294,"The surgical table is adjusted to the Trendelenburg position, tilted to the right, to optimize the surgical field for the robotic left colectomy."
-42.794,53.336,Four robotic ports are positioned in a diagonal line from the right femoral head to the intersection of the left midclavicular line and the left subcostal margin.
-53.836,60.578,The surgeon utilizes the red-marked robotic port four for inserting a 12mm endowrist instrument.
-61.078,65.659,Each robotic port is visually positioned at an eight-centimeter distance from the adjacent ports along the diagonal line from the right femoral head to the left midclavicular line.
-66.159,72.772,"A five millimeter air seal assistant port is placed lateral to the midclavicular line, complementing the existing robotic ports setup."
-73.272,80.162,"The surgical team targets the left iliac vessel, aligning the robotic instruments for precise access."
 80.662,125.607,The surgeon visualizes the lesion on the sigmoid colon and begins the procedure using a middle to lateral approach.
 126.107,148.945,"During the dissection, the surgeon identifies the left ureter, ensuring its preservation while continuing the procedure."
 149.445,157.532,"The surgeon dissects the anterior mesenteric artery approximately 1.5 centimeters from the aorta, using precise technique to separate the artery from surrounding tissues."
@@ -27,6 +17,3 @@ start,end,text
 493.64,518.888,"The surgeon uses Indocyanine Green fluorescence angiography to identify the proximal transaction margin after dividing the mesentery, before proceeding with sectioning."
 519.388,546.672,"The surgeon inserts the EEA stapler at the rectal stump, ensuring good vascular supply, and secures it with pearl sutures."
 547.172,569.638,"The surgeon performs a colon-heptal end-to-end anastomosis, using indocyanine green fluorescence angiography to recheck the vascular viability of the intestinal tissue, confirming a good vascular supply."
-570.138,576.196,The surgical procedure was successful. The operative time was one hundred thirty-five minutes.
-576.696,583.741,The post-operative period was uneventful. The patient was discharged after three days.
-584.241,592.827,The pathological report confirmed a PT-N-A adenocarcinoma with twenty-two nodes negative.

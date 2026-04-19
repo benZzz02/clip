@@ -1,10 +1,6 @@
 start,end,text
 0.091,6.542,The video shows a fluorescent colorectal anastomosis in a patient undergoing a high anterior resection for sigmoid cancer.
 7.042,11.482,"The surgeon observes the unhealthy appearance of the colon, indicating that the colorectal anastomosis needs to be redone."
-11.982,23.365,"In this video, we're going to show and talk through the phenomenon of venous ischemia as a cause of jeopardy to colorectal anastomosis and how this can be seen with fluorescence angiography, including showing one of the pitfalls of the current state of this technology."
-23.865,28.847,It's important to know that fluorescence presence alone in a segment of bowel does not necessarily mean it's okay.
-29.347,36.338,The dynamic patterns of its inflow are crucial in its correct interpretation.
-36.838,44.086,Her patient was a sixty-two-year-old man with a BMI of thirty-four and a sigmoid cancer detected on bowel cancer screening.
 44.586,57.233,"The surgeon performs a laparoscopic resection using a medial to lateral approach, executing a distal transection across the upper rectum."
 57.733,64.315,"The surgeon prepares the left mesocolon intercorporeally following the high ligation of the inferior mesenteric artery, with visible manipulation of the mesocolon tissue."
 64.815,108.327,"The surgeon observes good perfusion in the marginal artery, which will be confirmed using indocyanine green (ICG) angiography."
@@ -12,35 +8,21 @@ start,end,text
 118.894,127.9,"The view switches to near-infrared, revealing the inflow of indocyanine green (ICG) dye proximally to the designated point for proximal transection."
 128.4,147.885,"The near-infrared view displays a strong arterial inflow pattern, confirming brisk perfusion in the marginal artery following its transection."
 148.385,158.814,"The surgeon uses a stapler to perform the proximal transection, ensuring the cut is made within the area of good perfusion as indicated by fluorescence inflow."
-159.314,165.64,This is important rather than just stapling at the junction between good perfusion and malperfusion.
 166.14,171.521,The surgeon removes the specimen and prepares the proximal colon by placing a purse string suture and an anvil. The procedure then transitions to relaparoscopy.
 172.021,195.898,"The anvil in the proximal descending colon is visually aligned with the head of the circular stapler, which is inserted transanally into the rectum."
 196.398,202.64,"The surgeon switches to the near-infrared view to repeat the indocyanine green (ICG) angiography, visually assessing the perfusion of the anastomosis in situ."
 203.14,210.541,"The surgeon observes that the colon tissue surrounding the anvil exhibits slower fluorescence compared to adjacent tissues, indicating differences in perfusion."
 211.041,214.762,"The near infrared view shows the colon tissue around the anvil gradually brightening over thirty seconds, indicating delayed fluorescence compared to surrounding tissues."
-215.262,218.123,Go back and watch this part of the video again if you didn't quite notice this.
 218.623,226.435,"The surgical field displays a black and white view in the middle left of the screen, highlighting specific anatomical structures or surgical instruments."
 226.935,228.155,"The surgeon fires the stapler at the anastomosis site, completing the stapling process in the rectal cancer procedure."
-228.495,243.238,We're going to look back and see what the problem is.
 243.738,249.939,"The surgeon observes patchy fluorescence along the bowel, contrasting with the more uniform fluorescence of the proximal colon segment."
 250.439,263.614,"The video shows a segment of the colon with some arterial inflow, but it is less robust compared to the upstream section, as indicated by the fluorescence imaging."
 264.114,273.079,"The surgeon examines the mesocolon closely, identifying an area of encroachment at the same level as previously observed."
-273.579,284.564,This could have happened either during splenic flexural mobilization or perhaps the extraction of the specimen via the incision in this overweight man.
 285.064,315.049,"The video shows an injury to the mesocolon, where the marginal artery inflow appears preserved, but the venous outflow is visibly damaged."
 315.549,322.992,"The surgeon examines the bowel, observing visible signs of arterial perfusion in the tissue."
-323.492,342.633,"We spent a fair bit of time there in the operation, seeing was there any particular problem of tension or traction that could be corrected without having to redo the anastomosis."
-343.133,352.395,"At certain times, as you look at it, you could nearly be fooled into thinking the colon is okay with respect to perfusion, at least according to the fluorescence appearances."
 352.895,357.236,"The white light image reveals a section of the colon with compromised appearance, indicating potential issues with perfusion or tissue health."
-357.736,366.278,Venous ischemia as a cause of anastomotic failure is reported more in association with upper gastrointestinal anastomosis than in colorectal surgery.
-366.778,371.985,"Some groups have noticed, with colorectal anastomosis, the importance of looking for mucosal congestion."
-372.485,389.377,"but mostly, including since the development of ICG perfusion, the focus has been on arterial inflow."
 389.877,402.02,"The video shows the intestinal segments where ICG has perfused out, highlighting a lack of perfusion in the targeted area, indicating potential perfusion issues."
-402.52,403.942,This is a hallmark of venous ischaemia.
-404.442,409.707,"The ICG can get into the segment, even though it's imperfect in its flow in, but can't get out."
-410.207,415.291,"ICG is a half-life of about five minutes, and it clears without metabolism by excretion into the bowel."
-415.791,420.336,"Therefore, by twenty minutes, its circulatory concentration has dropped by eighty percent."
 420.836,434.828,"The video shows the affected segment of the colon where indocyanine green (ICG) dye is visibly trapped due to venous congestion, highlighting the area of concern."
-435.328,481.386,"Because it's a rather unhappy piece of colon, we redid the anastomosis."
 481.886,485.907,"The surgeon performs a proximal transection across the descending colon, visibly cutting through the tissue."
 486.407,501.212,"The surgeon prepares the newly formed proximal colonic conduit, which will serve as part of the reconstructed intestinal pathway."
 501.712,505.995,"The surgeon performs a transection in the distal sigmoid colon, cutting through the tissue to separate it for further surgical manipulation."
@@ -51,6 +33,3 @@ start,end,text
 603.881,626.255,"The circular stapler head is visible as its spike emerges through the rectal stump, preparing for the anastomosis."
 626.755,678.196,"The surgeon manipulates the proximal colonic segment, identified as the very proximal descending colon near the splenic flexure. A suture is placed to repair a small serosal tear in the splenic flexure area, ensuring adequate length for the segment to reach the top of the rectal stump."
 678.696,690.404,"The surgeon performs an ICG angiogram, revealing the dynamic inflow pattern along the colon, indicating proper blood supply."
-690.904,695.087,The patient did well postoperatively being discharged on day three without a defunctioning stoma.
-695.587,706.327,The pathology showed venous congestion as well as a T three and zero cancer.
-706.827,714.161,"You need to be careful to watch how fluorescence happens during ICG and geography, and not just whether it ends up fluorescent."

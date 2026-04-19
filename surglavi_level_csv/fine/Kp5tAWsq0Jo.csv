@@ -1,22 +1,10 @@
 start,end,text
-0.803,4.607,"The robotic arms are positioned to assist in the repair of a diaphragmatic hernia, with visible manipulation of the hernia sac and surrounding tissue."
-5.107,12.894,"Our patient is a sixty-year-old female with a history of alcoholic cirrhosis, child class A, with portal hypertension and variceal disease."
-13.394,20.22,"She had a known hiatal hernia that had caused her gastroesophageal reflux, which was somewhat refractory to PPI management."
-20.72,25.817,"More recently, she had developed some substernal epigastric pain, which was often worse after meals."
-26.317,34.825,"Also in her history, she had had a left mastectomy with a tram flap reconstruction for fibrocystic disease of her left breast."
-35.325,45.254,"An upper endoscopy was performed at an outside institution, which demonstrated a seven centimeter hiatal hernia and evidence of a portal hypertension, including portal gastropathy and varices."
-45.754,51.526,Her variceal disease was a contraindication for a formal hiatal hernia repair with misinfundal placation.
-52.026,57.928,"Due to the patient's comorbidities, we elected for a minimally invasive approach to her hiatal hernia repair."
-58.428,67.172,"A CT scan of the patient's chest abdomen was obtained, and this demonstrated an anterior substernal hernia with colonic contents."
-67.672,72.097,The coronal views demonstrated a narrow neck for this anterior hernia.
-72.597,83.042,"Both of these hernias were consistent with the patient's uncontrolled gastroesophageal reflux, as well as her postprandial substernal and epigastric abdominal pain."
 83.542,91.185,"The patient is positioned supine, and after entry with an optical trocar, multiple working ports are placed. The surgical robot is then docked to assist in the minimally invasive hernia repair procedure."
 91.685,97.105,"The surgeon carefully reduces the hernia contents back into the abdominal cavity, ensuring the displaced tissues are repositioned without causing damage."
 97.605,105.191,"The surgeon observes a large anterior defect in the diaphragm, measuring approximately ten by five centimeters, originating from the falciform ligament."
 105.691,112.395,The surgeon uses ultrasonic shears to dissect and free minor attachments from the hernia sac.
 112.895,121.375,"With the hernia fully reduced, the surgeon visualizes the patient's liver, which appears nodular, indicative of cirrhosis."
 121.875,126.018,"The surgeon assesses the hernia defect, which is a large anterior defect in the diaphragm measuring approximately ten by five centimeters, visible after reducing the hernia contents back into the abdomen."
-126.518,132.241,"Typically, an ideal repair would involve resection of the hernia sac and closure of the hernia defect with or without mesh."
 132.741,139.125,"The video shows a massive anterior defect in the diaphragm, requiring extensive dissection for repair."
 139.625,145.537,"The surgeon observes that the hernia originates from the patient's tram flap, which has compromised the integrity of the abdominal wall."
 146.037,153.46,The surgeon closes the hernia defect using a second tact and places a reinforcing mesh underlay beneath the defect to provide additional support.
@@ -24,15 +12,9 @@ start,end,text
 158.702,163.744,"The surgeon runs the suture from both ends of the hernia defect using a locking technique, then ties the two sutures together in the center of the defect."
 164.244,170.046,A thirty-degree camera is positioned upwards to provide a clear view of the interior abdominal wall.
 170.546,176.86,"The robotic articulating arms are used to perform intercorporeal suturing, demonstrating their efficiency and ease of movement within the surgical field."
-177.36,186.427,"Although not depicted in this recording, the operating console uses the stereoscopic video from the camera to allow for depth perception for the surgeon, another advantage of the platform."
-186.927,190.63,Stability of the camera and of the working instruments can also improve ease of use.
-191.13,195.353,The major disadvantage of using the robot is a lack of haptic feedback.
-195.774,204.3,"Tension is not translated into the operating console, and so the operator must focus on visual cues and take additional care when handling delicate structures, such as bowel."
 204.8,211.905,The surgeon uses a flexible measuring stick to measure the length of the hernia defect after completing the closure.
-212.405,215.548,It was approximately ten centimeters in length.
 216.048,225.155,The surgeon selects a ten by fifteen centimeter piece of porcine urinary bladder xenograft mesh to use as a buttress material in the hernia repair procedure.
 225.655,228.637,"The surgeon begins rehydrating the porcine urinary bladder xenograft mesh, preparing it for use as a buttress material in the hernia repair procedure."
-229.137,238.491,We chose this type of material and this patient to minimize the risk of foreign body reaction or infection in this high-risk patient.
 238.991,247.617,"The surgeon examines the patient's type II paraesophageal hernia, which appears small in size, potentially contributing to the patient's symptoms."
 248.117,254.174,"The surgeon performs a reduction of the type II paraesophageal hernia, followed by a gastropexy, taking into account the patient's medical comorbidities."
 254.674,258.697,The surgeon introduces a rehydrated 10 by 15 centimeter piece of porcine urinary bladder xenograft mesh into the abdominal cavity.
@@ -44,9 +26,3 @@ start,end,text
 314.144,324.092,"The surgeon elevates the previously placed gastropexy sutures to retract the stomach into the abdominal cavity, preparing to tie them down at the procedure's conclusion."
 324.592,335.177,"An intraoperative abdominal gastrointestinal diagnostic (AGD) procedure is performed, visually confirming the presence of a type II peri-esophageal hernia without any visible Cameron's ulcers."
 335.677,346.562,The surgeon closes the twelve millimeter ports with figure-of-eight ovicral stitches using the Carter-Thompson suture passer. The previously elevated gastropexy sutures are tied down to secure the stomach in the abdomen.
-347.062,352.265,The patient's operative time was three hours and twelve minutes and the estimated blood loss was twenty cc's.
-352.765,358.447,She had an uneventful post-operative recovery and she was discharged on post-operative day two.
-358.947,365.481,This video highlights the use of newer technologies such as robot assistance with the xenograft mesh underlay repair.
-365.981,377.145,"Using this material allowed us to avoid leaving permanent material inside of the patient, which would limit possible foreign body reaction, such as infection or erosion in this high-risk patient."
-377.645,389.049,"We also used a minimal approach to repairing her posterior type II paraesophageal hernia, utilizing an anterior gastropexy to provide symptom control and avoid placing the patient at higher risk."
-389.549,400.801,"In doing so, we tailored the operation to the patient by avoiding the increased morbidity of a laparotomy or of a formal hiatal hernia repair with fundoplication, which would have necessitated takedown of her varices."

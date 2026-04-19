@@ -1,7 +1,4 @@
 start,end,text
-0.999,5.464,This case is a robotic assisted transaxillary thymectomy.
-5.964,13.551,The patient is a fourteen year old female complaining of neck pain and dysphagia with a left thymic mass found on CT scan.
-13.992,18.538,"The video displays a 3.1 by 1.1 centimeter mass located in the thymus, visible within the surgical field."
 19.038,23.863,"The patient is positioned supine on the operating table with the left arm elevated above the head, preparing for the robotic-assisted transaxillary thymectomy."
 24.363,33.053,A neural integrity monitoring endotracheal tube and an orogastric tube are visibly placed in the patient.
 33.553,63.888,"The surgeon identifies the sternal notch and cricoid process as anatomical landmarks, tracing a line to the axilla to mark the incision site for the robotic-assisted transaxillary thymectomy."
@@ -25,7 +22,3 @@ start,end,text
 383.497,468.831,"The surgeon retracts the thymus cephalad and delivers it from the thorax, completing its removal from the surgical field."
 469.331,550.701,"The surgeon carefully dissects the thymus from the innominate vessels, ensuring clear separation of these anatomical structures."
 551.201,558.83,"Following the removal of the thymus specimen, the surgeon stimulates the contralateral vagus nerve to visually confirm its integrity and ensure no injury has occurred during the procedure."
-559.33,561.934,The patient was discharged post-op day one.
-562.434,571.805,She is now asymptomatic and the final pathology showed benign thymic hyperplasia.
-572.305,578.192,"This presentation was brought to you by the Tulane University School of Medicine, Department of Surgery."
-578.692,579.053,Thank you.

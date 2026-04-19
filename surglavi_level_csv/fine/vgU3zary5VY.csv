@@ -1,10 +1,4 @@
 start,end,text
-1.025,8.33,"Urgent, totally robotic right colectomy for sacral volvulus."
-8.83,16.936,"This is an eighty-one year old female with abdominal pain and vomiting for two days, admitted with a sacral volvulus, BMI of thirty-eight."
-17.436,21.5,Past medical history and cervical history as stated above.
-22,31.462,CT scan demonstrating the sacral volvulus with diameter almost nine centimeters.
-31.962,35.624,This is a different view.
-36.124,42.826,"Decision was made, take the patient urgently to the operating room for right galactomy."
 43.326,50.709,"The surgical table is set up with a total of four ports, each measuring 8.5 millimeters, with one port being upsized to accommodate the stapled radial arm."
 51.209,56.351,"The robotic arms are being docked into position, preparing for the surgical procedure."
 56.851,61.249,"The surgical team exposes the right upper quadrant, preparing the area for further intervention."
@@ -15,40 +9,30 @@ start,end,text
 84.125,87.127,"The surgeon uses a four by four gauze pad to apply soft retraction in the surgical field, aiding in the exposure of the targeted area."
 87.627,97.07,"The surgeon decompresses the distended cecum by placing a purse-string suture, addressing the difficulty in maneuvering the intestine."
 97.09,104.772,"The surgeon uses a three-year-old vial suture to decompress the colon, while gut suction is applied to remove fluid from the surgical field."
-105.272,116.567,"Although, you know, we might contaminate, but I think it's important in order to be able to manipulate the bowel due to this tension. in this case."
 116.987,132.396,"The surgeon begins the division and lateral mobilization of the ascending colon and cecum, with the suture already in place, ensuring a controlled surgical environment."
 132.896,139.579,"The surgeon uses the fourth arm of the surgical robot to achieve proper retraction and exposure of the surgical field, enhancing visibility of the colorectal structures."
-140.079,146.015,"Here, most of these cases, they have redundancy in the mesentery."
 146.515,157.759,The surgeon carefully retracts and exposes the surgical field to prevent any potential major spillage during the procedure.
 158.259,167.202,"The surgeon uses a vessel sealer to divide the mesentery, marking the area for proximal division of the distal ileum and creating a visible window in the tissue."
-167.702,180.598,"Since this is not a cancer operation, there's no need to have a mesocolic excision or"
 181.098,194.409,"The surgeon carefully divides the mesentery near the base, positioned close to the colon, ensuring precise separation of the tissue."
 194.909,200.834,"The surgical field approaches the hepatic flexure of the colon, with visible anatomical landmarks indicating proximity to this region."
 201.334,210.37,"The surgeon divides the mesentery with proper retraction, revealing the duodenum visible in the right lower corner of the surgical field."
 210.87,221.594,"The surgeon performs medial to lateral dissection, preparing the distal margin of the mesentery for transection, with visible separation of tissue layers."
 222.094,225.816,"The surgeon creates a window in the mesentery, revealing underlying structures and facilitating further dissection."
 226.316,238.369,"The robotic fourth arm is used for exposure and retraction, providing a clear view of the surgical field without the need for laparoscopic trocars."
-238.869,243.212,taking the most advantage of the robotic technology.
 243.712,249.536,"The surgeon completes the mobilization of the colorectal structures in the right upper quadrant, ensuring all tissues are fully mobilized and prepared for the next surgical steps."
 250.036,258.281,"The surgeon performs the transection of the transverse colon, completing the final step of the procedure."
 258.781,269.833,"The surgeon uses two 45mm blue load staplers to divide the transverse colon, with the robotic arms providing exposure and retraction."
-270.333,276.317,ICG to ensure and reassure the surgeon once ECG is given intravenously.
 276.817,280.66,"The surgeon places a suture for retraction, likely to hold tissue in place for better visibility or access during the procedure."
 281.16,282.681,"The surgeon uses scissors to make a colotomy, creating an incision in the colon tissue."
 282.701,286.004,"The colon appears decompressed, indicating a reduction in its distension following previous surgical interventions."
 286.504,288.946,"The surgeon performs another enterotomy using scissors, making an incision into the intestinal wall."
 289.446,293.382,"The surgeon uses the robotic arms and instruments to carefully control the surgical field, preventing any spillage from the decompressed colon."
-293.882,323.611,in the peritoneal cavity.
 324.111,325.492,"The surgeon sutures the common channel, using precise needle placement to close the incision within the surgical field."
 325.732,330.495,"The surgeon performs a canal suture using an outside-in, inside-out technique."
 330.995,340.039,"The surgeon uses a 3-0 barbed suture, measuring nine inches in length, to perform suturing within the surgical field."
 340.539,343.726,"The surgeon continues suturing in a running fashion within the peritoneal cavity, using a three O barbed suture to secure the common channel."
 344.226,348.767,The fourth robotic arm is used to obtain proper exposure for the anastomosis within the peritoneal cavity.
 349.267,365.891,"The surgeon initially tightens the sutures but progressively leaves them looser to maintain a visible opening, ensuring proper closure of the anastomosis."
-366.391,383.261,You can use ICG or Motan towards the end to ensure that you have a proper blood supply for your anastomosis.
 383.761,398.172,"The surgeon completes the closure of the anastomosis using a running suture technique with a 3-0 barbed suture, then reverses direction to lock the sutures securely."
-398.672,400.414,That's it.
 400.914,406.258,"The surgeon removes the colon through the Alexis wound protector at the stapler port, marking the end of the procedure."
 406.758,415.422,"The surgeon places a surgical drain adjacent to the anastomosis site, which is intended for urgent cases and will be removed prior to patient discharge."
-415.922,417.97,Tolerative time was a hundred thirty-four minutes.
-418.47,421.619,"Blood loss is minimal, less than twenty cc's. No preoperative complications."

@@ -1,11 +1,7 @@
 start,end,text
-0.824,12.106,Pelvic lymphadenectomy may be indicated in high-risk endometrial cancer. This video presents a ten-step systemic approach to transperitoneal pelvic lymphadenectomy.
 12.606,21.548,"The surgeon removes the right external iliac, internal iliac, and obturator lymph nodes using the DN block technique, demonstrating the systematic approach to pelvic lymphadenectomy."
 22.048,27.722,"The surgeon repeats the removal of the left external iliac, internal iliac, and obturator lymph nodes using the DN block technique to complete the pelvic lymphadenectomy."
-28.222,33.003,"A pneumoperitoneum is established by inserting a varus needle into the left hypochondrium, inflating the abdominal cavity to facilitate laparoscopic access."
 33.503,36.964,"The surgeon places an optical ten-millimeter trocar in the umbilicus, preparing for laparoscopic access to the abdominal cavity."
-37.464,47.286,"Three ancillary trochars are inserted, with two positioned medially to the anterior superior iliac spines and one placed in the suprapubic midline."
-47.786,51.726,"The surgeon opens the peritoneum to access the extraperitoneal spaces, revealing underlying anatomical structures."
 52.226,56.167,"The surgeon identifies the caudal limit of the incision at the parietal origin of the round ligament, marking the boundary for the surgical approach."
 56.667,62.993,The surgeon identifies the cephalic limit of the incision at the point where the gonadal vessels cross the external iliac vessels.
 63.493,69.699,"The surgeon makes an incision laterally to the parietal part of the broad ligament, positioned above the external iliac vessels."
@@ -15,7 +11,6 @@ start,end,text
 96.227,112.715,"The surgeon identifies the obturator and internal iliac lymph nodes as prevalent sites for metastasis, halting dissection at the deep circumflex vein."
 113.215,118.459,"The surgeon identifies the cephalic limit of the psoas muscle dissection at the bifurcation of the common iliac artery, marking the upper boundary of the dissection area."
 118.959,126.405,"The surgeon dissects the lateral pelvic sidewall, progressing towards the puborectalis muscle."
-126.905,140.716,"During this part of surgery, care should be taken to avoid injuring vessels which originate from the internal or external iliac vein and across the dissected space, because in our experience, varicoagulation is difficult"
 141.21,151.518,The surgeon begins the dissection of the paravesical fossa and the medial side of the external iliac vessels using the classic laparoscopic approach.
 152.018,157.322,The surgeon identifies and carefully preserves the genitofemoral nerve during the dissection of the lateral pelvic sidewall.
 157.822,168.095,"The surgeon identifies the genitofemoral nerve, which is located more medially in this case, during the dissection of the pelvic sidewall."
@@ -23,7 +18,6 @@ start,end,text
 177.662,189.772,"The surgeon pulls the block of lymph nodes medially, creating a space between the lateral side of the external iliac vessels and the psoas and obturator muscles, progressing until the obturator nerve is visually identified."
 190.272,195.296,"The surgeon performs deep dissection to create a window beneath the external iliac vessels, revealing underlying anatomical structures."
 195.796,201.248,"The surgeon prepares the lateral meridian of the lymph node packet, positioning it for subsequent removal, with visible manipulation of the surrounding tissue."
-201.268,212.19,"The surgeon continues the dissection medially, separating the medial side of the external iliac vessels from the surrounding fetid tissue and lymph nodes."
 212.69,219.871,"The surgeon mobilizes the lymph nodes located between the external iliac vessels, preparing them for subsequent removal."
 219.891,227.434,"The surgeon pulls the external iliac vessels laterally to facilitate the dissection of the medial meridian of the lymph nodes packet, creating a clear separation between the vessels and the lymphatic tissue."
 227.934,241.303,"The surgeon dissects the posterior side of the iliac vessels, creating a window under the iliac vein to access the previously dissected area lateral to the iliac vessels and obturator nerve."
@@ -33,7 +27,6 @@ start,end,text
 268.585,272.326,"The surgeon identifies the umbilical artery as a key landmark within the dissected space, providing orientation for further surgical navigation."
 272.826,278.107,"The surgeon halts dissection upon reaching the puborectalis muscle at the bottom of the surgical space, marking the endpoint of the current dissection phase."
 278.607,284.043,"The surgeon reveals the obturator nerve within the properly developed paravesical space, highlighting its clear visibility against the surrounding anatomical structures."
-284.543,292.327,"The surgeon performs dissection in the avascular space and cleavage planes using pneumodissection, separating tissue layers without causing bleeding."
 292.827,300.77,"The surgeon continues dissection along the posterior aspect of the umbilical artery and internal iliac artery, revealing these structures within the surgical field."
 301.27,314.04,"The surgeon develops the operative area in the extraperitoneal space, identifying anatomical landmarks before proceeding with lymph node dissection."
 314.54,339.54,"The surgeon laterally mobilizes the obturator, internal, and external iliac lymph nodes by dissecting the medial and lateral margins of the lymph node packet, without removing any lymph nodes."
@@ -43,9 +36,4 @@ start,end,text
 362.245,365.246,"The surgeon performs obturator nerve stripping, carefully manipulating the nerve within the surgical field."
 365.746,377.77,"The surgeon gently detaches the lymph nodes from the obturator nerve, ensuring careful separation to preserve the nerve's integrity."
 378.27,386.715,"The surgeon sections the proximal margin of the lymph node packet, revealing the bifurcation of the common iliac artery."
-387.215,393.919,"Less frequently, the middle of the common iliac artery has also been described as the cephalic limit of dissection."
 394.419,410.538,"The surgeon uses a bipolar device to dissect tissues and lymph nodes, achieving hemostasis and closure of lymphatic vessels, which may reduce lymphocytic formation."
-411.038,414.303,Pelvic lymphadenectomy is a standard oncology procedure.
-414.803,439.168,"In this video, it is presented as a simple algorithm which respects the anatomy of the iliac fossa and the ergonomics of laparoscopic surgery."
-439.668,446.45,Standardization of practice is an important goal as it can reduce the rate of complications and harm to the patient.
-446.95,461.075,"In our opinion, clearly described steps of the procedure, limited to a relatively small number, are easy to remember and help to ensure that the surgery is performed in the safe and certain way which apply to the most patients."

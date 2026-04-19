@@ -1,5 +1,4 @@
 start,end,text
-1.263,15.98,"This is a thirty-two-year-old female who presents with lower GI bleed and malnutrition secondary to ulcerative colitis, which is refractory to medical management. She is taken to the operating room for a laparoscopic total colectomy."
 16.46,25.606,"The surgeon performs a laparoscopic total colectomy, progressing from the medial to lateral aspect of the colon."
 26.106,59.157,"The surgeon begins dissection of the left colon by identifying the ligament of Treitz. The inferior mesenteric vein (IMV) is located lateral to the ligament, skeletonized, and divided."
 59.657,99.408,"The surgeon retracts the left mesocolon anteriorly, identifying the inferior mesenteric artery (IMA) and the ureter crossing the pelvic brim. The dissection continues to the level of the left colic branch of the IMA. The IMA pedicle is identified, and retroperitoneal structures are swept down before the IMA is divided."
@@ -11,4 +10,3 @@ start,end,text
 268.991,314.535,"The surgeon takes down the hepatic flexure, followed by the dissection of the lateral attachments of the right colon from the abdominal wall. The distal ileum is then divided using surgical instruments."
 315.035,371.53,"A dilator is inserted into the rectum, and electrocautery is used to open the rectal stump. Ring forceps are introduced transanally into the abdomen to grasp the specimen, which is then extracted through the anus under direct visualization."
 372.03,385.743,"The surgeon grasps the rectal stump and uses a surgical stapler to transect it, removing the remnant rectum from the abdominal cavity."
-386.243,390.447,"Pathology revealed, ulcerative colitis with no dysplasia."

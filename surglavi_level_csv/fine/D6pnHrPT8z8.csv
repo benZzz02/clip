@@ -1,9 +1,4 @@
 start,end,text
-4.469,8.69,The patient is a sixty-two year old female with stage one sigmoid colon cancer.
-9.19,13.811,We show here a video of laparoscopic sigmoidectomy by needle scopic surgery.
-14.311,18.333,A 12mm port is inserted at the umbilicus to accommodate a 10mm laparoscopic scope.
-18.833,22.294,A five millimeter port is inserted into the right lower quadrant of the abdomen.
-22.794,31.184,"Three 3.5 millimeter ports are placed at the right lateral, left lateral, and left lower quadrants of the abdomen for the laparoscopic sigmoidectomy procedure."
 31.684,34.428,"India ink is visibly injected near the tumor site in the sigmoid colon, marking the area for surgical reference."
 34.928,38.733,"The surgeon initiates medial retroperitoneal dissection of the mesocolon, using laparoscopic instruments to carefully separate the mesocolon from the retroperitoneal structures."
 39.233,43.959,"The surgeon inserts an electric scalpel through the five millimeter port located in the right lower quadrant, preparing for further dissection."
@@ -18,11 +13,8 @@ start,end,text
 141.294,157.369,"The surgeon identifies and preserves the bilateral hypogastric nerves during the dissection, ensuring these structures remain intact within the surgical field."
 157.869,173.046,"The surgeon dissects the retroperitoneum on both the right and left sides of the upper rectum, carefully separating these areas from surrounding tissues."
 173.546,214.069,"The surgeon dissects the mesocolon, revealing the colonic walls along the cut line of the distal cone."
-214.569,233.925,"A five-millimeter scope is inserted through the right lower five-millimeter port, providing a view of the surgical field. A forceps, intestinal clip, and articulated-type linear stapler are inserted through the twelve-millimeter port to facilitate colonic transduction."
 234.425,238.906,"The surgeon places an intestinal clip at the oral side of the colonic cut line, securing the tissue in preparation for further surgical steps."
 239.406,261.236,"The surgeon adjusts the angle of the intestinal clip using an angle adjuster, and modifies the angle of the N-linear stapler, preparing for precise stapling along the colonic cut line."
-261.736,263.088,"After calling transaction,"
 263.588,269.97,"The surgeon extracts the specimen through a small skin incision at the umbilicus, which measures up to thirty-five millimeters in size."
 270.41,279.792,"The surgeon performs an anastomosis using a double stapling technique, joining the two ends of the colon with precision."
 280.292,285.454,The surgeon places a nine-inch French drain into the pelvis through a five-millimeter incision located in the right lower quadrant.
-285.954,290.835,The wounds are small and barely noticed on the twenty-five postoperative days.

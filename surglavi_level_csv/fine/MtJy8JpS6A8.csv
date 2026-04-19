@@ -1,7 +1,4 @@
 start,end,text
-0.523,10.567,This video presents a robot-assisted laparoscopic cystectomy with an intracorporeal ileal conduit urinary diversion for patients with muscle invasive bladder cancer.
-11.067,14.848,What follows is a representative video of the procedure.
-15.348,21.021,"The surgical team utilizes a five-port standard placement, including one assistant port, for the robot-assisted laparoscopic cystectomy procedure."
 21.521,27.984,"The surgeon releases adhesions between the left colon and sigmoid colon from the wall of the deep pelvis, carefully separating these structures to facilitate further surgical access."
 28.484,32.946,"The surgical team gains access to the left iliac vessels and the left ureter, likely through the release of adhesions and strategic port placement."
 33.446,38.989,"The surgeon begins the procedure by making an incision in the peritoneum lateral to the left colon, using surgical instruments to access underlying structures."
@@ -24,7 +21,6 @@ start,end,text
 170.637,186.171,"After completing the nodal dissection, the surgeon visualizes and divides the pedicles of the bladder and prostate, clearly exposing these anatomical structures."
 186.671,190.917,"The surgeon uses a ligature to divide the bladder pedicles bilaterally, with the pedicles clearly visible in the surgical field."
 191.417,199.098,"The surgeon dissects to the endopelvic fascia and incises it bilaterally, exposing the prostate and its apex."
-199.598,204.219,"At this point, a nerve sparing procedure could be performed if indicated."
 204.719,212.921,"The surgeon develops the space of Retzius following posterior lateral dissection, revealing the anatomical area between the pubic symphysis and the bladder."
 213.421,224.683,"The surgeon cauterizes the superficial venous complex and secures the deep venous complex with sutures, ensuring hemostasis in the surgical field."
 225.183,234.468,"The surgeon incises the deep venous complex proximal to the previously placed suture, isolating the urethra from surrounding structures."
@@ -39,7 +35,6 @@ start,end,text
 308.932,318.758,The surgeon identifies the terminal ileum in the right abdomen and isolates a healthy segment of ileum approximately fifteen centimeters from the ileocecal junction.
 319.258,325.915,"The surgeon stretches the ileum from the retroperitoneum to the abdominal wall to estimate its length, ensuring it is adequate for the procedure."
 326.415,333.359,"The surgeon uses a sixty millimeter endovascular stapler to divide the ileal segment and its attached mesentery, visibly separating the tissue with precision."
-333.859,338.741,It is not necessary in most cases to divide a large segment of mesentery.
 339.241,344.784,"The surgeon positions the endovascular stapler perpendicular to the anti-mesenteric border of the bowel, ensuring precise alignment for division."
 345.284,353.058,The surgeon employs a technique that prevents devascularization of the ileal segment while ensuring adequate hemostasis of the mesentery during the cystectomy procedure.
 353.558,365.286,"The surgeon uses scissors to open the anti-mesenteric ends of the ileal segment, ensuring the staple lines remain intact for further manipulation."

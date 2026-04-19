@@ -1,13 +1,6 @@
 start,end,text
-0.324,5.626,"The robotic adrenalectomy procedure begins with a top-down approach, focusing on dissection along defined anatomical boundaries."
-5.806,7.027,We will start on the right.
-7.527,14.949,Our patient is a fifty-six year old woman with a three point six centimeter right incidentally found adrenal mass that increased in size to four point one centimeters.
-15.39,18.011,"Past medical history, surgical history, and medications are listed."
-18.471,21.972,Lab work was suggestive of a cortisol-producing tumor.
-22.472,30.584,Shown here are axial and coronal images of a preoperative CT scan.
 31.084,34.025,"The patient is positioned in a right side up lateral position on the operating table, preparing for the adrenalectomy procedure."
 34.525,36.146,"The surgeon places laparoscopic ports in the patient's abdomen, preparing for the adrenalectomy procedure."
-36.646,40.228,It is important to remove the entire adrenal gland with its surrounding fat.
 40.728,45.43,"The camera captures a view of the right adrenal mass located caudal to the liver, highlighting its position relative to surrounding anatomical structures."
 45.93,50.252,"The surgeon dissects the liver, revealing the diaphragm superior to the right adrenal mass."
 50.752,67.098,"The surgeon uses a grasper inserted through a five millimeter trocar in the epigastrium to retract the liver cranially, providing a clear view of the surgical field."
@@ -21,10 +14,6 @@ start,end,text
 144.572,161.296,"The surgeon performs the final dissection on the upper pole of the kidney, carefully avoiding branches of the renal vessels while separating the adrenal gland from surrounding tissues."
 161.796,168.118,"The surgeon has completed the removal of the adrenal gland, including the mass and surrounding periadrenal fat, leaving the surgical field clear of these structures."
 168.618,174.52,"The surgeon inspects the adrenalectomy bed for hemostasis, ensuring there is no active bleeding in the surgical site."
-175.02,178.221,"Next, we demonstrate a left robotic adrenalectomy."
-178.641,182.523,Our patient is a fifty-eight year old woman with a one point six centimeter left adrenal nodule.
-182.663,186.124,"Past medical history, surgical history, medications, and lab work are listed."
-186.384,192.966,Adrenal vein sampling confirmed primary hyperaldosteronism with lateralization to the left.
 193.466,201.427,"The surgeon mobilizes the spleen by dividing its peritoneal reflections, allowing for better access to the left adrenal gland."
 201.927,232.257,"The surgeon continues to mobilize the spleen and pancreas, revealing the diaphragm situated above the left adrenal gland."
 232.757,242.569,"The surgeon carefully safeguards the splenic vessels located near the pancreas, ensuring these structures are not damaged during the procedure."
@@ -36,12 +25,3 @@ start,end,text
 325.349,366.211,"The surgeon performs lateral dissection on the surface of the upper pole of the kidney, carefully separating tissue layers in this region."
 366.711,386.197,"The surgeon removes the final surrounding attachments of the adrenal gland, completing the dissection process."
 386.697,407.915,"The surgeon inspects the adrenalectomy bed for hemostasis after the complete removal of the adrenal gland, ensuring there is no active bleeding in the surgical area."
-408.415,411.117,"The surgeon presents the gross pathology specimen of the removed adrenal gland, displaying its size, shape, and any notable features."
-411.617,419.963,"In a closer view, the surgeon displays the transected aldosteronoma positioned above, with the normal adrenal tissue visible below, highlighting the distinction between the tumor and healthy tissue."
-420.463,424.486,Table one lists patient demographics from minimally invasive adrenalectomy.
-424.887,428.469,"These include BMI, age, sex, and race."
-428.969,433.253,Table two lists the tumor type and surgery modality used for our patient cohort.
-433.753,437.818,The most common pathology in both groups was pheochromocytoma.
-438.318,442.844,Table three lists the surgical outcomes for the top down versus bottom up approach.
-443.344,453.038,"There is no significant differences in clinical outcomes, such as operative time, estimated blood loss, length of hospital stay, complication rate, and readmission rate."
-453.538,453.838,Thank you.

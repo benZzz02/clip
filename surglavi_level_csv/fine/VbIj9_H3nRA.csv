@@ -1,10 +1,4 @@
 start,end,text
-3.004,11.69,This is a case of a patient requiring a laparoscopic splenectomy for splenomegaly.
-12.19,21.137,The CT scan shows an enlarged spleen.
-21.637,28.282,"The surgeon observes the spleen, which measures approximately 17.4 centimeters in maximal dimensions, indicating its enlarged state."
-28.782,30.984,It has been growing over time.
-31.484,33.017,"The surgeon demonstrates the placement of laparoscopic ports on the patient's abdomen, preparing for the splenectomy procedure."
-33.517,39.619,A 15mm port is placed in the left abdomen for the laparoscopic splenectomy procedure.
 40.119,47.84,"The surgeon begins mobilizing omental adhesions from the anterior abdominal wall, using surgical instruments to carefully separate the omentum from the underlying tissue."
 48.34,56.943,"The surgeon identifies the inferior pole of the spleen and proceeds to mobilize the splenic flexure of the colon, with partial mobilization of the left colon visible."
 57.443,59.443,"The surgeon reflects the spleen anteriorly, revealing its surface and surrounding anatomical structures."
@@ -29,4 +23,3 @@ start,end,text
 231.132,234.714,"With excellent hemostasis achieved, the surgeon proceeds to retrieve the spleen specimen from the surgical field."
 234.754,244.022,A 50mm port is used to introduce a large specimen retrieval bag into the surgical field for the removal of the spleen.
 244.522,251.277,The surgeon successfully compresses the spleen into the large specimen retrieval bag through the fifty millimeter port.
-251.777,256.549,"The surgeon uses a fifteen millimeter port to pull the spleen specimen through, then morselizes it for removal."

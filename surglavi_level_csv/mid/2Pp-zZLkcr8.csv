@@ -1,6 +1,5 @@
 start,end,text
 2.231,23.07,"The surgeon uses an optical trocar to safely enter the abdominal cavity, cleans the scope, and places additional trocars. The DaVinci robotic system is then brought in for docking."
-23.57,36.081,"Alright, I'm sitting at the console so we can start our sleeve gastrectomy. And currently our pressure setting is at fifteen. I want you to go ahead and drop the pressure setting down to ten since we have the new air seal caps."
 36.581,47.749,"The surgeon begins the robotic sleeve gastrectomy with a 36 French bougie in place, using a bipolar vessel sealer to access the lesser sac."
 48.249,66.48,"The surgeon begins the dissection at the inferior portion of the stomach, creating a window and working distally, aiming to carry the dissection to a point between four and six centimeters from the pylorus."
 66.98,83.904,"The surgeon identifies the pylorus and measures approximately six centimeters from it, using the insessura as a main landmark. The stomach is observed to take a sharp turn, prompting careful consideration to avoid distal narrowing."
@@ -13,4 +12,3 @@ start,end,text
 215.828,239.613,"The surgeon maintains visualization while removing the trocar to extract the stomach specimen. The operating table is adjusted to fifteen degrees for a leak test. The bougie is removed, revealing a uniform sleeve gastrectomy. Minor hemostasis is applied at the top of the sleeve."
 240.113,254.956,"The surgeon applies fibrin sealant to the completed 36 French sleeve gastrectomy, which was performed without an assist port at a pressure of ten. The sleeve appears uniform and well-formed."
 255.456,268.502,"The surgeon removes the trocar and uses a Kelly clamp to dilate the hole, maintaining visualization with the aid of an air seal despite the normal pneumoperitoneum."
-269.002,282.067,"That's the robotic sleeve gastrectomy using the new air seal system, which integrate with the da Vinci trocars. We did this at a lower pressure than we normally use and with no assist port. So I thought it was a great procedure."

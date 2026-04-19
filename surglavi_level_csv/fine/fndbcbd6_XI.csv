@@ -1,6 +1,4 @@
 start,end,text
-0.898,7.8,This is a robotic Roux-en-Y gastric bypass being performed on the da Vinci SI system.
-8.3,16.003,This is a forty-five-year-old female patient with morbid obesity and diabetes requiring insulin.
 16.503,59.399,"The surgeon begins the gastric bypass procedure by mobilizing and dissecting the angle of His, using robotic instruments to carefully separate the tissue in this area."
 59.899,71.829,"The surgeon opens the pars flaccida using blunt dissection, exposing the lesser curvature of the stomach's summit."
 72.329,81.043,"The surgeon gains access to the posterior area to begin dissection, likely around the lesser curvature or related structures."
@@ -11,7 +9,6 @@ start,end,text
 240.164,257.675,"After creating a posterior window behind the stomach, the surgeon introduces an EndoGIA-XX green load for further surgical steps."
 257.916,265.121,"The surgeon uses an Echelon stapler to further manipulate or divide tissue, likely in the context of the ongoing gastric bypass procedure."
 265.621,270.719,"The surgeon divides the stomach transversely using a surgical stapler, completing the separation along the previously dissected area."
-271.219,374.85,for the birth fire.
 375.35,434.501,"The surgeon uses a sixty green load stapler to vertically dissect and ligate the gastric pouch, completing its formation."
 435.001,603.891,"The surgeon uses an additional staple fire to complete the gastric pouch transaction, following the initial one to two staple fires."
 604.391,615.528,The completed gastric pouch is visible as the surgeon elevates the omentum and transverse colon to identify the ligament of Treitz.

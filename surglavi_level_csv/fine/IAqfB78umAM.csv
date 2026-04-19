@@ -1,9 +1,4 @@
 start,end,text
-1.35,7.096,This video is of a laparoscopic repair of a traumatic diaphragmatic hernia.
-7.596,24.485,The patient is a fifty year old male with a traumatic diaphragmatic hernia and a past medical history significant for hereditary hemorrhagic telangiectasias with subsequent development of severe pulmonary hypertension and symptomatic right-sided heart failure.
-24.985,36.798,The patient had a penetrating knife wound of the left flank thirty years prior with progressive symptoms of dyspnea and chest pain with recurrent pleural effusions requiring thoracentesis.
-37.298,47.837,His pulmonary hypertension was optimized with medical therapy and after cardiac anesthesia clearance he was consented for a laparoscopic diaphragmatic hernia repair.
-48.337,56.961,The preoperative CT scan reveals a left lateral diaphragmatic defect with incarcerated omentum and collapse of the left lower lobe.
 57.461,62.644,"The patient is positioned in the right lateral decubitus position on the operating table, preparing for the laparoscopic repair of the diaphragmatic hernia."
 63.144,73.264,"An 11mm port is placed in the left upper quadrant for the laparoscopic camera, while three additional working ports are positioned along the left costal margin for the surgeon and assistant."
 73.764,85.026,"The laparoscopic camera captures the left diaphragmatic defect, which visibly contains the majority of the patient's omentum."
@@ -12,11 +7,9 @@ start,end,text
 96.449,104.225,"The surgeon performs dissection along the lateral rim of the left diaphragmatic defect, carefully avoiding injury to the hernia contents visible within the defect."
 104.725,112.949,"After completing the mobilization and division of the peritoneal attachments, the surgeon gently reduces the hernia contents, which are visible within the left diaphragmatic defect."
 113.449,125.514,"The surgeon applies steady downward traction using a hand over hand technique to reduce the hernia contents from the left diaphragmatic defect, which contains the patient's omentum."
-126.014,132.32,"For defects with a small neck and significant amounts of hernia content, such as encountered in this patient,"
 132.82,140.705,"The surgeon enlarges the hernia defect by carefully dividing the diaphragm using cautery, creating a wider opening for further surgical access."
 141.205,147.729,"The surgeon gently reduces the hernia contents back into the abdominal cavity, following sufficient mobilization and division of peritoneal attachments."
 148.229,151.471,"The surgeon observes the surgical field, noting the relatively few interthoracic adhesions present in the patient."
-151.971,160.221,"However, care should be taken to take any attachments away from the pulmonary parenchyma in order to avoid a post-operative air leak."
 160.721,166.545,"The surgeon explores the left chest cavity using a laparoscopic camera, providing a clear view of the internal structures and any potential adhesions or hernia contents."
 167.045,183.441,"The surgeon uses a suction irrigation device to remove bloody loculated effusions from the incarcerated hernia contents, clearing the surgical field."
 183.941,186.785,"The surgeon uses a suction device to remove the remaining pleural effusion from the left chest cavity, clearing the fluid from the surgical field."
@@ -26,10 +19,6 @@ start,end,text
 226.88,232.864,"The surgeon surveys the hernia defect, visually estimating its size to be approximately three to four centimeters."
 233.364,235.525,"The surgeon closes the defect primarily, indicating that the tissue edges are approximated and sutured together without tension."
 235.545,244.051,"The surgeon uses a laparoscopic suturing device to close the defect with nonabsorbable suture in a running fashion, visible through the laparoscopic view."
-244.551,253.962,"If the defect cannot be closed primarily without undue tension, we prefer to use a piece of nonabsorbable composite mesh on the abdominal side of the diaphragm."
 254.462,257.643,"The surgeon ties the two tails of the running suture in the middle of the closed defect, securing the repair."
 258.143,262.584,"The surgeon takes additional interrupted suture bites to ensure the adequate closure of the defect, which measures approximately three to four centimeters."
 263.084,269.126,"After the defect is satisfactorily closed, the surgeon desufflates the abdomen and places a 28 French chest tube into the surgical site."
-269.626,272.066,The patient was extubated eighteen hours after surgery.
-272.486,275.127,His chest tube was removed on post-operative day number three.
-275.627,279.188,He had no recurrent diffusion with improved symptoms and short-term follow-up.

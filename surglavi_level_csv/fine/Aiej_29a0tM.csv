@@ -1,9 +1,4 @@
 start,end,text
-5.252,15.539,The minimally invasive spleen-preserving distal pancreatectomy has become a routine procedure for management of benign or low-grade tumours of the body and tail of the pancreas.
-16.039,23.545,The surgeon demonstrates the temporary occlusion of the splenic artery using robotic instruments during a spleen-preserving distal pancreatectomy.
-24.045,34.232,"This modification of the Kimura technique was developed at the Royal North Shore Hospital in Sydney, and is successfully being used for our last twelve robotic distal pancreatectomies."
-34.732,50.559,"The surgeon applies a vascular clamp to the splenic artery, temporarily occluding it to reduce arterial inflow to the spleen and indirectly decrease venous return."
-51.059,60.164,"The surgical field remains relatively bloodless, facilitating the precise dissection of the non-distended splenic vein."
 60.664,64.207,"The da Vinci robotic platform is utilized to perform the spleen-preserving distal pancreatectomy, showcasing the robotic instruments maneuvering within the surgical field."
 64.707,75.052,"The surgeon begins the procedure by dissecting the gastrocolic ligament along the greater curvature of the stomach, providing access to the lesser sac."
 75.552,81.995,"The surgeon uses sutures to hitch the stomach onto the abdominal wall, providing retraction and improved access to the surgical field."
@@ -15,7 +10,6 @@ start,end,text
 129.166,135.19,"The surgeon uses a 6-0 PDS suture to successfully tamponade the bleeding vein, effectively controlling the blood loss from the venous tear."
 135.69,140.669,"The surgeon prepares to divide the neck of the pancreas lateral to the portal vein, positioning instruments to ensure precise separation from surrounding structures."
 141.169,146.532,"The surgeon prepares to divide the neck of the pancreas, choosing between using a stapler or diathermy for the procedure."
-147.032,156.397,"In a patient with a bulky or firm pancreas, the experience at this centre has been that the stapler does not efficiently span or cut across the neck."
 156.897,160.959,"The surgeon uses a diathermy device to divide the neck of the pancreas, as the stapler was not suitable for this case."
 161.459,168.007,"After dividing the pancreatic parenchyma, the surgeon identifies the splenic artery running along the superior margin of the pancreas."
 168.507,171.991,"The surgeon clips and divides the pancreatic magna branch, which is visible within the surgical field."
@@ -32,4 +26,3 @@ start,end,text
 277.617,284.863,"The surgeon applies a haemostatic agent to the pancreatic resection bed, compacting it with a small amount of fibrillar material to control bleeding and stabilize the area."
 285.363,291.329,"The surgeon removes the vascular clamp, and the omentum is placed over the pancreatic resection bed to cover the area."
 291.829,296.513,The surgical specimen is retrieved through the umbilical port before the closure of the fascia.
-297.013,300.396,We do not routinely use any drains in our institution for these cases.

@@ -1,15 +1,8 @@
 start,end,text
-3.25,16.038,Robotic right hemicolectomy is one of the latest minimally invasive techniques for removal of ascending colon and proximal transverse colon cancer that have been evolving over the last few years.
-16.538,22.841,This platform has the advantage of stable vision and added precision for surgeons.
-23.341,30.638,There is need for standardization of the procedure to make it reproducible and oncologically safe.
-31.138,39.741,We present our video showing the steps we believe should be taken as standard to perform a safe robotic right amicolectomy.
 40.241,52.965,"The surgeon creates a vertical incision at the umbilicus to establish pneumoperitoneum, temporarily closing it with a J-suture after placing four robotic eight-millimeter ports."
 53.465,58.813,The surgeon prepares to use the previously made vertical incision at the umbilicus to extract the specimen following the robotic right hemicolectomy procedure.
-59.313,79.648,"The surgeon places four robotic ports in an oblique but straight line, starting at the suprapubic level and ending in the left upper quadrant, spaced six to eight centimeters apart, with the abdominal wall fully inflated."
-80.148,90.868,"The assistant port is positioned five to seven centimeters lateral to the camera port, facilitating the placement of locking clips and swabs."
 91.368,118.923,"The greater omentum is positioned cranially under the liver to expose the root of the small bowel mesentery inferiorly, the transverse mesocolon superiorly, and the duodenum supermedially before docking the robotic arms."
 119.423,136.755,The surgeon identifies the ileocolic vessels and positions a tonsil swab inferiorly to prevent the small bowel from dislocating into the surgical workspace.
-137.255,141.158,"The robotic arms are docked in a specific arrangement, ready for the surgical procedure."
 141.658,146.301,"The robotic arm labeled R-I is equipped with a fenestrated bipolar grasper, positioned within the surgical field."
 146.801,148.935,"The camera is positioned in robotic arm R-II, providing a view of the surgical field."
 149.435,160.398,"The robotic arm R-III is equipped with monopolar scissors, while R-IV holds a grasper, either a cadier or tip-up forceps, for macro-retraction during the procedure."
@@ -21,11 +14,9 @@ start,end,text
 200.316,219.392,"The surgeon divides the ileocolic pedicle, right colic vessels, and the right branch of the middle colic artery, if visible, after securing them with locking clips placed proximally and distally."
 219.892,226.182,"The surgeon uses monopolar energy to dissect along the embryological plane, carefully separating tissue layers while maintaining the anatomical boundaries."
 226.682,234.565,"The surgeon carefully defines the dissection plane adjacent to the pancreatic head, ensuring clear separation to prevent injury to the pancreas."
-235.065,241.667,Priority must be given to medial to lateral mobilization rather than vessel ligation.
 242.167,253.445,"During mesocolon mobilization, the surgeon visualizes retroperitoneal structures, including the duodenum and pancreatic head, using the vessels as a tent to aid in exposure."
 253.945,295.298,"The surgeon performs anterior vascular dissection after achieving good mobilization, focusing on securing retroperitoneal structures by ligating the vessels."
 295.798,314.113,"A tonsil swab is placed at the cranial limit of the dissection, adjacent to the hepatic flexure, to shield the pancreas and duodenum from potential diathermy injury."
-314.613,317.796,"The surgeon begins subidal dissection, focusing on the area adjacent to the pancreatic head, ensuring careful separation of tissue layers to avoid injury."
 318.296,322.514,"The surgeon divides congenital adhesions located caudal to the terminal ileum, carefully separating these structures from surrounding tissue."
 323.014,327.738,"The surgeon carries out subidal plane dissection, continuing the process of separating tissue layers in the surgical field."
 328.238,340.567,"The surgeon dissects the plane cranially between the ascending colon and the Gerota's fascia, simultaneously dividing the lateral attachments."
@@ -38,7 +29,5 @@ start,end,text
 420.891,438.998,"The surgeon divides the attachments between the greater omentum and the proximal transverse colon, facilitating the dissection process."
 439.498,450.386,"A swab placed from below becomes visible, marking the plane that guides further lateral dissection to clear the hepatic flexure."
 450.886,459.052,"The surgeon enters the lesser sac, revealing the right branch of the middle colic artery, which becomes visible in the surgical field."
-459.552,463.845,"If not done yet, it may be divided if required."
 464.345,477.896,"The surgeon extracts the fully mobilized right colon specimen through a four-centimeter incision at the previous umbilical site, initially used for pneumoperitoneum access."
 478.396,487.443,"The surgeon uses a wound retractor to facilitate the delivery of the specimen through the incision, while also protecting the wound edges from potential contamination by cancer cells."
-487.943,492.827,"The surgeon performs an extracorporeal anastomosis using their preferred technique, connecting the bowel segments outside the abdominal cavity."

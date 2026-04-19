@@ -286,7 +286,11 @@ class PeskaVLPAdapter(nn.Module):
         return ("frame_local_projection.", "logit_scale")
 
     def allowed_unexpected_prefixes(self):
-        return ("frame_local_projection.", "logit_scale")
+        return (
+            "frame_local_projection.",
+            "logit_scale",
+            "backbone_text.model.embeddings.position_ids",
+        )
 
     def _encode_frame_embeddings(self, images: torch.Tensor) -> torch.Tensor:
         if images.ndim == 4:

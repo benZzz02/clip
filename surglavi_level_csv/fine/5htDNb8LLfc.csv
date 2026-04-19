@@ -1,6 +1,4 @@
 start,end,text
-4.704,13.35,"The surgeon performs a laparoscopic total proctocolectomy, followed by the creation of an intracorporeal ileal pouch anal anastomosis."
-13.85,18.436,"Comes from Gem Hospital, India."
 18.936,31.041,"The surgeon places trocars, including one for the camera in the umbilicus, and four additional trocars, allowing access to all quadrants of the colon for mobilization."
 31.541,40.665,The surgeon stands on the right side of the patient and incises the gastrocolic omentum from the middle to the inferior pole of the spleen.
 41.165,45.907,"The surgeon incises the anterior layer of the mesocolon at the inferior border of the pancreas, revealing underlying structures."
@@ -11,7 +9,6 @@ start,end,text
 73.922,85.25,"The surgeon carefully separates the mesocolon from the genitous fascia, revealing the underlying kidney and visualizing the pancreas."
 85.41,90.794,"The surgeon, positioned on the left side of the patient, turns attention to the right side of the surgical field to perform the next steps of the procedure."
 91.294,97.018,"The surgeon incises the gastrocolic ligament, revealing the second part of the duodenum beneath it."
-97.518,101.307,From the second part of the duodenum that
 101.807,107.039,"The surgeon incises the peritoneum of the hepatocolic ligament, carefully identifying the Gerota's fascia beneath."
 107.539,113.27,"The surgeon dissects the second and third parts of the duodenum, carefully separating these sections from surrounding tissues."
 113.77,136.274,"The surgeon mobilizes the iliac cecum by incising the posterior inferior border of the mesentery, creating a tunnel for retropaternal dissection. The right side of the mesocolon is dissected up to the duodenum and the inferior vena cava (IVC)."
@@ -21,7 +18,6 @@ start,end,text
 163.453,167.495,The surgeon identifies and dissects the main vessels at the root of the mesentery near the inferior border of the pancreas.
 167.995,172.517,"The surgeon has completed the dissection, freeing the pancreas at its inferior border, with surrounding tissues visibly separated."
 173.017,177.44,"The surgeon identifies the middle colic vessel and the ileocolic vessel, highlighting their positions within the surgical field."
-177.94,179.36,"Second part, third part junctions."
 179.62,185.083,"The surgeon releases the lateral attachment of the ascending colon, detaching it from surrounding tissues."
 185.583,193.812,"The right side of the colon, including the transverse colon up to the splenic flexure, is fully mobilized, indicating the completion of this stage of the dissection."
 194.312,204.745,"The surgeon mobilizes the sigmoid colon and divides the inferior mesenteric vessels, including the arteries, as part of the colectomy procedure."
@@ -58,7 +54,6 @@ start,end,text
 426.135,433.678,"The surgeon carefully manipulates the jaws of the surgical instrument to position them into each bowel segment, overcoming initial difficulty."
 434.178,442.042,"The surgeon uses multiple cartridges to lengthen the pouch created from the folded distal ileum, visible through repeated application of the stapler."
 442.542,453.782,"The surgeon uses a six-centimeter echelon stapler to extend the pouch size, demonstrating the ease of manipulation and adjustment of the pouch diameter."
-454.282,463.712,Now it is the third one.
 464.212,470.939,"The surgeon adjusts the bowel over the stapler, utilizing the stitches in between to aid in proper alignment."
 471.439,473.02,"The surgeon introduces the anvil into the surgical field, preparing it for use in the colectomy procedure."
 473.04,483.802,"The surgeon inserts the anvil into the prepared pouch, positioning it for the next step in the procedure."
@@ -69,4 +64,3 @@ start,end,text
 542.32,571.093,"The surgeon removes the staple and inflates the bowel to check the integrity of the circular anastomosis. The tension of the vessels is assessed, confirming good alignment and no rotation."
 571.593,582.977,"The surgeon inspects the pouch for any signs of leakage, carefully examining the integrity of the anastomosis."
 583.477,599.422,The surgeon identifies a loop of small bowel proximal to the pouch and uses it to create a split ileostomy on the right side of the abdominal wall.
-599.602,600.442,"The surgeon presents the resected specimen, likely from the colectomy procedure, for visual inspection."

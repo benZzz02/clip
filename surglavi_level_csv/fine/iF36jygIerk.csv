@@ -1,15 +1,10 @@
 start,end,text
-11.816,14.238,This is the gallbladder that I recently did.
 14.738,18.381,"The surgeon begins the procedure by attempting to isolate the cystic duct, a standard initial step in the operation."
-18.862,23.346,"However, I could not get a ICG backfill into the duct."
 23.846,31.933,"The surgeon employs a dome down technique on the gallbladder, aiming to facilitate backfill in the cystic duct."
 32.433,36.536,"The surgeon continues dissection around the cystic duct, which remains unfilled despite attempts to isolate it."
-37.036,62.495,And this suggests that there could be a cystic duct stone
 62.995,71.086,"The surgeon has skeletonized the cystic duct, revealing its structure clearly, with a potential obstruction visible within the duct."
 71.526,81.834,"The surgeon clips the cystic duct, relying on visual feedback to identify the presence of a stone due to the lack of haptic feedback in robotic surgery."
 82.334,86.478,"The surgeon transects the gallbladder just below the previously placed clip, completing the separation from the cystic duct."
-86.978,89.139,What I'm mainly looking for is bile reflux.
-89.199,94.944,"If I get a bunch of bile reflux, I'll try and milk back that duct and then clip it."
 95.444,118.799,"The surgeon observes the absence of bile reflux, suggesting a potential obstruction in the duct that requires further investigation."
 119.299,128.606,"The surgeon switches instrumentation and identifies a filling defect in the duct, gently milking it back to address the obstruction."
 129.106,148.501,"The surgeon gently manipulates the duct, applying counter traction and milking the proximal duct into the open lumen, taking care not to crush the stone to prevent it from entering the main bile duct."

@@ -5,7 +5,6 @@ start,end,text
 123.858,142.914,"The surgeon identifies the proximal resection margin of the colon and marks it with a surgical clip, preparing for resection."
 143.414,153.385,"The surgeon retrieves free peritoneal fluid, if present, for cytological analysis using a laparoscopic approach."
 153.885,200.683,"The surgeon uses a transfixed stitch to suspend the uterus, enhancing exposure of the surgical field."
-201.183,210.327,Several interesting anatomical details are seen in this case.
 210.827,232.911,"The surgeon identifies the left ureter, inferior mesenteric vein, left colic vein, left colic artery, and left kidney within the surgical field."
 233.411,288.092,"The surgeon identifies the left renal vein and the left gonadal vein. As the procedure progresses upwards, the inferior margin of the pancreas is visualized."
 288.592,311.328,"The surgeon follows the left colic vessels to reach the left colic flexure, revealing the anatomical junction between the transverse and descending colon."
@@ -28,4 +27,3 @@ start,end,text
 599.689,603.922,"The surgeon identifies the intermesenteric plexus, which is visually distinct within the surgical field."
 604.422,615.485,"The surgeon begins the dissection by dividing the peritoneum between the inferior mesenteric vein and the aorta, avoiding direct pursuit of the inferior mesenteric artery."
 615.985,626.727,"The surgeon employs a strategy to visualize and divide the atolletes fasciae, effectively lowering the left ureter and moving it away from the inferior mesenteric artery."
-627.227,631.888,"The surgeon safely pursues the inferior mesenteric artery, ensuring it is separated from the left ureter and surrounding structures."

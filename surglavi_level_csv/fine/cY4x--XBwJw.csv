@@ -1,8 +1,4 @@
 start,end,text
-1.03,15.541,"The surgical team performs a robot-assisted irritator reimplantation, guided by a three-dimensional model."
-16.041,20.124,"Case one, reimplantation of the graft user to the bladder."
-20.624,26.082,The CT scan and the pillography shows the distal stricture.
-26.582,38.193,From the CT scan a model is created showing the anatomy and the vascularization.
 38.693,46.22,"The surgeon identifies the ureter, a challenging procedure requiring careful examination and manipulation of the surrounding anatomical structures."
 46.72,56.791,"The surgeon injects indocyanine green (ICG) through the pilostomy, enhancing the visualization of the ureter under fluorescence imaging."
 57.291,63.212,"The surgeon isolates and dissects the distal part of the ureter, followed by spatulation of the ureteral end."
@@ -12,8 +8,6 @@ start,end,text
 102.427,108.91,"The surgeon uses a 4-0 PDS running suture to close the bladder, following the completion of the anastomosis and stent placement."
 109.41,113.292,"Adipose tissue is placed over the anastomosis site, providing coverage and protection for the surgical area."
 113.792,116.805,"The surgeon performs a bladder seal test, confirming no leakage at the site of the bladder closure."
-117.305,121.786,The pyelography imaging reveals no visible dilatation in the urinary tract.
-122.286,131.329,"The surgeon performs a raft pelvis to bladder anastomosis using a small buaric-asati flap, securing the connection between the pelvis and bladder."
 131.829,143.132,"The surgeon identifies the ureter, visually distinguishing it from surrounding tissues."
 143.632,155.06,"Indocyanine green dye is injected through the pyelostomy, likely visualizing the renal structures and confirming the patency of the urinary tract."
 155.56,169.188,"The surgeon identifies the ureter as sclerotic and malasic, leading to its resection up to the pelvis."
@@ -22,10 +16,6 @@ start,end,text
 192.624,204.575,The surgeon positions a double J ureteral stent within the ureter.
 205.075,216.627,"The surgeon uses a PDS-SWC suture to close the bladder, carefully stitching the bladder tissue to ensure proper closure."
 217.127,229.352,"The surgeon closes the dissected distal ureter at the ureterovesical junction, followed by a bladder seal test that confirms no urinary leakage."
-229.852,234.254,"Pielography reveals a rapid outflow of urine through the anastomosis, indicating successful urinary passage."
-234.754,240.756,"The video shows modest ectasia of the calicopialic cavities, indicating slight dilation of these anatomical structures."
-241.256,247.245,"In case three, we present a native uretero-autograft kidney pyranastomosis."
-247.745,254.929,"The CT scan image displays two native kidneys alongside the graft kidney, providing a visual comparison of their positions and structures."
 255.429,263.054,"The pyelography image reveals a visible junctal stricture, indicating a narrowing at the junction of the ureter and renal pelvis."
 263.554,277.742,"The surgeon isolates the native ureter, preparing it for further surgical manipulation."
 278.242,316.425,"The surgeon identifies and isolates the graft ureter, performing a caudocranial dissection up to the renal pelvis, carefully separating the surrounding tissues."
@@ -33,6 +23,3 @@ start,end,text
 347.078,354.821,"The surgeon positions a double J ureteral stent within the native ureter, ensuring proper placement for urinary drainage."
 355.321,362.904,"The surgeon secures the anastomosis using PDS 4-0 single stitches around the double J stent, ensuring the connection is stable."
 363.404,379.73,"The surgeon injects venous ICG, which highlights the native ureter and the graft ureter, making them visually distinct."
-380.23,382.811,No dilatation is shown at the epilography.
-383.311,388.293,"The native ureter and graft ureter are visible in the surgical field, showing their anatomical positioning and relationship."
-388.793,396.255,"Some of the robotic approach advantages include the main invasivity, the ICC injection to identify the ureter and the use of the models."

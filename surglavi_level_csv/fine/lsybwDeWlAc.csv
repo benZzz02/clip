@@ -1,15 +1,8 @@
 start,end,text
-1.12,10.284,"The surgeon demonstrates vessel management during a laparoscopic right hemicolectomy, focusing on the complete mesocolic excision technique."
-1.12,10.284,"The surgeon demonstrates vessel management during a laparoscopic right hemicolectomy, focusing on the complete mesocolic excision technique."
-10.784,14.205,"The patient is positioned supine with legs split, preparing for the laparoscopic right hemicolectomy procedure."
-10.784,14.205,"The patient is positioned supine with legs split, preparing for the laparoscopic right hemicolectomy procedure."
-14.566,20.828,"The surgeon performs the colectomy using five laparoscopic ports, positioned on the left side of the supine patient with split legs."
-14.566,20.828,"The surgeon performs the hemicolectomy using five laparoscopic ports, positioned on the left side of the supine patient with split legs."
 21.328,109.346,"The surgeon begins the colectomy by entering the omental bursa inferior to the gastroepiploic vessels, following a careful exploration for metastasis."
 21.328,109.346,"The surgeon begins the hemicolectomy by entering the omental bursa inferior to the gastroepiploic vessels, following a careful exploration for metastasis."
 109.846,144.932,"The surgeon mobilizes the hepatic flexure of the colon, taking care to avoid the gallbladder during the procedure."
 109.846,113.156,"The surgeon mobilizes the hepatic flexure of the colon, detaching it from surrounding tissues to allow for better access and manipulation during the hemicolectomy."
-113.656,144.932,Be careful of the gall bladder.
 145.432,196.421,"The surgeon detaches the anterior lobe of the transverse mesocolon from the inferior border of the pancreatic neck, exposing the superior mesenteric vein."
 145.432,196.421,"The surgeon detaches the anterior lobe of the transverse mesocolon from the inferior border of the pancreatic neck, exposing the superior mesenteric vein."
 196.921,207.557,"The superior mesenteric vein (SMV) is visible in the surgical field, following the detachment of the anterior lobe of the transverse mesocolline from the inferior border of the pancreatic neck."
@@ -36,12 +29,3 @@ start,end,text
 539.092,558.297,"The surgeon identifies the point where the right colic vein connects with the gastroepiploic trunk, preparing to safely clip and divide the right colic vein."
 558.797,563.348,"The gastrocolic trunk of Hennel (GTH) is visible, showing its anatomical position and relation to surrounding structures."
 558.797,563.348,"The gastrocolic trunk of Hennel (GTH) is identified, showing its anatomical position in relation to surrounding structures."
-563.848,581.141,"Due to the extended lymphadenectomy, a drainage tube was placed and the length of stay was extended in order to observe if a chial leaks developed. If a chial leaks occurs, the drainage tube would be maintained and the patient would be sent home with clinic follow-up."
-563.848,572.795,"Due to the extended lymphadenectomy, a drainage tube was placed and the length of stay was extended in order to observe if a chial leaks developed."
-573.295,581.141,"If a chial leaks occurs, the drainage tube would be maintained and the patient would be sent home with clinic follow-up."
-581.641,590.604,The drainage tube will be removed until the chial leaks has stopped.
-581.641,590.604,The drainage tube will be removed until the chial leaks has stopped.
-591.104,596.731,"The surgeon completely mobilizes the mesocolon and performs an en bloc resection of the tumor, ensuring the entire mass is removed along with surrounding tissue."
-591.104,596.731,"The surgeon mobilizes the mesocolon completely and performs an en bloc resection of the tumor, ensuring complete removal from the surrounding tissue."
-597.231,602.137,Here is the proposal of a pathway without leaving prophylactic drain for colleagues.
-597.231,602.137,Here is the proposal of a pathway without leaving prophylactic drain for colleagues.

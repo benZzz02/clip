@@ -1,24 +1,14 @@
 start,end,text
-0.331,7.899,"I'm Jacques Fontaine, Thoracic Surgeon at Moffitt Cancer Center, and I will be describing our robotic right lower lobectomy technique."
-8.399,14.285,This is a patient with a T-N-N-M-O adenocarcinoma of the lung.
-14.785,24.235,"As can be seen here on CT scan, the patient has a bulky level XI hyaluron lymph node as well as a right lower lobe primary tumor."
-24.735,32.438,Preoperative endobronchial ultrasound showed no evidence of mediastinal lymph node involvement in station four and seven.
-32.458,43.123,"A PET scan showed intense FDG avidity, not only in the primary right lower lobe tumor, but also in the bulky level eleven hyaluron lymph node."
-43.623,45.404,No evidence of distant disease.
-45.904,51.323,We offer the patient surgical resection followed by adjuvant therapy.
 51.823,60.881,"During the robotic right lower lobectomy, the surgeon divides the infrapulmonary ligaments, extending the dissection towards the infrapulmonary vein."
 61.381,75.528,"An 8mm, 30-degree camera is positioned in the eighth intercostal space, accompanied by two 12mm ports placed on either side, also in the eighth intercostal space."
 76.028,85.613,Retraction is achieved using a thoracic tip-up device and a sponge ball inserted through the anterior fourth intercostal space.
 86.113,94.801,"The surgeon performs a lymphadenectomy of level nine and level eight parasophageal lymph nodes after dissecting the inferior pulmonary ligament, using robotic instruments visible through the thoracic ports."
-95.301,113.04,We prefer using the robotic vessel sealer as we find this is more hemostatic and possibly decreases postoperative chylothorax after an extensive lymphadenectomy.
 113.54,127.16,"After completing the level nine lymphadenectomy, the surgeon exposes the pericardium, preparing for the subsequent level seven lymphadenectomy."
 127.66,139.567,"The surgeon encircles and divides the posterior aspect of the inferior pulmonary vein using a robotic 30mm gray load tip-up stapler, visible through the thoracic cavity."
 140.067,145.611,"After dividing the vein, the surgeon proceeds with the posterior hilar dissection, utilizing robotic instruments to carefully separate tissue structures in the hilar region."
 146.111,151.493,"The surgeon performs a lymphadenectomy in the subcarinal space, carefully dissecting and removing lymphatic tissue using robotic instruments."
-151.993,159.837,"To perform a complete lymphadenectomy, it's important to look for the borders of our dissection rather than for the lymph nodes themselves."
 160.337,176.626,"The subcarinal space is visually defined as a triangular area, with the infrapulmonary vein forming the base, the posterior aspect of the bronchus intermedius as one edge, the esophagus as the other edge, and the carina at the apex."
 177.106,180.957,"The surgeon exposes the floor of the dissection, revealing the pericardium as the underlying structure."
-181.457,207.558,It is important to follow these borders rather than looking for the lymph node and if possible not breaking the lymph node to be able to get a complete lymphadenectomy with minimal blood loss and possibly a better oncologic technique by not breaking the lymph node.
 208.058,215.201,"The surgeon visualizes the subcarinal space, identifying the triangle formed by the left and right main stem bronchus, with the carina at the apex."
 215.701,225.44,"The surgeon continues the posterior hilar dissection, carefully removing the level eleven interlobar lymph node from the surrounding tissue."
 225.94,238.251,"The surgeon uses robotic instruments to carefully dissect and remove a bulky hyaluron lymph node in one piece, leveraging the dexterity of the robotic tools for precise manipulation."
@@ -33,7 +23,6 @@ start,end,text
 324.884,326.546,"The surgeon continues the anterior dissection, revealing the bronchus to the middle and lower lobes."
 327.046,331.829,"The surgeon creates an entry point for the tunnel used in the fissureless dissection technique, facilitating access to the pulmonary artery."
 332.329,345.038,"The surgeon divides the lung parenchyma superficial to the pulmonary artery, avoiding the need to dissect through the fissure to locate the artery."
-345.538,350.497,This is very useful in patients who have poor fissures.
 350.997,356.639,"The surgeon exposes the pulmonary artery and divides it using a gray load stapler, completing the dissection without entering the fissure."
 357.139,363.722,"The surgeon exposes the bronchus to the lower lobe and divides it using a green load stapler, following the completion of the anterior dissection."
 364.222,373.969,"The surgeon resumes the dissection of the bulky level eleven lymph node, carefully separating it from surrounding tissues."
@@ -42,7 +31,6 @@ start,end,text
 392.182,404.939,"The surgeon performs a level ten superior mediastinal lymphadenectomy, followed by dissection of the paratracheal lymph nodes, carefully removing lymphatic tissue from the mediastinal region."
 405.439,422.725,"The surgeon defines the paratracheal space as a triangle, with the trachea as the posterior border, the superior vena cava as the anterior border, and the pulmonary artery as the inferior border. The apex is near the subclavian artery, visible after the removal of the level X lymph node."
 423.225,428.647,"The surgeon reveals the floor of the paratracheal lymphadenectomy, which is visually identifiable as the pericardium."
-429.147,434.68,Once I've defined my borders precisely with the...
 435.18,452.516,"The surgeon uses a vessel sealer to efficiently dissect and seal vessels, enhancing hemostasis and reducing the risk of chylothorax during the thymectomy procedure."
 453.016,459.043,"The surgeon focuses on identifying the border of the dissection area, rather than searching for lymph nodes, within the defined paratracheal space."
 459.543,469.706,"The surgeon enters a small area of the pericardium, where pericardial fluid is visible and being suctioned out using a surgical suction device."
@@ -51,4 +39,3 @@ start,end,text
 492.186,513.351,The surgical field shows a clearly visualized triangular area with no residual lymphatic tissue present.
 513.851,523.087,"The bedside assistant uses a suction device through the accessory port to clear pericardial fluid, enhancing visualization of the surgical field."
 523.587,525.961,"The surgical field shows a complete dissection with clear visualization of the anatomical structures, including the pericardium as the floor of the dissection."
-526.461,527.586,Thank you for your attention.

@@ -1,27 +1,14 @@
 start,end,text
-0.504,2.686,Good morning. My name is Dr. Swanto Sukhandi.
-2.806,8.611,I'm honored to give this presentation during SAGE's virtual meeting.
-9.111,20.421,This is a video presentation on a robotic left hepatectomy for a giant symptomatic liver hemangioma.
-20.921,25.15,This is a seventy-one-year-old man who presents with syncopal episodes with hypotension.
-25.65,30.876,He was found to have a giant left-sided hepatic hemangioma about thirteen centimeters.
-31.376,35.701,The CT scan image shows a large hemangioma occupying and replacing the entire left hepatic lobe.
-36.201,40.414,He has significant symptoms which has been going on for a couple of years.
-40.914,44.797,"Due to the symptoms, we feel there is a need for a resection of this hemangioma."
-45.297,48.359,"Our post-placement as such, this is a robotic approach."
 48.859,58.707,The surgeon begins the operation by visualizing the falciform ligament extending up to the confluence of the hepatic veins as they enter the vena cava.
 59.207,67.853,The surgeon uses a robotic hook and bipolar device to carefully dissect and remove adhesions between the omentum and the undersurface of the liver.
 67.913,72.688,"The surgeon releases the gallbladder, detaching it from surrounding structures using robotic instruments."
 73.188,82.297,"The surgeon performs a section to achieve vascular control of the left hemoliver, aiming to reduce bleeding during the procedure."
-82.797,89.915,We like to do inflow control whenever possible for any major hepatectomy that we do in our program.
 90.415,96.542,"The surgeon cleans out the soft tissue covering the liver before proceeding with the hepatectomy, revealing the underlying hepatic surface."
 97.042,108.173,"The surgeon divides an accessory hepatic artery at the base of segment four using a clip and scissors, ensuring precise vascular control."
-108.673,113.428,"Remember, this is a giant hemangioma, therefore the vascularity is quite robust."
 113.928,121.274,"The surgeon identifies the main left hepatic artery, which is visually observed as the vessel feeding the left hemangioma."
-121.774,123.895,The robotic system makes this operation easier.
 124.215,133.035,"The surgeon performs a clamp trial by occluding the left hepatic artery, visually assessing the vascular flow to the contralateral liver to ensure it remains intact."
 133.535,142.48,"The surgeon uses a six-inch trio silk suture to ligate the left hepatic artery, which supplies blood to the left hepatic lobe."
 142.98,149.783,"The surgeon uses a bipolar device and a Maryland forcep to tie off the left hepatic artery, which is feeding the left hemangioma."
-150.283,154.585,"This is quite easily, again, done with a robotic approach."
 154.645,160.801,"The surgeon reinforces the ligation of the left hepatic artery with a medium-sized hemlock clip, ensuring secure occlusion of the vessel."
 161.301,165.562,"The surgeon places two clips on the staying side and one clip on the specimen side of the left hepatic artery, following the clamp trial to ensure intact vascular flow."
 166.062,174.104,"The surgeon divides the left hepatic artery using robotic instruments, checking for any accessory branches that may be visible."
@@ -33,11 +20,9 @@ start,end,text
 204.08,211.183,"The surgeon has achieved complete inflow control to the left hepatic lobe, minimizing the risk of bleeding during the procedure."
 211.683,217.162,"The surgeon removes adhesions of the omentum attached to the hemangioma, carefully dissecting these fibrous connections to expose the hemangioma."
 217.662,244.731,"The surgeon uses a vessel sealer on the hemangioma, causing it to shrink significantly. Ultrasound is employed to locate the middle hepatic vein, visible in a small window inferiorly. The left hepatic vein is mapped out with ultrasound, and the surgeon cuts approximately five millimeters medial to the left hepatic vein, leaving it intact."
-245.231,251.614,We ask anesthesia to lower the CVP down. We use CVP in all major hepatectomy cases in our program.
 252.114,260.961,"The surgeon uses a monopolar scissor cautery to dissect the superficial parenchyma, approximately two centimeters deep, achieving effective hemostasis."
 261.001,272.048,"The surgeon uses an extended vessel sealer to carefully transect the deeper liver parenchyma, proceeding bit by bit to ensure precision and control."
 272.548,280.513,"The surgeon ensures hemostasis is achieved throughout the hepatectomy to minimize blood loss, carefully inspecting the surgical field for any bleeding."
-281.013,286.982,And this is the same technique that we do for all our major right or left hepatectomy.
 287.482,295.046,The bedside surgeon uses a laparoscopic suction device to maintain a dry operative field during the hepatectomy procedure.
 295.546,303.991,The surgeon identifies crossing vessels within the liver parenchyma and uses a coagulation technique to ensure hemostasis before cutting.
 304.491,311.354,The surgeon uses a laparoscopic stapler to secure and transect the crossing branches within the liver parenchyma.
@@ -55,7 +40,3 @@ start,end,text
 382.482,387.226,The surgeon observes the reduced size of the hemangioma following the reduction of the inflavascular structure.
 387.246,399.036,"The bedside surgeon inspects the surgical area for any signs of bleeding or bile leak, ensuring the operation site remains stable and secure."
 399.536,407.553,"The surgeon uses the omentum to patch the staple line area, ensuring hemostasis is maintained."
-408.053,414.618,We sometimes utilize product to make sure the hemostasis is achieved. We don't use this routinely.
-414.638,422.925,"Out of four hundred hepatectomies we have done in our program, our leak rate is about one percent."
-423.425,432.953,The operation went very well. It took about three hours. The EBL was about a hundred and fifty cc. Patient went home in about post-operative day four and did very well.
-432.973,435.075,This is the end of the presentation.

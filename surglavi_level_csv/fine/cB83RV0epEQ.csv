@@ -1,32 +1,9 @@
 start,end,text
-1.11,5.698,Intra-arterial renal hypothermia for complex endophytic or hilar tumors.
-6.198,12.824,Case series and description of surgical technique.
-13.324,20.648,"If technically feasible, nephron sparing surgery using partial nephrectomy is a standard treatment for all FIT patients with T-I renal masses."
-21.148,25.65,It allows for complete removal of the tumor with maximal preservation of kidney function.
-26.15,33.074,"As a limited ischemia time is essential, this is not always feasible in complex cases such as deep endophytic or hilar tumors."
-33.574,35.975,"Alternatively, renal hypothermia can be applied."
-36.475,41.593,This reduces ischemic damage and allows for longer clamping times while working in a bloodless field.
-42.093,51.509,"Many techniques have been described, including perirenal ice slush, cold saline surface irrigation, retrograde cooling through the ureter, and intra-arterial cooling."
-52.009,57.371,"The surgeon achieves renal hypothermia by inserting a balloon catheter through the renal artery via an arteriotomy, visually demonstrating the catheter placement within the artery."
-57.871,67.295,"This allows for rapid and stable decrease in kidney temperature, removes any blood left in the kidney, prevents intravascular coagulation, and improves intraoperative visibility."
-67.795,74.758,We previously demonstrated the feasibility of this technique in a total intracorporeal robot-assisted kidney auto-transplantation procedure.
-75.258,77.819,Ten patients with complex renal tumors were studied.
-78.319,80.54,No metastases were suspected.
-81.04,87.466,All patients were sent for a second to fourth opinion after being offered a radical nephrectomy elsewhere.
-87.966,91.849,"In this video, we present a patient with a hilar lesion in the upper pole of the left kidney."
-92.349,96.753,"The computed tomography scan reveals a renal mass in the upper pole of the left kidney, surrounded by multiple arteries and a large vein."
-97.253,102.918,"Given the complexity of this partial nephrectomy, we estimated ischemia times over thirty minutes."
-103.418,108.718,We also created a three-dimensional model for preoperative planning and perioperative guidance.
-109.218,114.223,The procedure took place under general anesthesia and the patient was positioned in lateral flank position.
-114.723,119.128,Ports were located as displayed.
-119.628,124.093,The da Vinci X-eye robotic system is utilized alongside an inertia lens deflator during the surgical procedure.
 124.593,128.838,"The surgeon reclines the descending colon and incises the Geroidus fascia, exposing the underlying structures."
 129.338,135.631,"The surgeon identifies and frees the renal artery and vein, carefully dissecting these vascular structures from surrounding tissues."
 136.131,142.519,"The surgeon exposes and mobilizes the kidney capsule on all sides, leaving the kidney attached only by its artery, vein, and ureter."
-143.019,153.03,This is very important as incomplete freeing of the kidney may cause residual arterial or venous flow into the kidney through small collateral branches.
 153.53,158.85,"The surgeon clips the gonadal and adrenal veins as needed, using robotic assistance for precise control."
 159.35,170.476,"The surgeon preserves the fatty tissue within the golden triangle, located between the ureter, the lower pole of the kidney, and the hilum, to protect the vascular supply to the proximal ureter."
-170.976,177.78,Our digital model facilitates dissection.
 178.28,184.791,"Bulldog clamps and sutures are positioned intracorporeally to minimize ischemia during the procedure, with the kidney visible and mobilized except for its attachment by the artery, vein, and ureter."
 185.291,201.536,"The surgeon inserts a Fogarty catheter transcutaneously using the Seldinger technique, which involves threading the catheter through a needle puncture site."
 202.036,211.878,"Bulldog clamps are placed on the renal artery and renal vein, initiating ischemia in the kidney region."
@@ -49,19 +26,3 @@ start,end,text
 342.175,345.837,"The surgeon extracts the specimen from the surgical site and proceeds to close the wounds in layers, ensuring proper closure of each tissue layer."
 346.337,354.88,"The surgeon clamps the proximal ureter and its vascular sheath to minimize venous backflow, enhancing visibility for the tumor enucleation procedure."
 355.38,367.551,"The surgeon clamps the ureter, which assists in tumor nucleation and helps recognize the collecting system by inducing temporary hydronephrosis."
-368.051,371.394,"In all other cases, we also applied intra-arterial cooling."
-371.894,402.448,"Three-dimensional reconstructions of complex lesions are displayed, showing detailed anatomical structures and spatial relationships of the lesions."
-402.948,405.03,All surgeries were completed successfully.
-405.53,415.659,One case was converted to radical nephrectomy due to excessive bleeding of the resection bed during the reperfusion phase with unsafe hemostasis after reclamping and second rhinoraphy.
-416.159,418.822,No other intraoperative complications occurred.
-419.322,427.129,"Median and intercartal range of surgical times, ischemia times and estimated blood loss are displayed."
-427.629,431.602,Only one patient experienced one high-grade complication within the first thirty days.
-432.102,436.444,needing segmental coiling for pseudoaneurysm two weeks after the surgery.
-436.944,440.646,No other high-grade complications were noted thus far.
-441.146,447.97,Post-operative outcomes were adequate and are displayed.
-448.47,450.431,We note one positive surgical margin.
-450.931,456.471,No sign of recurrence was withheld up to present.
-456.971,464.613,"In conclusion, we demonstrated that robot-assisted partial nephrectomy using intra-arterial renal hypothermia with arteriotomy is feasible."
-464.993,467.474,This allows for more precise surgery in a bloodless field.
-467.974,472.135,It can reduce ischemic damage if clamping times longer than twenty-five minutes are needed.
-472.575,478.497,"Thus, it creates more opportunities for nephron-sparing surgery in patients with deep endophytic and hilar tumors."

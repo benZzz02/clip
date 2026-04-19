@@ -1,5 +1,4 @@
 start,end,text
-1.263,11.715,"This is a thirty-two-year-old female who presents with lower GI bleed and malnutrition secondary to ulcerative colitis, which is refractory to medical management."
 12.115,15.98,"The patient is positioned in the operating room for a laparoscopic total colectomy, with surgical instruments prepared for the procedure."
 16.46,25.606,"The surgeon performs a laparoscopic total colectomy, progressing in a medial-to-lateral direction to remove the colon."
 26.106,32.292,"The surgeon begins the dissection of the left colon by identifying the ligament of Treitz, a key anatomical landmark in the procedure."
@@ -14,7 +13,6 @@ start,end,text
 123.008,143.68,"The surgeon uses an endogia stapler to divide the colon at the rectosigmoid junction, completing the separation of the rectosigmoid segment."
 144.18,155.476,"The surgeon dissects the mesocolon away from the underlying retroperitoneal structures, carefully separating the tissue layers."
 155.976,183.396,"The surgeon completes the takedown of the splenic flexure, detaching it from surrounding structures."
-183.896,185.058,The left
 185.558,194.045,"The surgeon identifies, skeletonizes, and divides the middle colic vessels, carefully isolating them from surrounding tissues."
 194.065,212.497,"The surgeon begins the dissection of the right colon by identifying the ileocolic pedicle, preparing to separate it from surrounding tissues."
 212.997,222.899,"The surgeon identifies the duodenum and sweeps down the retroperitoneal structures, separating them from the mesocolon."
@@ -32,4 +30,3 @@ start,end,text
 339.177,371.53,"The surgeon extracts the specimen through the anus under direct visualization, completing the removal process."
 372.03,382.44,"The surgeon grasps the rectal stump and uses a surgical stapler to close it off, completing the closure of the rectal stump."
 382.94,385.743,"The surgeon removes the remnant rectum from the abdominal cavity, completing the extraction process."
-386.243,390.447,"Pathology revealed, ulcerative colitis with no dysplasia."

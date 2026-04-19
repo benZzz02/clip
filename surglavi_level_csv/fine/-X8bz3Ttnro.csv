@@ -1,12 +1,4 @@
 start,end,text
-0.912,5.614,"The surgeon performs a laparoscopic left colectomy, preparing for intracorporeal anastomosis by manipulating the colon and surrounding tissues using laparoscopic instruments."
-0.912,5.614,"The surgeon performs a laparoscopic left colectomy, preparing for intracorporeal anastomosis within the abdominal cavity."
-6.114,12.698,"The surgeon performs a complete mesocolic excision, carefully preserving the inferior mesenteric vein, ensuring the vein remains intact and undisturbed during the procedure."
-6.114,12.698,"The surgeon performs a complete mesocolic excision while preserving the inferior mesenteric vein, carefully dissecting around the vein to maintain its integrity."
-13.198,18.42,A six to eight years old male with adenocarcinoma of the descending colon.
-13.198,18.42,A six to eight years old male with adenocarcinoma of the descending colon.
-18.76,28.825,Colonoscopy shows a six centimeter villous lesion and CT shows a five centimeters while thickening in the descending colon.
-18.76,28.825,"The colonoscopy reveals a six-centimeter villous lesion in the descending colon, while the CT scan shows a five-centimeter area of wall thickening in the same region."
 29.228,35.732,An intraoperative colonoscopy is performed to visually confirm the position of the lesion within the descending colon.
 29.228,35.732,An intraoperative colonoscopy is performed to visually confirm the position of the lesion in the descending colon.
 36.232,39.454,The surgeon marks the position of the lesion on the descending colon during the laparoscopic left colectomy.
@@ -25,10 +17,6 @@ start,end,text
 95.818,106.582,The surgeon removes the surrounding fat from the vein and ligates all branches entering the descending mesocolon.
 107.082,113.727,The surgeon carefully preserves the inferior mesenteric vein in its anatomical position while continuing the dissection around the descending mesocolon.
 107.082,113.727,"The surgeon carefully preserves the inferior mesenteric vein in place during the dissection, ensuring it remains intact while continuing to work around the surrounding structures."
-114.227,123.332,Preserving the vein in place facilitates the venous drainage of the distal descending column and sigmoid.
-114.227,123.332,Preserving the vein in place facilitates the venous drainage of the distal descending column and sigmoid.
-123.832,129.855,"With this, we will be able to perform a higher anastomosis."
-123.832,129.855,"With this, we will be able to perform a higher anastomosis."
 130.355,140.678,The surgeon completes the medial dissection and proceeds to create a window in the tissue to access the lesser sac.
 130.355,140.678,The surgeon completes the medial dissection and proceeds to create a window in the tissue to access the lesser sac.
 141.178,156.51,"The surgeon dissects the last branch entering the mesocolon, with the vein preserved and visible running below the pancreas."
@@ -45,7 +33,6 @@ start,end,text
 184.868,190.798,"The surgeon selects a point for the distal transection of the colon, ensuring it is at least ten centimeters away from the visible tumor."
 191.298,200.3,"The surgeon selects a point on the transverse mesocolon, ten centimeters proximal to the tumor, for further dissection."
 191.298,200.3,"The surgeon selects a point on the transverse mesocolon, ten centimeters proximal to the tumor, for further dissection."
-200.8,208.763,Keeping the vein in place allowed us to do a higher anastomosis.
 200.8,208.763,"The surgeon maintains the vein in place to facilitate a higher anastomosis, ensuring optimal positioning for the surgical connection."
 209.263,215.384,The surgeon detaches the marginal arcade on both sides and uses a surgical stapler to transect the colon.
 209.263,215.384,The surgeon detaches the marginal arcade on both sides and uses a surgical stapler to transect the colon.

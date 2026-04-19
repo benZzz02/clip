@@ -1,6 +1,4 @@
 start,end,text
-0.861,13.61,"Demonstrated here is a single-port robotic approach to trans-anion minimally invasive surgery, or SPR-TAMIS. I have no disclosures."
-14.11,44.186,"The single-port robotic system is deployed at the operative field, with the robotic boom rotating 360 degrees around the cannula's remote center. The robot is docked to a 25mm multi-channel trocar, which contains a 3D camera and three working arms."
 44.686,72.348,"The surgeon inserts the camera into the SP trocar, followed by three robotic working arms. The instruments are recognized by the robot and advanced into the operative field through the transanally inserted access platform."
 72.848,107.01,The surgeon utilizes the full wrist and elbow articulation of the three robotic working arms to identify the lesion. The lesion is marked with monopolar scissors for excision. A holographic image at the six o'clock position displays the position of the camera and the three working arms within the operative field.
 107.51,127.683,"The surgeon utilizes a three-dimensional view to navigate the operative field, entering the plane between the muscularis propria and perirectal fat with precise instrument positioning."
@@ -11,4 +9,3 @@ start,end,text
 294.383,332.242,"After irrigating the surgical site with a dilute betadine solution, an assistant port is used to introduce a 3-0 Vicryl suture into the operative field. The robotic platform facilitates a full-thickness closure, with a third robotic arm providing retraction for optimal visualization."
 332.742,379.795,"The surgeon performs an instrument tie using the SP robotic arms, demonstrating the ease of manipulation. A running full thickness suture is used to close the defect, with visible full thickness bites being executed to complete the anastomosis."
 380.295,408.703,"Two robotic arms are seen tightening the suture endoluminally, while a third arm retracts the tissue for optimal visualization. The surgeon fast-forwards to the completion of the final knot tying, followed by loading scissors to cut the suture, marking the completion of the operation."
-409.203,415.028,"The clean margins of the excised specimen are visible, indicating successful removal of the targeted tissue."

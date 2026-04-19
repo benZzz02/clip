@@ -1,6 +1,4 @@
 start,end,text
-0.246,3.75,"Hello, I am Dr. Richard Fortunato from Allegheny General Hospital in Pittsburgh."
-3.81,9.097,And today I'd like to show you a problem with the double stapled technique to be aware of and to avoid.
 9.117,10.618,The colon is visibly rolling away from its initial position during the procedure.
 10.799,15.51,"The surgeon performs a stapling technique on the ileocolic junction, using a surgical stapler to secure the tissue."
 16.01,38.33,"The surgeon elevates the colon, which rolls away at an angle, causing a non-perpendicular staple firing. The surgeon prepares to readjust the stapler and elevate the bowel to ensure proper alignment."
@@ -11,4 +9,3 @@ start,end,text
 59.738,70.125,"The surgeon performs a second firing of the stapler due to the length of the bowel, ensuring a flat staple line across the tissue."
 70.625,73.547,"The surgeon positions the stapler perpendicular to the original staple line, ensuring alignment for the next step in the ileocolic resection."
 74.047,84.554,"The surgeon maintains a perpendicular common staple line on the colon, ensuring it does not curve or narrow the lumen."
-85.054,86.235,Hope you find this technique helpful.

@@ -1,8 +1,4 @@
 start,end,text
-0.152,12.618,"I would like to thank the committee for allowing us to present our concurrent robotic APR and prostatectomy. This is a sixty-one-year-old man who presented with three weeks of rectal bleeding, anemia, and perianal pain."
-13.118,23.784,"He had a medical history significant for prostate cancer. This was diagnosed four years ago, and at the time, prostatectomy and radiation were recommended. However, the patient chose holistic therapy."
-24.284,35.055,He had a rectal tumor interiorly that started at the dentate line and extended beyond the reach of the finger. He had elevated CEA and PSA. He had no other colorectal lesions.
-35.555,40.618,"The video shows the port placement for the surgical procedure, with multiple ports visible on the patient's abdomen."
 41.118,48.682,"The surgical field displays black dashes indicating the placement of eight millimeter robotic ports, while a red dash marks the location of a laparoscopic assist port."
 49.182,63.207,"The surgeon identifies the ureters bilaterally, visually confirming their location within the surgical field."
 63.707,76.811,"The surgeon uses a Ligasure device to dissect the mesorectum and ligate the lateral stalks, separating these structures from surrounding tissue."
@@ -15,7 +11,6 @@ start,end,text
 164.621,171.254,"The surgeon observes the significantly redundant colon, with the descending colon already mobilized through dissection along the white line of Toldt."
 171.754,181.102,"The surgeon continues dissection through the mesentery, preparing a section of the colon for division with a stapler. Following the completion of the prostatectomy, the bowel is transected laparoscopically."
 181.602,186.246,"The surgeon performs the remainder of the abdominoperineal resection (APR) from the perineum, with the patient positioned in the prone jackknife position."
-186.746,194.473,We will leave the bowel and turn our attention towards the prostatectomy portion of this operation.
 194.973,212.412,"The surgeon begins the prostatectomy by dissecting the vas deferens and seminal vesicles, carefully separating these structures from surrounding tissues."
 212.912,222.936,"The surgeon develops the preperitoneal space, revealing the presence of a right indirect inguinal hernia."
 223.436,242.09,"The surgeon continues dissection through the space of Retzius, dividing the dorsal venous complex using a surgical stapler."
@@ -23,11 +18,8 @@ start,end,text
 272.835,294.052,"The surgeon continues the dissection posteriorly, dividing the posterior prostatic fascia to expose the seminal vesicles, vas deferens, and lateral prostatic pedicles."
 294.552,314.257,"The surgeon uses a Ligasure device to take the lateral pedicles, while dissecting the prostate free from the remaining periprosthetic fascia. The neurovascular bundle is preserved laterally."
 314.757,331.297,"The surgeon pulls back the Foley catheter and transects the urethra distal to the prostate, completing the separation of the urethra from the prostate."
-331.797,334.719,This concludes the prostatectomy portion of the operation.
 335.219,349.849,"The surgeon places the excised prostate into an EndoCatch bag and positions it behind the rectum, clearing the surgical field to begin the urethra-vesicle anastomosis."
 350.349,400.228,"The surgeon begins the urethra vesicle anastomosis from the posterior aspect, intermittently inserting and withdrawing the Foley catheter to identify the urethral lumen and ensure the mucosa is included in each full-thickness suture bite."
 400.728,405.649,"The surgeon completes the urethra vesicle anastomosis, securing the suture with a locking suture clip."
 406.149,415.651,"The surgeon laparoscopically divides the bowel, followed by the removal of the prostate through the perineal wound as part of the abdominoperineal resection (APR)."
 416.131,420.933,"The surgeon matures the ostomy through a marked site in the left lower quadrant, ensuring proper placement and function."
-421.433,431.831,The patient is pictured laying on his right side. The patient had an unremarkable post-operative course. He was seen in clinic two weeks following discharge doing well.
-432.331,443.426,"His pathology revealed T-III disease of both the prostate and rectum. There were sixteen nodes harvested, one of which was positive for prostate adenocarcinoma."

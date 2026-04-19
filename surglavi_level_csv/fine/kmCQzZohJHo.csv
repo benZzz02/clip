@@ -1,11 +1,7 @@
 start,end,text
-10.087,18.069,This is a sixty-seven year old man who presented to us with symptoms of chronic intestinal obstruction.
-18.249,27.231,The patient was operated upon anterior resection for cancer of the rectal sigmoidal junction two years before.
 27.411,32.652,"The video shows a severe neoplastic stenosis at the site of the colorectal anastomosis, with visible narrowing of the intestinal lumen."
-32.852,37.234,The patient had multiple unresectable liver metastases.
 37.674,56.507,"A thin pediatric nasogastroscope is advanced through the colorectal stenosis, extending well above the stenosis for at least thirty centimeters."
 57.007,67.756,"The surgeon inserts a guide wire through the nasogastroscope, visually tracking its advancement through the colorectal stenosis."
-68.256,81.15,"In such a way, it is possible to avoid lesions to the colonic wall, which above the obstruction is usually dilated and partially ischemic."
 81.65,86.835,"The surgeon confirms the correct position of the guide wire using fluoroscopic imaging, ensuring it is properly placed within the colorectal region."
 87.176,100.009,"The pediatric nasogastroscope is withdrawn, allowing for the measurement of the colorectal stenosis length, which will inform the selection of an appropriately sized stent."
 100.509,151.661,"The guide wire remains positioned within the colorectal stenosis, visible through the nasogastroscope."
@@ -18,4 +14,3 @@ start,end,text
 221.653,227.974,"The surgeon removes the guide wire from the stent apparatus, which is positioned above the stenosis."
 228.474,232.555,"Radiological imaging confirms the correct position of the stent within the colon, showing the stent's placement and alignment."
 232.955,252.02,"The colonoscope is advanced through the stent to its proximal margin, allowing for visual inspection to verify the absence of any kinking in the stent."
-252.52,267.738,"An abdominal x-ray is performed at the end of the procedure, showing the stent with an hourglass shape. The stent is not yet fully expanded and will take at least twenty-four hours to reach full expansion."

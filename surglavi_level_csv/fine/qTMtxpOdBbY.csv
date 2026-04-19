@@ -1,5 +1,4 @@
 start,end,text
-0.813,6.999,I've been asked to demonstrate how I tend to do laparoscopic intracorporeal bowel anastomosis.
 7.499,12.463,"The surgeon performs a right hemicolectomy, with the bowel ends visibly transected and prepared for anastomosis."
 12.963,18.268,"The surgeon aligns the small bowel with the colon following the complete mobilization of the small bowel mesentery, preparing for intracorporeal anastomosis."
 18.288,28.134,"The surgeon places a stay suture on the anti-mesenteric border of the colon and small bowel, preparing to tie it down to secure the alignment for anastomosis."
@@ -8,7 +7,6 @@ start,end,text
 47.93,52.574,"The surgeon creates a colotomy on the anti-mesenteric border of the colon, corresponding to the previously made enterotomy on the small bowel."
 53.074,58.04,"The surgeon introduces a surgical stapler to join the aligned small bowel and colon, a challenging step in the procedure."
 58.54,71.947,"The surgeon loads the cartridge end of the stapler into the small bowel, using the stay suture and graspers to maneuver the anvil end and introduce it into the colon."
-72.307,76.59,"But again, sometimes that can be done in the opposite direction."
 77.09,83.523,"The surgeon assesses the length of the small bowel and colon limbs, ensuring they are approximately equal before proceeding with the anastomosis."
 84.023,114.226,"The surgeon fires the stapler to create a common channel for the ileocolic anastomosis, with no visible evidence of hemorrhage. The first stitch is placed through the staple line, starting on the colon side, passing the needle through the full thickness of the anastomosis, and then through the small bowel, with the knot tied down on the staple line."
 114.726,121.969,"The surgeon places a subsequent stitch through the staple line, replicating the technique of passing the needle full thickness from the colon side into the small bowel, and tying the knot down on the staple line."
@@ -26,6 +24,4 @@ start,end,text
 235.865,240.147,"The surgeon demonstrates the orientation of the bowel following the completion of the anastomosis, showing how the bowel segments are aligned."
 240.167,250.112,"The surgeon repositions the bowel to confirm correct orientation of the bowel ends and mesentery, ensuring there is no twist. The alignment appears satisfactory."
 250.612,254.015,"The surgeon begins to perform a second layer of suturing on the completed anastomosis, reinforcing the connection between the bowel ends."
-254.515,259.36,"sometimes just running all the way through the previous one, and in other cases, imbricating."
 259.38,264.046,"The surgeon completes the second layer of the anastomosis, showing the final configuration of the bowel ends joined together."
-264.546,271.153,"The surgeon extracts the colon specimen through a fan retractor and steel instrument, preparing the surgical site for early recovery strategy implementation."

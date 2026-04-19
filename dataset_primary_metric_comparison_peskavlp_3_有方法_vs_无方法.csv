@@ -1,0 +1,13 @@
+﻿dataset,primary_metric,有方法,无方法,差值_有方法减无方法,更优
+autolaparo_phase,overall_accuracy,0.4278332145,0.4392729865,-0.0114397719,无方法
+bern_bypass70_phase,overall_accuracy,0.2168383133,0.1568025106,0.0600358027,有方法
+cholec80_instrument,overall_mAP,0.2502326572,0.2845559146,-0.0343232573,无方法
+cholec80_phase,overall_accuracy,0.4304493401,0.4245475983,0.0059017419,有方法
+cholect50_triplet,triplet_mAP,0.0342234812,0.0364710069,-0.0022475257,无方法
+grasp_instrument,overall_mAP,0.3783243221,0.3774203340,0.0009039881,有方法
+grasp_phase,overall_accuracy,0.2303424482,0.2576403944,-0.0272979462,无方法
+grasp_step,overall_accuracy,0.1354873301,0.1532741217,-0.0177867916,无方法
+heichole_instrument,overall_mAP,0.2451092232,0.2655688166,-0.0204595935,无方法
+heichole_phase,overall_accuracy,0.4777348926,0.4287113313,0.0490235613,有方法
+sarrarp50_phase,overall_accuracy,0.0972606956,0.0407817790,0.0564789166,有方法
+stras_bypass70_phase,overall_accuracy,0.2263743096,0.2209016512,0.0054726584,有方法

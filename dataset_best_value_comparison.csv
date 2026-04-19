@@ -1,0 +1,13 @@
+dataset,peskavlp_best_metric,peskavlp_best_value,pretrained_best_metric,pretrained_best_value,delta_best_value,winner,analysis
+autolaparo_phase,video_avg_accuracy,0.5665305643,overall_accuracy,0.3851389879,0.1813915764,peskavlp,peskavlp best value higher by 0.1814
+bern_bypass70_phase,overall_f1_average,0.1536299558,video_avg_accuracy,0.2681257713,-0.1144958155,pretrained,pretrained best value higher by 0.1145
+cholec80_instrument,video_avg_mAP,0.4133339583,video_avg_mAP,0.4426735553,-0.0293395970,pretrained,pretrained best value higher by 0.0293
+cholec80_phase,overall_accuracy,0.5040061493,overall_accuracy,0.5311437393,-0.0271375901,pretrained,pretrained best value higher by 0.0271
+cholect50_triplet,instrument_mAP,0.3110716483,instrument_mAP,0.3441401167,-0.0330684684,pretrained,pretrained best value higher by 0.0331
+grasp_instrument,video_avg_mAP,0.4745397877,video_avg_mAP,0.4686319732,0.0059078145,peskavlp,peskavlp best value higher by 0.0059
+grasp_phase,video_avg_accuracy,0.2488436318,overall_accuracy,0.1461873791,0.1026562527,peskavlp,peskavlp best value higher by 0.1027
+grasp_step,video_avg_accuracy,0.1424047092,video_avg_accuracy,0.0578783852,0.0845263239,peskavlp,peskavlp best value higher by 0.0845
+heichole_instrument,overall_mAP,0.3462889625,video_avg_mAP,0.3652161362,-0.0189271737,pretrained,pretrained best value higher by 0.0189
+heichole_phase,video_avg_accuracy,0.5133609374,video_avg_accuracy,0.6346237903,-0.1212628529,pretrained,pretrained best value higher by 0.1213
+sarrarp50_phase,video_avg_accuracy,0.1492675068,overall_accuracy,0.0840258541,0.0652416526,peskavlp,peskavlp best value higher by 0.0652
+stras_bypass70_phase,overall_f1_average,0.2256056246,video_avg_accuracy,0.2955028044,-0.0698971798,pretrained,pretrained best value higher by 0.0699

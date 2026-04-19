@@ -1,15 +1,10 @@
 start,end,text
-0.962,5.446,"Hello, this is a case of laparoscopic appendicitomy."
-5.946,16.094,This patient has the previous two episodes of the acute appendicitis and right now she is in little interval state.
 16.594,39.615,"The surgeon uses a Striker mini alligator to grasp the appendix and its mesoappendix, while a harmonic scalpel is employed to separate the appendix from the mesoappendix."
 40.115,43.338,"The surgeon identifies a slightly inflamed appendix near the cecum, using laparoscopic instruments to assess its condition."
 43.838,49.061,"The surgeon addresses adhesions between the paracolic gutter and the peritoneum of the abdominal wall, carefully separating these structures."
-49.081,57.587,"A striker mini alligator, if you will use, then you don't have to use another port."
 57.707,61.39,"The surgeon uses the striker mini alligator to securely hold the appendix, ensuring stable manipulation during the procedure."
 61.89,65.873,"The surgeon uses a single instrument to dissect the appendix, continuing the separation process initiated with the striker mini alligator and harmonic device."
-66.013,70.182,Sometime this medial traction is useful.
 70.682,105.394,"The surgeon mobilizes the appendix, maneuvering it to reach the base for further dissection."
-105.894,115.317,"To avoid the stump appendicitis, it is important that the appendix should must be removed from the base."
 115.817,119.819,"The appendix is visually skeletonized, with surrounding tissue dissected away to expose its structure."
 120.319,123.68,"The surgeon uses an extracorporeal knot to secure the base of the appendix, ensuring it is properly ligated before removal."
 124.18,126.381,"The surgeon ties a Melger knot around the base of the appendix, securing it for removal."
@@ -17,18 +12,12 @@ start,end,text
 132.022,143.237,"The surgeon uses an instrument to grasp the appendix, preparing for its removal from the base to prevent stump appendicitis."
 143.737,147.959,"The surgeon carefully negotiates the loop to enter around the nearly skeletonized appendix, preparing for further manipulation."
 148.1,151.802,"The surgeon uses a knot pusher to guide the tip of the knot to the base of the appendix, ensuring secure placement for the appendectomy procedure."
-152.302,153.663,Little towards the cecum.
 153.783,159.486,"The surgeon ties the knot, causing the loop to shrink around the base of the appendix at the cecum."
 159.986,164.909,"The surgeon uses an extracorporeal knot technique, maneuvering the tip of the knot pusher towards the cecum to secure the base of the appendix."
 165.409,166.67,"The surgeon tightens the knot securely at the base of the appendix using the knot pusher, ensuring the loop is properly positioned."
-166.83,169.072,One knot is more than sufficient.
 169.572,176.386,"The surgeon repeatedly tightens the knot, ensuring it is securely positioned near the cecum."
-176.886,177.807,And now it is over.
 177.947,182.109,"The surgeon uses scissors to cut the tissue, likely separating the appendix from surrounding structures."
 182.609,186.311,"The surgeon uses a harmonic scalpel to cut the appendix, completing the appendectomy procedure."
 186.811,196.837,"The surgeon uses a harmonic scalpel to cut the appendix, sealing the digital portion and cauterizing the mucosa to prevent bleeding."
-197.337,202.16,So there will be no chance of any future mucosal.
-202.66,207.427,So it is just a very simple case of the laparoscopic appendectomy.
 207.927,247.718,"The surgeon uses a striker mini alligator through the five millimeter left iliac fossa port to perform dissection. A five millimeter telescope is then used to visualize and pull the appendix through the umbilicus, with reduced vision noted during the maneuver."
 248.218,280.34,"The surgeon carefully pulls the appendix into the cannula to conceal it, minimizing exposure. The cannula and appendix are then removed together, with the option to use an endo bag to further reduce infection risk."
-280.84,281.323,Thank you.

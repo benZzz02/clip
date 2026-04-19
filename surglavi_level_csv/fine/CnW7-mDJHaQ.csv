@@ -1,12 +1,10 @@
 start,end,text
-0.648,11.633,Welcome to this video of a robotic right upper lobectomy presented by Jason Trevis and performed at the James Cook University Hospital by Mr. Joel Dunning.
 12.133,32.973,"The surgical setup includes Maryland forceps with bipolar energy, Cadea forceps, and a thoracic grasper used to position the lung. Two cigar-shaped objects are visible in the chest cavity."
 33.473,45.546,"The surgeon begins the right upper lobectomy by dissecting the station seven lymph node along the bronchus intermedius, addressing a small bronchial artery during the procedure."
 46.046,57.555,"The surgeon opens the subcarinal space to fully dissect the station seven subcarinal lymph node, a critical structure in thoracic surgery."
 58.055,74.817,"The surgeon uses Maryland bipolar forceps to perform a complete dissection, efficiently maneuvering without the need to swap instruments."
 75.317,83.283,"The surgeon uses robotic instruments to peel the station seven subcarinal lymph node from behind the bronchus intermedius, revealing the anatomical structures involved in the dissection."
 83.783,99.025,"The surgeon attempts to remove the station seven lymph node whole, using careful dissection techniques to minimize bleeding and ensure a thorough lymphadenectomy."
-99.525,109.911,One of the real advantages of robotics is the ability to lift with one arm whilst working with the other and having the third provide retraction.
 110.411,119.407,"The surgeon carefully dissects the station seven lymph node from the pericardium, with the oesophagus visible to the left of the surgical field."
 119.907,125.338,"The surgeon uses Maryland bipolar forceps to peel the remaining parts of the station seven lymph node from the esophagus, progressing upwards towards the carina."
 125.838,138.732,The surgeon carefully navigates around small vessels emerging from the bronchus intermedius and nearby structures while continuing the dissection.
@@ -23,7 +21,6 @@ start,end,text
 249.247,251.868,"The surgeon proceeds to dissect and remove the station R-eleven lymph node, ensuring careful handling to maintain the integrity of the node and minimize bleeding."
 252.308,256.79,"The surgical field shows the anatomical location between the right upper lobe and the bronchus intermedius, with visible structures positioned relative to these bronchi."
 257.29,263.392,"The surgeon prepares to remove a structure completely to reveal the underlying pulmonary artery, ensuring clear visualization of this major vessel."
-263.892,266.773,"Because of this, we're just being slightly careful with the Maryland."
 267.273,273.081,The pulmonary artery becomes visible to the right of the station R-eleven lymph node during the procedure.
 273.581,309.115,"The surgeon carefully dissects and removes the lymph node located between the right upper lobe and the bronchus intermedius, providing improved visibility of the pulmonary artery and the posterior descending segmental vessel."
 309.615,315.202,"The surgeon identifies Station R-Eleven, an interlobar lymph node located between the upper, lower, and middle lobes of the lung."
@@ -32,7 +29,6 @@ start,end,text
 367.331,370.293,"The surgeon transitions to the fissure between the upper and middle lobes, preparing to further dissect and expose anatomical structures within this area."
 370.793,373.896,"The surgeon encounters adhesions in the surgical field, which are visible as fibrous tissue bands connecting the lung lobes."
 374.396,380.46,"The surgeon removes adhesions to access the fissure between the upper and middle lobes, potentially allowing visualization of the pulmonary artery."
-380.96,387.284,"We don't always do this, as if the patient does have a bad fissure, it can always be left until last."
 387.784,400.342,The surgeon observes the presence of small adhesions but notes that the patient has a well-defined fissure between the lung lobes.
 400.842,410.993,"The surgical view clearly displays the anatomical layout: the upper lobe is visible above, the middle lobe is positioned to the right, and the lower lobe is located at the bottom left of the screen."
 411.493,419.846,"The surgical view shows the confluence of the fissures, where the pulmonary artery is typically visible."
@@ -45,23 +41,19 @@ start,end,text
 467.568,474.471,"The surgeon ensures complete excision of the station ten lymph node from beneath the ozygous vein, carefully removing the tissue in its entirety."
 474.971,478.172,"The superior vena cava (SVC) is visible anterior to the surgical field, providing a landmark for orientation during the procedure."
 478.672,483.594,"After completing the lymphadenectomy, the surgeon aims to visualize the entire trachea and the posterior aspect of the vagus nerve."
-484.094,525.453,"Whilst ideally, you do not want to leave any fatty tissue in this area as this makes for a more complete lymphadenectomy."
 525.953,532.455,"The surgeon retracts the upper lobe of the lung posteriorly to expose and identify the upper lobe vein, which is visible in the surgical field."
 532.955,559.247,"The surgeon carefully maneuvers around the vein, ensuring not to damage the pulmonary artery, which is positioned just behind the heart."
 559.747,574.357,The surgeon has successfully navigated around the vein and is preparing to use a Tan-Forty-Five stapler with a leader catheter for further surgical action.
 574.857,594.022,"The surgeon uses a soft leader catheter to effectively navigate around the pulmonary vessels, ensuring precise manipulation without damaging surrounding structures."
 594.522,597.165,"The surgeon uses the leader cath to guide the assistant in maneuvering around the pulmonary vessels, ensuring precise navigation during the procedure."
-597.665,612.241,This is particularly useful for those who are more junior.
 612.741,622.791,"The surgeon rotates the Tan-Forty-Five stapler around to align it with the vein, ensuring precise positioning for stapling while avoiding the nearby pulmonary artery."
 623.291,629.939,"The surgeon fires the Tan-Forty-Five stapler, compressing and cutting the targeted vessel with the assistance of the leader cath."
 630.439,645.4,"The surgeon uses the Signia powered stapler to smoothly fire staples, securing the tissue during the pulmonary lobectomy procedure."
 645.9,648.341,"The surgeon returns to the right upper lobe bronchus, preparing to manipulate or dissect this anatomical structure."
 648.841,652.881,"The right upper lobe and bronchus intermedius are clearly visible in the surgical field, highlighting the anatomical structures involved in the procedure."
 653.381,667.444,"The surgical field shows a clear view of the pulmonary artery, enhanced by the removal of lymph nodes from station XI and station X."
-667.944,686.407,"Sometimes a sling may be used, although with a leader cath, this does make negotiating the vessel much easier."
 686.907,693.875,The surgeon uses a purple 45mm gold tip tri-stapler to secure tissue in the surgical field.
 694.375,703.846,"The surgeon visually inspects the bronchus intermedius, which is clearly visible in the surgical field, without performing an inflation test."
-704.346,710.008,Although if there are any doubts an inflation test should be carried out.
 710.508,717.426,"The surgeon has divided the bronchus and is now excising lymph nodes located just behind it, revealing the truncal branch of the pulmonary artery."
 717.926,743.182,"The surgeon identifies and manipulates L-ten hilar lymph nodes, which are located near the pulmonary hilum."
 743.682,747.924,"The surgeon approaches the anterior aspect to identify and maneuver around the pulmonary vessels, ensuring clear visualization and access for further dissection."
@@ -71,9 +63,7 @@ start,end,text
 775.051,786.44,"The surgeon uses a leader cast to maneuver through the surgical field, while the assistant operates a Tan-45 stapler to secure the vessels."
 786.94,799.142,"The surgical view shows a clear path for the assistant to access the vessels from the low and anterior port, with no reticulation visible in the surrounding tissue."
 799.642,808.545,"The surgeon prepares to address the fissure after completing the dissection and management of the bronchus, vein, and artery, with the pulmonary artery's anterior and apical truncal branches previously exposed."
-809.045,814.347,"Again, optionally, you can use a leader cath, as sometimes it is helpful, but sometimes it is not."
 814.847,820.549,"The surgeon uses a purple 60mm stapler to secure the pulmonary tissue, ensuring safe closure of the vessel with no structures behind."
-821.049,834.357,"Sometimes it is better to do this fissure last, as it is better for air leak."
 834.857,843.645,"The surgeon performs the final two firings of the stapler, creating straight staple lines along the pulmonary fissure to minimize air leaks."
 844.145,867.053,"The surgeon uses a Purple Sixty stapler to create staple lines across the pulmonary fissure, ensuring precise closure to minimize air leaks."
 867.553,879.596,"The surgeon prepares for the final firing of the stapler using a purple cartridge, ensuring the staple line is straight to minimize air leaks."

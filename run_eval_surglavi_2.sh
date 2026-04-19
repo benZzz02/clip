@@ -15,8 +15,8 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
 fi
 set -u
 
-CKPT="${CKPT:-/data/surglavi_checkpoint/peskavlp_lora_3gpu_bs100/surglavi_epoch_40.pt}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_peskavlp_full}"
+CKPT="${CKPT:-/data/surglavi_checkpoint/peskavlp_text_bioclinicalbert_vis_imagenet_no_method/final.pt}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_peskavlp_2}"
 CUDA_DEVICE="${CUDA_DEVICE:-2}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"

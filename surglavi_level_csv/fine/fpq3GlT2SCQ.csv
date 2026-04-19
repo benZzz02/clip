@@ -1,5 +1,4 @@
 start,end,text
-8.143,17.565,"Welcome to the robotic assisted Whipple procedure performed at Capital Health in Pennington, New Jersey."
 18.065,27.588,"The surgeon mobilizes the right flexure of the colon, carefully separating it from surrounding tissues to facilitate access to the surgical site."
 28.088,41.286,"The surgeon performs extensive mobilization of the right flexure of the colon using sharp dissection and cautery, carefully separating tissue layers."
 41.786,56.097,"The surgeon initiates the caulker maneuver using cautery and sharp dissection techniques, focusing on precise tissue separation."
@@ -16,7 +15,6 @@ start,end,text
 177.629,198.862,"The surgeon navigates around the gastroduodenal junction, using umbilical tape to position and fire staples distally to the pylorus, securing the junction."
 199.362,228.896,"The surgeon dissects the gastroduodenal artery and divides it between clips, with visible separation of the artery from surrounding tissues."
 229.396,249.846,"The surgeon extends the dissection at the hepatic hilum, revealing the anatomical structures and vessels in this region."
-250.346,259.227,Portal pain is evident in the background.
 259.727,276.578,"The surgeon develops a channel between the superior mesenteric vein, the portal vein, and the pancreatic gland, carefully separating these structures to facilitate further dissection."
 277.078,298.323,"The surgeon carefully divides the head of the pancreas from the body using cautery, ensuring precise separation of the pancreatic tissue."
 298.823,309.811,"The surgeon completes the division of the pancreas gland and proceeds to dissect the portal vein and superior mesenteric vein from the head of the pancreas, carefully separating these vascular structures from the surrounding pancreatic tissue."
@@ -31,6 +29,5 @@ start,end,text
 444.967,460.542,"The surgeon performs ductal mucosa anastomosis using a running suture technique with five OPDS sutures, securing the connection between the duct and surrounding tissue."
 461.042,480.086,A stent is visibly placed across the anastomosis site to support the structure and prevent leaks.
 480.586,510.144,"The surgeon proceeds to the choledochojejunostomy, utilizing a 5-0 PDS suture to connect the bile duct to the jejunum."
-510.644,541.824,we don't stand for this anastomosis
 542.324,583.315,"The surgeon prepares to perform the final anastomosis between the stump of the duodenum and the jejunum, using a two-layer technique similar to open surgery."
 583.815,585.032,"The final appearance of the completed anastomosis is shown, with the stent visibly placed across the anastomosis to support it and prevent leaks."

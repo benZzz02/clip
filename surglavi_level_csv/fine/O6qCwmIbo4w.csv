@@ -1,18 +1,4 @@
 start,end,text
-0.695,5.439,This video presents a robotic total proctocolectomy with en masse total pelvic accentuation.
-0.695,5.439,This video presents a robotic total proctocolectomy with en masse total pelvic accentuation.
-5.939,13.045,Our patient is a thirty-five year old gentleman with non-metastatic obstructing adenocarcinoma in the lower rectum reaching the anal verge.
-5.939,13.045,Our patient is a thirty-five year old gentleman with non-metastatic obstructing adenocarcinoma in the lower rectum reaching the anal verge.
-13.545,21.692,"The laparoscopic view reveals a sigmoid stoma with multiple polyps visible at the stoma site, consistent with the diagnosis of familial adenomatous polyposis (FAP)."
-13.545,21.692,"The laparoscopic view reveals multiple polyps at the sigmoid stoma site, which were later confirmed as familial adenomatous polyposis (FAP) through colonoscopy."
-22.192,26.109,The initial MRI showed frank prostatic infiltration with a positive CRM.
-22.192,26.109,The initial MRI showed frank prostatic infiltration with a positive CRM.
-26.609,33.552,"Following long course chemo radiation, there was a reduction in tumor bulk but persistent prostatic involvement and involved sphincters."
-26.609,33.552,"Following long course chemo radiation, there was a reduction in tumor bulk but persistent prostatic involvement and involved sphincters."
-34.052,45.197,"The surgeon places robotic ports closer to the umbilicus and at a less acute angle than in a standard robotic low anterior resection, facilitating access to all quadrants of the abdomen."
-34.052,45.197,"The robotic surgical ports are positioned closer to the umbilicus and at a less acute angle compared to a standard robotic low anterior resection, allowing access to all quadrants of the abdomen."
-45.697,52.235,"The camera is positioned at the umbilicus, providing a view of the surgical field with two instruments visible on the left side and one instrument on the right side."
-45.697,52.235,"The camera is positioned at the umbilicus, providing a view of the surgical field with two instruments visible on the left side and one instrument on the right side."
 52.735,60.822,"The surgeon begins the colectomy by incising the peritoneum along the root of the small bowel mesentery, exposing the posterior planes for further dissection."
 52.735,60.822,"The surgeon begins the procedure by incising the peritoneum along the root of the small bowel mesentery, exposing the posterior planes for further dissection."
 61.322,70.969,"The surgeon proceeds in an inferior to superior direction, visualizing the second part of the duodenum and mobilizing it from the overlying right colon mesentery."
@@ -52,13 +38,8 @@ start,end,text
 200.188,214.319,"The surgeon divides the free end of the transverse mesocolon, extending the dissection towards the left, while using sharp dissection to take down the remaining attachments of the right colon, completing its mobilization."
 200.188,214.319,"The surgeon divides the free end of the transverse mesocolon, extending the dissection towards the left. Sharp dissection is used to take down the remaining attachments of the right colon, completing its mobilization."
 214.819,216.829,"The robotic surgical system is undocked from the patient, indicating a transition in the procedure."
-214.819,216.829,"At this point, the robot is undocked."
 217.329,221.031,The surgeon temporarily closes the existing sigmoid stoma.
 217.329,221.031,"The surgeon temporarily closes the existing sigmoid stoma, ensuring it is securely sealed."
-221.531,225.553,The surgical boom is rotated to a configuration that provides access to the lower abdomen.
-221.531,225.553,"The surgical boom is rotated to a lower abdomen configuration, adjusting the positioning for continued access to the surgical field."
-226.053,235.178,"An assistant port is placed in the right hypochondrium, and the camera is shifted to position R-III. Two surgical instruments are positioned on the left side and one on the right side of the surgical field."
-226.053,235.178,"An assistant port is placed in the right hypochondrium, and the camera is shifted to position R-III. The surgical setup includes two instruments positioned on the left side and one on the right side."
 235.678,243.465,"The surgeon begins rectal mobilization by incising the right leaf of the rectal nascent tree, opening up the posterior planes and proceeding from medial to lateral."
 235.678,243.465,"The surgeon begins rectal mobilization by incising the right leaf of the rectal nascent tree, opening up the posterior planes and proceeding from medial to lateral."
 243.965,250.168,"The surgeon dissects towards the root of the inferior mesenteric artery, carefully exposing and separating it down to its origin."
@@ -167,7 +148,3 @@ start,end,text
 604.627,608.929,"The surgeon performs a mini laparotomy in the lower abdomen, exteriorizing the specimen from the surgical site."
 609.429,620.143,"The surgeon forms the ileal conduit through the existing incision, performs the ureteric anastomosis, and matures the ileostomy at the site of the existing sigmoid stoma."
 609.429,620.143,"The surgeon forms the ileal conduit through the existing incision, performs the ureteric anastomosis, and matures the ileostomy at the sigmoid stoma site."
-620.643,631.798,"The histopathology showed scanty residual viral adenocarcinoma, a negative CRM, multiple polyps in the colon and rectum, and zero of a hundred and nineteen nodes."
-620.643,631.798,"The histopathology showed scanty residual viral adenocarcinoma, a negative CRM, multiple polyps in the colon and rectum, and zero of a hundred and nineteen nodes."
-632.298,632.598,Thank you.
-632.298,632.598,Thank you.

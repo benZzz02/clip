@@ -1,11 +1,5 @@
 start,end,text
-5.19,15.034,"The patient had two colonic lesions, one of the cecum and the other in the distal rectum, up to one centimeter from the anal verge, and a single metastasis in the eighth segment."
-15.114,21.596,"We planned a surgical resection of all lesions in a single stage using the da Vinci robot, as shown in the picture."
-21.716,26.478,The robotic arms approach from the head of the patient to perform the resection of the liver metastasis located in the eighth segment.
-26.978,45.1,"The surgeon performs a second right hemicolectomy with the robotic arms positioned in the upper right quadrant. Following this, an abdominal perineal resection is conducted, extracting an old surgical specimen through the perineal incision."
-45.6,47.981,For the first surgical procedure we had a problem.
 48.161,66.387,"The patient is positioned in the left lateral decubitus with a high degree of hyperkyphosis. The space between the costal margin and the anterior superior iliac spine is visibly tight, preventing the docking of the robotic arm due to collision with the anterior superior iliac spine."
-66.847,70.49,"So, we changed the strategy and we went on by laparoscopy."
 70.99,92.477,"The surgeon performs an intraoperative ultrasound to assess the liver metastasis, followed by an oncological resection leaving a margin of at least one centimeter from the lesion. The resected specimen is placed inside a retrieval bag for delayed extraction."
 92.977,100.659,"The surgical team repositions the patient and initiates the second robotic docking, with the robotic arm approaching from the right upper quadrant."
 100.799,112.301,"The surgeon performs a laparoscopic incision of the gastrocolic ligament, extending up to the right colon angle, and marks the precise location on the transverse colon for resection."
@@ -16,8 +10,6 @@ start,end,text
 144.647,161.467,"The surgeon sections the right colic vessels and the right branch of the middle colic pedicles at their origin, completing the vascular dissection in this area."
 161.967,172.613,The surgeon uses a mechanical stapler to section the transverse colon and the associated mesenteric loops.
 173.113,190.246,"The surgeon performs an intracorporeal lateral-lateral isoperistaltic anastomosis using a mechanical stapler, followed by closure of the enterotomies with a double-layer suture: first a running suture with PDS-III-O, then interrupted sutures with II-O Vicryl."
-190.746,213.285,We never close mesenthetic defect.
-213.785,217.347,"At last, we proceed with the third phase of surgical procedure."
 217.727,229.454,"The surgeon begins the procedure laparoscopically by incising the parietal peritoneum at the base of the sigmoid mesentery. The dissection proceeds medially to laterally between the Toldt fascia and the Gerota fascia, extending towards the rectum."
 229.954,237.939,"The surgical team performs the third robotic docking, positioning the robotic cart from the patient's left leg."
 238.439,242.742,"The surgeon begins dissection posteriorly between the fascia reti and the valdaeus fascia, carefully separating these anatomical layers."
@@ -26,4 +18,3 @@ start,end,text
 270.229,285.244,"The surgeon uses a mechanical stapler to section the sigmoid colon, preparing to transition to the perineal phase of the surgery."
 285.744,295.299,The surgeon removes the surgical specimen and uses the same perineal incision to exteriorize the right colon and liver metastasis.
 295.799,298.202,"The final view of the patient's abdomen is shown, revealing the surgical field after completion of the colorectal procedure."
-298.582,303.808,The patient was discharged in the fifth postoperative day without no complications.

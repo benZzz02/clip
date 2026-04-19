@@ -1,9 +1,4 @@
 start,end,text
-0.242,5.446,Fifty-four-year-old obese woman with diffuse abdominal pain of more than thirty-six hours duration.
-5.746,10.33,"No prior history of peptic ulcer disease, but she admits to occasional alcohol intake."
-10.57,15.494,Examination revealed generalized abdominal tenderness with leukocytosis of nineteen thousand.
-15.814,18.856,CT scan of the abdomen showed perforated duodenal ulcer.
-19.056,28.619,She was resuscitated and underwent robotic assisted repair of duodenal ulcer perforation.
 29.119,36.642,"Robotic ports are placed, and the surgeon assesses the peritoneum, revealing macronodular liver cirrhosis."
 37.142,43.404,"The surgeon uses suction to remove gastrointestinal spillage and fibrinous exudate from the abdominal cavity, clearing the area for further repair of the duodenal ulcer perforation."
 43.904,76.737,The surgeon performs gentle blunt dissection and inspects the hepato-duodenal area to visually identify the site of the duodenal ulcer perforation.
@@ -13,7 +8,6 @@ start,end,text
 145.463,264.705,"The surgeon takes a suture bite that includes the posterior duodenal wall, ensuring the repair encompasses both anterior and posterior aspects of the duodenal perforation."
 265.205,273.008,The surgeon mobilizes a patch of viable omentum and positions it without tension over the perforation on the anterior wall of the duodenum.
 273.508,328.795,The surgeon ties the sutures to securely anchor the mobilized omental patch over the perforation on the anterior wall of the duodenum.
-329.295,333.042,An important consideration is the tying technique.
 333.542,358.849,"The surgeon adjusts the tension on the sutures to stabilize the omental patch over the perforation, ensuring it is secure while maintaining adequate blood supply to the omentum."
 359.349,376.186,"The surgical field shows no drainage performed in the subhepatic space, with the omental patch visibly covering the perforation site."
 376.686,382.11,"The surgeon irrigates the peritoneal cavity with a large volume of warm saline, ensuring thorough cleansing of the surgical area."

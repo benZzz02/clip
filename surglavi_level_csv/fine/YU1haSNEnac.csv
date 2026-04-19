@@ -1,9 +1,6 @@
 start,end,text
-0.858,13.385,"Hello, this is Roxen Liu with a robotic cholecystectomy using my new open book technique. For those of you who haven't seen this technique before, basically I use only three instruments."
 13.885,30.712,"A medium-large clip applier is visible on the right side of the screen, entering from the patient's left upper quadrant and docked to arm four. It functions as both the liver retractor and the gallbladder retractor in the open book technique, where the gallbladder is not directly grasped."
 30.772,47.26,"The surgeon uses a clip-up wire to push the gallbladder and liver upward, revealing the floppy nature of the gallbladder and the limited space for further elevation as the liver is pushed anteriorly."
-47.76,67.519,"Now I could have done it the traditional way and placed a grasper in the abdomen in place of the clipper plier and used the grasper to elevate the gallbladder. But I've found that with the open book technique, I've gotten used to having that clipper plier there."
-68.019,77.763,I find ways to continue to perform the operation safely and still not need a grasper.
 78.263,93.11,"The surgeon begins the procedure using the open book technique, focusing on opening the peritoneum on the medial side of the gallbladder."
 93.61,113.494,"The surgeon adjusts the retraction using the shaft of the clip applier, which elevates the left lateral segment of the liver, clearing the view for further dissection in the hepatocystic triangle."
 113.994,127.158,"The surgeon uses the angular clipper bar to manipulate the gallbladder, taking care not to exert excessive force that could cause the liver to be pulled into the clipper bar."
@@ -16,7 +13,6 @@ start,end,text
 240.752,262.298,"The surgeon opens the medial side of the gallbladder and pulls it away from the liver, increasing the distance between the gallbladder, including the infundibulum, and the liver."
 262.798,286.657,"The surgeon continues to separate the gallbladder from the liver by pulling it further away along its medial side, ensuring safety by avoiding excessive traction that could inadvertently involve the liver in the clip applier, risking laceration."
 287.157,304.754,"The surgeon identifies small branches of the cystic artery that are bleeding near the gallbladder and uses a bipolar device to coagulate them, aiming to preserve the main artery while controlling the bleeding."
-305.254,319.009,"And there's nothing fancy with this technique, right? It's just doing things just a little differently. It's not significantly different from the traditional method, but it's just more focused on"
 319.509,339.983,"The surgeon opens the medial side of the gallbladder, creating a clear view of the anatomy within the hepatocystic triangle, resembling the opening of a book for better visualization."
 340.483,357.21,"The surgeon continues to open the medial side of the gallbladder, resembling the 'opening of a book,' while controlling a small bleeder on the cystic artery. The gallbladder is gradually being pulled away from the liver, increasing the separation between these structures."
 357.71,380.553,"The surgeon approaches the hepatocystic triangle, carefully maintaining dissection close to the gallbladder to avoid injuring the right hepatic artery or duct."
@@ -25,14 +21,11 @@ start,end,text
 430.871,458.184,"The surgeon uses a clip-applier to efficiently secure the cystic duct without instrument exchange, while pulling the gallbladder far from critical structures to gain complete access around the duct."
 458.204,472.904,"The surgeon continues to work at a high level, avoiding the area where the common hepatic artery and common hepatic ducts are located, while maintaining focus on the gallbladder dissection."
 473.404,500.837,"The surgeon has achieved the critical view of safety and continues to dissect the gallbladder using a hook instrument while waiting for the clipper bar to be reloaded. The surgeon inspects a structure to determine if it is a small bile duct, confirming it is not, and aims to completely remove the gallbladder as the final clip is placed."
-501.337,509.627,It's a little game I play with my tech to see who can be faster.
 510.127,547.246,"The surgeon dissects additional length on the cystic duct using robotic instruments, preparing to clip and divide it with cautery while avoiding thermal injury."
 547.746,593.497,"The surgeon has skeletonized the cystic duct, revealing most of the gallbladder detached from the liver bed. The remaining gallbladder tissue is being carefully dissected away, ensuring thorough removal."
 593.997,606.583,"The surgeon leaves a portion of the gallbladder attached while preparing to apply a clip, ensuring there is still tissue to manipulate during the clip reloading process."
 606.723,627.637,"The surgeon positions the clip applier to avoid interference with the falciform ligament, ensuring clear visibility of the cystic duct for secure clipping."
 628.137,670.265,"The surgeon uses hooks on the robotic arms to remove the remaining attachments of the gallbladder from the liver bed, maintaining continuous movement while waiting for the clip applier to reload."
-670.765,683.673,"And I just use one clip applier Because of the number of reprocessing lives available, I don't use each clip with enough firings to justify the cost of it."
-683.713,699.678,"So I just use one clip of pyre. And with my ability to continue dissecting while the clip is being reloaded, I really don't need two clip of pyres."
 700.178,725.198,"The surgeon nearly completes the gallbladder dissection, but the bedside assistant quickly brings in the third clip applier. The clip applier is then used as a liver retractor to facilitate the final steps of gallbladder removal."
 725.698,750.728,"The surgeon uses the robotic system's cut function to divide the cystic duct, which is visible with a long length under tension. Firefly imaging is then employed to check for bile leaks and ensure no small ducts of Luschka are missed."
 751.228,798.965,The surgeon swaps the hook for an endocatch device through the umbilical port using the Hasson technique. The gallbladder is placed into the endocatch for extraction through the belly button. The clip applier is used as a grasper to manipulate the endocatch during the procedure.

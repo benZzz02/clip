@@ -1,21 +1,9 @@
 start,end,text
-2.11,13.075,This is an IMAS educational video on robotic myomectomy for a large uterine fibroid.
-13.575,24.04,The patient was a thirty-year-old female who presented to us with complaints of heaviness in hypochondrium and primary infertility.
-24.461,33.145,"On examination, a lump was palpable reaching up to the infraumblycal region."
-33.645,42.047,On MRI there was a large uterine fundal fibroid approximately thirteen into ten centimeters in size.
-42.547,46.928,We planned a robotic myomectomy for the patient.
 47.428,55.949,"The surgical team drapes the patient cart, preparing it for the robotic myomectomy procedure."
-56.449,59.342,"The surgical team plans the placement of robotic ports on the patient's abdomen, as indicated in the diagram, for the upcoming myomectomy procedure."
-59.842,69.968,"The camera port is positioned above the umbilicus in the midline, maintaining a distance of approximately twenty centimeters from the target anatomy."
-70.468,79.278,"Robotic ports one and two are placed in the right and left midclavicular lines, each being 8 mm in size."
-79.778,85.7,"The robotic ports, along with the camera port, are positioned to form a triangular configuration, with the base of the triangle oriented towards the target anatomy."
-86.16,97.404,"The patient cart is positioned from the left thigh of the patient for side docking, allowing space for an assistant to sit between the patient's legs if needed."
-97.844,106.547,"Two 5mm assistant ports are positioned in the right and left hypochondrium, facilitating the use of a myoma screw and suction irrigation during the procedure."
 106.907,110.207,"The patient cart is positioned closer to the patient, aligning with the previously established port placements for robotic surgery."
 110.707,118.029,"The camera arm and instrument arms of the robotic system are docked following the completion of diagnostic laparoscopy, with the robotic ports positioned in the right and left midclavicular lines."
 118.529,126.111,"During diagnostic laparoscopy, a large fundal fibroid is visible on the uterine surface."
 126.611,130.473,"The laparoscopic view shows both fallopian tubes and ovaries appearing normal, with no visible abnormalities or lesions."
-130.973,135.974,The plan is to do a myomectomy without causing any injury to the adnexa.
 136.454,139.848,"The surgeon inserts a myoma screw into the large fundal fibroid, preparing for its manipulation during the myomectomy procedure."
 140.348,152.159,"The surgeon manipulates the fibroid using the myoma screw, applying traction and counter traction to facilitate its movement."
 152.659,165.55,The surgeon injects vasopressin around the fibroid tissue to reduce its vascularity and minimize bleeding during the procedure.
@@ -28,17 +16,10 @@ start,end,text
 233.583,260.613,"The surgical system provides enhanced vision, allowing the surgeon to identify the correct dissection plane around the fibroid. The endoristed instruments, particularly the hook, offer degrees of freedom that aid in precise dissection."
 261.113,266.877,"The surgeon continues dissection in the proper plane over the fibroid, ensuring there is no oozing of blood."
 267.377,282.967,"The myoma is visibly protruding from its surrounding coverings, indicating its position within the surgical field."
-283.467,289.523,There is a predefined force which can be applied with various robotic instruments.
-290.023,305.812,like you can apply more force with the help of a progressed forceps as compared to a fenestrated bipolar forceps.
-306.312,395.041,There is no force feedback in robotics and you have to use your visual feedback in order to assess how much force is being applied.
 395.541,439.232,"The surgeon applies traction and counter traction to uncover the myoma, which is visibly protruding from its coverings."
 439.732,464.044,"The surgeon repeatedly reapplies the myoma screw to provide traction, facilitating the downward progression towards the fundus of the uterus, with the myoma visibly protruding from its coverings."
 464.544,474.713,"The surgeon completes the separation of the myoma from the surrounding uterine tissue, revealing the entire myoma structure."
 475.213,487.698,"The surgeon uses a harmonic scalpel to divide the myoma from its stalk, visually separating the myoma from the surrounding uterine tissue."
-488.198,494.801,This is done after undocking of robot.
 495.301,499.651,"The surgeon confirms hemostasis, ensuring there is no active bleeding in the surgical field."
 500.151,507.817,"The surgeon extracts the myoma by morselation, visibly fragmenting the tissue for removal."
-508.317,518.946,This again has to be done taking care not to injure any visceral organ or bowel because this is a dangerous instrument and should be handled with care.
-519.446,529.168,It takes time in order to morselate these large myomas but one should be patient in order to provide
-529.668,542.538,the minimally invasive advantage to the patient.
 543.038,554.226,"The surgeon closes the peritoneal covering after extracting the myoma, confirms hemostasis, and removes the pores under direct visualization."

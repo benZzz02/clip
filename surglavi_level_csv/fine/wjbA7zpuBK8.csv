@@ -1,6 +1,4 @@
 start,end,text
-0.729,15.841,"We present the case of a sixty-six years old male patient, BMI of thirty point six, diagnosed with a locally advanced rectal adenocarcinoma located five centimeters from the anal verge and concurrent prostatic adenocarcinoma of posterior basal right lobe."
-0.729,15.841,"We present the case of a sixty-six years old male patient, BMI of thirty point six, diagnosed with a locally advanced rectal adenocarcinoma located five centimeters from the anal verge and concurrent prostatic adenocarcinoma of posterior basal right lobe."
 16.341,21.605,"The da Vinci robot system SI is utilized in a single docking approach to perform the prostatectomy, with robotic arms positioned for precise surgical manipulation."
 16.341,21.605,"The da Vinci robot system SI is utilized for the surgery with a single docking approach, indicating the use of robotic arms for precise manipulation within the surgical field."
 22.105,33.625,"The patient is positioned in a modified lithotomy position with a 30-degree Trendelenburg tilt to the right side, facilitating surgical access to the pelvic region."
@@ -8,7 +6,6 @@ start,end,text
 34.125,43.12,"The surgeon begins the dissection of the inferior mesenteric artery from its origin at the aorta, using a medial to lateral approach."
 34.125,43.12,"The surgeon begins the dissection of the inferior mesenteric artery near its origin at the aorta, using a medial to lateral approach."
 43.62,68.202,"The surgeon utilizes bipolar and monopolar energy devices throughout the prostatectomy procedure, visible in the surgical field."
-43.62,68.202,Only bipolar and monopolar energy devices are used for the entire procedure.
 68.702,116.852,"The surgeon uses surgical clips to divide the inferior mesenteric vein, ensuring secure ligation before transection."
 68.702,116.852,"The surgeon uses surgical clips to divide the inferior mesenteric vein, visible within the surgical field."
 117.352,150.501,"The surgeon uses the da Vinci robotic system to mobilize the entire left colon and left splenic flexure, ensuring the structures are free for an attention-free anastomosis."
@@ -33,5 +30,3 @@ start,end,text
 527.946,549.342,"Following the division between the descending colon and the sigmoid colon, the surgeon performs a purse-string suture to facilitate the positioning of a 29mm anvil for an end-to-end anastomosis."
 549.842,584.995,"The surgeon completes the procedure by performing an end-to-end staphylococcal anastomosis, placing a semi-aspirative drain, and creating a diverting ileostomy."
 549.842,584.995,"The surgeon completes the procedure by performing an end-to-end anastomosis, placing a semi-aspirative drain, and creating a diverting ileostomy."
-585.495,591.751,"The extracted surgical specimen is displayed, showing a complete resection of adenocarcinomas with no visible nodal involvement."
-585.495,591.751,"The surgical specimen is displayed, showing a complete resection of both adenocarcinomas with no visible nodal involvement."

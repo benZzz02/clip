@@ -1,44 +1,19 @@
 start,end,text
-0.554,5.279,"Hello, I'm sharing another laparoscopic appendectomy for appendicitis."
-0.554,5.279,"Hello, I'm sharing another laparoscopic appendectomy for appendicitis."
 5.779,10.923,A large phlegmon is visible at the base of the cecum during the laparoscopic appendectomy procedure.
 5.779,10.923,A large phlegmon is visible at the base of the cecum during the laparoscopic appendectomy procedure.
-11.423,16.648,And the patient's story was that they had over a week of pain and fevers.
-11.423,21.112,"And the patient's story was that they had over a week of pain and fevers. They were reluctant to come into the emergency room, which is why it got this bad."
-17.148,21.112,"They were reluctant to come into the emergency room, which is why it got this bad."
-21.612,24.425,The finding on CAT scan was read as phlegmon.
-21.612,24.425,The finding on CAT scan was read as phlegmon.
-24.925,28.668,I know there's a lot of differences in the way you can manage patients like this.
-24.925,28.668,I know there's a lot of differences in the way you can manage patients like this.
-28.708,35.612,"You could choose to give antibiotics and wait for things to cool down, or you can go in for surgery."
-28.708,35.612,"You could choose to give antibiotics and wait for things to cool down, or you can go in for surgery."
-35.672,42.017,"Obviously, a lot of people have concerns that with surgery, there could be conversion to open or the need for an ileocolic resection."
-35.672,47.42,"Obviously, a lot of people have concerns that with surgery, there could be conversion to open or the need for an ileocolic resection. I'm very comfortable with these and just going to the operating room. And that's what I chose for this patient."
-42.517,45.078,I'm very comfortable with these and just going to the operating room.
-45.098,47.42,And that's what I chose for this patient.
 47.92,74.583,"The surgeon carefully manipulates the omentum to clear the view of the appendix, preparing to visualize the anatomical structures for the appendectomy procedure."
 47.92,74.583,The surgeon carefully retracts the omentum away from the appendix to improve visibility of the surgical field.
 75.083,85.527,"The omentum is visibly wrapped around the inflamed appendix, demonstrating its role in containing inflammation within the abdominal cavity."
 75.083,85.527,"The omentum is visibly draped over the inflamed appendix, attempting to contain the inflammation within the abdominal cavity."
-85.607,96.062,"And certainly there was no spread of any perforation anywhere throughout the patient's abdomen, just a very localized phlegmon."
-85.607,96.062,"And certainly there was no spread of any perforation anywhere throughout the patient's abdomen, just a very localized phlegmon."
-96.562,108.89,"I think this case is a good one to show that if you're just careful and you stay in an area of known to unknown, you can always get to the base of the cecum with the junction of the appendix."
-96.562,108.89,"I think this case is a good one to show that if you're just careful and you stay in an area of known to unknown, you can always get to the base of the cecum with the junction of the appendix."
-109.39,113.253,And I can actually see that coming up shortly here.
 109.39,127.304,"The surgeon identifies the yellow anti-mesenteric fat on the terminal ileum, visible just above the ligature."
 113.753,127.304,"The surgeon identifies the yellow anti-mesenteric fat on the terminal ileum, visible just above the ligature."
 127.804,129.805,"The surgeon visually identifies the base of the appendix, which is clearly exposed in the surgical field."
 127.804,141.434,The surgeon identifies the base of the appendix and maneuvers to gain a clear view of it by retracting surrounding tissues.
-129.825,141.434,And I'm just trying to get myself back to that.
 141.934,148.699,"The surgical field reveals unfolding anatomical structures, with the appendix base becoming more visible as the dissection progresses."
-141.934,148.699,And now things are kind of unfolding a little bit.
 149.199,153.76,"The surgeon observes the curlicue appearance of the folded appendix, highlighting its distinctive twisted shape."
 149.199,153.76,"The surgeon observes the curlicue nature of the folded appendix, highlighting its twisted appearance."
 154.26,159.123,"The surgeon mobilizes the terminal ileum and the cecum to elevate the appendix, adjusting the position of these structures for better access."
 154.26,161.424,"The surgeon mobilizes the terminal ileum and the cecum to improve access to the appendix, ensuring the ureter is checked for safety during this maneuver."
-159.623,161.424,Always check the ureter before you do this.
-161.504,163.426,I think it's good practice.
-161.504,201.983,I think it's good practice. This is just a nice maneuver in order to get the cecum and the appendix to become a little bit more mobile and you can manipulate it to get a little bit more angles for dissection and plan of attack.
 163.926,201.983,"The surgeon performs a maneuver to increase the mobility of the cecum and appendix, allowing for better manipulation and improved angles for dissection."
 202.483,214.973,"The surgeon exposes the wall of the cecum, providing a clear view of its surface during the appendectomy procedure."
 202.483,214.973,"The surgeon exposes the wall of the cecum, providing a clear view of its surface during the appendectomy procedure."
@@ -50,9 +25,7 @@ start,end,text
 225.181,229.66,"The surgeon identifies the anatomical location of the appendix, positioned above the terminal ileal fat, facilitating further dissection."
 230.16,236.103,"The surgeon attempts to cut through the tissue near the mesoappendix, using a technique that involves visible manipulation of the surrounding structures."
 230.16,236.103,"The surgeon attempts to transect tissue in the area around the mobilized terminal ileum and cecum, using an instrument to cut through the targeted section."
-236.603,241.365,"Just double checking again, make sure I understand how I think the appendix is folded on itself."
 236.603,244.706,"The surgeon examines the appendix, noting its folded position and identifying the base of the appendix for further dissection."
-241.865,244.706,This being the base right there.
 245.206,251.449,"The surgeon considers dividing the base of the appendix before addressing the mesoappendix, indicating a strategic approach to the appendectomy procedure."
 245.206,259.763,"The surgeon divides the base of the appendix and proceeds to dissect through the mesoappendix, revealing pus draining from the inflamed tissue."
 251.949,256.35,"The surgeon uses an instrument to cut through the tissue, accessing the phlegmon area adjacent to the appendix."
@@ -62,34 +35,12 @@ start,end,text
 264.866,272.532,"The surgeon takes a small bite into the tissue, creating a plane between the anti-mesenteric fat of the terminal ileum and the mesoappendix."
 264.866,292.747,"The surgeon takes a small bite to access the plane between the anti-mesenteric fat of the terminal ileum and the mesoappendix. With this area cleared, the surgeon proceeds to dissect through the mesentery."
 273.032,292.747,"The surgeon proceeds to cut through the mesentery, having cleared the surrounding tissue to ensure safe dissection."
-293.247,298.589,I was fully aware that I could make a hole in the cecum.
-293.247,303.511,"I was fully aware that I could make a hole in the cecum. If that's the case, I'm prepared to over-sew things."
-299.089,303.511,"If that's the case, I'm prepared to over-sew things."
-304.011,308.893,I know we always can send patients like this or all appendixes for a possible iliac colorectal resection.
-304.011,320.076,"I know we always can send patients like this or all appendixes for a possible iliac colorectal resection. In my entire career, I've only had to do that once, and that was for basically a blown-out cecum with a giant hole right adjacent to the ileocecal valve."
-309.393,320.076,"In my entire career, I've only had to do that once, and that was for basically a blown-out cecum with a giant hole right adjacent to the ileocecal valve."
-320.576,328.545,Here's the last bit of the...
-320.576,328.545,Here's the last bit of the...
 329.045,336.587,"The surgeon manipulates the appendix, revealing a thinned-out base of the appendix during the appendectomy procedure."
 329.045,356.646,"The surgeon manipulates the mesoappendix, revealing the base of the appendix, which appears thinned out. The surgeon uses a ligature to secure a portion of the tissue, although there is difficulty in grasping it."
-337.087,340.687,I do think that I caught a little bite with my ligature there.
-340.707,356.646,"I'm having a hard time grabbing this thing, but there you can see it."
 357.146,364.871,The surgeon addresses the last portion of the meso-appendix or phlegmon rind on the lateral aspect of the appendix.
 357.146,374.337,"The surgeon elevates the remaining meso-appendix or phlegmon on the lateral aspect, preparing to transect it with a ligature. The tissue is visibly lifted, allowing for clear access to complete the dissection."
-365.291,368.314,"Now that it's up in the air, I'm kind of debating what should I do."
-368.814,374.337,"In the past, what I've done is I just transect this with the ligature and then I'll over-sew the hole."
 374.357,377.219,"The surgeon prepares to use an opened surgical stapler, likely for transecting or securing tissue during the appendectomy procedure."
 374.357,382.248,"The surgeon uses a stapler to secure the base of the appendix, preparing to transect the remaining meso-appendix tissue."
-377.279,382.248,I decided to use it.
-382.748,385.729,And then my plan was after doing that to over-sew.
-382.748,391.451,And then my plan was after doing that to over-sew. I'm not really sure if the stapler added anything in this case versus just over-sewing it.
-386.229,391.451,I'm not really sure if the stapler added anything in this case versus just over-sewing it.
-391.651,399.454,"I think for those of you who might not be comfortable with your sewing, the stapler is a nice addition to it."
-391.651,409.678,"I think for those of you who might not be comfortable with your sewing, the stapler is a nice addition to it. I don't necessarily think that an end-of-loop would be that secure on something like this. I'm taking a look at it and kind of deciding how I want to over-sew this. And since I have a little..."
-399.954,404.616,I don't necessarily think that an end-of-loop would be that secure on something like this.
-405.116,408.197,I'm taking a look at it and kind of deciding how I want to over-sew this.
-408.277,409.678,And since I have a little...
-410.178,411.239,Tiny nub in there.
 410.178,414.842,The surgeon identifies a tiny nub at the base of the appendix and prepares to over-sew it using a couple of figure-of-eight sutures.
 411.459,414.842,"The surgeon prepares to over-sew the appendiceal stump using a series of figure-of-eight sutures, ensuring secure closure of the tissue."
 415.342,424.931,The surgeon cleans the surgical area and prepares to use a 2-0 Vicryl suture for closure.
@@ -99,33 +50,7 @@ start,end,text
 435.959,456.35,"The surgeon uses a long suture to take large bites of tissue, bunching it up around the stump of the appendix."
 440.39,444,"The surgeon takes large bites with the suture needle beneath the stump of the appendix, preparing to secure the area with sutures."
 444.5,456.35,"The surgeon attempts to bunch up the surrounding tissue near the stump of the appendix, preparing for further suturing."
-456.85,465.798,I do not leave drains for appendixes like this and in fact I very rarely leave drains even for perforated appendicitis.
-456.85,475.767,I do not leave drains for appendixes like this and in fact I very rarely leave drains even for perforated appendicitis. This is the type of patient that I do leave on antibiotics for about three days. The vast majority of my appendicitis cases I will send home from the recovery room.
-466.298,471.543,This is the type of patient that I do leave on antibiotics for about three days.
-472.043,475.767,The vast majority of my appendicitis cases I will send home from the recovery room.
-476.267,485.092,This was a patient that I left in house for about twenty three hours for IV antibiotics prior to discharge.
-476.267,495.778,This was a patient that I left in house for about twenty three hours for IV antibiotics prior to discharge. Given the inflammatory markers for her were so high with a white count over twenty seven thousand and fevers to one hundred and three. This is my second suture.
-485.592,492.116,Given the inflammatory markers for her were so high with a white count over twenty seven thousand and fevers to one hundred and three.
-492.136,529.489,This is my second suture.
 492.136,529.489,"The surgeon places the second suture using a two-oh Vicryl, taking large bites beneath the stump of the appendix."
-529.989,542.939,I do think I've seen a lot of surgeons and other doctors manage appendicitis like this with the CAT scan read that the patient had with antibiotics and potential appendectomy at a later time.
-529.989,548.842,I do think I've seen a lot of surgeons and other doctors manage appendicitis like this with the CAT scan read that the patient had with antibiotics and potential appendectomy at a later time. I don't necessarily disagree with that. I just feel very comfortable with the approach of going to the operating room early.
-543.439,545.44,I don't necessarily disagree with that.
-545.54,548.842,I just feel very comfortable with the approach of going to the operating room early.
-548.862,555.367,"This is a young, healthy person, and I just wanted this process to be over and done with with her."
-548.862,555.367,"This is a young, healthy person, and I just wanted this process to be over and done with with her."
 555.867,558.87,"The surgeon performs an omentopexy, securing the omentum to the abdominal wall as an additional measure during the appendectomy procedure."
 555.867,596.797,"The surgeon performs an omentopexy by taking a bite of the omentum and securing it to the lateral border of the appendix stump, ensuring it remains in place to seal the area."
-558.89,564.936,"I probably could have just left the omentum, flopped over top of it, but I wanted to make sure that it stayed there."
 565.436,596.797,The surgeon takes a bite with a suture at the lateral border of the appendix stump to ensure a secure seal at the site.
-597.297,610.315,I have a little suture management issue here.
-597.297,610.315,I have a little suture management issue here.
-610.815,614.415,This patient did do well.
-610.815,635.217,"This patient did do well. I think early in my career, when I've had cases like this with that stump of the appendix, I probably left a drain. I have not had any concerns. I've not had any stump leaks. I've not had any abscesses. So I'm very happy with leaving things as they are. And this is another patient who did well, and that's just my approach. I hope you enjoyed."
-614.915,621.782,"I think early in my career, when I've had cases like this with that stump of the appendix, I probably left a drain."
-621.802,624.425,I have not had any concerns.
-624.465,625.747,I've not had any stump leaks.
-625.787,627.168,I've not had any abscesses.
-627.188,630.372,So I'm very happy with leaving things as they are.
-630.392,634.036,"And this is another patient who did well, and that's just my approach."
-634.536,635.217,I hope you enjoyed.

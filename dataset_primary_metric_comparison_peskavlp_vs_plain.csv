@@ -1,0 +1,13 @@
+dataset,primary_metric,peskavlp,plain,delta_peskavlp_minus_plain,winner
+autolaparo_phase,overall_accuracy,0.5642908054,0.5527441197,0.0115466857,peskavlp
+bern_bypass70_phase,overall_accuracy,0.1430670969,0.1070655057,0.0360015912,peskavlp
+cholec80_instrument,overall_mAP,0.3739166256,0.4010682469,-0.0271516213,plain
+cholec80_phase,overall_accuracy,0.5040061493,0.5092564848,-0.0052503355,plain
+cholect50_triplet,triplet_mAP,0.0392026365,0.0409015243,-0.0016988878,plain
+grasp_instrument,overall_mAP,0.4360382070,0.4511083476,-0.0150701407,plain
+grasp_phase,overall_accuracy,0.2369163345,0.2615567522,-0.0246404177,plain
+grasp_step,overall_accuracy,0.1412453085,0.1129216495,0.0283236590,peskavlp
+heichole_instrument,overall_mAP,0.3462889625,0.3555392434,-0.0092502809,plain
+heichole_phase,overall_accuracy,0.4857422663,0.5229563915,-0.0372141252,plain
+sarrarp50_phase,overall_accuracy,0.1371191136,0.1802092952,-0.0430901816,plain
+stras_bypass70_phase,overall_accuracy,0.2140192591,0.1688427171,0.0451765420,peskavlp

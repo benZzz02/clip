@@ -1,10 +1,4 @@
 start,end,text
-0.723,3.764,So here I'm sharing a case of complicated diverticulitis.
-0.723,3.764,So here I'm sharing a case of complicated diverticulitis.
-4.184,16.388,"Patients had numerous attacks and now has developed a fistula likely to the left fallopian tube, as well as what looks like on MRI a fistula to the cervix."
-4.184,16.388,"Patients had numerous attacks and now has developed a fistula likely to the left fallopian tube, as well as what looks like on MRI a fistula to the cervix."
-16.888,18.268,So she elected for resection.
-16.888,18.268,So she elected for resection.
 18.468,20.489,"The surgeon has completed the separation of the appendix from surrounding tissues, revealing the anatomical structures involved in the colectomy procedure."
 18.468,20.489,"The surgeon has completed the separation of the appendix from surrounding tissues, revealing the anatomical structure clearly."
 20.649,24.27,"The surgeon performs a quick appendectomy, addressing a potential injury observed during the procedure."
@@ -14,22 +8,18 @@ start,end,text
 32.066,33.668,"The surgeon cleans off the base of the appendix, removing any residual tissue or debris from the area."
 33.728,42.316,"The surgeon performs suture ligation using a zero silk thread, tying off the targeted structure in the surgical field."
 33.728,42.316,The surgeon performs a suture ligation using a zero silk suture to secure the base of the appendix.
-42.816,49.322,Do two of these.
-42.816,49.322,Do two of these.
 49.822,53.652,The surgeon divides the appendix from its base and removes it from the surgical field.
 49.822,53.652,The surgeon divides the appendix and removes it from the surgical field.
 54.152,56.294,"The surgeon begins the medial to lateral dissection, carefully separating the mesenteric tissue from the colon using surgical instruments."
 54.152,56.294,"The surgeon proceeds with a medial to lateral dissection, likely involving the separation of tissue layers and structures in the surgical field."
 56.454,94.574,"The surgeon leaves the lateral fibrotic and inflammatory adhesions attached to the sidewall, using them as natural retraction while proceeding with the medial to lateral dissection. The retroperitoneal plane remains unaffected by the inflammatory response."
 56.454,68.987,"The surgeon leaves the lateral fibrotic and inflammatory adhesions attached to the sidewall, utilizing them as natural retraction during the procedure."
-69.487,75.933,And usually the retroperitoneal plane is unviolated by the inflammatory response.
 76.013,94.574,"The surgeon proceeds with a medial to lateral dissection, continuing the separation of tissue layers in the surgical field."
 95.074,108.108,"The surgeon navigates beneath the superior hemorrhoidal vessel, identifying a large inflamed lymph node and locating the ureter."
 95.074,102.241,"The surgeon begins dissection beneath the superior hemorrhoidal vessel, visually searching for the ureter in the surgical field."
 102.481,105.925,A large inflamed lymph node is visible in the surgical field.
 106.425,108.108,"The surgeon visually identifies the ureter, which is exposed in the surgical field."
 108.608,132.125,"The surgeon uses ICG fluorescence to meticulously dissect down into the pelvis, carefully navigating around the ureter, which is intimately involved in the inflammatory reaction."
-108.608,112.451,You'll see in a little bit why I really like ICG and the ureters.
 112.491,115.148,"The surgeon attempts to dissect down into the pelvic region, navigating through the surrounding tissues."
 115.648,132.125,"The surgeon performs a meticulous dissection around the ureter, which is closely involved in the inflammatory reaction, using ICG mode to enhance visualization and avoid injury."
 132.625,165.152,"The surgeon isolates the superior hemorrhoidal vessel, meticulously cleaning surrounding tissue to ensure the vessel is clearly defined before using a vessel sealer."
@@ -43,33 +33,23 @@ start,end,text
 180.788,185.83,"After completing the medial dissection, the surgeon places a sponge underneath to maintain the ureter in a posterior position."
 185.85,189.552,"The surgeon performs lateral dissection, carefully separating tissue layers to isolate anatomical structures."
 189.832,210.016,"The surgeon joins the previous medial dissection, with a visible sponge placed to keep the ureter posterior. The surgical field shows the completed lateral dissection, including the mobilization of the splenic flexure to gain length for the lower anastomosis."
-189.832,203.478,"Not shown in this video was that I did a full lateral dissection, including mobilization of the splenic flexure in order to gain length for the anastomosis as this anastomosis was much lower than a standard sigmoid."
 203.978,206.359,"The surgeon joins the previously completed medial dissection, connecting it to the lateral dissection area."
 206.399,210.016,"A sponge is visible in the surgical field, positioned to keep the ureter posterior during the procedure."
 210.516,231.947,"The surgeon attempts to dissect down towards the left pelvic brim, where the tissue is notably adherent. Blunt dissection is employed to navigate into the true anatomical plane, highlighting the challenging nature of this part of the procedure."
 210.516,217.059,"The surgeon attempts to dissect down towards the left pelvic brim, encountering dense adhesions that make the tissue appear tightly adhered."
-217.079,226.064,And you'll see later on how challenging this part of the dissection becomes.
 226.564,231.947,"The surgeon uses blunt dissection to carefully enter the true anatomical plane, separating tissue layers."
 232.447,270.008,"The surgeon performs pelvic dissection, freeing the right fallopian tube and ovary. The sigmoid colon is visibly stuck deep in the pelvis, adherent to the posterior aspect of the uterus and cervix due to chronic inflammation."
-232.447,238.088,"But this just proved really, really challenging due to the chronic inflammation."
-238.588,241.049,Obviously these operations can be done laparoscopically.
-241.069,250.653,"I find that with the strength of the robotic arms to be able to get the torque that we're getting here for retraction, robotic in my hands is a lot easier."
 251.153,255.415,"The surgeon performs pelvic dissection, addressing areas where tissue is visibly adherent and challenging to separate."
 255.455,257.236,"The surgeon successfully frees the right fallopian tube and ovary, separating them from surrounding tissue."
 257.256,270.008,The surgeon observes the lupus sigmoid deeply adhered to the posterior aspect of the uterus and cervix within the pelvis.
 270.508,296.347,"The surgeon encounters difficulty with the dissection, using a suction device to perform blunt dissection. The surgical field becomes bloody during this process."
-270.508,273.23,really having a lot of trouble with that part of the dissection.
 273.27,286.78,"The surgeon uses a suction device to perform blunt dissection, maneuvering the instrument to separate tissue layers."
-287.28,289.562,These operations are not always very glamorous.
 289.582,293.746,"The surgical field becomes bloody at certain points, indicating areas of active bleeding or tissue trauma."
-294.246,296.247,I don't think there's really much that you can do about that.
 296.347,317.657,"The surgeon suspends the uterus to free the robotic arm for retraction, allowing continued dissection deep in the pelvis."
 296.347,300.202,"The surgeon suspends the uterus after freeing it from surrounding tissues, using visible surgical techniques to maintain its position."
 300.702,314.734,"The surgeon frees the first robotic arm, allowing it to be used for retraction during the procedure."
 315.234,317.657,"The surgeon continues to work deep in the pelvis, manipulating tissues and structures within the pelvic cavity."
 317.677,346.509,"The surgeon examines the area where the MRI suggested a fistula from the lupus sigmoid to the cervix or upper vagina. The visual inspection reveals no significant granulation tissue, indicating possible adherence rather than a true fistula. A fistula to the left fallopian tube is identified."
-317.677,327.537,"And again, the MRI suggested that there was a separate fistula down here from the lupus sigmoid to either the cervix or upper vagina."
-328.037,346.509,"I didn't really come across much granulation tissue in this area, so I'm not sure if that was just adherence or a true fistula, but clearly there was a fistula to the left fallopian tube, and you'll see that in a little bit."
 347.009,394.874,"The surgeon identifies granulation tissue associated with a fistula and locates a plane lateral and inferior to the left fallopian tube and ovary. Using blunt dissection, the surgeon frees the left tube and ovary, which are adhered to the medial aspect of the sigmoid colon. The suction device is positioned around the fallopian tube, and the surgeon prepares to divide and remove the tube and ovary en bloc with the colon, facilitating further dissection in the left pelvic brim."
 347.009,360.628,The surgeon identifies granulation tissue associated with the fistula and locates a plane lateral and inferior to the left fallopian tube and ovary.
 361.128,365.169,"The surgeon uses blunt dissection to free tissue deep in the pelvis, continuing the process of separating anatomical structures."
@@ -81,10 +61,7 @@ start,end,text
 395.374,403.977,"The surgeon uses a suction device to clean the surgical field, removing debris and fluids around the left tube and ovary, which are adhered to the medial aspect of the sigmoid colon."
 404.477,406.178,"The surgeon navigates deep into the pelvic region, focusing on the area where the left fallopian tube and ovary are adhered to the medial aspect of the sigmoid colon."
 406.678,410.619,"The surgeon encounters the colon adhered to the anterior peritoneal reflection, indicating a challenging area for dissection."
-411.119,417.254,"Just showing, you know, she clearly had an abscess down deep in there and causing some"
 417.754,422.543,"The surgeon separates the distal sigmoid loop from the anterior peritoneal reflection, revealing the anatomical structures involved in the dissection."
-422.583,425.067,"Again, I don't think that there was truly a fistula down here."
-425.087,437.514,I think it was just stuck from the abscess and the rind.
 438.014,503.327,"The surgeon uses scissors to carefully dissect through the problematic area near the ureter, aiming to avoid incorporating the left pelvic sidewall or branches of the internal iliac into the dissection plane. Blunt dissection is employed to minimize thermal spread to the ureter, followed by the use of a ligature to complete the dissection. Minor bleeding from the sidewall is managed with Surgicil, which effectively stops the bleeding by the end of the operation."
 438.014,442.896,"The surgeon examines the area of concern near the ureter, where previous difficulties were encountered."
 442.996,448.859,"The surgeon uses scissors to carefully carve through the tissue, attempting to find a suitable dissection plane."
@@ -92,28 +69,16 @@ start,end,text
 460.085,469.354,"The surgeon performs blunt dissection in the pelvic region, attempting to improve visibility and separate tissue layers while avoiding nearby structures."
 469.854,480.201,The surgeon carefully avoids thermal spread to the ureter while completing the dissection using a ligature device.
 480.221,484.643,A small amount of bleeding is observed from the pelvic sidewall.
-484.803,503.327,"You'll see later on I just put a Surgicil on that for the remainder of the operation, and when I was done, the bleeding there had stopped."
 503.827,522.882,"The surgeon has successfully removed the lupus sigmoid from the pelvis and is now cleaning the distal rectal mesentery to prepare for transection. The transection point is located lower than usual for a sigmoid resection, with the anastomosis positioned just above the peritoneal reflection."
 503.827,511.694,"The surgeon has successfully mobilized the lupus sigmoid out of the pelvis and proceeds to clean the distal rectal mesentery, preparing the area for distal transection."
-512.194,519.4,This is actually much lower than you standard would for a sigmoid resection.
 519.9,522.882,"The anastomosis is positioned just above the peritoneal reflection, indicating the completion of the connection between the bowel segments."
 522.902,557.879,"The surgeon excises the upper rectum, which is visibly scarred and damaged by disease, and proceeds to take the proximal mesentery. The splenic flexure has already been taken down, and the inferior mesenteric vein (IMV) is later transected near the duodenum to ensure adequate length."
 522.902,536.82,"The surgeon excises the upper rectum, which appears scarred and damaged due to disease."
 537.32,539.122,"The surgeon proceeds to dissect and remove the proximal mesentery, preparing the area for further surgical steps."
-539.302,544.627,"As I said, I previously had taken down the entire splenic flexure."
-545.127,554.535,"And actually later after I'm doing what I'm doing right now, I actually went up ahead and took the IMV right at the duodenum in order to get adequate length."
-554.976,557.879,I just edited that out for time.
 558.379,579.033,The surgeon prepares for a distal colorectal anastomosis by marking the division site with cautery after ensuring adequate perfusion. Indocyanine green (ICG) is used to assess perfusion before proceeding with the division.
-558.379,564.847,"But after having done these maneuvers, I had more than adequate length to reach for basically a distal colorectal anastomosis."
-565.347,566.347,Always check perfusion.
 566.427,571.39,"The surgeon uses a cautery device to make a mark on the tissue, indicating the location for division after the indocyanine green (ICG) dye has washed out."
-571.89,579.033,And I'm going to go ahead and do that now.
 579.533,601.873,"The surgeon prepares to divide the distal rectum, opting for an intracorporeal hand-sewn anastomosis due to concerns about potential tearing during transrectal extraction. The specimen is kept intact to avoid complications with chopping it into smaller pieces."
-579.533,580.673,And then I'll divide distal.
 580.873,584.355,"The surgeon prepares to perform an intracorporeal anastomosis, indicating the chosen technique for connecting the bowel segments within the abdominal cavity."
-584.855,590.665,I did not want to do a transrectal extraction because I was very concerned about that distal rectum.
-591.165,595.908,getting torn and I knew that it was going to be very challenging to chop up that specimen into smaller pieces.
-595.968,601.873,"So I decided to just do a hand-sewn anastomosis, which has become my routine."
 602.373,762.255,"The surgeon sutures the two posterior staple lines together to form an outer posterior layer, checking perfusion to ensure satisfactory blood flow. A proctotomy and collotomy are made using scissors, followed by suturing the inner back row with a 3-0 B-lock suture, starting in the middle and moving around the left side of the anastomosis. The needle is turned for better angle, and suturing continues towards the right side, completing the inner anterior row with a baseball stitch over the top. The sutures are tied together for added security, and the original 3-0 B-lock is used to reinforce the anterior suture line."
 602.373,609.598,"The surgeon sutures the two posterior staple lines together, forming an outer posterior layer of the anastomosis."
 610.098,613.12,"The surgeon visually assesses the perfusion of the anastomosis site, ensuring adequate blood flow to the tissue."
@@ -121,7 +86,6 @@ start,end,text
 620.683,626.469,"The surgeon performs a collotomy using scissors, making an incision into the colon."
 626.969,627.83,"The surgeon begins suturing the tissue, continuing the hand-sewn anastomosis process."
 627.85,640.423,"The surgeon begins suturing the inner back row using a 3-0 B-lock suture, starting from the middle and extending around the left-hand side."
-640.923,645.256,You've seen me do this in a lot of my other videos.
 645.756,652.42,"The surgeon performs an anastomosis deep in the pelvis, where the bowel edges appear irregular and frayed."
 652.92,659.184,"The surgeon sutures around the left side of the anastomosis, completing the outer layer of the bowel connection."
 659.684,663.786,The surgeon rotates the needle to position it on the outside of the tissue during the suturing process.
@@ -129,15 +93,9 @@ start,end,text
 685.033,690.363,"The surgeon turns the needle around to achieve a better angle for suturing, focusing on the anastomosis site deep in the pelvis."
 690.863,695.612,"The surgeon performs a baseball stitch over the top of the anastomosis, securing the bowel edges in place."
 696.112,711.524,"The surgeon is working on the inner anterior row of the anastomosis, focusing on precise placement of sutures in this section."
-712.024,715.629,You can slow this part down in YouTube if you'd like to see it a little bit closer.
-715.689,723.981,"But again, I have many other better demonstrations of this anastomosis than what you're seeing here."
 724.481,733.772,The surgeon ties two sutures together to provide additional security to the anastomosis.
 734.272,762.255,The surgeon takes the original 3-0 braided suture used for the posterior row and brings it around anteriorly to reinforce the inner suture line.
 762.755,810.472,"The surgeon sutures the corner of the anastomosis to ensure closure, tying the V-lock suture to a silk suture beyond the anastomosis for security. A leak test is performed using a 19mm proctoscope to confirm patency, followed by a vaginoscopy to check for defects, concluding the operation with no visible leaks."
-762.755,771.682,And just for additional security to make sure that I've got that whole corner closed because you can see it's kind of tough to see exactly where the anastomosis is and where the bowel keeps on going.
 771.722,786.013,"The surgeon sutures out to the silk, ensuring it extends beyond the anastomosis, and ties the V-lock suture to the silk for complete closure."
 786.513,797.702,The surgeon completes the anastomosis and performs a leak test by inserting a 19mm proctoscope through the anastomosis to confirm its patency.
 798.202,810.472,"The surgeon performs a vaginoscopy, observing no defects in the vaginal tissue. The distension appears adequate, with no visible bubbles indicating leaks, leading to the conclusion of the operation."
-810.972,814.615,"Patient did well, discharged on post-operative day two. Thank you for watching."
-810.972,813.674,"Patient did well, discharged on post-operative day two."
-813.894,814.615,Thank you for watching.

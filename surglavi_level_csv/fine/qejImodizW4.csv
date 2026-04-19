@@ -1,9 +1,5 @@
 start,end,text
-2.079,8.061,"The surgeon begins the gastric bypass procedure using the da Vinci XI robotic system, placing ports on the patient's abdomen to facilitate robotic instrument access."
-8.561,22.206,"The surgeon positions the robotic ports in a straight line directed toward the upper abdomen, preparing for the gastric bypass procedure."
-22.706,33.586,"The surgeon places the assistant port just to the right of the umbilicus using a non-bladed optical entry trocar, preparing for the gastric bypass procedure."
 34.086,42.77,"The surgeon uses the camera through the assistant port to place the eight and a half millimeter robotic operating ports, including a twelve millimeter robotic stapler port, in the upper abdomen."
-42.89,48.513,I like it in my right hand. You could also put it in your left hand on the other side.
 49.013,59.914,"The surgeon begins the gastric bypass operation along the lesser curvature of the stomach, creating a window into the lesser sac. The ender wrist stapler is used to perform this step."
 60.414,66.618,"The surgeon uses the wristed function of the stapler to create the gastric pouch, demonstrating precise control and maneuverability in the upper abdomen."
 66.638,72.701,"The surgeon adjusts the angle of the stapler to create the gastric pouch, utilizing various approaches to ensure precise formation along the lesser curvature."
@@ -27,4 +23,3 @@ start,end,text
 388.059,418.656,"The surgeon closes the enterotomy on the jejuno-jejunostomy using an absorbable V-lock suture, performing a running full-thickness closure along the small enterotomy. Upon reaching the top, the surgeon reverses direction to apply a second layer of serosal stitches, effectively burying the first layer."
 419.156,447.147,"The surgeon creates a tight, secure suture line along the mesentery, using a single suture to close the mesentery defect. The third arm of the surgical instrument holds the mesentery in position, allowing efficient stitching across the defect."
 447.587,475.754,"The surgeon completes a two-layer closure on the enterotomy, followed by a mesentery closure using a V-lock suture. The tail of the V-lock is used to finalize the closure, with options for additional stitches to relieve tension. The operation is facilitated by the use of an ender wrist stapler."
-476.254,481.177,"If you'd like any more information on this or other robotic procedures, check out my website at clarkgerhart.com."

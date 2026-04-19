@@ -1,8 +1,6 @@
 start,end,text
-2.042,14.066,This is a total laparoscopic Whipple procedure with an interesting reconstruction.
 14.566,21.188,"The patient is positioned in Trendelenburg, and the surgeon initiates the procedure using a medial approach to access the duodenum."
 21.208,25.389,"The surgeon fully mobilizes the duodenum, completing the process of Kocherization to expose the duodenum and surrounding structures."
-25.79,34.036,Here's the posterior surface.
 34.536,43.263,"Following the cocharization of the duodenum, the surgeon identifies the groove of the superior mesenteric vein, visible as a distinct anatomical landmark."
 43.763,52.069,"The surgeon identifies the bowel just distal to the ligament of Treitz and divides it using a surgical stapler, visibly separating the bowel segment."
 52.569,60.419,"The surgeon delivers the bowel into the right upper quadrant, positioning it for further surgical manipulation."
@@ -25,7 +23,6 @@ start,end,text
 240.331,249.638,"The lateral view shows the bile duct with a lymph node being carefully dropped down, revealing the spatial relationship between these structures."
 250.138,253.363,The right hepatic artery is visible in the surgical field.
 253.863,257.504,The surgeon uses a bulldog clamp to control the bile duct before proceeding to divide it.
-258.004,265.546,This helps prevent spillage of excessive bile during the operation.
 266.046,279.699,"The surgeon divides the bile duct while preserving the right hepatic artery, which remains visible in the surgical field."
 280.199,287.024,"The uncinate process remains attached to the superior mesenteric artery (SMA) and superior mesenteric vein (SMV), visible as the final point of attachment in the surgical field."
 287.524,290.567,"The surgical field shows the lesion positioned at a safe distance from the superior mesenteric artery (SMA), ensuring no immediate risk of vascular involvement."
@@ -53,5 +50,3 @@ start,end,text
 532.657,537.307,"The surgeon creates a common channel by firing a surgical stapler, joining the structures with precise alignment."
 537.807,549.116,"The surgeon closes the gastroenterostomy in two layers using running braided 3-0 sutures, ensuring secure approximation of the tissue edges."
 549.616,550.577,The surgeon places the final stitch to complete the closure of the anastomosis.
-551.077,553.659,The anastomosis looks pretty good.
-554.159,554.88,This patient did well.

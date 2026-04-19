@@ -1,7 +1,4 @@
 start,end,text
-1.435,11.78,This is a robotic parasophageal hernia repair with mesh and collis gastroplasty in the setting of prior Roux-en-Y gastric bypass.
-12.28,25.187,The patient is a thirty-six year old female who presented with intermittent nausea and vomiting with meals for the past two months with history of gastric bypass in twenty thirteen. Her AGD showed a moderate size hiatal hernia.
-25.687,29.415,This is her upper GI series displaying her hiatal hernia.
 29.915,38.903,"The surgeon begins the procedure by addressing dense intra-abdominal adhesions, using sharp dissection and electrocautery to carefully separate and remove the adhesions."
 39.403,47.77,"The surgeon dissects the right crus of the diaphragm away from the hernia sac, skeletonizing the structure down to the confluence."
 48.27,58.647,"The surgeon carefully dissects around the esophagus, ensuring it remains unharmed during the procedure."
@@ -20,4 +17,3 @@ start,end,text
 320.15,336.1,"The surgeon performs a partial gastrectomy using a 60mm linear stapler, visibly excising a portion of the stomach."
 336.6,388.819,"The surgeon imbricates the staple line of the gastroplasty using a running barb suture, reinforcing the closure along the gastric tissue."
 389.319,408.755,"The surgeon performs a bubble leak test at the conclusion of the procedure, visually confirming the absence of leaks from the repair site."
-409.255,418.542,"This is the patient's post-op upper GI series showing no evidence of hiatal hernia. The patient was discharged post-op day two, had no complications and no adverse events."

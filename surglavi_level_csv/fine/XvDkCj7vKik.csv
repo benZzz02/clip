@@ -1,11 +1,7 @@
 start,end,text
-0.79,4.875,Hello. Sharing a case of acute cholecystitis.
-5.375,6.777,Not my favorite operation.
-6.797,9.66,Video didn't start until after I had gotten started.
 9.7,14.426,"The surgeon attempts to decompress the gallbladder using a large needle, with minimal bile visibly being extracted from the organ."
 14.926,23.134,"A large stone is visibly lodged at the bottom of the gallbladder, presenting a challenging aspect of the case."
 23.174,46.844,The surgeon opens the peritoneum on both sides at the bottom of the gallbladder and begins inspecting the Calot's triangle for anatomical structures.
-47.344,54.986,"As often is the case with these very inflamed gallbladders, you'll get some bleeding from time to time."
 55.486,70.391,"The surgeon identifies a lateral branch of the artery near the gallbladder, noting its presence without concern for significant bleeding or complications."
 70.891,83.747,"The surgeon continues to open the peritoneum around the bottom of the gallbladder, attempting to lift it upwards and out of its position."
 84.247,97.574,"The surgeon attempts to open the peritoneum along the lower part of the gallbladder, aiming to improve visibility and facilitate lifting the gallbladder."
@@ -13,7 +9,6 @@ start,end,text
 106.458,141.948,"The surgeon attempts to create space around the gallbladder to increase its mobility for manipulation, using careful dissection techniques."
 142.448,189.043,"The surgeon attempts to access the medial side of the gallbladder, working to get behind it using a modified top-down approach to better expose the bottom of the gallbladder. The surgeon maneuvers back and forth to achieve this exposure."
 189.543,203.491,"The surgeon views the surgical plane from a new angle behind the gallbladder, encountering a large stone at the bottom that obstructs manipulation. The surgeon attempts to approach from the opposite side to improve access."
-203.991,221.939,"I usually like to use ICG for these cases. Our equipment for this case was not functional, so I wasn't able to use it."
 222.439,230.185,"The surgeon pauses to reassess the anatomical layout, cleaning the surgical field. A small bleeder is identified and requires attention."
 230.205,239.812,"The surgeon identifies a structure that appears to be the cystic artery, visible within the surgical field."
 239.872,273.197,"The surgeon maneuvers around the gallbladder, preparing to divide the tissue, with visible manipulation to expose the area for further dissection."
@@ -29,16 +24,10 @@ start,end,text
 499.555,530.002,"The surgeon widens the opening in the gallbladder to access a large stone visible within the lumen, preparing to extract it."
 530.502,549.091,"The surgeon widens the opening in the gallbladder to extract the stone, which becomes visible as it is maneuvered out."
 549.591,568.11,"With the stone removed, the surgeon views the interior of the gallbladder lumen, assessing the remaining gallbladder tissue below. The surgeon then grasps and manipulates the gallbladder for further dissection."
-568.61,592.418,"Many times during this case, I contemplated doing a subtotal with stone removal. But I think that if you can get the rest of the gallbladder out, you should always, if you look, there's actually quite a bit of gallbladder remaining. And if you leave this, I have a lot of concerns that a patient like this is the type of person that would have recurrent cholecystitis."
 592.918,651.017,"The surgeon continues to work from the posterior aspect of the gallbladder, attempting to separate the peritoneum, which is resistant to tearing, using a back-and-forth motion."
 651.517,683.352,"The surgeon amputates the majority of the gallbladder, aiming to facilitate further manipulation and removal of the remaining tissue."
-683.852,735.78,"I contemplated calling it a day at this point of the case, but really didn't want to leave that much gallbladder."
 736.28,768.551,"The surgeon lifts the gallbladder, revealing the bottom portion of the organ, allowing for further manipulation and visualization of the remaining tissue."
 769.051,780.401,"The surgeon identifies a structure resembling the cystic duct, which appears to be the only remaining attachment to the liver. The surgeon clears surrounding tissue to confirm its identity."
 780.901,822.756,"The gallbladder is pressed against the common bile duct, potentially causing a Mirizzi syndrome. The surgeon identifies the area resembling the Calot's triangle and begins to develop this anatomical space."
 823.256,849.436,"The surgeon peels down the artery, revealing the back wall of the gallbladder that has been pursued throughout the procedure."
-849.936,863.342,"In case like this, I kind of regret not having removed the stone earlier. I think it would have made the case a lot easier."
-863.842,873.347,"But all in all, a safe cholecystectomy."
 873.847,888.742,"The surgeon visually inspects the lumen of the duct, clearly identifying it as the cystic duct, which is the remaining structure attached to the liver."
-889.242,917.769,"And then go ahead and click. In this case, I decided to add an endo loop to that."
-918.269,937.512,And that concludes the case. Go ahead and get our friend down here. I hope you enjoyed.

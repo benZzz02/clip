@@ -1,6 +1,4 @@
 start,end,text
-0.637,29.938,hello this is a case of laparoscopic appendicectomy for ruptured appendix patient was having the appendicitis for long time and then it was ruptured ultrasound has detected a lot of fluid inside the abdomen accessing these patients should be very carefully
-30.438,37.08,because due to peritonitis the access is difficult.
 37.58,53.946,"The laparoscopic view reveals fibrinous exudates and fluid collection throughout all quadrants of the abdomen, indicative of a ruptured appendix."
 54.446,60.637,"The surgeon carefully performs suction irrigation within the abdominal cavity, removing fluid and fibrinous exudates associated with the ruptured appendix."
 61.137,93.313,"The surgeon performs a thorough lavage of the peritoneal cavity during the laparoscopic appendectomy, effectively irrigating the area to manage the perforated appendicitis."
@@ -25,7 +23,6 @@ start,end,text
 558.839,562.342,The surgeon visually identifies the gallbladder and the appendix within the surgical field.
 562.842,594.127,"The surgeon performs suction irrigation in all quadrants of the abdomen, ensuring thorough lavage to prevent fluid accumulation in the diaphragmatic area, which could lead to a subdiaphragmatic abscess."
 594.627,632.157,"The surgeon performs repeated suction irrigation across all quadrants of the abdomen, removing fibrinous exudate to maximize cleaning and aspiration."
-632.657,654.738,some people they use the metronidazole or ofloxacilin antibiotics also to irrigate the pectoral cavity but we don't see any advantage of doing that so intravenous antibiotic is okay in these patients some of the fluids would must be sent for the culture also
 655.238,686.87,The surgeon completes peritoneal toileting and introduces a glove as an endo bag into the abdominal cavity for the removal of the appendix.
 687.37,716.507,"The surgeon places the appendix into the glove endo bag within the abdominal cavity. The edges of the glove are grasped with an instrument, and the endo bag is pulled into the cannula. The entire cannula is then extracted from the abdominal cavity, necessitating port closure."
 717.007,739.243,"After thorough suction and irrigation, a nasogastric tube is introduced as a drain into the abdominal cavity through a ten millimeter extra port. The port is then closed securely."

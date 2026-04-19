@@ -11,6 +11,6 @@ export LORA_RANK="${LORA_RANK:-8}"
 export LORA_ALPHA="${LORA_ALPHA:-16}"
 export LORA_DROPOUT="${LORA_DROPOUT:-0.05}"
 export LORA_TARGETS="${LORA_TARGETS:-backbone_text.model.encoder.layer.,backbone_img.global_embedder}"
-export OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_peskavlp}"
+export OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_peskavlp_3_no_method}"
 
 exec bash run_eval_surglavi_2.sh

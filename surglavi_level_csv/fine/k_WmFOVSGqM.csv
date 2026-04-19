@@ -1,22 +1,4 @@
 start,end,text
-0.131,5.676,Robotic low anterior resection for a distal sigmoid colon
-6.176,10.319,A fifty-two year old male presents with three months of abdominal pain and hematochesia.
-10.76,13.162,Patient has no family history of GI cancer.
-13.302,17.486,A physical exam revealed internal hemorrhoids and a BMI of twenty-eight.
-17.986,23.33,Colonoscopy showed a friable circumferential mass twenty centimeters from the anal verge.
-23.791,27.277,"The colonoscope is visibly obstructed by a circumferential mass in the distal sigmoid colon, preventing further advancement."
-27.777,30.479,The surgeon takes biopsies from the friable circumferential mass located twenty centimeters from the anal verge and applies a tattoo to mark the mass.
-30.899,38.044,Biopsy results showed that there was a microscopic focus of high-grade dysplasia or intramucosal adenocarcinoma.
-38.544,44.268,"A CT chest, abdomen, and pelvis was performed, which were negative for distant metastases."
-44.768,60.056,"MRI of the abdomen and pelvis showed a seven-centimeter segment of distal sigmoid colon, fifteen centimeters above the anal verge with diffuse thickening of the submucosal and muscularis margins."
-60.556,86.795,"Key points include team personal protective precautions, an N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N-N"
-87.295,96.137,The surgeon turns off the insufflator and uses a smoke evacuation device to empty the pneumoperitoneum before making the extraction incision.
-96.637,103.919,The surgeon avoids trans-anal specimen extraction to prevent the release of pneumoperitoneum during the procedure.
-104.419,113.661,"At our institution, we use a Buffalo filter plume port active, which allows for pneumoperitoneum and smoke evacuation through ultrafiltration."
-113.681,124.021,A full control dial on the plume port active allows us to control the rate of suction. This whole system is connected to regular suction in the room.
-124.521,134.385,Advantages of robotic surgery during the COVID era include lower levels of personal protective equipment needed for the console surgeon.
-134.885,141.298,The surgical team maintains adequate visualization of the intra-abdominal cavity with reduced pneumoperitoneum pressure set to eight millimeters of mercury.
-141.798,151.543,There is also an ability to minimize electrocautery power by avoiding the use of ultrasonic sealing devices and by easily using clips and sutures.
 152.043,160.027,The surgical setup includes four ports visible on the abdomen: a 12-millimeter port in the right lower quadrant and three additional ports measuring 8.5 millimeters each.
 160.227,173.04,"The robotic arms are positioned in the left lower quadrant, targeting the sigmoid colon. Adhesions around the sigmoid colon are carefully lysed."
 173.54,178.682,"The surgeon visualizes the sigmoid colon cancer, which is located very low in the pelvis, using laparoscopic instruments."
@@ -41,6 +23,3 @@ start,end,text
 569.646,598.518,"The robotic arms are positioned in the pelvis, and the surgeon performs an anastomosis using a powered EEA stapler."
 599.018,610.205,"The surgeon performs an air leak test on the anastomosis, visually confirming the absence of any leaks."
 610.705,618.411,"Indocyanin green dye is applied to assess the bowel perfusion and visualize the blood supply to the anastomosis site, highlighting areas of vascularization."
-618.911,630.746,Final pathology showed a four centimeter Moderately differentiated adenocarcinoma of the distal sigmoid colon with invasion through the muscularis propria and subsorosal adipose tissue.
-631.246,639.254,The distal margin was three centimeters. Lymph nodes were negative. The patient's post-operative course was uncomplicated and he was discharged on post-operative day two.
-639.634,645.48,"On a two-week post-operative visit, he was tolerating his diet and awaiting oncology evaluation for chemotherapy."

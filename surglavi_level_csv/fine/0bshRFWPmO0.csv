@@ -1,5 +1,4 @@
 start,end,text
-0.151,12.119,A sixty-five-year-old female with a history of chronic complicated diverticular disease presents for elective surgery after recent hospitalization for a diverticulitis attack.
 12.619,16.142,"The surgeon demonstrates the placement of a trocar into the abdominal cavity, preparing for the laparoscopic procedure."
 16.642,22.822,"The robotic surgical system is positioned and docked from the left side of the patient, preparing for the colorectal procedure."
 23.322,28.603,"The surgeon initiates dissection at the posterior aspect of the inferior mesenteric vein, carefully separating the surrounding tissue."
@@ -21,5 +20,3 @@ start,end,text
 247.716,269.186,"The distal end of the colon is exteriorized through the wound protector, visibly prepared for anastomosis."
 269.686,275.271,The surgeon uses a circular 28mm stapler to perform an anastomosis on the exteriorized distal end of the colon.
 275.771,281.396,"The surgeon performs an air leak test on the anastomosis site, confirming the absence of air leaks."
-281.896,287.461,Past operative recovery was uneventful and patient discharged home on post-op day two.
-287.781,297.77,"As a conclusion, robotic sigmoidectomy by using DaVinci XI platform is safe and feasible in patients with complicated diverticular disease."
