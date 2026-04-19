@@ -2,6 +2,7 @@ import os
 import math
 import argparse
 import contextlib
+import time
 
 import torch
 import torch.nn.functional as F
@@ -10,7 +11,7 @@ from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.cuda.amp import autocast, GradScaler
+from torch.cuda.amp import GradScaler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
@@ -270,18 +271,6 @@ def parse_args():
         default=0.5,
         help="Weight for the train-time expanded-window selection contrastive loss",
     )
-    parser.add_argument(
-        "--enable_htg",
-        type=str2bool,
-        default=False,
-        help="Enable multi-positive hierarchical anchoring",
-    )
-    parser.add_argument(
-        "--htg_loss_weight",
-        type=float,
-        default=0.1,
-        help="Weight for hierarchical multi-positive anchoring loss",
-    )
 
     return parser.parse_args()
 
@@ -304,18 +293,12 @@ def collate_fn_expanded_frames_only(batch):
     for item in batch:
         if item is None:
             continue
-        if len(item) not in (5, 8):
+        if len(item) != 5:
             raise ValueError(
-                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids) or the same plus sample metadata."
+                "Expected dataset items as (images, selection_images, input_ids, attention_mask, level_ids)."
             )
-        if len(item) == 5:
-            _, selection_images, input_ids, attention_mask, level_ids = item
-            compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
-        else:
-            _, selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times = item
-            compact_batch.append(
-                (selection_images, input_ids, attention_mask, level_ids, video_ids, start_times, end_times)
-            )
+        _, selection_images, input_ids, attention_mask, level_ids = item
+        compact_batch.append((selection_images, input_ids, attention_mask, level_ids))
 
     if not compact_batch:
         return None
@@ -387,31 +370,27 @@ def _collect_debug_stats(model_module, level_ids):
 
 def clip_contrastive_loss(
     model,
-    images,
     selection_images,
     input_ids,
     attention_mask,
     level_ids,
-    video_ids=None,
-    start_times=None,
-    end_times=None,
     selection_loss_weight=0.5,
-    htg_loss_weight=0.0,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
-        image=images,
+        image=selection_images,
         input_ids=input_ids,
         attention_mask=attention_mask,
         level_ids=level_ids,
         selection_image=selection_images,
     )
+    
     rank = dist.get_rank()
     batch_size = image_features.size(0)
     device = image_features.device
     logit_scale = model.module.logit_scale.exp()
     labels = torch.arange(batch_size, device=device) + rank * batch_size
 
-    def _symmetric_contrastive(image_feats, text_feats):
+    def _gather_features(image_feats, text_feats):
         gathered_image = concat_all_gather(image_feats.detach())
         gathered_text = concat_all_gather(text_feats.detach())
 
@@ -421,6 +400,11 @@ def clip_contrastive_loss(
         all_image_features = torch.cat(gathered_image, dim=0)
         all_text_features = torch.cat(gathered_text, dim=0)
 
+        return all_image_features, all_text_features
+
+    def _symmetric_contrastive(image_feats, text_feats):
+        all_image_features, all_text_features = _gather_features(image_feats, text_feats)
+
         logits_per_image = logit_scale * image_feats @ all_text_features.t()
         logits_per_text = logit_scale * text_feats @ all_image_features.t()
         loss_i = F.cross_entropy(logits_per_image, labels)
@@ -429,42 +413,10 @@ def clip_contrastive_loss(
 
     base_loss = _symmetric_contrastive(image_features, text_features)
     if selected_image_features is None:
-        return base_loss
-
-    selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-    total_loss = base_loss + selection_loss_weight * selection_loss
-
-    htg_loss = None
-    if (
-        htg_loss_weight > 0
-        and selected_image_features is not None
-        and video_ids is not None
-        and start_times is not None
-        and end_times is not None
-    ):
-        fine_mask = level_ids == 0
-        parent_mask = level_ids > 0
-        if fine_mask.any() and parent_mask.any():
-            per_parent_losses = []
-            parent_indices = torch.nonzero(parent_mask, as_tuple=False).flatten()
-            for parent_idx in parent_indices.tolist():
-                child_mask = (
-                    fine_mask
-                    & (video_ids == video_ids[parent_idx])
-                    & (start_times >= start_times[parent_idx])
-                    & (end_times <= end_times[parent_idx])
-                )
-                child_indices = torch.nonzero(child_mask, as_tuple=False).flatten()
-                if child_indices.numel() == 0:
-                    continue
-
-                logits = logit_scale * (selected_image_features[parent_idx : parent_idx + 1] @ text_features.t())
-                log_probs = F.log_softmax(logits, dim=-1)
-                per_parent_losses.append(-log_probs[0, child_indices].mean())
-
-            if per_parent_losses:
-                htg_loss = torch.stack(per_parent_losses).mean()
-                total_loss = total_loss + htg_loss_weight * htg_loss
+        total_loss = base_loss
+    else:
+        selection_loss = _symmetric_contrastive(selected_image_features, text_features)
+        total_loss = base_loss + selection_loss_weight * selection_loss
 
     return total_loss
 
@@ -496,6 +448,10 @@ def train():
     USE_SWANLAB = args.use_swanlab
     LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
     DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
+    PERF_LOG_INTERVAL = int(os.environ.get("PERF_LOG_INTERVAL", DEBUG_LOG_INTERVAL))
+    anchor_same_video_triplets = all(
+        LEVEL_BATCH_SIZES.get(level, 0) > 0 for level in ("fine", "mid", "coarse")
+    )
 
     if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
         raise ValueError(
@@ -531,8 +487,7 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
-        "enable_htg": args.enable_htg,
-        "htg_loss_weight": args.htg_loss_weight,
+        "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
     MAIN_CSV_PATH = args.main_csv_path
@@ -623,6 +578,7 @@ def train():
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
+        print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
@@ -645,7 +601,6 @@ def train():
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
         return_expanded_frames=True,
-        return_sample_meta=CONFIG["enable_htg"],
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -657,7 +612,7 @@ def train():
         train_dataset,
         batch_size=PER_GPU_BATCH_SIZE,
         level_batch_sizes=LEVEL_BATCH_SIZES,
-        require_complete_triplet=CONFIG["enable_htg"],
+        anchor_same_video_triplets=CONFIG["anchor_same_video_triplets"],
         num_replicas=world_size,
         rank=rank,
         shuffle=True,
@@ -670,6 +625,7 @@ def train():
         batch_sampler=train_sampler,
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
+        collate_fn=collate_fn_expanded_frames_only,
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
     )
@@ -734,6 +690,7 @@ def train():
                     "samples_cache_version": args.samples_cache_version,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
+                    "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
                 }
@@ -818,33 +775,22 @@ def train():
         optimizer.zero_grad(set_to_none=True)
         last_loss_value = None
         accum_loss_sum = torch.zeros((), device=device)
+        accum_data_time_sum = 0.0
+        accum_step_time_sum = 0.0
+        batch_fetch_start = time.perf_counter()
 
         for step, batch in enumerate(progress_bar):
-            if len(batch) == 5:
-                images_cpu, selection_images_cpu, input_ids, attention_mask, level_ids = batch
-                video_ids = None
-                start_times = None
-                end_times = None
-            else:
-                (
-                    images_cpu,
-                    selection_images_cpu,
-                    input_ids,
-                    attention_mask,
-                    level_ids,
-                    video_ids,
-                    start_times,
-                    end_times,
-                ) = batch
+            data_time = time.perf_counter() - batch_fetch_start
+            if batch is None:
+                batch_fetch_start = time.perf_counter()
+                continue
+
+            step_start = time.perf_counter()
+            selection_images_cpu, input_ids, attention_mask, level_ids = batch
             selection_images = selection_images_cpu.to(device, non_blocking=True)
-            images = None
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
-            if video_ids is not None:
-                video_ids = video_ids.to(device, non_blocking=True)
-                start_times = start_times.to(device, non_blocking=True)
-                end_times = end_times.to(device, non_blocking=True)
 
             micro_step = (step % ACCUM_STEPS) + 1
             is_last_batch = (step + 1) == num_batches
@@ -854,19 +800,14 @@ def train():
             sync_ctx = model.no_sync() if not should_update else contextlib.nullcontext()
 
             with sync_ctx:
-                with autocast(dtype=amp_dtype):
+                with torch.amp.autocast("cuda", dtype=amp_dtype):
                     raw_loss = clip_contrastive_loss(
                         model,
-                        images,
                         selection_images,
                         input_ids,
                         attention_mask,
                         level_ids,
-                        video_ids=video_ids,
-                        start_times=start_times,
-                        end_times=end_times,
                         selection_loss_weight=CONFIG["selection_loss_weight"],
-                        htg_loss_weight=CONFIG.get("htg_loss_weight", 0.0),
                     )
                     loss = raw_loss / current_accum_steps
 
@@ -876,6 +817,9 @@ def train():
                     loss.backward()
 
             accum_loss_sum += raw_loss.detach()
+            step_time = time.perf_counter() - step_start
+            accum_data_time_sum += data_time
+            accum_step_time_sum += step_time
 
             if should_update:
                 if scaler.is_enabled():
@@ -893,12 +837,22 @@ def train():
                 loss_avg = loss_log.item() / world_size
                 last_loss_value = loss_avg
                 accum_loss_sum.zero_()
+                data_time_avg = _reduce_mean_tensor(
+                    torch.tensor(accum_data_time_sum / current_accum_steps, device=device)
+                ).item()
+                step_time_avg = _reduce_mean_tensor(
+                    torch.tensor(accum_step_time_sum / current_accum_steps, device=device)
+                ).item()
+                accum_data_time_sum = 0.0
+                accum_step_time_sum = 0.0
                 debug_stats = _collect_debug_stats(_unwrap_state_io_module(model.module), level_ids)
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
                     writer.add_scalar("train/lr", scheduler.get_last_lr()[0], global_step)
                     writer.add_scalar("train/epoch", epoch + 1, global_step)
+                    writer.add_scalar("perf/data_time", data_time_avg, global_step)
+                    writer.add_scalar("perf/step_time", step_time_avg, global_step)
                     for stat_name, stat_value in debug_stats.items():
                         writer.add_scalar(f"debug/{stat_name}", stat_value, global_step)
 
@@ -908,6 +862,8 @@ def train():
                 postfix = {
                     "loss": f"{raw_loss.item():.4f}",
                     "lr": f"{scheduler.get_last_lr()[0]:.2e}",
+                    "data": f"{data_time:.2f}s",
+                    "step": f"{step_time:.2f}s",
                 }
                 if should_update:
                     if "pair_confidence" in debug_stats:
@@ -931,8 +887,14 @@ def train():
                             f"[debug step {global_step}] " + " | ".join(debug_parts),
                             flush=True,
                         )
+                if should_update and PERF_LOG_INTERVAL > 0 and global_step % PERF_LOG_INTERVAL == 0:
+                    print(
+                        f"[perf step {global_step}] data={data_time_avg:.2f}s | step={step_time_avg:.2f}s",
+                        flush=True,
+                    )
 
-            del images, input_ids, attention_mask, level_ids
+            del input_ids, attention_mask, level_ids
+            batch_fetch_start = time.perf_counter()
 
         if rank == 0:
             print(
