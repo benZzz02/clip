@@ -29,7 +29,7 @@ pick_first_existing() {
 }
 
 NPROC=2
-EXP_NAME="htg_multipositive_8f_v1"
+EXP_NAME="same_video_triplet_8f_v1"
 
 PER_GPU_BATCH_SIZE=128
 ACCUM_STEPS=1
@@ -87,14 +87,11 @@ LEVEL_FRAME_TEMPERATURES="0.35,0.8,1.6"
 TRAIN_WINDOW_EXPAND_RATIO=1.5
 SELECTION_LOSS_WEIGHT=0.7
 
-ENABLE_HTG=true
-HTG_LOSS_WEIGHT=0.1
-
 export CUDA_VISIBLE_DEVICES=0,1
 export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export TORCH_SHOW_CPP_STACKTRACES=1
 export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
-export SAVE_PREFIX="/data/nfs_data/CLIP/outputs/htg_multipositive_8f_run1/"
+export SAVE_PREFIX="/data/nfs_data/CLIP/outputs/same_video_triplet_8f_run1/"
 
 if [[ -z "$VISION_PRETRAINED_WEIGHTS" ]]; then
   echo "Could not locate lemonfm.pth. Set VISION_PRETRAINED_WEIGHTS explicitly." >&2
@@ -140,6 +137,4 @@ torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \
     --local_temperature "$LOCAL_TEMPERATURE" \
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
-    --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
-    --enable_htg "$ENABLE_HTG" \
-    --htg_loss_weight "$HTG_LOSS_WEIGHT"
+    --selection_loss_weight "$SELECTION_LOSS_WEIGHT"

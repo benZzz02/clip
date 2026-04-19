@@ -69,13 +69,11 @@ LORA_DROPOUT=0.05
 LORA_TARGETS="${LORA_TARGETS:-backbone_text.model.encoder.layer.,backbone_img.global_embedder}"
 GRADIENT_CHECKPOINTING=1
 
-# Plain SurgLaVi training baseline: no expanded-window denoising, no selection loss, no HTG.
+# Plain SurgLaVi training baseline: no expanded-window denoising and no selection loss.
 LOCAL_TEMPERATURE=0.15
 LEVEL_FRAME_TEMPERATURES="0.35,0.8,1.6"
 TRAIN_WINDOW_EXPAND_RATIO=1.0
 SELECTION_LOSS_WEIGHT=0.0
-ENABLE_HTG=false
-HTG_LOSS_WEIGHT=0.0
 
 SAVE_DIR="/data/surglavi_checkpoint/${EXP_NAME}"
 SAVE_EVERY=5
@@ -135,7 +133,5 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
-    --enable_htg "$ENABLE_HTG" \
-    --htg_loss_weight "$HTG_LOSS_WEIGHT" \
     ${INIT_CHECKPOINT:+--init_checkpoint "$INIT_CHECKPOINT"} \
     ${RESUME_FROM_CHECKPOINT:+--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT"}

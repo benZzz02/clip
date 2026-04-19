@@ -445,7 +445,7 @@ class SurgCLIPAdapter(torch.nn.Module):
         return image_features, selected_image_features, text_features
 
 
-def clip_contrastive_loss(model, images, selection_images, input_ids, attention_mask, level_ids, selection_loss_weight=0.5, htg_loss_weight=0.0, video_ids=None, start_times=None, end_times=None):
+def clip_contrastive_loss(model, images, selection_images, input_ids, attention_mask, level_ids, selection_loss_weight=0.5):
     rank = dist.get_rank()
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=images,
@@ -481,38 +481,6 @@ def clip_contrastive_loss(model, images, selection_images, input_ids, attention_
 
     selection_loss = _symmetric_contrastive(selected_image_features, text_features)
     total_loss = base_loss + selection_loss_weight * selection_loss
-
-    htg_loss = None
-    if (
-        htg_loss_weight > 0
-        and selected_image_features is not None
-        and video_ids is not None
-        and start_times is not None
-        and end_times is not None
-    ):
-        fine_mask = level_ids == 0
-        parent_mask = level_ids > 0
-        if fine_mask.any() and parent_mask.any():
-            per_parent_losses = []
-            parent_indices = torch.nonzero(parent_mask, as_tuple=False).flatten()
-            for parent_idx in parent_indices.tolist():
-                child_mask = (
-                    fine_mask
-                    & (video_ids == video_ids[parent_idx])
-                    & (start_times >= start_times[parent_idx])
-                    & (end_times <= end_times[parent_idx])
-                )
-                child_indices = torch.nonzero(child_mask, as_tuple=False).flatten()
-                if child_indices.numel() == 0:
-                    continue
-
-                logits = logit_scale * (selected_image_features[parent_idx : parent_idx + 1] @ text_features.t())
-                log_probs = F.log_softmax(logits, dim=-1)
-                per_parent_losses.append(-log_probs[0, child_indices].mean())
-
-            if per_parent_losses:
-                htg_loss = torch.stack(per_parent_losses).mean()
-                total_loss = total_loss + htg_loss_weight * htg_loss
 
     return total_loss
 
@@ -614,10 +582,6 @@ def parse_args():
     )
     p.add_argument("--train_window_expand_ratio", type=float, default=float(os.environ.get("TRAIN_WINDOW_EXPAND_RATIO", 1.5)))
     p.add_argument("--selection_loss_weight", type=float, default=float(os.environ.get("SELECTION_LOSS_WEIGHT", 0.5)))
-    p.add_argument("--enable_htg", type=lambda x: str(x).lower() in {"1", "true", "t", "yes", "y"},
-                   default=os.environ.get("ENABLE_HTG", "0").lower() in {"1", "true", "t", "yes", "y"})
-    p.add_argument("--htg_loss_weight", type=float, default=float(os.environ.get("HTG_LOSS_WEIGHT", 0.1)))
-
     return p.parse_args()
 
 
@@ -641,6 +605,14 @@ def train():
     amp_dtype = torch.bfloat16 if getattr(torch.cuda, "is_bf16_supported", lambda: False)() else torch.float16
     scaler = torch.amp.GradScaler("cuda", enabled=(amp_dtype == torch.float16))
 
+    level_batch_sizes = None
+    anchor_same_video_triplets = False
+    if args.annotations_root or args.annotation_levels:
+        level_batch_sizes = parse_level_batch_sizes(args.level_batch_sizes)
+        anchor_same_video_triplets = all(
+            level_batch_sizes.get(level, 0) > 0 for level in ("fine", "mid", "coarse")
+        )
+
     if rank == 0:
         print(f"[rank0] world_size={world_size} num_frames={args.num_frames} per_gpu_batch_size={args.per_gpu_batch_size} amp_dtype={amp_dtype}")
         print(f"[rank0] save_dir={args.save_dir} save_every={args.save_every} save_name={args.save_name}")
@@ -659,6 +631,7 @@ def train():
         print(f"[rank0] samples_cache_dir={args.samples_cache_dir} use_samples_cache={args.use_samples_cache} rebuild_samples_cache={args.rebuild_samples_cache} samples_cache_version={args.samples_cache_version}")
         print(f"[rank0] local_temperature={args.local_temperature} level_frame_temperatures={args.level_frame_temperatures}")
         print(f"[rank0] train_window_expand_ratio={args.train_window_expand_ratio} selection_loss_weight={args.selection_loss_weight}")
+        print(f"[rank0] anchor_same_video_triplets={anchor_same_video_triplets}")
         if args.annotations_root:
             levels = args.annotation_levels if args.annotation_levels else "coarse,mid,fine"
             print(f"[rank0] annotations_root={args.annotations_root} annotation_levels={levels} level_mix={args.level_mix} sample_mode={args.sample_mode} level_batch_sizes={args.level_batch_sizes}")
@@ -684,7 +657,7 @@ def train():
         level_seed=args.level_seed,
         return_level_id=bool(args.annotations_root or args.annotation_levels),
         return_expanded_frames=True,
-        return_sample_meta=args.enable_htg,
+        return_sample_meta=False,
         expanded_window_ratio=args.train_window_expand_ratio,
         samples_cache_dir=args.samples_cache_dir,
         use_samples_cache=args.use_samples_cache,
@@ -704,7 +677,7 @@ def train():
             train_dataset,
             batch_size=args.per_gpu_batch_size,
             level_batch_sizes=level_batch_sizes,
-            require_complete_triplet=args.enable_htg,
+            anchor_same_video_triplets=anchor_same_video_triplets,
             num_replicas=world_size,
             rank=rank,
             shuffle=True,
@@ -940,10 +913,6 @@ def train():
                         attention_mask,
                         level_ids,
                         selection_loss_weight=args.selection_loss_weight,
-                        htg_loss_weight=args.htg_loss_weight if args.enable_htg else 0.0,
-                        video_ids=video_ids if args.enable_htg else None,
-                        start_times=start_times if args.enable_htg else None,
-                        end_times=end_times if args.enable_htg else None,
                     )
                     current_accum_steps = micro_step if (is_last_batch and micro_step != args.accum_steps) else args.accum_steps
                     loss = raw_loss / current_accum_steps

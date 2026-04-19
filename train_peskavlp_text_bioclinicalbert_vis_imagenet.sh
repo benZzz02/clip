@@ -15,7 +15,7 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "$CONDA_ENV_NAME" ]]; then
 fi
 set -u
 
-EXP_NAME="${EXP_NAME:-peskavlp_text_bioclinicalbert_vis_imagenet}"
+EXP_NAME="${EXP_NAME:-peskavlp_text_bioclinicalbert_vis_imagenet_same_video_triplet}"
 
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2}"
 IFS=',' read -r -a CUDA_DEVICE_LIST <<< "$CUDA_VISIBLE_DEVICES"
@@ -69,8 +69,6 @@ LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
 LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.5}"
-ENABLE_HTG="${ENABLE_HTG:-true}"
-HTG_LOSS_WEIGHT="${HTG_LOSS_WEIGHT:-0.1}"
 
 SAVE_DIR="${SAVE_DIR:-/data/surglavi_checkpoint/${EXP_NAME}}"
 SAVE_EVERY="${SAVE_EVERY:-5}"
@@ -134,7 +132,5 @@ torchrun --standalone --nproc_per_node="$NPROC" train_surglavi_ddp.py \
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES" \
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO" \
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT" \
-    --enable_htg "$ENABLE_HTG" \
-    --htg_loss_weight "$HTG_LOSS_WEIGHT" \
     ${INIT_CHECKPOINT:+--init_checkpoint "$INIT_CHECKPOINT"} \
     ${RESUME_FROM_CHECKPOINT:+--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT"}
