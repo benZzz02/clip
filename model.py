@@ -403,7 +403,7 @@ class VLP(nn.Module):
         else:
             norm = torch.log(
                 torch.full(
-                    (weights.size(0),),
+                    weights.shape[:-1],
                     float(max(weights.size(-1), 2)),
                     device=weights.device,
                     dtype=weights.dtype,
