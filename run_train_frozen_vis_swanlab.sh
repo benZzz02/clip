@@ -9,7 +9,7 @@ conda activate "${CONDA_ENV:-vllm}"
 
 NPROC="${NPROC:-2}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
-EXP_NAME="${EXP_NAME:-same_video_triplet_xpool_8f_run1}"
+EXP_NAME="${EXP_NAME:-latent_xpool_124_sw07_8f_run1}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
 ACCUM_STEPS="${ACCUM_STEPS:-1}"
@@ -47,13 +47,15 @@ REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
 SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
 
 LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
-SELECTION_POOLING="${SELECTION_POOLING:-xpool}"
+SELECTION_POOLING="${SELECTION_POOLING:-latent_xpool}"
 LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
+MAX_TEXT_QUERIES="${MAX_TEXT_QUERIES:-8}"
+LEVEL_TEXT_QUERY_COUNTS="${LEVEL_TEXT_QUERY_COUNTS:-1,2,4}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.7}"
 
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
-SAVE_PREFIX="${SAVE_PREFIX:-outputs/same_video_triplet_xpool_8f_run1/}"
+SAVE_PREFIX="${SAVE_PREFIX:-outputs/latent_xpool_124_sw07_8f_run1/}"
 
 if [[ "$SAVE_PREFIX" == */ ]]; then
     mkdir -p "$SAVE_PREFIX"
@@ -104,6 +106,8 @@ cmd=(
     --local_temperature "$LOCAL_TEMPERATURE"
     --selection_pooling "$SELECTION_POOLING"
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
+    --max_text_queries "$MAX_TEXT_QUERIES"
+    --level_text_query_counts "$LEVEL_TEXT_QUERY_COUNTS"
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
     --hierarchical_consistency_weight 0.1

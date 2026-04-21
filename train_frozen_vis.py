@@ -81,6 +81,7 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "frame_local_projection.",
         "frame_score_head.",
         "video_gate_head.",
+        "latent_text_query_slots",
     )
     allowed_unexpected_prefixes = (
         "token_local_projection.",
@@ -88,6 +89,7 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "text_gate_head.",
         "frame_score_head.",
         "video_gate_head.",
+        "latent_text_query_slots",
     )
 
     disallowed_missing = [
@@ -132,6 +134,15 @@ def parse_float_list(spec: str, expected_len: int = None):
     if expected_len is not None and len(values) != expected_len:
         raise argparse.ArgumentTypeError(
             f"Expected {expected_len} comma-separated floats, got {len(values)} from: {spec}"
+        )
+    return tuple(values)
+
+
+def parse_int_list(spec: str, expected_len: int = None):
+    values = [int(x.strip()) for x in spec.split(",") if x.strip()]
+    if expected_len is not None and len(values) != expected_len:
+        raise argparse.ArgumentTypeError(
+            f"Expected {expected_len} comma-separated ints, got {len(values)} from: {spec}"
         )
     return tuple(values)
 
@@ -258,7 +269,7 @@ def parse_args():
         "--selection_pooling",
         type=str,
         default=os.environ.get("SELECTION_POOLING", "similarity"),
-        choices=["similarity", "xpool"],
+        choices=["similarity", "xpool", "latent_xpool"],
         help="Frame selection pooling strategy for text-conditioned video reweighting",
     )
     parser.add_argument(
@@ -266,6 +277,21 @@ def parse_args():
         type=lambda s: parse_float_list(s, expected_len=3),
         default=(0.6, 0.9, 1.2),
         help="Comma-separated fine,mid,coarse frame temperatures",
+    )
+    parser.add_argument(
+        "--max_text_queries",
+        type=int,
+        default=int(os.environ.get("MAX_TEXT_QUERIES", 8)),
+        help="Maximum number of latent text queries for latent_xpool",
+    )
+    parser.add_argument(
+        "--level_text_query_counts",
+        type=lambda s: parse_int_list(s, expected_len=3),
+        default=parse_int_list(
+            os.environ.get("LEVEL_TEXT_QUERY_COUNTS", "1,2,4"),
+            expected_len=3,
+        ),
+        help="Comma-separated fine,mid,coarse latent query counts",
     )
     parser.add_argument(
         "--train_window_expand_ratio",
@@ -551,6 +577,8 @@ def train():
         "local_temperature": args.local_temperature,
         "selection_pooling": args.selection_pooling,
         "level_frame_temperatures": args.level_frame_temperatures,
+        "max_text_queries": args.max_text_queries,
+        "level_text_query_counts": args.level_text_query_counts,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
         "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
@@ -571,6 +599,8 @@ def train():
         local_temperature=CONFIG["local_temperature"],
         selection_pooling=CONFIG["selection_pooling"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
+        max_text_queries=CONFIG["max_text_queries"],
+        level_text_query_counts=CONFIG["level_text_query_counts"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -645,6 +675,8 @@ def train():
         print(f"local_temperature: {CONFIG['local_temperature']}")
         print(f"selection_pooling: {CONFIG['selection_pooling']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
+        print(f"max_text_queries: {CONFIG['max_text_queries']}")
+        print(f"level_text_query_counts: {CONFIG['level_text_query_counts']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
         print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
@@ -774,6 +806,8 @@ def train():
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
                     "selection_pooling": args.selection_pooling,
+                    "max_text_queries": args.max_text_queries,
+                    "level_text_query_counts": args.level_text_query_counts,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
                     "hierarchical_consistency_weight": args.hierarchical_consistency_weight,

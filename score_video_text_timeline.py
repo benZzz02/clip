@@ -108,6 +108,7 @@ def load_checkpoint(model: torch.nn.Module, ckpt_path: str, device: str) -> None
         "frame_local_projection.weight",
         "selection_text_query_projection.weight",
         "selection_frame_key_projection.weight",
+        "latent_text_query_slots",
     }
     disallowed_missing = [key for key in msg.missing_keys if key not in allowed_missing]
     if disallowed_missing:
