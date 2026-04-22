@@ -64,6 +64,12 @@ def parse_args():
 
     parser.add_argument("--sample_index", type=int, nargs="*", default=None)
     parser.add_argument("--max_samples", type=int, default=10)
+    parser.add_argument(
+        "--window_scale",
+        type=float,
+        default=1.5,
+        help="Search window length as a multiple of the reference duration. Set <=0 to use fixed second offsets.",
+    )
     parser.add_argument("--start_offset_sec", type=float, default=10.0)
     parser.add_argument("--end_offset_sec", type=float, default=10.0)
     parser.add_argument("--sample_every_sec", type=float, default=1.0)
@@ -202,6 +208,36 @@ def build_sample_times(window_start: float, window_end: float, stride_sec: float
     return times
 
 
+def build_search_window(
+    reference_start: float,
+    reference_end: float,
+    video_duration: float,
+    window_scale: float,
+    start_offset_sec: float,
+    end_offset_sec: float,
+) -> tuple:
+    reference_start = float(reference_start)
+    reference_end = float(reference_end)
+    if reference_end < reference_start:
+        reference_end = reference_start
+
+    reference_duration = max(reference_end - reference_start, 1e-6)
+    if float(window_scale) > 0.0:
+        scaled_duration = reference_duration * max(float(window_scale), 1.0)
+        extra_duration = max(scaled_duration - reference_duration, 0.0)
+        before = extra_duration * 0.5
+        after = extra_duration * 0.5
+    else:
+        before = max(float(start_offset_sec), 0.0)
+        after = max(float(end_offset_sec), 0.0)
+
+    window_start = max(0.0, reference_start - before)
+    window_end = min(float(video_duration), reference_end + after)
+    if window_end < window_start:
+        window_end = window_start
+    return window_start, window_end
+
+
 @torch.no_grad()
 def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sample_dir: Path) -> Dict:
     video_path = sample["video_path"]
@@ -214,10 +250,14 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
 
     gt_start = float(sample["start_time"])
     gt_end = float(sample["end_time"])
-    window_start = max(0.0, gt_start - float(args.start_offset_sec))
-    window_end = min(duration, gt_end + float(args.end_offset_sec))
-    if window_end < window_start:
-        window_end = window_start
+    window_start, window_end = build_search_window(
+        gt_start,
+        gt_end,
+        duration,
+        args.window_scale,
+        args.start_offset_sec,
+        args.end_offset_sec,
+    )
 
     sampled_times = build_sample_times(window_start, window_end, args.sample_every_sec)
     frame_indices = [frame_index_from_time(t, fps, num_video_frames) for t in sampled_times]
@@ -317,10 +357,14 @@ def score_timeline_stats(sample: Dict, model: VLP, tokenizer, args, device: str)
 
     reference_start = float(sample["start_time"])
     reference_end = float(sample["end_time"])
-    window_start = max(0.0, reference_start - float(args.start_offset_sec))
-    window_end = min(duration, reference_end + float(args.end_offset_sec))
-    if window_end < window_start:
-        window_end = window_start
+    window_start, window_end = build_search_window(
+        reference_start,
+        reference_end,
+        duration,
+        args.window_scale,
+        args.start_offset_sec,
+        args.end_offset_sec,
+    )
 
     sampled_times = build_sample_times(window_start, window_end, args.sample_every_sec)
     frame_indices = [frame_index_from_time(t, fps, num_video_frames) for t in sampled_times]
