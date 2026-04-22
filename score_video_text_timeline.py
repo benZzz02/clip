@@ -1,4 +1,5 @@
 import argparse
+import csv
 import html
 import json
 import math
@@ -68,6 +69,17 @@ def parse_args():
     parser.add_argument("--sample_every_sec", type=float, default=1.0)
     parser.add_argument("--thumbnail_width", type=int, default=180)
     parser.add_argument("--device", type=str, default="cuda:3")
+    parser.add_argument(
+        "--stats_only",
+        action="store_true",
+        help="Only export CSV statistics for high-scoring frames outside the reference window.",
+    )
+    parser.add_argument(
+        "--top_k",
+        type=int,
+        default=5,
+        help="Number of top-scoring sampled frames used by stats_only.",
+    )
     return parser.parse_args()
 
 
@@ -252,12 +264,19 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
         frame_path = thumbs_dir / frame_filename
         pil_image.save(frame_path, quality=90)
 
+        distance = 0.0
+        if timestamp < gt_start:
+            distance = gt_start - timestamp
+        elif timestamp > gt_end:
+            distance = timestamp - gt_end
+
         score_points.append(
             {
                 "time": timestamp,
                 "frame_index": int(frame_idx),
                 "score": score,
                 "in_reference_window": bool(gt_start <= timestamp <= gt_end),
+                "distance_to_reference_sec": float(distance),
                 "image_relpath": f"frames/{frame_filename}",
             }
         )
@@ -284,6 +303,231 @@ def score_timeline(sample: Dict, model: VLP, tokenizer, args, device: str, sampl
         "top_in_reference_window": score_points[top_idx]["in_reference_window"],
         "points": score_points,
     }
+
+
+@torch.no_grad()
+def score_timeline_stats(sample: Dict, model: VLP, tokenizer, args, device: str) -> Dict:
+    video_path = sample["video_path"]
+    vr = VideoReader(video_path, ctx=cpu(0), num_threads=1)
+    num_video_frames = len(vr)
+    fps = float(vr.get_avg_fps())
+    if not np.isfinite(fps) or fps <= 0:
+        fps = 30.0
+    duration = max(num_video_frames - 1, 0) / fps
+
+    reference_start = float(sample["start_time"])
+    reference_end = float(sample["end_time"])
+    window_start = max(0.0, reference_start - float(args.start_offset_sec))
+    window_end = min(duration, reference_end + float(args.end_offset_sec))
+    if window_end < window_start:
+        window_end = window_start
+
+    sampled_times = build_sample_times(window_start, window_end, args.sample_every_sec)
+    frame_indices = [frame_index_from_time(t, fps, num_video_frames) for t in sampled_times]
+    frames_np = vr.get_batch(frame_indices).asnumpy()
+
+    tokenized = tokenizer(
+        sample["caption"],
+        padding="max_length",
+        truncation=True,
+        max_length=args.max_length,
+        return_tensors="pt",
+    )
+    input_ids = tokenized["input_ids"].to(device)
+    attention_mask = tokenized["attention_mask"].to(device)
+    text_features = model.encode_text(input_ids=input_ids, attention_mask=attention_mask)
+    logit_scale = float(model.logit_scale.exp().detach().cpu().item())
+
+    points = []
+    for timestamp, frame_idx, frame_np in zip(sampled_times, frame_indices, frames_np):
+        image_tensor = preprocess_frame(frame_np, args.image_size)
+        image_tensor = build_model_input(image_tensor, args.num_frames).to(device)
+        image_features = model.encode_image(image_tensor)
+        score = float((logit_scale * image_features @ text_features.t()).squeeze().detach().cpu().item())
+        in_reference = reference_start <= timestamp <= reference_end
+        distance = 0.0
+        if timestamp < reference_start:
+            distance = reference_start - timestamp
+        elif timestamp > reference_end:
+            distance = timestamp - reference_end
+        points.append(
+            {
+                "time": timestamp,
+                "frame_index": int(frame_idx),
+                "score": score,
+                "in_reference_window": bool(in_reference),
+                "distance_to_reference_sec": float(distance),
+            }
+        )
+
+    top_k = max(1, int(args.top_k))
+    sorted_points = sorted(points, key=lambda point: point["score"], reverse=True)
+    top_points = sorted_points[: min(top_k, len(sorted_points))]
+    outside_points = [point for point in points if not point["in_reference_window"]]
+    inside_points = [point for point in points if point["in_reference_window"]]
+    outside_top_points = [point for point in top_points if not point["in_reference_window"]]
+
+    best_point = top_points[0]
+    best_outside = max(outside_points, key=lambda point: point["score"], default=None)
+    best_inside = max(inside_points, key=lambda point: point["score"], default=None)
+
+    return {
+        "video_path": video_path,
+        "caption": sample["caption"],
+        "level": sample.get("level"),
+        "reference_start": reference_start,
+        "reference_end": reference_end,
+        "window_start": window_start,
+        "window_end": window_end,
+        "num_points": len(points),
+        "best_time": best_point["time"],
+        "best_score": best_point["score"],
+        "best_in_reference_window": best_point["in_reference_window"],
+        "best_distance_to_reference_sec": best_point["distance_to_reference_sec"],
+        "best_inside_time": "" if best_inside is None else best_inside["time"],
+        "best_inside_score": "" if best_inside is None else best_inside["score"],
+        "best_outside_time": "" if best_outside is None else best_outside["time"],
+        "best_outside_score": "" if best_outside is None else best_outside["score"],
+        "best_outside_distance_sec": "" if best_outside is None else best_outside["distance_to_reference_sec"],
+        "top_k": len(top_points),
+        "top_k_outside_count": len(outside_top_points),
+        "top_k_outside_ratio": len(outside_top_points) / max(len(top_points), 1),
+        "top_k_times": json.dumps([point["time"] for point in top_points]),
+        "top_k_scores": json.dumps([point["score"] for point in top_points]),
+        "top_k_in_reference": json.dumps([point["in_reference_window"] for point in top_points]),
+    }
+
+
+def build_stats_row_from_result(result: Dict, top_k: int) -> Dict:
+    points = result["points"]
+    top_k = max(1, int(top_k))
+    sorted_points = sorted(points, key=lambda point: point["score"], reverse=True)
+    top_points = sorted_points[: min(top_k, len(sorted_points))]
+    outside_points = [point for point in points if not point["in_reference_window"]]
+    inside_points = [point for point in points if point["in_reference_window"]]
+    outside_top_points = [point for point in top_points if not point["in_reference_window"]]
+
+    best_point = top_points[0]
+    best_outside = max(outside_points, key=lambda point: point["score"], default=None)
+    best_inside = max(inside_points, key=lambda point: point["score"], default=None)
+
+    return {
+        "video_path": result["video_path"],
+        "caption": result["caption"],
+        "level": result.get("level"),
+        "reference_start": result["reference_start"],
+        "reference_end": result["reference_end"],
+        "window_start": result["window_start"],
+        "window_end": result["window_end"],
+        "num_points": len(points),
+        "best_time": best_point["time"],
+        "best_score": best_point["score"],
+        "best_in_reference_window": best_point["in_reference_window"],
+        "best_distance_to_reference_sec": best_point["distance_to_reference_sec"],
+        "best_inside_time": "" if best_inside is None else best_inside["time"],
+        "best_inside_score": "" if best_inside is None else best_inside["score"],
+        "best_outside_time": "" if best_outside is None else best_outside["time"],
+        "best_outside_score": "" if best_outside is None else best_outside["score"],
+        "best_outside_distance_sec": "" if best_outside is None else best_outside["distance_to_reference_sec"],
+        "top_k": len(top_points),
+        "top_k_outside_count": len(outside_top_points),
+        "top_k_outside_ratio": len(outside_top_points) / max(len(top_points), 1),
+        "top_k_times": json.dumps([point["time"] for point in top_points]),
+        "top_k_scores": json.dumps([point["score"] for point in top_points]),
+        "top_k_in_reference": json.dumps([point["in_reference_window"] for point in top_points]),
+    }
+
+
+def as_float(value, default: float = -1.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def write_outside_reference_stats(rows: List[Dict], output_dir: Path) -> Dict:
+    stats_path = output_dir / "outside_reference_stats.csv"
+    cases_path = output_dir / "outside_reference_cases.csv"
+
+    fieldnames = sorted({key for row in rows for key in row.keys()})
+    preferred = [
+        "sample_index",
+        "sample_id",
+        "level",
+        "video_path",
+        "html_relpath",
+        "reference_start",
+        "reference_end",
+        "window_start",
+        "window_end",
+        "best_time",
+        "best_score",
+        "best_in_reference_window",
+        "best_distance_to_reference_sec",
+        "best_inside_time",
+        "best_inside_score",
+        "best_outside_time",
+        "best_outside_score",
+        "best_outside_distance_sec",
+        "top_k",
+        "top_k_outside_count",
+        "top_k_outside_ratio",
+        "top_k_times",
+        "top_k_scores",
+        "top_k_in_reference",
+        "caption",
+        "error",
+    ]
+    fieldnames = [name for name in preferred if name in fieldnames] + [
+        name for name in fieldnames if name not in preferred
+    ]
+
+    with stats_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    case_rows = [
+        row
+        for row in rows
+        if as_float(row.get("top_k_outside_count"), 0.0) > 0.0
+    ]
+    case_rows = sorted(
+        case_rows,
+        key=lambda row: (
+            str(row.get("best_in_reference_window", "")).lower() == "false",
+            as_float(row.get("top_k_outside_ratio")),
+            as_float(row.get("best_outside_score")),
+        ),
+        reverse=True,
+    )
+    with cases_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(case_rows)
+
+    outside_best = sum(
+        1 for row in rows
+        if str(row.get("best_in_reference_window", "")).lower() == "false"
+    )
+    valid_rows = sum(1 for row in rows if "error" not in row)
+    return {
+        "stats_path": stats_path,
+        "cases_path": cases_path,
+        "valid_rows": valid_rows,
+        "total_rows": len(rows),
+        "outside_best": outside_best,
+        "case_rows": len(case_rows),
+    }
+
+
+def print_stats_summary(summary: Dict) -> None:
+    valid_rows = summary["valid_rows"]
+    print(f"Saved outside-reference stats to: {summary['stats_path']}")
+    print(f"Saved outside-reference cases to: {summary['cases_path']}")
+    print(f"Valid samples: {valid_rows}/{summary['total_rows']}")
+    print(f"Best frame outside reference window: {summary['outside_best']}/{valid_rows}")
+    print(f"Top-k contains outside-reference frames: {summary['case_rows']}/{valid_rows}")
 
 
 def score_color(score: float, min_score: float, max_score: float) -> str:
@@ -712,7 +956,29 @@ def main():
     samples = build_samples(args)
     indices = select_sample_indices(len(samples), args.sample_index, args.max_samples)
 
+    if args.stats_only:
+        rows = []
+        for sample_idx in indices:
+            sample = samples[sample_idx]
+            try:
+                row = score_timeline_stats(sample, model, tokenizer, args, device)
+            except Exception as exc:
+                row = {
+                    "video_path": sample.get("video_path", ""),
+                    "caption": sample.get("caption", ""),
+                    "level": sample.get("level", ""),
+                    "reference_start": sample.get("start_time", ""),
+                    "reference_end": sample.get("end_time", ""),
+                    "error": str(exc),
+                }
+            row = {"sample_index": sample_idx, **row}
+            rows.append(row)
+
+        print_stats_summary(write_outside_reference_stats(rows, output_dir))
+        return
+
     index_entries = []
+    stats_rows = []
     results_jsonl_path = output_dir / "results.jsonl"
     with results_jsonl_path.open("w", encoding="utf-8") as jsonl_f:
         for ordinal, sample_idx in enumerate(indices):
@@ -729,6 +995,15 @@ def main():
             result_record = {"sample_id": sample_id, "sample_index": sample_idx, **result}
             jsonl_f.write(json.dumps(result_record, ensure_ascii=False) + "\n")
 
+            stats_row = build_stats_row_from_result(result, args.top_k)
+            stats_row = {
+                "sample_index": sample_idx,
+                "sample_id": sample_id,
+                "html_relpath": f"{sample_id}/index.html",
+                **stats_row,
+            }
+            stats_rows.append(stats_row)
+
             index_entries.append(
                 {
                     "sample_id": sample_id,
@@ -743,6 +1018,7 @@ def main():
             )
 
     (output_dir / "index.html").write_text(render_index(index_entries), encoding="utf-8")
+    print_stats_summary(write_outside_reference_stats(stats_rows, output_dir))
     print(f"Saved HTML timeline visualization to: {output_dir / 'index.html'}")
     print(f"Saved machine-readable results to: {results_jsonl_path}")
 
