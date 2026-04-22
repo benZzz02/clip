@@ -370,6 +370,11 @@ def score_timeline_stats(sample: Dict, model: VLP, tokenizer, args, device: str)
     best_point = top_points[0]
     best_outside = max(outside_points, key=lambda point: point["score"], default=None)
     best_inside = max(inside_points, key=lambda point: point["score"], default=None)
+    outside_discovery_margin = ""
+    outside_discovery = False
+    if best_outside is not None and best_inside is not None:
+        outside_discovery_margin = best_outside["score"] - best_inside["score"]
+        outside_discovery = outside_discovery_margin > 0.0
 
     return {
         "video_path": video_path,
@@ -389,6 +394,8 @@ def score_timeline_stats(sample: Dict, model: VLP, tokenizer, args, device: str)
         "best_outside_time": "" if best_outside is None else best_outside["time"],
         "best_outside_score": "" if best_outside is None else best_outside["score"],
         "best_outside_distance_sec": "" if best_outside is None else best_outside["distance_to_reference_sec"],
+        "outside_discovery_margin": outside_discovery_margin,
+        "outside_discovery": outside_discovery,
         "top_k": len(top_points),
         "top_k_outside_count": len(outside_top_points),
         "top_k_outside_ratio": len(outside_top_points) / max(len(top_points), 1),
@@ -410,6 +417,11 @@ def build_stats_row_from_result(result: Dict, top_k: int) -> Dict:
     best_point = top_points[0]
     best_outside = max(outside_points, key=lambda point: point["score"], default=None)
     best_inside = max(inside_points, key=lambda point: point["score"], default=None)
+    outside_discovery_margin = ""
+    outside_discovery = False
+    if best_outside is not None and best_inside is not None:
+        outside_discovery_margin = best_outside["score"] - best_inside["score"]
+        outside_discovery = outside_discovery_margin > 0.0
 
     return {
         "video_path": result["video_path"],
@@ -429,6 +441,8 @@ def build_stats_row_from_result(result: Dict, top_k: int) -> Dict:
         "best_outside_time": "" if best_outside is None else best_outside["time"],
         "best_outside_score": "" if best_outside is None else best_outside["score"],
         "best_outside_distance_sec": "" if best_outside is None else best_outside["distance_to_reference_sec"],
+        "outside_discovery_margin": outside_discovery_margin,
+        "outside_discovery": outside_discovery,
         "top_k": len(top_points),
         "top_k_outside_count": len(outside_top_points),
         "top_k_outside_ratio": len(outside_top_points) / max(len(top_points), 1),
@@ -449,38 +463,25 @@ def write_outside_reference_stats(rows: List[Dict], output_dir: Path) -> Dict:
     stats_path = output_dir / "outside_reference_stats.csv"
     cases_path = output_dir / "outside_reference_cases.csv"
 
-    fieldnames = sorted({key for row in rows for key in row.keys()})
     preferred = [
         "sample_index",
         "sample_id",
         "level",
-        "video_path",
         "html_relpath",
+        "video_path",
         "reference_start",
         "reference_end",
-        "window_start",
-        "window_end",
-        "best_time",
-        "best_score",
-        "best_in_reference_window",
-        "best_distance_to_reference_sec",
+        "outside_discovery",
+        "outside_discovery_margin",
         "best_inside_time",
         "best_inside_score",
         "best_outside_time",
         "best_outside_score",
         "best_outside_distance_sec",
-        "top_k",
-        "top_k_outside_count",
-        "top_k_outside_ratio",
-        "top_k_times",
-        "top_k_scores",
-        "top_k_in_reference",
         "caption",
         "error",
     ]
-    fieldnames = [name for name in preferred if name in fieldnames] + [
-        name for name in fieldnames if name not in preferred
-    ]
+    fieldnames = [name for name in preferred if any(name in row for row in rows)]
 
     with stats_path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -490,15 +491,11 @@ def write_outside_reference_stats(rows: List[Dict], output_dir: Path) -> Dict:
     case_rows = [
         row
         for row in rows
-        if as_float(row.get("top_k_outside_count"), 0.0) > 0.0
+        if str(row.get("outside_discovery", "")).lower() == "true"
     ]
     case_rows = sorted(
         case_rows,
-        key=lambda row: (
-            str(row.get("best_in_reference_window", "")).lower() == "false",
-            as_float(row.get("top_k_outside_ratio")),
-            as_float(row.get("best_outside_score")),
-        ),
+        key=lambda row: as_float(row.get("outside_discovery_margin")),
         reverse=True,
     )
     with cases_path.open("w", encoding="utf-8", newline="") as f:
@@ -525,9 +522,9 @@ def print_stats_summary(summary: Dict) -> None:
     valid_rows = summary["valid_rows"]
     print(f"Saved outside-reference stats to: {summary['stats_path']}")
     print(f"Saved outside-reference cases to: {summary['cases_path']}")
+    print("Metric: outside_discovery_margin = best_outside_score - best_inside_score")
     print(f"Valid samples: {valid_rows}/{summary['total_rows']}")
-    print(f"Best frame outside reference window: {summary['outside_best']}/{valid_rows}")
-    print(f"Top-k contains outside-reference frames: {summary['case_rows']}/{valid_rows}")
+    print(f"Outside discovery rate: {summary['case_rows']}/{valid_rows}")
 
 
 def score_color(score: float, min_score: float, max_score: float) -> str:
