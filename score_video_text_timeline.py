@@ -528,7 +528,7 @@ def write_outside_reference_stats(rows: List[Dict], output_dir: Path) -> Dict:
     fieldnames = [name for name in preferred if any(name in row for row in rows)]
 
     with stats_path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -543,7 +543,7 @@ def write_outside_reference_stats(rows: List[Dict], output_dir: Path) -> Dict:
         reverse=True,
     )
     with cases_path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(case_rows)
 
