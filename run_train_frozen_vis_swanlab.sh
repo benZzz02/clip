@@ -23,7 +23,8 @@ EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
 ACCUM_STEPS="${ACCUM_STEPS:-1}"
-NUM_WORKERS="${NUM_WORKERS:-8}"
+# DataLoader workers are per DDP process. With NPROC=2, this default uses 8 workers total.
+NUM_WORKERS="${NUM_WORKERS:-4}"
 NUM_FRAMES="${NUM_FRAMES:-8}"
 
 EPOCHS="${EPOCHS:-50}"
