@@ -39,6 +39,8 @@ MAX_LENGTH="${MAX_LENGTH:-256}"
 
 FFMPEG_TIMEOUT="${FFMPEG_TIMEOUT:-10}"
 MAX_RETRY="${MAX_RETRY:-5}"
+VIDEO_READER_THREADS="${VIDEO_READER_THREADS:-1}"
+VIDEO_READER_CACHE_SIZE="${VIDEO_READER_CACHE_SIZE:-64}"
 ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
 USE_SWANLAB="${USE_SWANLAB:-true}"
 
@@ -98,6 +100,8 @@ cmd=(
     --video_root_folder "$VIDEO_ROOT_FOLDER"
     --ffmpeg_timeout "$FFMPEG_TIMEOUT"
     --max_retry "$MAX_RETRY"
+    --video_reader_threads "$VIDEO_READER_THREADS"
+    --video_reader_cache_size "$VIDEO_READER_CACHE_SIZE"
     --assume_resized_video "$ASSUME_RESIZED_VIDEO"
     --main_csv_path "$MAIN_CSV_PATH"
     --annotations_root "$ANNOTATIONS_ROOT"

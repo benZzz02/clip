@@ -197,6 +197,16 @@ def parse_args():
     parser.add_argument("--ffmpeg_timeout", type=int, default=10)
     parser.add_argument("--max_retry", type=int, default=5)
     parser.add_argument(
+        "--video_reader_threads",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_THREADS", 1)),
+    )
+    parser.add_argument(
+        "--video_reader_cache_size",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 64)),
+    )
+    parser.add_argument(
         "--assume_resized_video",
         type=str2bool,
         default=os.environ.get("PRETRAIN_VIDEO_ALREADY_RESIZED", "0") == "1",
@@ -564,6 +574,8 @@ def train():
         "video_root_folder": args.video_root_folder,
         "ffmpeg_timeout": args.ffmpeg_timeout,
         "max_retry": args.max_retry,
+        "video_reader_threads": args.video_reader_threads,
+        "video_reader_cache_size": args.video_reader_cache_size,
         "assume_resized_video": args.assume_resized_video,
         "num_frames": args.num_frames,
         "annotations_root": args.annotations_root,
@@ -664,6 +676,8 @@ def train():
         print("正在加载预训练数据集...")
         print(f"视频目录: {CONFIG['video_root_folder']}")
         print(f"假设视频已预缩放: {CONFIG['assume_resized_video']}")
+        print(f"video_reader_threads: {CONFIG['video_reader_threads']}")
+        print(f"video_reader_cache_size: {CONFIG['video_reader_cache_size']}")
         print(f"每个样本抽帧数: {CONFIG['num_frames']}")
         if args.annotations_root:
             print(f"标注根目录: {args.annotations_root}")
@@ -701,6 +715,8 @@ def train():
         video_root_folder=CONFIG["video_root_folder"],
         assume_resized_video=CONFIG["assume_resized_video"],
         num_frames=CONFIG["num_frames"],
+        video_reader_threads=CONFIG["video_reader_threads"],
+        video_reader_cache_size=CONFIG["video_reader_cache_size"],
         return_level_id=True,
         return_sample_index=True,
         return_expanded_frames=True,
@@ -790,6 +806,8 @@ def train():
                     "video_root_folder": CONFIG["video_root_folder"],
                     "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],
                     "max_retry": CONFIG["max_retry"],
+                    "video_reader_threads": CONFIG["video_reader_threads"],
+                    "video_reader_cache_size": CONFIG["video_reader_cache_size"],
                     "assume_resized_video": CONFIG["assume_resized_video"],
                     "num_frames": CONFIG["num_frames"],
                     "per_gpu_batch_size": PER_GPU_BATCH_SIZE,
