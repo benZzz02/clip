@@ -281,7 +281,7 @@ def parse_args():
     parser.add_argument(
         "--max_text_queries",
         type=int,
-        default=int(os.environ.get("MAX_TEXT_QUERIES", 8)),
+        default=int(os.environ.get("MAX_TEXT_QUERIES", 4)),
         help="Maximum number of latent text queries for latent_xpool",
     )
     parser.add_argument(

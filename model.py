@@ -211,8 +211,8 @@ class VLP(nn.Module):
         local_temperature=0.07,
         selection_pooling="similarity",
         level_frame_temperatures=(0.6, 0.9, 1.2),
-        max_text_queries=8,
-        level_text_query_counts=(1, 4, 8),
+        max_text_queries=4,
+        level_text_query_counts=(1, 2, 4),
     ):
         super().__init__()
 
@@ -229,6 +229,13 @@ class VLP(nn.Module):
         self.local_temperature = float(local_temperature)
         self.selection_pooling = str(selection_pooling).lower()
         self.max_text_queries = max(1, int(max_text_queries))
+        self.active_text_queries = max(
+            1,
+            min(
+                self.max_text_queries,
+                max(int(query_count) for query_count in level_text_query_counts),
+            ),
+        )
 
         self.frame_pool = None
         if self.num_frames > 1:
@@ -536,7 +543,7 @@ class VLP(nn.Module):
         if level_ids is None:
             return torch.full(
                 (batch_size,),
-                int(self.max_text_queries),
+                int(self.active_text_queries),
                 device=device,
                 dtype=torch.long,
             )
@@ -548,9 +555,12 @@ class VLP(nn.Module):
         query_counts = self.level_text_query_counts.to(device=device)[level_ids]
         return query_counts.clamp(min=1, max=self.max_text_queries)
 
-    def _compute_latent_text_queries(self, token_hidden, attention_mask):
+    def _compute_latent_text_queries(self, token_hidden, attention_mask, num_queries=None):
         token_mask = attention_mask.to(device=token_hidden.device, dtype=torch.bool)
-        slots = self.latent_text_query_slots.to(dtype=token_hidden.dtype)
+        if num_queries is None:
+            num_queries = self.max_text_queries
+        num_queries = max(1, min(int(num_queries), int(self.max_text_queries)))
+        slots = self.latent_text_query_slots[:num_queries].to(dtype=token_hidden.dtype)
         attn_scores = torch.einsum("kh,blh->bkl", slots, token_hidden)
         attn_scores = attn_scores / math.sqrt(float(token_hidden.size(-1)))
         attn_scores = attn_scores.masked_fill(~token_mask.unsqueeze(1), -1e4)
@@ -565,9 +575,15 @@ class VLP(nn.Module):
         dtype = frame_tokens.dtype
         device = frame_tokens.device
 
+        query_counts = self._get_level_query_counts(
+            level_ids=level_ids,
+            batch_size=batch_size,
+            device=device,
+        )
         text_query_hidden, _ = self._compute_latent_text_queries(
             token_hidden=token_hidden,
             attention_mask=attention_mask,
+            num_queries=self.active_text_queries,
         )
         queries = F.normalize(self.selection_text_query_projection(text_query_hidden), dim=-1)
         keys = F.normalize(self.selection_frame_key_projection(frame_tokens), dim=-1)
@@ -583,12 +599,7 @@ class VLP(nn.Module):
         ).view(batch_size, 1, 1)
         frame_weights = F.softmax(raw_scores / frame_temps.clamp(min=1e-4), dim=-1)
 
-        query_counts = self._get_level_query_counts(
-            level_ids=level_ids,
-            batch_size=batch_size,
-            device=device,
-        )
-        query_ids = torch.arange(self.max_text_queries, device=device).view(1, -1)
+        query_ids = torch.arange(self.active_text_queries, device=device).view(1, -1)
         query_mask = query_ids < query_counts.view(-1, 1)
         frame_weights = frame_weights * query_mask.unsqueeze(-1).to(dtype=frame_weights.dtype)
 
