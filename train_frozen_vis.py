@@ -204,7 +204,7 @@ def parse_args():
     parser.add_argument(
         "--video_reader_cache_size",
         type=int,
-        default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 64)),
+        default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 16)),
     )
     parser.add_argument(
         "--assume_resized_video",
