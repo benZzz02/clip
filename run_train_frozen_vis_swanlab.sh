@@ -7,12 +7,12 @@ cd "$SCRIPT_DIR"
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate "${CONDA_ENV:-vllm}"
 
-# Multi-query latent xpool preset:
-# fine/mid/coarse use 1/2/4 latent text queries, with the stronger
-# selection loss setting that matched the previous stable xpool run.
-RUN_NAME="${RUN_NAME:-latent_xpool_124_sw07_8f_run1}"
+# Coarse-only multi-query latent xpool preset:
+# stay close to the previous best xpool launcher, and only let coarse
+# samples use extra latent text queries.
+RUN_NAME="${RUN_NAME:-latent_xpool_coarse_only_114_sw07_8f_run1}"
 SELECTION_POOLING="${SELECTION_POOLING:-latent_xpool}"
-LEVEL_TEXT_QUERY_COUNTS="${LEVEL_TEXT_QUERY_COUNTS:-1,2,4}"
+LEVEL_TEXT_QUERY_COUNTS="${LEVEL_TEXT_QUERY_COUNTS:-1,1,4}"
 MAX_TEXT_QUERIES="${MAX_TEXT_QUERIES:-4}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.7}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
@@ -23,7 +23,7 @@ EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
 ACCUM_STEPS="${ACCUM_STEPS:-1}"
-NUM_WORKERS="${NUM_WORKERS:-8}"
+NUM_WORKERS="${NUM_WORKERS:-1}"
 NUM_FRAMES="${NUM_FRAMES:-8}"
 
 EPOCHS="${EPOCHS:-50}"

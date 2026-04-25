@@ -575,19 +575,31 @@ class VLP(nn.Module):
         dtype = frame_tokens.dtype
         device = frame_tokens.device
 
+        token_mask = attention_mask.bool()
+        text_mask = token_mask.unsqueeze(-1).to(dtype=token_hidden.dtype)
+        pooled_hidden = (token_hidden * text_mask).sum(dim=1) / text_mask.sum(dim=1).clamp(min=1e-6)
+
         query_counts = self._get_level_query_counts(
             level_ids=level_ids,
             batch_size=batch_size,
             device=device,
         )
-        text_query_hidden, _ = self._compute_latent_text_queries(
-            token_hidden=token_hidden,
-            attention_mask=attention_mask,
-            num_queries=self.active_text_queries,
-        )
-        queries = F.normalize(self.selection_text_query_projection(text_query_hidden), dim=-1)
         keys = F.normalize(self.selection_frame_key_projection(frame_tokens), dim=-1)
-        raw_scores = torch.einsum("bkd,btd->bkt", queries, keys)
+        xpool_query = F.normalize(self.selection_text_query_projection(pooled_hidden), dim=-1)
+        xpool_scores = torch.einsum("bd,btd->bt", xpool_query, keys).unsqueeze(1)
+
+        num_latent_queries = max(0, self.active_text_queries - 1)
+        if num_latent_queries > 0:
+            text_query_hidden, _ = self._compute_latent_text_queries(
+                token_hidden=token_hidden,
+                attention_mask=attention_mask,
+                num_queries=num_latent_queries,
+            )
+            latent_queries = F.normalize(self.selection_text_query_projection(text_query_hidden), dim=-1)
+            latent_scores = torch.einsum("bkd,btd->bkt", latent_queries, keys)
+            raw_scores = torch.cat([xpool_scores, latent_scores], dim=1)
+        else:
+            raw_scores = xpool_scores
 
         frame_temps = self._get_level_values(
             level_ids,
