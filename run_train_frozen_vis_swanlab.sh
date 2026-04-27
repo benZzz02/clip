@@ -9,7 +9,8 @@ conda activate "${CONDA_ENV:-vllm}"
 
 NPROC="${NPROC:-2}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
-EXP_NAME="${EXP_NAME:-same_video_triplet_xpool_8f_run1}"
+RUN_NAME="${RUN_NAME:-same_video_triplet_xpool_8f_no_hc_run1}"
+EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
 ACCUM_STEPS="${ACCUM_STEPS:-1}"
@@ -28,6 +29,8 @@ MAX_LENGTH="${MAX_LENGTH:-256}"
 
 FFMPEG_TIMEOUT="${FFMPEG_TIMEOUT:-10}"
 MAX_RETRY="${MAX_RETRY:-5}"
+VIDEO_READER_THREADS="${VIDEO_READER_THREADS:-1}"
+VIDEO_READER_CACHE_SIZE="${VIDEO_READER_CACHE_SIZE:-16}"
 ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
 USE_SWANLAB="${USE_SWANLAB:-true}"
 
@@ -51,9 +54,10 @@ SELECTION_POOLING="${SELECTION_POOLING:-xpool}"
 LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.35,0.8,1.6}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
 SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.7}"
+HIERARCHICAL_CONSISTENCY_WEIGHT="${HIERARCHICAL_CONSISTENCY_WEIGHT:-0}"
 
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
-SAVE_PREFIX="${SAVE_PREFIX:-outputs/same_video_triplet_xpool_8f_run1/}"
+SAVE_PREFIX="${SAVE_PREFIX:-outputs/$RUN_NAME/}"
 
 if [[ "$SAVE_PREFIX" == */ ]]; then
     mkdir -p "$SAVE_PREFIX"
@@ -90,6 +94,8 @@ cmd=(
     --video_root_folder "$VIDEO_ROOT_FOLDER"
     --ffmpeg_timeout "$FFMPEG_TIMEOUT"
     --max_retry "$MAX_RETRY"
+    --video_reader_threads "$VIDEO_READER_THREADS"
+    --video_reader_cache_size "$VIDEO_READER_CACHE_SIZE"
     --assume_resized_video "$ASSUME_RESIZED_VIDEO"
     --main_csv_path "$MAIN_CSV_PATH"
     --annotations_root "$ANNOTATIONS_ROOT"
@@ -106,7 +112,7 @@ cmd=(
     --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
-    --hierarchical_consistency_weight 0.1
+    --hierarchical_consistency_weight "$HIERARCHICAL_CONSISTENCY_WEIGHT"
 )
 
 if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then

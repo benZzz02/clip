@@ -186,6 +186,16 @@ def parse_args():
     parser.add_argument("--ffmpeg_timeout", type=int, default=10)
     parser.add_argument("--max_retry", type=int, default=5)
     parser.add_argument(
+        "--video_reader_threads",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_THREADS", 1)),
+    )
+    parser.add_argument(
+        "--video_reader_cache_size",
+        type=int,
+        default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 16)),
+    )
+    parser.add_argument(
         "--assume_resized_video",
         type=str2bool,
         default=os.environ.get("PRETRAIN_VIDEO_ALREADY_RESIZED", "0") == "1",
@@ -538,6 +548,8 @@ def train():
         "video_root_folder": args.video_root_folder,
         "ffmpeg_timeout": args.ffmpeg_timeout,
         "max_retry": args.max_retry,
+        "video_reader_threads": args.video_reader_threads,
+        "video_reader_cache_size": args.video_reader_cache_size,
         "assume_resized_video": args.assume_resized_video,
         "num_frames": args.num_frames,
         "annotations_root": args.annotations_root,
@@ -653,6 +665,8 @@ def train():
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
         print(f"samples_cache_version: {CONFIG['samples_cache_version']}")
+        print(f"video_reader_threads: {CONFIG['video_reader_threads']}")
+        print(f"video_reader_cache_size: {CONFIG['video_reader_cache_size']}")
 
     train_dataset = PretrainDataset(
         main_csv_path=MAIN_CSV_PATH,
@@ -677,6 +691,8 @@ def train():
         use_samples_cache=CONFIG["use_samples_cache"],
         rebuild_samples_cache=CONFIG["rebuild_samples_cache"],
         samples_cache_version=CONFIG["samples_cache_version"],
+        video_reader_threads=CONFIG["video_reader_threads"],
+        video_reader_cache_size=CONFIG["video_reader_cache_size"],
     )
 
     if rank == 0:
