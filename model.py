@@ -3,18 +3,39 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-from transformers import AutoModel
+from transformers import AutoConfig, AutoModel
 
 from surgclip.surgclip.models.timesformer.timesformer import Block
 
 
-def build_LemonFM(pretrained_weights="lemonfm.pth"):
-    net = torchvision.models.convnext_large()
+def _build_convnext_large_backbone(weights=None):
+    net = torchvision.models.convnext_large(weights=weights)
     in_dim = net.classifier[2].in_features
     net.classifier[2] = nn.Identity()
+    net.output_dim = in_dim
+    return net
 
+
+def build_LemonFM(pretrained_weights="lemonfm.pth"):
     if pretrained_weights is None:
         raise ValueError("pretrained_weights is None")
+
+    if isinstance(pretrained_weights, str):
+        mode = pretrained_weights.strip().lower()
+    else:
+        mode = pretrained_weights
+
+    if mode in {"random", "none", "scratch"}:
+        print("Initializing ConvNeXt-Large with random weights.")
+        return _build_convnext_large_backbone(weights=None)
+
+    if mode in {"imagenet", "imagenet1k", "torchvision", "default"}:
+        print("Loading ConvNeXt-Large torchvision ImageNet-1K weights.")
+        return _build_convnext_large_backbone(
+            weights=torchvision.models.ConvNeXt_Large_Weights.IMAGENET1K_V1
+        )
+
+    net = _build_convnext_large_backbone(weights=None)
 
     if not os.path.isfile(pretrained_weights):
         raise FileNotFoundError(f"Local checkpoint not found: {pretrained_weights}")
@@ -39,8 +60,6 @@ def build_LemonFM(pretrained_weights="lemonfm.pth"):
     ), f"Local checkpoint not actually loaded for key: {first_key}"
 
     print(f"Verified local checkpoint loaded into model for key: {first_key}")
-
-    net.output_dim = in_dim
     return net
 
 
@@ -48,10 +67,25 @@ class SurgicBERTaTextEncoder(nn.Module):
     def __init__(self, model_name="marcobombieri/surgicberta", embed_dim=512):
         super().__init__()
 
-        self.backbone = AutoModel.from_pretrained(
-            model_name,
-            add_pooling_layer=False,
-        )
+        model_name = model_name.strip()
+        lower_name = model_name.lower()
+
+        if lower_name.startswith(("random:", "scratch:", "none:")):
+            base_name = model_name.split(":", 1)[1].strip()
+            if not base_name:
+                raise ValueError(
+                    "Random text initialization requires a base config name, "
+                    "e.g. random:bert-base-uncased"
+                )
+            print(f"Initializing text backbone from config only: {base_name}")
+            config = AutoConfig.from_pretrained(base_name)
+            config.add_pooling_layer = False
+            self.backbone = AutoModel.from_config(config)
+        else:
+            self.backbone = AutoModel.from_pretrained(
+                model_name,
+                add_pooling_layer=False,
+            )
 
         self.hidden_size = self.backbone.config.hidden_size
         self.text_projection = nn.Linear(self.hidden_size, embed_dim, bias=False)

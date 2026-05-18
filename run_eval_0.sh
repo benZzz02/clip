@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-set +u
 source ~/miniconda3/etc/profile.d/conda.sh
-if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
-  conda activate vllm
-fi
-set -u
 
-CKPT="/mnt/mydisk/CLIP/outputs/train_window_denoise_8f_run2/vlp_epoch_30.pt"
-VISION_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
+set -u
+CKPT="outputs/same_video_triplet_reselect_only_8f_run1_1101/vlp_final.pt"
+VISION_WEIGHTS="lemonfm.pth"
 TEXT_MODEL="marcobombieri/surgicberta"
-OUTPUT_DIR="./eval_4.3_epoch_30"
-CUDA_DEVICE=2
+OUTPUT_DIR="./eval_5.17_epoch_50"
+CUDA_DEVICE=1
+
 
 EMBED_DIM=256
 BATCH_SIZE=32

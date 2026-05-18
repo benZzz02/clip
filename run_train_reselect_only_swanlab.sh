@@ -5,11 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate "${CONDA_ENV:-vllm}"
+
 
 NPROC="${NPROC:-2}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
-RUN_NAME="${RUN_NAME:-same_video_triplet_baseline_8f_run1}"
+RUN_NAME="${RUN_NAME:-same_video_triplet_reselect_only_8f_run1_1101}"
 EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
@@ -35,25 +35,25 @@ ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
 USE_SWANLAB="${USE_SWANLAB:-true}"
 
 TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
-VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-/mnt/mydisk/CLIP/lemonfm.pth}"
-VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-/mnt/mydisk/CLIP/downloaded_video_224_test}"
-MAIN_CSV_PATH="${MAIN_CSV_PATH:-/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv}"
+VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-lemonfm.pth}"
+VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-downloaded_video_224_test}"
+MAIN_CSV_PATH="${MAIN_CSV_PATH:-surglavi_level_csv/all_video.csv}"
 
-ANNOTATIONS_ROOT="${ANNOTATIONS_ROOT:-/mnt/mydisk/CLIP/surglavi_level_csv}"
+ANNOTATIONS_ROOT="${ANNOTATIONS_ROOT:-surglavi_level_csv}"
 ANNOTATION_LEVELS="${ANNOTATION_LEVELS:-coarse,mid,fine}"
 LEVEL_MIX="${LEVEL_MIX:-concat}"
 LEVEL_BATCH_SIZES="${LEVEL_BATCH_SIZES:-fine:80,mid:32,coarse:16}"
 
-SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-/mnt/mydisk/CLIP/.cache/pretrain_samples}"
+SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-.cache/pretrain_samples}"
 USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
 REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
 SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
 
 LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
-SELECTION_POOLING="${SELECTION_POOLING:-similarity}"
-LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-1.0,1.0,1.0}"
+SELECTION_POOLING="${SELECTION_POOLING:-xpool}"
+LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.6,0.9,1.2}"
 TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.0}"
-SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0}"
+SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-0.7}"
 HIERARCHICAL_CONSISTENCY_WEIGHT="${HIERARCHICAL_CONSISTENCY_WEIGHT:-0}"
 
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
@@ -113,7 +113,6 @@ cmd=(
     --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
     --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
     --hierarchical_consistency_weight "$HIERARCHICAL_CONSISTENCY_WEIGHT"
-    --resume_from_checkpoint "outputs/same_video_triplet_baseline_8f_run1/vlp_epoch_23.pt"
 )
 
 if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
