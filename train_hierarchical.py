@@ -33,7 +33,7 @@ import torch.nn.functional as F
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import CosineAnnealingLR, LambdaLR
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.cuda.amp import autocast, GradScaler
 from torch.utils.tensorboard import SummaryWriter
@@ -200,13 +200,35 @@ def train_epoch(loader, model, loss_fn, optimizer, scheduler, scaler,
 
 
 # ==============================================================================
+# Cosine warmup scheduler (from PeskaVLP: get_cosine_schedule_with_warmup)
+# ==============================================================================
+
+def get_cosine_warmup_scheduler(optimizer, warmup_steps, total_steps):
+    """Linear warmup then cosine decay, same as PeskaVLP."""
+    def lr_lambda(step):
+        if step < warmup_steps:
+            return float(step) / float(max(1, warmup_steps))
+        progress = float(step - warmup_steps) / float(max(1, total_steps - warmup_steps))
+        return max(0.0, 0.5 * (1.0 + math.cos(math.pi * progress)))
+    return LambdaLR(optimizer, lr_lambda)
+
+
+# ==============================================================================
 # In-Training Eval (reuses zeroshot_evaluate.py)
 # ==============================================================================
 
 def run_eval(model, tokenizer, epoch, args, device):
+    """Run zero-shot evaluation using existing zeroshot_evaluate infrastructure."""
     from zeroshot_evaluate import build_dataloader, evaluation_wrapper
+
     model.eval()
-    for ds in [d.strip() for d in args.eval_datasets.split(",") if d.strip()]:
+    datasets = [d.strip() for d in args.eval_datasets.split(",") if d.strip()]
+
+    # Add triplet eval if requested
+    if args.eval_triplet:
+        datasets.append("cholect50_triplet")
+
+    for ds in datasets:
         try:
             loader, _ = build_dataloader(ds, batch_size=16, num_workers=2,
                                          num_frames=args.num_frames)
@@ -218,6 +240,8 @@ def run_eval(model, tokenizer, epoch, args, device):
                 for k, v in result.items():
                     if isinstance(v, (int, float)):
                         args.writer.add_scalar(f"eval/{ds}/{k}", v, epoch)
+            if dist.get_rank() == 0:
+                print(f"  [{ds}] OK")
         except Exception as e:
             if dist.get_rank() == 0:
                 print(f"  [{ds}] eval error: {e}")
@@ -277,6 +301,10 @@ def parse_args():
     # Logging (from train.py)
     p.add_argument("--log_interval", type=int, default=10)
     p.add_argument("--output_dir", type=str, default="runs/hierarchical_vlp")
+    p.add_argument("--warmup_steps", type=int, default=500,
+                        help="Linear warmup steps")
+    p.add_argument("--eval_triplet", action="store_true",
+                        help="Also run triplet evaluation during training")
     p.add_argument("--resume", type=str, default=None)
     p.add_argument("--use_compile", action="store_true")
 
@@ -377,7 +405,10 @@ def train():
     acts = math.ceil(len(action_loader) / args.accum_steps)
     keys = math.ceil(len(keystep_loader) / args.accum_steps) * max(0, (args.epochs - 1) // args.keystep_every)
     abss = math.ceil(len(abstract_loader) / args.accum_steps) * max(0, (args.epochs - 1) // args.abstract_every)
-    scheduler = CosineAnnealingLR(optimizer, T_max=acts * args.epochs + keys + abss)
+    scheduler = get_cosine_warmup_scheduler(
+        optimizer, warmup_steps=args.warmup_steps,
+        total_steps=acts * args.epochs + keys + abss,
+    )
     scaler = GradScaler(enabled=(args.amp_dtype == torch.float16))
 
     # ---- Resume (from train.py) ----
