@@ -132,7 +132,7 @@ def _overlap(s1, e1, s2, e2):
 def _query_adjacent(lookup, video_path, start, end, primary_level,
                     max_candidates, min_overlap, build_text_fn):
     """Query adjacent-level texts with overlapping time windows."""
-    if video_path not in lookup:
+    if video_path not in lookup or max_candidates <= 0:
         return []
     cands = []
     for level in ["fine", "mid", "coarse"]:
