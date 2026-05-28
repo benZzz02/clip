@@ -1,12 +1,12 @@
 """
-Gradient-preserving AllGather for distributed contrastive learning.
+AllGather with gradient preservation.
 
-Ported from PeskaVLP's utils.py. Unlike the CLIP repo's concat_all_gather
-(which detaches gradients and re-attaches locally), this autograd Function
-preserves full gradient flow through the gather operation — critical for
-multi-term loss composition (InfoNCE + NTXent + MILNCE + SimCLR) where
-gradients must flow correctly from the global contrastive matrix back to
-each GPU's local embeddings.
+Extends the pattern from train.py's concat_all_gather (which uses .detach())
+to support gradient flow through the gather operation — needed when multiple
+loss terms (InfoNCE + NTXent + MILNCE + SimCLR) compose gradients on the
+full distributed contrastive matrix.
+
+This is a standard PyTorch autograd.Function wrapping dist.all_gather.
 """
 
 import torch
@@ -14,11 +14,7 @@ import torch.distributed as dist
 
 
 class AllGather(torch.autograd.Function):
-    """An autograd function that performs allgather on a tensor.
-
-    Forward: gathers tensors from all GPUs and concatenates along dim 0.
-    Backward: scatters gradients back to the correct GPU's local slice.
-    """
+    """all_gather with proper gradient back-propagation."""
 
     @staticmethod
     def forward(ctx, tensor, world_size, rank):
@@ -32,13 +28,8 @@ class AllGather(torch.autograd.Function):
     def backward(ctx, grad_output):
         start = ctx.batch_size * ctx.rank
         end = start + ctx.batch_size
-        return (
-            grad_output[start:end],
-            None,  # world_size
-            None,  # rank
-        )
+        return grad_output[start:end], None, None
 
 
 def all_gather(tensor, world_size, rank):
-    """Convenience wrapper for AllGather autograd function."""
     return AllGather.apply(tensor, world_size, rank)
