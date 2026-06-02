@@ -8,20 +8,19 @@ if [[ "${CONDA_DEFAULT_ENV:-}" != "vllm" ]]; then
 fi
 set -u
 
-CKPT="${CKPT:-/data/surglavi_checkpoint/surglavi_16frame_run1/surglavi_epoch_50.pt}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_surglavi}"
+CKPT="${CKPT:-/data/surglavi_checkpoint/surglavi_8frame_run1/surglavi_epoch_45.pt}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_surglavi_epoch45}"
 CUDA_DEVICE="${CUDA_DEVICE:-0}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
 TOKENIZER_NAME="${TOKENIZER_NAME:-bert-base-uncased}"
 
-NUM_FRAMES="${NUM_FRAMES:-8}"
-MODEL_NUM_FRAMES="${MODEL_NUM_FRAMES:-8}"
+NUM_FRAMES="${NUM_FRAMES:-16}"
+MODEL_NUM_FRAMES="${MODEL_NUM_FRAMES:-16}"
 FRAME_STRIDE="${FRAME_STRIDE:-1}"
 BATCH_SIZE="${BATCH_SIZE:-64}"
-NUM_WORKERS="${NUM_WORKERS:-4}"
+NUM_WORKERS="${NUM_WORKERS:-8}"
 IMAGE_SIZE="${IMAGE_SIZE:-224}"
-
 mkdir -p "$OUTPUT_DIR"
 
 for ds in \

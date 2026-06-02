@@ -4,10 +4,10 @@ set -euo pipefail
 source ~/miniconda3/etc/profile.d/conda.sh
 
 set -u
-CKPT="outputs/same_video_triplet_reselect_only_8f_run1_1101/vlp_final.pt"
+CKPT="/data/nfs_data/CLIP/outputs/same_video_triplet_baseline_no_surgical_init_8f_run1/vlp_final.pt"
 VISION_WEIGHTS="lemonfm.pth"
-TEXT_MODEL="marcobombieri/surgicberta"
-OUTPUT_DIR="./eval_5.17_epoch_50"
+TEXT_MODEL="bert-base-uncased"
+OUTPUT_DIR="./eval_5.29_epoch_50"
 CUDA_DEVICE=1
 
 
@@ -17,7 +17,7 @@ NUM_WORKERS=6
 NUM_FRAMES=8
 FRAME_STRIDE=1
 TEMPORAL_LAYERS=2
-TEMPORAL_HEADS=8
+TEMPORAL_HEADS=12
 TEMPORAL_DROPOUT=0.1
 
 for ds in \

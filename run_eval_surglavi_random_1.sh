@@ -9,8 +9,8 @@ fi
 set -u
 
 CKPT="${CKPT:-/data/surglavi_checkpoint/surglavi_8frame_run1/surglavi_epoch_45.pt}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_outputs_surglavi_epoch45}"
-CUDA_DEVICE="${CUDA_DEVICE:-2}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_surglavi_random_proj}"
+CUDA_DEVICE="${CUDA_DEVICE:-1}"
 
 SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
 TOKENIZER_NAME="${TOKENIZER_NAME:-bert-base-uncased}"
@@ -21,16 +21,17 @@ FRAME_STRIDE="${FRAME_STRIDE:-1}"
 BATCH_SIZE="${BATCH_SIZE:-64}"
 NUM_WORKERS="${NUM_WORKERS:-8}"
 IMAGE_SIZE="${IMAGE_SIZE:-224}"
+RANDOM_SEED="${RANDOM_SEED:-42}"
 
 mkdir -p "$OUTPUT_DIR"
 
 for ds in \
-  cholect50_triplet \
-  sarrarp50_phase \
-  heichole_phase \
-  heichole_instrument
+  grasp_phase \
+  grasp_step \
+  grasp_instrument \
+  autolaparo_phase
 do
-  echo "Evaluating dataset: $ds"
+  echo "Evaluating dataset: $ds (randomized projection)"
 
   CUDA_VISIBLE_DEVICES="$CUDA_DEVICE" python zeroshot_evaluate_surglavi.py \
     --dataset "$ds" \
@@ -43,5 +44,7 @@ do
     --model_num_frames "$MODEL_NUM_FRAMES" \
     --frame_stride "$FRAME_STRIDE" \
     --image_size "$IMAGE_SIZE" \
+    --randomize_projection \
+    --random_seed "$RANDOM_SEED" \
     --output_dir "$OUTPUT_DIR"
 done

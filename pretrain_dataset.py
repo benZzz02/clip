@@ -55,6 +55,7 @@ class PretrainDataset(Dataset):
         samples_cache_version="v1",
         video_reader_threads=1,
         video_reader_cache_size=16,
+        normalization="imagenet",
     ):
         super().__init__()
 
@@ -87,12 +88,21 @@ class PretrainDataset(Dataset):
         self.video_reader_cache_size = max(0, int(video_reader_cache_size))
         self._video_reader_cache = OrderedDict()
 
-        self.pixel_mean = torch.tensor(
-            [0.485, 0.456, 0.406], dtype=torch.float32
-        ).view(1, 3, 1, 1)
-        self.pixel_std = torch.tensor(
-            [0.229, 0.224, 0.225], dtype=torch.float32
-        ).view(1, 3, 1, 1)
+        norm_type = str(normalization).strip().lower()
+        if norm_type == "surgclip":
+            self.pixel_mean = torch.tensor(
+                [0.5, 0.5, 0.5], dtype=torch.float32
+            ).view(1, 3, 1, 1)
+            self.pixel_std = torch.tensor(
+                [0.5, 0.5, 0.5], dtype=torch.float32
+            ).view(1, 3, 1, 1)
+        else:
+            self.pixel_mean = torch.tensor(
+                [0.485, 0.456, 0.406], dtype=torch.float32
+            ).view(1, 3, 1, 1)
+            self.pixel_std = torch.tensor(
+                [0.229, 0.224, 0.225], dtype=torch.float32
+            ).view(1, 3, 1, 1)
 
         self.samples = load_or_build_pretrain_samples(
             main_csv_path=self.main_csv_path,

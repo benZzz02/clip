@@ -182,6 +182,20 @@ def parse_args():
     p.add_argument("--level_seed", type=int, default=int(os.environ.get("PRETRAIN_LEVEL_SEED", 42)))
     p.add_argument("--sample_mode", type=str, default=os.environ.get("PRETRAIN_SAMPLE_MODE", "random"),
                    choices=("random", "center"))
+    p.add_argument("--normalization", type=str, default=os.environ.get("PRETRAIN_NORMALIZATION", "surgclip"),
+                   choices=("imagenet", "surgclip"))
+
+    # decord / video reader
+    p.add_argument("--ffmpeg_timeout", type=int, default=int(os.environ.get("FFMPEG_TIMEOUT", 10)))
+    p.add_argument("--max_retry", type=int, default=int(os.environ.get("MAX_RETRY", 5)))
+    p.add_argument("--video_reader_threads", type=int, default=int(os.environ.get("VIDEO_READER_THREADS", 1)))
+    p.add_argument("--video_reader_cache_size", type=int, default=int(os.environ.get("VIDEO_READER_CACHE_SIZE", 16)))
+
+    # samples cache
+    p.add_argument("--samples_cache_dir", type=str, default=os.environ.get("SAMPLES_CACHE_DIR", ".cache/pretrain_samples"))
+    p.add_argument("--use_samples_cache", type=int, default=int(os.environ.get("USE_SAMPLES_CACHE", "1")))
+    p.add_argument("--rebuild_samples_cache", type=int, default=int(os.environ.get("REBUILD_SAMPLES_CACHE", "0")))
+    p.add_argument("--samples_cache_version", type=str, default=os.environ.get("SAMPLES_CACHE_VERSION", "v1"))
 
     # tokenizer: 用于 caption -> input_ids/attention_mask，同时对齐 SurgCLIP 文本编码器权重
     p.add_argument("--tokenizer_name", type=str, default=os.environ.get("TOKENIZER_NAME", "bert-base-uncased"))
@@ -244,6 +258,15 @@ def train():
         annotation_levels=(args.annotation_levels or None),
         level_mix=args.level_mix,
         level_seed=args.level_seed,
+        normalization=args.normalization,
+        ffmpeg_timeout=args.ffmpeg_timeout,
+        max_retry=args.max_retry,
+        video_reader_threads=args.video_reader_threads,
+        video_reader_cache_size=args.video_reader_cache_size,
+        samples_cache_dir=args.samples_cache_dir,
+        use_samples_cache=bool(args.use_samples_cache),
+        rebuild_samples_cache=bool(args.rebuild_samples_cache),
+        samples_cache_version=args.samples_cache_version,
     )
 
     train_sampler = DistributedSampler(
@@ -288,7 +311,50 @@ def train():
     )
 
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=True)
+
+    # ---- 加载 SurgCLIP 预训练权重（仅 backbone，对齐层随机初始化） ----
+    from surgclip.surgclip.download import download_weights
+    weights_path = download_weights(args.surgclip_model_name)
+    if rank == 0:
+        print(f"[rank0] Loading SurgCLIP pretrained weights from: {weights_path}")
+    state_dict = torch.load(weights_path, map_location="cpu")
+
+    surgclip_core.load_state_dict(state_dict, strict=False)
+
+    # 随机重初始化对齐层（vision_proj / text_proj），保留 temp
+    import torch.nn.init as init
+    init.trunc_normal_(surgclip_core.vision_proj.weight, std=0.02)
+    init.trunc_normal_(surgclip_core.text_proj.weight, std=0.02)
+    if surgclip_core.vision_proj.bias is not None:
+        init.zeros_(surgclip_core.vision_proj.bias)
+    if surgclip_core.text_proj.bias is not None:
+        init.zeros_(surgclip_core.text_proj.bias)
+
+    if rank == 0:
+        print(f"[rank0] Re-initialized vision_proj / text_proj randomly (backbone weights loaded from pretrained)")
+    # ---------------------------------
+
     model = SurgCLIPAdapter(surgclip_core).to(device)
+
+    # ---- 冻结 backbone，只训练对齐层 ----
+    for name, param in model.named_parameters():
+        param.requires_grad = False
+
+    # SurgCLIP 的对齐层
+    for name, param in surgclip_core.vision_proj.named_parameters():
+        param.requires_grad = True
+    for name, param in surgclip_core.text_proj.named_parameters():
+        param.requires_grad = True
+    surgclip_core.temp.requires_grad = True
+
+    # SurgCLIPAdapter 的 logit_scale
+    model.logit_scale.requires_grad = True
+
+    if rank == 0:
+        trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total = sum(p.numel() for p in model.parameters())
+        print(f"[rank0] Total params: {total:,} | Trainable: {trainable:,} ({100*trainable/total:.1f}%)")
+    # -----------------------------------
 
     if os.environ.get("USE_COMPILE", "0") == "1":
         try:

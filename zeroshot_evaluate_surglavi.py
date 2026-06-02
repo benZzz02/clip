@@ -6,6 +6,7 @@ from types import SimpleNamespace
 
 import torch
 import torch.nn.functional as F
+import torch.nn.init as init
 from transformers import AutoTokenizer
 
 from eval_report_utils import export_evaluation_reports
@@ -145,6 +146,20 @@ def build_model(args, tokenizer, device):
     surgclip_core = SurgCLIP(config=config, tokenizer=tokenizer, is_pretrain=False)
     model = SurgCLIPAdapter(surgclip_core).to(device)
     model = load_model_checkpoint(model, args.ckpt, device)
+
+    if getattr(args, "randomize_projection", False):
+        seed = getattr(args, "random_seed", 42)
+        torch.manual_seed(seed)
+        init.trunc_normal_(model.surgclip.vision_proj.weight, std=0.02)
+        init.trunc_normal_(model.surgclip.text_proj.weight, std=0.02)
+        if model.surgclip.vision_proj.bias is not None:
+            init.zeros_(model.surgclip.vision_proj.bias)
+        if model.surgclip.text_proj.bias is not None:
+            init.zeros_(model.surgclip.text_proj.bias)
+        model.surgclip.temp.data.fill_(0.07)
+        model.logit_scale.data.fill_(math.log(1.0 / 0.07))
+        print("已随机重置对齐层 (vision_proj, text_proj, temp, logit_scale)")
+
     model.eval()
     return model
 
@@ -189,6 +204,8 @@ def evaluate_zero_shot(args):
             "dataset": args.dataset,
             "model_family": "surgclip",
             "ckpt": args.ckpt,
+            "randomize_projection": args.randomize_projection,
+            "random_seed": args.random_seed,
             "tokenizer_name": args.tokenizer_name,
             "batch_size": args.batch_size,
             "num_workers": args.num_workers,
@@ -223,6 +240,10 @@ def parse_args():
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--image_size", type=int, default=224)
     parser.add_argument("--sota_file", type=str, default=None)
+    parser.add_argument("--randomize_projection", action="store_true",
+                        help="加载 checkpoint 后随机重置对齐层 (vision_proj / text_proj / temp / logit_scale)")
+    parser.add_argument("--random_seed", type=int, default=42,
+                        help="随机种子 (仅 randomize_projection 时生效)")
     return parser.parse_args()
 
 
