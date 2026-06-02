@@ -117,6 +117,25 @@ class SurgicBERTaTextEncoder(nn.Module):
         return text_features
 
 
+class ResidualFeatureAdapter(nn.Module):
+    def __init__(self, feature_dim, bottleneck_dim=None, bottleneck_ratio=4):
+        super().__init__()
+        feature_dim = int(feature_dim)
+        if bottleneck_dim is None:
+            bottleneck_dim = max(1, feature_dim // int(bottleneck_ratio))
+
+        self.norm = nn.LayerNorm(feature_dim)
+        self.down = nn.Linear(feature_dim, int(bottleneck_dim))
+        self.act = nn.GELU()
+        self.up = nn.Linear(int(bottleneck_dim), feature_dim)
+
+        nn.init.zeros_(self.up.weight)
+        nn.init.zeros_(self.up.bias)
+
+    def forward(self, x):
+        return x + self.up(self.act(self.down(self.norm(x))))
+
+
 class TimeSformerStyleTemporalPool(nn.Module):
     """
     Temporal head for frame-level features [B, T, D].
@@ -277,6 +296,8 @@ class VLP(nn.Module):
 
         pooled_dim = self.temporal_hidden_dim if self.frame_pool is not None else self.visual_dim
         self.frame_token_dim = pooled_dim
+        self.video_adapter = ResidualFeatureAdapter(pooled_dim)
+        self.text_adapter = ResidualFeatureAdapter(self.text.hidden_size)
         self.video_projection = nn.Linear(
             pooled_dim,
             embed_dim,
@@ -471,6 +492,8 @@ class VLP(nn.Module):
         device = frame_tokens.device
         token_mask = attention_mask.bool()
 
+        frame_tokens = self.video_adapter(frame_tokens)
+        token_hidden = self.text_adapter(token_hidden)
         frame_local = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
         token_local = F.normalize(self.text.project(token_hidden), dim=-1)
         raw_alignment = torch.matmul(frame_local, token_local.transpose(1, 2))
@@ -521,6 +544,8 @@ class VLP(nn.Module):
         text_mask = token_mask.unsqueeze(-1).to(dtype=token_hidden.dtype)
         pooled_hidden = (token_hidden * text_mask).sum(dim=1) / text_mask.sum(dim=1).clamp(min=1e-6)
 
+        frame_tokens = self.video_adapter(frame_tokens)
+        pooled_hidden = self.text_adapter(pooled_hidden)
         query = F.normalize(self.selection_text_query_projection(pooled_hidden), dim=-1)
         keys = F.normalize(self.selection_frame_key_projection(frame_tokens), dim=-1)
         raw_scores = torch.einsum("bd,btd->bt", query, keys)
@@ -547,14 +572,17 @@ class VLP(nn.Module):
         return frame_weights, confidence.detach()
 
     def _project_video_global(self, video_global_hidden):
+        video_global_hidden = self.video_adapter(video_global_hidden)
         return F.normalize(self.video_projection(video_global_hidden), dim=-1)
 
     def _project_selected_video(self, frame_tokens, frame_weights):
+        frame_tokens = self.video_adapter(frame_tokens)
         selected_hidden = torch.sum(frame_weights.unsqueeze(-1) * frame_tokens, dim=1)
         return F.normalize(self.video_projection(selected_hidden), dim=-1)
 
     def _encode_text_global(self, text_global_hidden):
         self.last_text_gate = None
+        text_global_hidden = self.text_adapter(text_global_hidden)
         return F.normalize(self.text.project(text_global_hidden), dim=-1)
 
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
@@ -627,11 +655,12 @@ class VLP(nn.Module):
         attention_mask: torch.Tensor,
         level_ids: torch.Tensor = None,
     ):
-        text_features, _, _ = self.text(
+        _, _, text_global_hidden = self.text(
             input_ids=input_ids,
             attention_mask=attention_mask,
             return_hidden=True,
         )
+        text_features = self._encode_text_global(text_global_hidden)
         self.last_token_weights = None
         self.last_token_entropy = None
         self.last_token_peak = None
@@ -676,6 +705,12 @@ class VLP(nn.Module):
             for p in self.frame_pool.parameters():
                 p.requires_grad = True
 
+        for p in self.video_adapter.parameters():
+            p.requires_grad = True
+
+        for p in self.text_adapter.parameters():
+            p.requires_grad = True
+
         for p in self.video_projection.parameters():
             p.requires_grad = True
 
@@ -704,6 +739,9 @@ class VLP(nn.Module):
 
         for layer in self.text.backbone.encoder.layer[-2:]:
             layer.train()
+
+        self.video_adapter.train()
+        self.text_adapter.train()
 
 def count_parameters(model):
     total = sum(p.numel() for p in model.parameters())
@@ -740,6 +778,8 @@ def print_model_info(model):
     print("-" * 80)
     print(f"visual params    : {sum(p.numel() for p in model.visual.parameters()):,}")
     print(f"text params      : {sum(p.numel() for p in model.text.parameters()):,}")
+    print(f"video adapter params: {sum(p.numel() for p in model.video_adapter.parameters()):,}")
+    print(f"text adapter params : {sum(p.numel() for p in model.text_adapter.parameters()):,}")
     print(f"video proj params: {sum(p.numel() for p in model.video_projection.parameters()):,}")
     print(f"frame pool params: {frame_pool_params:,}")
     print("=" * 80)

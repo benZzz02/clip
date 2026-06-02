@@ -81,6 +81,8 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "frame_local_projection.",
         "frame_score_head.",
         "video_gate_head.",
+        "video_adapter.",
+        "text_adapter.",
     )
     allowed_unexpected_prefixes = (
         "token_local_projection.",
@@ -290,6 +292,18 @@ def parse_args():
         help="Weight for the train-time expanded-window selection contrastive loss",
     )
     parser.add_argument(
+        "--selection_loss_warmup_zero_epochs",
+        type=int,
+        default=5,
+        help="Number of initial epochs with selection_loss_weight forced to 0",
+    )
+    parser.add_argument(
+        "--selection_loss_warmup_ramp_epochs",
+        type=int,
+        default=5,
+        help="Number of epochs used to linearly ramp selection_loss_weight to its target value",
+    )
+    parser.add_argument(
         "--hierarchical_consistency_weight",
         type=float,
         default=0.1,
@@ -310,6 +324,27 @@ def parse_level_batch_sizes(spec: str):
     if not out:
         raise ValueError("level_batch_sizes is empty")
     return out
+
+
+def get_selection_loss_weight_for_epoch(
+    target_weight,
+    epoch,
+    zero_epochs=5,
+    ramp_epochs=5,
+):
+    target_weight = float(target_weight)
+    zero_epochs = max(0, int(zero_epochs))
+    ramp_epochs = max(0, int(ramp_epochs))
+
+    if target_weight <= 0:
+        return 0.0
+    if epoch < zero_epochs:
+        return 0.0
+    if ramp_epochs == 0:
+        return target_weight
+
+    ramp_step = min(ramp_epochs, epoch - zero_epochs + 1)
+    return target_weight * (float(ramp_step) / float(ramp_epochs))
 
 
 def collate_fn_expanded_frames_only(batch):
@@ -565,6 +600,8 @@ def train():
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
         "selection_loss_weight": args.selection_loss_weight,
+        "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
+        "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
         "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
@@ -601,6 +638,12 @@ def train():
         video_proj_total = sum(p.numel() for p in model.video_projection.parameters())
         video_proj_trainable = sum(p.numel() for p in model.video_projection.parameters() if p.requires_grad)
 
+        video_adapter_total = sum(p.numel() for p in model.video_adapter.parameters())
+        video_adapter_trainable = sum(p.numel() for p in model.video_adapter.parameters() if p.requires_grad)
+
+        text_adapter_total = sum(p.numel() for p in model.text_adapter.parameters())
+        text_adapter_trainable = sum(p.numel() for p in model.text_adapter.parameters() if p.requires_grad)
+
         frame_pool_total = 0
         frame_pool_trainable = 0
         if model.frame_pool is not None:
@@ -614,6 +657,8 @@ def train():
         print(f"文本backbone冻结: trainable {text_backbone_trainable}/{text_backbone_total}")
         print(f"文本投影层可训练: trainable {text_proj_trainable}/{text_proj_total}")
         print(f"视频投影层可训练: trainable {video_proj_trainable}/{video_proj_total}")
+        print(f"视频adapter可训练: trainable {video_adapter_trainable}/{video_adapter_total}")
+        print(f"文本adapter可训练: trainable {text_adapter_trainable}/{text_adapter_total}")
         print(f"帧池化模块可训练: trainable {frame_pool_trainable}/{frame_pool_total}")
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
         print(f"模型总参数量: {total_params:,}")
@@ -658,7 +703,12 @@ def train():
         print(f"selection_pooling: {CONFIG['selection_pooling']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
         print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
-        print(f"selection_loss_weight: {CONFIG['selection_loss_weight']}")
+        print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
+        print(
+            "selection_loss warmup: "
+            f"zero_epochs={CONFIG['selection_loss_warmup_zero_epochs']}, "
+            f"ramp_epochs={CONFIG['selection_loss_warmup_ramp_epochs']}"
+        )
         print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
         print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
@@ -792,6 +842,8 @@ def train():
                     "selection_pooling": args.selection_pooling,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "selection_loss_weight": args.selection_loss_weight,
+                    "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
+                    "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
                     "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
@@ -867,6 +919,20 @@ def train():
     for epoch in range(start_epoch, CONFIG["epochs"]):
         train_sampler.set_epoch(epoch)
         _unwrap_state_io_module(model.module).set_frozen_modules_eval()
+        current_selection_loss_weight = get_selection_loss_weight_for_epoch(
+            CONFIG["selection_loss_weight"],
+            epoch,
+            zero_epochs=CONFIG["selection_loss_warmup_zero_epochs"],
+            ramp_epochs=CONFIG["selection_loss_warmup_ramp_epochs"],
+        )
+
+        if rank == 0:
+            print(
+                f"Epoch {epoch + 1}: selection_loss_weight="
+                f"{current_selection_loss_weight:.6g} "
+                f"(target={CONFIG['selection_loss_weight']:.6g})",
+                flush=True,
+            )
 
         progress_bar = tqdm(
             train_loader,
@@ -912,7 +978,7 @@ def train():
                         level_ids,
                         sample_indices,
                         train_dataset.samples,
-                        selection_loss_weight=CONFIG["selection_loss_weight"],
+                        selection_loss_weight=current_selection_loss_weight,
                         hierarchical_consistency_weight=CONFIG["hierarchical_consistency_weight"],
                     )
                     loss = raw_loss / current_accum_steps
@@ -957,6 +1023,11 @@ def train():
                     writer.add_scalar("train/loss", loss_avg, global_step)
                     writer.add_scalar("train/lr", scheduler.get_last_lr()[0], global_step)
                     writer.add_scalar("train/epoch", epoch + 1, global_step)
+                    writer.add_scalar(
+                        "train/selection_loss_weight",
+                        current_selection_loss_weight,
+                        global_step,
+                    )
                     writer.add_scalar("perf/data_time", data_time_avg, global_step)
                     writer.add_scalar("perf/step_time", step_time_avg, global_step)
                     for stat_name, stat_value in debug_stats.items():
@@ -968,6 +1039,7 @@ def train():
                 postfix = {
                     "loss": f"{raw_loss.item():.4f}",
                     "lr": f"{scheduler.get_last_lr()[0]:.2e}",
+                    "sel_w": f"{current_selection_loss_weight:.2g}",
                     "data": f"{data_time:.2f}s",
                     "step": f"{step_time:.2f}s",
                 }
