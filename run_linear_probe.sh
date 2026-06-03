@@ -25,9 +25,9 @@ VISION_WEIGHTS="${VISION_WEIGHTS:-lemonfm.pth}"
 TEXT_MODEL="${TEXT_MODEL:-marcobombieri/surgicberta}"
 
 DATASETS="${DATASETS:-cholec80_phase,cholec80_instrument,grasp_phase,grasp_step,grasp_instrument,heichole_phase,heichole_instrument}"
+SHOT_MODE="${SHOT_MODE:-ratio}"
 SHOTS="${SHOTS:-0.1,1.0}"
 SEEDS="${SEEDS:-0,1,2}"
-SHOT_MODE="${SHOT_MODE:-ratio}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
 FRAME_STRIDE="${FRAME_STRIDE:-1}"
@@ -58,7 +58,7 @@ for dataset in "${DATASET_ARR[@]}"; do
     shot="$(echo "$shot" | xargs)"
     [[ -z "$shot" ]] && continue
 
-    out_dir="$OUTPUT_ROOT/${dataset}/shot_${shot}"
+    out_dir="$OUTPUT_ROOT/${SHOT_MODE}/${dataset}/shot_${shot}"
     mkdir -p "$out_dir"
 
     cmd=(
@@ -98,7 +98,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       cmd+=(--amp)
     fi
 
-    echo "Running linear probe: dataset=$dataset shot=$shot shot_mode=$SHOT_MODE feature_mode=$FEATURE_MODE"
+    echo "Running linear probe: dataset=$dataset shot=$shot shot_mode=$SHOT_MODE seeds=$SEEDS feature_mode=$FEATURE_MODE"
     "${cmd[@]}"
   done
 done
