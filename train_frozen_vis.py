@@ -175,6 +175,13 @@ def parse_args():
     )
 
     parser.add_argument("--text_model_name", type=str, default="marcobombieri/surgicberta")
+    parser.add_argument(
+        "--vision_backbone",
+        type=str,
+        default=os.environ.get("VISION_BACKBONE", "convnext_lemonfm"),
+        choices=["convnext_lemonfm", "gsvit_m5", "peskavlp_resnet50"],
+        help="Visual backbone family. Default preserves the existing LemonFM/ConvNeXt path.",
+    )
     parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
 
     parser.add_argument(
@@ -579,6 +586,7 @@ def train():
         "image_size": args.image_size,
         "max_length": args.max_length,
         "text_model_name": args.text_model_name,
+        "vision_backbone": args.vision_backbone,
         "vision_pretrained_weights": args.vision_pretrained_weights,
         "video_root_folder": args.video_root_folder,
         "ffmpeg_timeout": args.ffmpeg_timeout,
@@ -615,6 +623,7 @@ def train():
     model = VLP(
         embed_dim=CONFIG["embed_dim"],
         text_model_name=CONFIG["text_model_name"],
+        vision_backbone=CONFIG["vision_backbone"],
         vision_pretrained_weights=CONFIG["vision_pretrained_weights"],
         num_frames=CONFIG["num_frames"],
         local_temperature=CONFIG["local_temperature"],
@@ -689,6 +698,7 @@ def train():
 
     if rank == 0:
         print("正在加载预训练数据集...")
+        print(f"视觉backbone: {CONFIG['vision_backbone']}")
         print(f"视频目录: {CONFIG['video_root_folder']}")
         print(f"假设视频已预缩放: {CONFIG['assume_resized_video']}")
         print(f"每个样本抽帧数: {CONFIG['num_frames']}")
@@ -820,6 +830,7 @@ def train():
                     "image_size": CONFIG["image_size"],
                     "max_length": CONFIG["max_length"],
                     "text_model_name": CONFIG["text_model_name"],
+                    "vision_backbone": CONFIG["vision_backbone"],
                     "vision_pretrained_weights": CONFIG["vision_pretrained_weights"],
                     "video_root_folder": CONFIG["video_root_folder"],
                     "ffmpeg_timeout": CONFIG["ffmpeg_timeout"],

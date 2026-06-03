@@ -18,7 +18,8 @@ from tqdm import tqdm
 
 from downstream_datasets import SurgLaViClipDataset, SurgLaViSingleFrameDataset
 from eval_report_utils import export_evaluation_reports, flatten_metrics
-from model import VLP, build_LemonFM
+from model import VLP
+from visual_backbones import build_visual_backbone
 from zeroshot_evaluate import ToolPresenceEvaluator, WorkflowEvaluator, to_builtin
 
 
@@ -293,12 +294,13 @@ def load_vlp_checkpoint(model, ckpt_path, device, strict=False):
 
 def build_feature_model(args, device):
     if args.feature_mode == "raw_visual":
-        model = build_LemonFM(args.vision_weights).to(device)
+        model = build_visual_backbone(args.vision_backbone, args.vision_weights).to(device)
         return model.eval(), model.output_dim
 
     model = VLP(
         embed_dim=args.embed_dim,
         text_model_name=args.text_model,
+        vision_backbone=args.vision_backbone,
         vision_pretrained_weights=args.vision_weights,
         num_frames=args.num_frames,
         temporal_num_layers=args.temporal_layers,
@@ -663,6 +665,12 @@ def parse_args():
     parser.add_argument("--ckpt", type=str, default="")
     parser.add_argument("--feature_mode", type=str, default="vlp", choices=["vlp", "raw_visual"])
     parser.add_argument("--text_model", type=str, default="marcobombieri/surgicberta")
+    parser.add_argument(
+        "--vision_backbone",
+        type=str,
+        default="convnext_lemonfm",
+        choices=["convnext_lemonfm", "gsvit_m5", "peskavlp_resnet50"],
+    )
     parser.add_argument("--vision_weights", type=str, default="lemonfm.pth")
     parser.add_argument("--anno_root", type=str, default=DEFAULT_ANNO_ROOT)
     parser.add_argument("--data_root", type=str, default=DEFAULT_DATA_ROOT)

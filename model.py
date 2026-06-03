@@ -1,66 +1,10 @@
-import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torchvision
 from transformers import AutoConfig, AutoModel
 
 from surgclip.surgclip.models.timesformer.timesformer import Block
-
-
-def _build_convnext_large_backbone(weights=None):
-    net = torchvision.models.convnext_large(weights=weights)
-    in_dim = net.classifier[2].in_features
-    net.classifier[2] = nn.Identity()
-    net.output_dim = in_dim
-    return net
-
-
-def build_LemonFM(pretrained_weights="lemonfm.pth"):
-    if pretrained_weights is None:
-        raise ValueError("pretrained_weights is None")
-
-    if isinstance(pretrained_weights, str):
-        mode = pretrained_weights.strip().lower()
-    else:
-        mode = pretrained_weights
-
-    if mode in {"random", "none", "scratch"}:
-        print("Initializing ConvNeXt-Large with random weights.")
-        return _build_convnext_large_backbone(weights=None)
-
-    if mode in {"imagenet", "imagenet1k", "torchvision", "default"}:
-        print("Loading ConvNeXt-Large torchvision ImageNet-1K weights.")
-        return _build_convnext_large_backbone(
-            weights=torchvision.models.ConvNeXt_Large_Weights.IMAGENET1K_V1
-        )
-
-    net = _build_convnext_large_backbone(weights=None)
-
-    if not os.path.isfile(pretrained_weights):
-        raise FileNotFoundError(f"Local checkpoint not found: {pretrained_weights}")
-
-    print(f"Loading LemonFM weights from local file: {os.path.abspath(pretrained_weights)}")
-
-    state_dict = torch.load(pretrained_weights, map_location="cpu")
-    state_dict = state_dict["teacher"]
-    state_dict = {
-        k.replace("backbone.", ""): v
-        for k, v in state_dict.items()
-        if k.startswith("backbone.")
-    }
-
-    msg = net.load_state_dict(state_dict, strict=False)
-    print(msg)
-
-    first_key = next(iter(state_dict))
-    assert torch.equal(
-        net.state_dict()[first_key].cpu(),
-        state_dict[first_key].cpu(),
-    ), f"Local checkpoint not actually loaded for key: {first_key}"
-
-    print(f"Verified local checkpoint loaded into model for key: {first_key}")
-    return net
+from visual_backbones import build_LemonFM, build_visual_backbone
 
 
 class SurgicBERTaTextEncoder(nn.Module):
@@ -254,6 +198,7 @@ class VLP(nn.Module):
         self,
         embed_dim=512,
         text_model_name="marcobombieri/surgicberta",
+        vision_backbone="convnext_lemonfm",
         vision_pretrained_weights="lemonfm.pth",
         num_frames=4,
         temporal_num_layers=2,
@@ -266,7 +211,11 @@ class VLP(nn.Module):
     ):
         super().__init__()
 
-        self.visual = build_LemonFM(vision_pretrained_weights)
+        self.vision_backbone = str(vision_backbone)
+        self.visual = build_visual_backbone(
+            name=vision_backbone,
+            weights=vision_pretrained_weights,
+        )
         self.text = SurgicBERTaTextEncoder(
             model_name=text_model_name,
             embed_dim=embed_dim,
@@ -687,13 +636,15 @@ class VLP(nn.Module):
         for p in self.text.backbone.parameters():
             p.requires_grad = False
 
-        # 2. 视觉侧：放开最后一个 stage
-        for p in self.visual.features[7].parameters():
-            p.requires_grad = True
-
-        # 这个 LayerNorm 很小，但紧跟视觉输出，建议一起放开
-        for p in self.visual.classifier[0].parameters():
-            p.requires_grad = True
+        # 2. 视觉侧：默认 LemonFM 保持原有最后 stage 微调；新增 backbone 可选择全冻。
+        if hasattr(self.visual, "unfreeze_last_stage"):
+            self.visual.unfreeze_last_stage()
+        elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
+            for p in self.visual.features[7].parameters():
+                p.requires_grad = True
+            if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
+                for p in self.visual.classifier[0].parameters():
+                    p.requires_grad = True
 
         # 3. 文本侧：放开最后两层
         for layer in self.text.backbone.encoder.layer[-2:]:
@@ -734,8 +685,12 @@ class VLP(nn.Module):
         self.text.backbone.eval()
 
         # 再把允许微调的部分切回 train
-        self.visual.features[7].train()
-        self.visual.classifier[0].train()
+        if hasattr(self.visual, "set_last_stage_train"):
+            self.visual.set_last_stage_train()
+        elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
+            self.visual.features[7].train()
+            if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
+                self.visual.classifier[0].train()
 
         for layer in self.text.backbone.encoder.layer[-2:]:
             layer.train()
@@ -759,7 +714,7 @@ def print_model_info(model):
     print("=" * 80)
     print("Model Summary")
     print("=" * 80)
-    print("Visual Encoder   : LemonFM (ConvNeXt-Large)")
+    print(f"Visual Encoder   : {getattr(model.visual, 'name', model.visual.__class__.__name__)}")
     print(f"Text Encoder     : {model.text.__class__.__name__}")
     print(f"Visual Dim       : {model.visual_dim}")
     print(f"Temporal Hidden  : {getattr(model, 'temporal_hidden_dim', model.visual_dim)}")
@@ -791,6 +746,7 @@ if __name__ == "__main__":
     model = VLP(
         embed_dim=256,
         text_model_name="marcobombieri/surgicberta",
+        vision_backbone="convnext_lemonfm",
         vision_pretrained_weights="lemonfm.pth",
         num_frames=8,
         temporal_num_layers=2,
