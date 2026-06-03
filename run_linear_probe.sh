@@ -10,18 +10,18 @@ if [[ -f ~/miniconda3/etc/profile.d/conda.sh ]]; then
 fi
 
 PYTHON_BIN="${PYTHON_BIN:-python}"
-CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-3}"
 export CUDA_VISIBLE_DEVICES
 
 FEATURE_MODE="${FEATURE_MODE:-vlp}"
-CKPT="${CKPT:-}"
+CKPT="${CKPT:-/mnt/mydisk/CLIP/outputs/same_video_triplet_xpool_adapter_warmup_16f_run1/vlp_epoch_32.pt}"
 RUN_NAME="${RUN_NAME:-linear_probe}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-./linear_probe_outputs/$RUN_NAME}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-linear_probe_outputs/$RUN_NAME}"
 CACHE_DIR="${CACHE_DIR:-$OUTPUT_ROOT/cache}"
 
-ANNO_ROOT="${ANNO_ROOT:-../anno_downstream}"
-DATA_ROOT="${DATA_ROOT:-..}"
-VISION_WEIGHTS="${VISION_WEIGHTS:-/mnt/mydisk/CLIP/lemonfm.pth}"
+ANNO_ROOT="${ANNO_ROOT:-anno_downstream}"
+DATA_ROOT="${DATA_ROOT:-/mnt/mydisk}"
+VISION_WEIGHTS="${VISION_WEIGHTS:-lemonfm.pth}"
 TEXT_MODEL="${TEXT_MODEL:-marcobombieri/surgicberta}"
 
 DATASETS="${DATASETS:-cholec80_phase,cholec80_instrument,grasp_phase,grasp_step,grasp_instrument,heichole_phase,heichole_instrument}"
@@ -37,7 +37,7 @@ LR="${LR:-1e-3}"
 WEIGHT_DECAY="${WEIGHT_DECAY:-0.0}"
 PROBE_OPTIMIZER="${PROBE_OPTIMIZER:-adamw}"
 MOMENTUM="${MOMENTUM:-0.9}"
-ENCODE_BATCH_SIZE="${ENCODE_BATCH_SIZE:-32}"
+ENCODE_BATCH_SIZE="${ENCODE_BATCH_SIZE:-128}"
 PROBE_BATCH_SIZE="${PROBE_BATCH_SIZE:-4096}"
 NUM_WORKERS="${NUM_WORKERS:-4}"
 AMP="${AMP:-true}"
