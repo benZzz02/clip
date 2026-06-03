@@ -82,6 +82,35 @@ def load_image_lists(file, data_root, labels):
     return frame_paths, video_idx_to_name
 
 
+def filter_labels_to_available_frames(labels, image_paths, require_existing_paths=False):
+    filtered_labels = []
+    missing_frame_count = 0
+    missing_file_count = 0
+
+    for video_idx, video_labels in enumerate(labels):
+        available_paths = image_paths[video_idx]
+
+        if require_existing_paths:
+            available_paths = {
+                frame_num: image_path
+                for frame_num, image_path in available_paths.items()
+                if os.path.exists(image_path)
+            }
+            missing_file_count += len(image_paths[video_idx]) - len(available_paths)
+            image_paths[video_idx] = available_paths
+
+        kept = {}
+        for frame_num, label in video_labels.items():
+            image_path = available_paths.get(frame_num)
+            if image_path is None:
+                missing_frame_count += 1
+                continue
+            kept[frame_num] = label
+        filtered_labels.append(kept)
+
+    return filtered_labels, missing_frame_count, missing_file_count
+
+
 def _category_name(item):
     if "name" in item:
         return item["name"]
@@ -274,21 +303,25 @@ class SurgLaViSingleFrameDataset(Dataset):
             for i in range(len(self._image_paths))
         ]
 
-        if self.name == "heichole":
-            filtered_labels = []
-            for video_idx in range(len(self.labels)):
-                self._image_paths[video_idx] = {
-                    frame_num: image_path
-                    for frame_num, image_path in self._image_paths[video_idx].items()
-                    if os.path.exists(image_path)
-                }
-                kept = {}
-                for frame_num, label in self.labels[video_idx].items():
-                    image_path = self._image_paths[video_idx].get(frame_num)
-                    if image_path is not None and os.path.exists(image_path):
-                        kept[frame_num] = label
-                filtered_labels.append(kept)
-            self.labels = filtered_labels
+        (
+            self.labels,
+            missing_frame_count,
+            missing_file_count,
+        ) = filter_labels_to_available_frames(
+            self.labels,
+            self._image_paths,
+            require_existing_paths=self.name == "heichole",
+        )
+        if missing_frame_count:
+            print(
+                f"Warning: dropped {missing_frame_count} annotated frames from "
+                f"{self.label_file} because they are absent from {self.frame_lists}."
+            )
+        if missing_file_count:
+            print(
+                f"Warning: dropped {missing_file_count} frame-list entries from "
+                f"{self.frame_lists} because the image files were not found."
+            )
 
         self._keyframe_indices, _ = get_keyframe_data(self.labels)
         self.num_examples = len(self._keyframe_indices)

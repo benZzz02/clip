@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import random
+from contextlib import nullcontext
 from dataclasses import dataclass
 from typing import Dict, Optional
 
@@ -361,7 +362,12 @@ def extract_features(model, data_loader, device, args):
     with torch.no_grad():
         for images, labels, video_idxs, frame_idxs in tqdm(data_loader, desc="Extracting features"):
             images = images.to(device, non_blocking=True)
-            with torch.cuda.amp.autocast(enabled=args.amp and device.type == "cuda"):
+            amp_context = (
+                torch.amp.autocast("cuda", enabled=args.amp)
+                if device.type == "cuda"
+                else nullcontext()
+            )
+            with amp_context:
                 features = encode_features(model, images, args.feature_mode)
             all_features.append(features.float().cpu())
             all_labels.append(labels.cpu())
