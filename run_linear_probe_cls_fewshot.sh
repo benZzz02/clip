@@ -8,4 +8,4 @@ export SHOT_MODE="${SHOT_MODE:-cls}"
 export SHOTS="${SHOTS:-1,2,4,8,16}"
 export SEEDS="${SEEDS:-0,1,2,3,4}"
 
-exec ./run_linear_probe.sh "$@"
+exec bash ./run_linear_probe.sh "$@"

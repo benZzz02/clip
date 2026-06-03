@@ -8,4 +8,4 @@ export SHOT_MODE="${SHOT_MODE:-ratio}"
 export SHOTS="${SHOTS:-0.1,1.0}"
 export SEEDS="${SEEDS:-0,1,2}"
 
-exec ./run_linear_probe.sh "$@"
+exec bash ./run_linear_probe.sh "$@"
