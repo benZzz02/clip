@@ -409,7 +409,7 @@ def load_or_extract_features(model, dataset, split_spec, split_name, args, devic
     return pack
 
 
-def sample_probe_indices(labels, task, shot_ratio, seed, num_classes):
+def sample_ratio_indices(labels, task, shot_ratio, seed, num_classes):
     num_samples = labels.shape[0]
     if shot_ratio >= 1.0:
         return torch.arange(num_samples)
@@ -444,19 +444,112 @@ def sample_probe_indices(labels, task, shot_ratio, seed, num_classes):
     return torch.from_numpy(selected)
 
 
+def sample_cls_fewshot_indices(labels, task, shots_per_class, seed, num_classes):
+    shots_per_class = int(shots_per_class)
+    if shots_per_class <= 0:
+        raise ValueError(f"shots_per_class must be positive, got {shots_per_class}")
+
+    rng = np.random.default_rng(seed)
+    labels_np = labels.cpu().numpy()
+    selected = []
+
+    if task in {"phases", "steps", "actions"}:
+        labels_np = labels_np.astype(np.int64)
+        for class_idx in range(num_classes):
+            class_indices = np.where(labels_np == class_idx)[0]
+            if len(class_indices) == 0:
+                continue
+            selected.extend(
+                rng.choice(
+                    class_indices,
+                    size=min(shots_per_class, len(class_indices)),
+                    replace=False,
+                ).tolist()
+            )
+    else:
+        for class_idx in range(num_classes):
+            positives = np.where(labels_np[:, class_idx] > 0)[0]
+            if len(positives) == 0:
+                continue
+            selected.extend(
+                rng.choice(
+                    positives,
+                    size=min(shots_per_class, len(positives)),
+                    replace=False,
+                ).tolist()
+            )
+
+    if not selected:
+        raise ValueError("No samples selected for CLS few-shot probing.")
+
+    selected = np.array(sorted(set(selected)), dtype=np.int64)
+    rng.shuffle(selected)
+    return torch.from_numpy(selected)
+
+
+def sample_video_fewshot_indices(video_idxs, video_ratio, seed):
+    video_ratio = float(video_ratio)
+    if video_ratio <= 0:
+        raise ValueError(f"video_ratio must be positive, got {video_ratio}")
+
+    video_np = video_idxs.cpu().numpy()
+    unique_videos = np.unique(video_np)
+    if video_ratio >= 1.0:
+        return torch.arange(len(video_np))
+
+    rng = np.random.default_rng(seed)
+    num_videos = max(1, int(round(len(unique_videos) * video_ratio)))
+    chosen_videos = rng.choice(unique_videos, size=min(num_videos, len(unique_videos)), replace=False)
+    selected = np.where(np.isin(video_np, chosen_videos))[0]
+    rng.shuffle(selected)
+    return torch.from_numpy(selected.astype(np.int64))
+
+
+def sample_probe_indices(train_pack, task, args, seed, num_classes):
+    labels = train_pack["labels"]
+    shot_mode = str(args.shot_mode).lower()
+
+    if shot_mode == "ratio":
+        return sample_ratio_indices(labels, task, args.shot_ratio, seed, num_classes)
+
+    if shot_mode == "cls":
+        shots_per_class = args.shots_per_class
+        if shots_per_class is None:
+            shots_per_class = int(round(args.shot_ratio))
+        return sample_cls_fewshot_indices(labels, task, shots_per_class, seed, num_classes)
+
+    if shot_mode == "video":
+        return sample_video_fewshot_indices(train_pack["video_idxs"], args.shot_ratio, seed)
+
+    raise ValueError(f"Unsupported shot_mode: {args.shot_mode}")
+
+
 def train_linear_head(train_pack, task, num_classes, args, seed, device):
     set_seed(seed)
 
     features = train_pack["features"]
     labels = train_pack["labels"]
-    selected_indices = sample_probe_indices(labels, task, args.shot_ratio, seed, num_classes)
+    selected_indices = sample_probe_indices(train_pack, task, args, seed, num_classes)
     features = features[selected_indices]
     labels = labels[selected_indices]
 
-    print(f"Training linear probe with {len(selected_indices)}/{len(train_pack['features'])} samples")
+    print(
+        f"Training linear probe with {len(selected_indices)}/{len(train_pack['features'])} "
+        f"samples (shot_mode={args.shot_mode})"
+    )
 
     head = nn.Linear(features.shape[-1], num_classes).to(device)
-    optimizer = torch.optim.AdamW(head.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    if args.probe_optimizer == "sgd":
+        optimizer = torch.optim.SGD(
+            head.parameters(),
+            lr=args.lr,
+            momentum=args.momentum,
+            weight_decay=args.weight_decay,
+        )
+    elif args.probe_optimizer == "adamw":
+        optimizer = torch.optim.AdamW(head.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    else:
+        raise ValueError(f"Unsupported probe_optimizer: {args.probe_optimizer}")
     dataset = TensorDataset(features, labels)
     loader = DataLoader(dataset, batch_size=args.probe_batch_size, shuffle=True, num_workers=0)
 
@@ -547,11 +640,15 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
         "model_family": f"linear_probe_{args.feature_mode}",
         "ckpt": args.ckpt if args.ckpt else args.vision_weights,
         "feature_mode": args.feature_mode,
+        "shot_mode": args.shot_mode,
         "shot_ratio": args.shot_ratio,
+        "shots_per_class": args.shots_per_class,
         "seed": seed,
         "epochs": args.epochs,
         "lr": args.lr,
         "weight_decay": args.weight_decay,
+        "probe_optimizer": args.probe_optimizer,
+        "momentum": args.momentum,
         "num_frames": args.num_frames,
         "frame_stride": args.frame_stride,
         "embed_dim": args.embed_dim,
@@ -683,11 +780,30 @@ def parse_args():
     parser.add_argument("--temporal_heads", type=int, default=12)
     parser.add_argument("--temporal_dropout", type=float, default=0.1)
     parser.add_argument("--image_size", type=int, default=224)
+    parser.add_argument(
+        "--shot_mode",
+        type=str,
+        default="ratio",
+        choices=["ratio", "cls", "video"],
+        help=(
+            "ratio: old sample-ratio probing; "
+            "cls: SurgLaVi CLS few-shot probing with N samples per class; "
+            "video: SurgLaVi video few/full-shot probing with a ratio of training videos."
+        ),
+    )
     parser.add_argument("--shot_ratio", type=float, default=1.0)
+    parser.add_argument(
+        "--shots_per_class",
+        type=int,
+        default=None,
+        help="Number of labeled frames per class for --shot_mode=cls. Defaults to round(--shot_ratio).",
+    )
     parser.add_argument("--seeds", type=str, default="0")
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight_decay", type=float, default=0.0)
+    parser.add_argument("--probe_optimizer", type=str, default="adamw", choices=["adamw", "sgd"])
+    parser.add_argument("--momentum", type=float, default=0.9)
     parser.add_argument("--encode_batch_size", type=int, default=32)
     parser.add_argument("--probe_batch_size", type=int, default=4096)
     parser.add_argument("--num_workers", type=int, default=4)

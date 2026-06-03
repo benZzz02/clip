@@ -27,6 +27,7 @@ TEXT_MODEL="${TEXT_MODEL:-marcobombieri/surgicberta}"
 DATASETS="${DATASETS:-cholec80_phase,cholec80_instrument,grasp_phase,grasp_step,grasp_instrument,heichole_phase,heichole_instrument}"
 SHOTS="${SHOTS:-0.1,1.0}"
 SEEDS="${SEEDS:-0,1,2}"
+SHOT_MODE="${SHOT_MODE:-ratio}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
 FRAME_STRIDE="${FRAME_STRIDE:-1}"
@@ -34,6 +35,8 @@ EMBED_DIM="${EMBED_DIM:-256}"
 EPOCHS="${EPOCHS:-50}"
 LR="${LR:-1e-3}"
 WEIGHT_DECAY="${WEIGHT_DECAY:-0.0}"
+PROBE_OPTIMIZER="${PROBE_OPTIMIZER:-adamw}"
+MOMENTUM="${MOMENTUM:-0.9}"
 ENCODE_BATCH_SIZE="${ENCODE_BATCH_SIZE:-32}"
 PROBE_BATCH_SIZE="${PROBE_BATCH_SIZE:-4096}"
 NUM_WORKERS="${NUM_WORKERS:-4}"
@@ -68,6 +71,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       --data_root "$DATA_ROOT"
       --output_dir "$out_dir"
       --cache_dir "$CACHE_DIR"
+      --shot_mode "$SHOT_MODE"
       --shot_ratio "$shot"
       --seeds "$SEEDS"
       --num_frames "$NUM_FRAMES"
@@ -76,10 +80,16 @@ for dataset in "${DATASET_ARR[@]}"; do
       --epochs "$EPOCHS"
       --lr "$LR"
       --weight_decay "$WEIGHT_DECAY"
+      --probe_optimizer "$PROBE_OPTIMIZER"
+      --momentum "$MOMENTUM"
       --encode_batch_size "$ENCODE_BATCH_SIZE"
       --probe_batch_size "$PROBE_BATCH_SIZE"
       --num_workers "$NUM_WORKERS"
     )
+
+    if [[ "$SHOT_MODE" == "cls" ]]; then
+      cmd+=(--shots_per_class "$shot")
+    fi
 
     if [[ "$FEATURE_MODE" == "vlp" ]]; then
       cmd+=(--ckpt "$CKPT")
@@ -88,7 +98,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       cmd+=(--amp)
     fi
 
-    echo "Running linear probe: dataset=$dataset shot=$shot feature_mode=$FEATURE_MODE"
+    echo "Running linear probe: dataset=$dataset shot=$shot shot_mode=$SHOT_MODE feature_mode=$FEATURE_MODE"
     "${cmd[@]}"
   done
 done
