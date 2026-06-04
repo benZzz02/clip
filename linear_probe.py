@@ -766,7 +766,7 @@ def parse_args():
         "--vision_backbone",
         type=str,
         default="convnext_lemonfm",
-        choices=["convnext_lemonfm", "gsvit_m5", "peskavlp_resnet50"],
+        choices=["convnext_lemonfm", "gsvit_m5"],
     )
     parser.add_argument("--vision_weights", type=str, default="lemonfm.pth")
     parser.add_argument("--anno_root", type=str, default=DEFAULT_ANNO_ROOT)

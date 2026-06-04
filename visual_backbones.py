@@ -183,49 +183,6 @@ class GSViTM5Backbone(nn.Module):
         return self.model(x)
 
 
-class PeskaVLPResNet50Backbone(nn.Module):
-    name = "peskavlp_resnet50"
-    output_dim = 2048
-
-    def __init__(self, pretrained_weights, pretrained="random"):
-        super().__init__()
-        if pretrained_weights and not os.path.isfile(pretrained_weights):
-            raise FileNotFoundError(f"PeskaVLP checkpoint not found: {pretrained_weights}")
-
-        if pretrained == "imagenet":
-            weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V2
-        else:
-            weights = None
-
-        self.model = torchvision.models.resnet50(weights=weights)
-        self.model.fc = nn.Identity()
-        if pretrained_weights:
-            self._load_peskavlp_visual_trunk(pretrained_weights)
-
-    def _load_peskavlp_visual_trunk(self, pretrained_weights):
-        checkpoint = torch.load(pretrained_weights, map_location="cpu")
-        state_dict = checkpoint.get("state_dict", checkpoint)
-
-        trunk_state = {}
-        for key, value in state_dict.items():
-            while key.startswith("module."):
-                key = key[len("module."):]
-            prefix = "backbone_img.model."
-            if key.startswith(prefix):
-                trunk_state[key[len(prefix):]] = value
-
-        if not trunk_state:
-            raise RuntimeError(
-                f"No PeskaVLP visual trunk keys with prefix 'backbone_img.model.' in {pretrained_weights}"
-            )
-
-        msg = self.model.load_state_dict(trunk_state, strict=False)
-        print(f"Loaded PeskaVLP ResNet50 visual trunk: {msg}")
-
-    def forward(self, x):
-        return self.model(x)
-
-
 def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
     name = str(name or "convnext_lemonfm").strip().lower()
     aliases = {
@@ -233,8 +190,6 @@ def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
         "convnext": "convnext_lemonfm",
         "convnext_large": "convnext_lemonfm",
         "gsvit": "gsvit_m5",
-        "peska": "peskavlp_resnet50",
-        "peskavlp": "peskavlp_resnet50",
     }
     name = aliases.get(name, name)
 
@@ -242,10 +197,8 @@ def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
         return build_LemonFM(weights)
     if name == "gsvit_m5":
         return GSViTM5Backbone(weights)
-    if name == "peskavlp_resnet50":
-        return PeskaVLPResNet50Backbone(weights)
 
     raise ValueError(
         f"Unknown vision backbone: {name}. "
-        "Expected one of: convnext_lemonfm, gsvit_m5, peskavlp_resnet50."
+        "Expected one of: convnext_lemonfm, gsvit_m5."
     )

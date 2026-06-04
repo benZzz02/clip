@@ -179,7 +179,7 @@ def parse_args():
         "--vision_backbone",
         type=str,
         default=os.environ.get("VISION_BACKBONE", "convnext_lemonfm"),
-        choices=["convnext_lemonfm", "gsvit_m5", "peskavlp_resnet50"],
+        choices=["convnext_lemonfm", "gsvit_m5"],
         help="Visual backbone family. Default preserves the existing LemonFM/ConvNeXt path.",
     )
     parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
@@ -301,13 +301,13 @@ def parse_args():
     parser.add_argument(
         "--selection_loss_warmup_zero_epochs",
         type=int,
-        default=5,
+        default=0,
         help="Number of initial epochs with selection_loss_weight forced to 0",
     )
     parser.add_argument(
         "--selection_loss_warmup_ramp_epochs",
         type=int,
-        default=5,
+        default=0,
         help="Number of epochs used to linearly ramp selection_loss_weight to its target value",
     )
     parser.add_argument(
@@ -316,6 +316,24 @@ def parse_args():
         default=0.1,
         help="Weight for same-video adjacent-level consistency on selected views",
     )
+    parser.add_argument(
+        "--training_method",
+        type=str,
+        default=os.environ.get("TRAINING_METHOD", "current"),
+        choices=["current", "peskavlp"],
+        help=(
+            "Pretraining objective to use with the local VLP model and PretrainDataset. "
+            "peskavlp uses PeskaVLP losses on original annotation windows: "
+            "SSL_VL_Loss_new for fine/action, hier_infonce for mid/keystep, "
+            "and hier_infonce_dtw for coarse/abstract."
+        ),
+    )
+    parser.add_argument("--peskavlp_temperature", type=float, default=0.1)
+    parser.add_argument("--peskavlp_alpha_weight", type=float, default=0.75)
+    parser.add_argument("--peskavlp_dtw_beta", type=float, default=0.0)
+    parser.add_argument("--peskavlp_dtw_ratio", type=float, default=0.5)
+    parser.add_argument("--peskavlp_dtw_scale_factor", type=float, default=0.01)
+    parser.add_argument("--peskavlp_max_candidates", type=int, default=8)
 
     return parser.parse_args()
 
@@ -333,11 +351,35 @@ def parse_level_batch_sizes(spec: str):
     return out
 
 
+LEVEL_NAME_TO_ID = {
+    "fine": 0,
+    "mid": 1,
+    "coarse": 2,
+}
+LEVEL_ID_TO_NAME = {value: key for key, value in LEVEL_NAME_TO_ID.items()}
+
+
+def get_peskavlp_active_level_ids(epoch):
+    """Mirror PeskaVLP's staged hierarchy schedule on the local dataset levels."""
+    active = [LEVEL_NAME_TO_ID["fine"]]
+    if epoch != 0 and epoch % 3 == 0:
+        active.append(LEVEL_NAME_TO_ID["mid"])
+    if epoch != 0 and epoch % 5 == 0:
+        active.append(LEVEL_NAME_TO_ID["coarse"])
+    return tuple(active)
+
+
+def format_level_ids(level_ids):
+    if level_ids is None:
+        return "all"
+    return ",".join(LEVEL_ID_TO_NAME.get(int(level_id), str(level_id)) for level_id in level_ids)
+
+
 def get_selection_loss_weight_for_epoch(
     target_weight,
     epoch,
-    zero_epochs=5,
-    ramp_epochs=5,
+    zero_epochs=0,
+    ramp_epochs=0,
 ):
     target_weight = float(target_weight)
     zero_epochs = max(0, int(zero_epochs))
@@ -365,6 +407,24 @@ def collate_fn_expanded_frames_only(batch):
             )
         _, selection_images, input_ids, attention_mask, level_ids, sample_indices = item
         compact_batch.append((selection_images, input_ids, attention_mask, level_ids, sample_indices))
+
+    if not compact_batch:
+        return None
+
+    return torch.utils.data.dataloader.default_collate(compact_batch)
+
+
+def collate_fn_single_view_with_meta(batch):
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) != 5:
+            raise ValueError(
+                "Expected dataset items as (images, input_ids, attention_mask, level_ids, sample_indices)."
+            )
+        images, input_ids, attention_mask, level_ids, sample_indices = item
+        compact_batch.append((images, input_ids, attention_mask, level_ids, sample_indices))
 
     if not compact_batch:
         return None
@@ -611,6 +671,13 @@ def train():
         "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
         "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
         "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
+        "training_method": args.training_method,
+        "peskavlp_temperature": args.peskavlp_temperature,
+        "peskavlp_alpha_weight": args.peskavlp_alpha_weight,
+        "peskavlp_dtw_beta": args.peskavlp_dtw_beta,
+        "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
+        "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
+        "peskavlp_max_candidates": args.peskavlp_max_candidates,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
@@ -712,14 +779,27 @@ def train():
         print(f"local_temperature: {CONFIG['local_temperature']}")
         print(f"selection_pooling: {CONFIG['selection_pooling']}")
         print(f"level_frame_temperatures: {CONFIG['level_frame_temperatures']}")
-        print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
-        print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
-        print(
-            "selection_loss warmup: "
-            f"zero_epochs={CONFIG['selection_loss_warmup_zero_epochs']}, "
-            f"ramp_epochs={CONFIG['selection_loss_warmup_ramp_epochs']}"
-        )
-        print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
+        print(f"training_method: {CONFIG['training_method']}")
+        if CONFIG["training_method"] == "peskavlp":
+            print("PeskaVLP mode uses original annotation windows only; expanded-window reselect is disabled.")
+            print(
+                "PeskaVLP loss config: "
+                f"temperature={CONFIG['peskavlp_temperature']}, "
+                f"alpha={CONFIG['peskavlp_alpha_weight']}, "
+                f"dtw_beta={CONFIG['peskavlp_dtw_beta']}, "
+                f"dtw_ratio={CONFIG['peskavlp_dtw_ratio']}, "
+                f"dtw_scale={CONFIG['peskavlp_dtw_scale_factor']}, "
+                f"max_candidates={CONFIG['peskavlp_max_candidates']}"
+            )
+        else:
+            print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
+            print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
+            print(
+                "selection_loss warmup: "
+                f"zero_epochs={CONFIG['selection_loss_warmup_zero_epochs']}, "
+                f"ramp_epochs={CONFIG['selection_loss_warmup_ramp_epochs']}"
+            )
+            print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
         print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
@@ -745,7 +825,7 @@ def train():
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
         return_sample_index=True,
-        return_expanded_frames=True,
+        return_expanded_frames=(CONFIG["training_method"] != "peskavlp"),
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -786,7 +866,11 @@ def train():
         batch_sampler=train_sampler,
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
-        collate_fn=collate_fn_expanded_frames_only,
+        collate_fn=(
+            collate_fn_single_view_with_meta
+            if CONFIG["training_method"] == "peskavlp"
+            else collate_fn_expanded_frames_only
+        ),
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
     )
@@ -809,6 +893,18 @@ def train():
     updates_per_epoch = math.ceil(num_batches / ACCUM_STEPS)
     total_update_steps = updates_per_epoch * CONFIG["epochs"]
     scheduler = CosineAnnealingLR(optimizer, T_max=max(1, total_update_steps))
+    peskavlp_loss = None
+    if CONFIG["training_method"] == "peskavlp":
+        from peskavlp_pretraining import PeskaVLPPretrainingLoss
+
+        peskavlp_loss = PeskaVLPPretrainingLoss(
+            temperature=CONFIG["peskavlp_temperature"],
+            alpha_weight=CONFIG["peskavlp_alpha_weight"],
+            dtw_beta=CONFIG["peskavlp_dtw_beta"],
+            dtw_ratio=CONFIG["peskavlp_dtw_ratio"],
+            dtw_scale_factor=CONFIG["peskavlp_dtw_scale_factor"],
+            max_candidates=CONFIG["peskavlp_max_candidates"],
+        ).to(device)
 
     writer = None
     swanlab_run = None
@@ -856,6 +952,13 @@ def train():
                     "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
                     "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
                     "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
+                    "training_method": args.training_method,
+                    "peskavlp_temperature": args.peskavlp_temperature,
+                    "peskavlp_alpha_weight": args.peskavlp_alpha_weight,
+                    "peskavlp_dtw_beta": args.peskavlp_dtw_beta,
+                    "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
+                    "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
+                    "peskavlp_max_candidates": args.peskavlp_max_candidates,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
@@ -938,11 +1041,28 @@ def train():
         )
 
         if rank == 0:
-            print(
-                f"Epoch {epoch + 1}: selection_loss_weight="
-                f"{current_selection_loss_weight:.6g} "
-                f"(target={CONFIG['selection_loss_weight']:.6g})",
-                flush=True,
+            active_level_ids = (
+                get_peskavlp_active_level_ids(epoch)
+                if CONFIG["training_method"] == "peskavlp"
+                else None
+            )
+            if CONFIG["training_method"] == "peskavlp":
+                print(
+                    f"Epoch {epoch + 1}: PeskaVLP active_levels={format_level_ids(active_level_ids)}",
+                    flush=True,
+                )
+            else:
+                print(
+                    f"Epoch {epoch + 1}: selection_loss_weight="
+                    f"{current_selection_loss_weight:.6g} "
+                    f"(target={CONFIG['selection_loss_weight']:.6g})",
+                    flush=True,
+                )
+        else:
+            active_level_ids = (
+                get_peskavlp_active_level_ids(epoch)
+                if CONFIG["training_method"] == "peskavlp"
+                else None
             )
 
         progress_bar = tqdm(
@@ -966,8 +1086,14 @@ def train():
                 continue
 
             step_start = time.perf_counter()
-            selection_images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
-            selection_images = selection_images_cpu.to(device, non_blocking=True)
+            if CONFIG["training_method"] == "peskavlp":
+                images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
+                images = images_cpu.to(device, non_blocking=True)
+                selection_images = None
+            else:
+                selection_images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
+                images = None
+                selection_images = selection_images_cpu.to(device, non_blocking=True)
             input_ids = input_ids.to(device, non_blocking=True)
             attention_mask = attention_mask.to(device, non_blocking=True)
             level_ids = level_ids.to(device, non_blocking=True)
@@ -981,17 +1107,30 @@ def train():
 
             with sync_ctx:
                 with torch.amp.autocast("cuda", dtype=amp_dtype):
-                    raw_loss = clip_contrastive_loss(
-                        model,
-                        selection_images,
-                        input_ids,
-                        attention_mask,
-                        level_ids,
-                        sample_indices,
-                        train_dataset.samples,
-                        selection_loss_weight=current_selection_loss_weight,
-                        hierarchical_consistency_weight=CONFIG["hierarchical_consistency_weight"],
-                    )
+                    if CONFIG["training_method"] == "peskavlp":
+                        raw_loss, loss_parts = peskavlp_loss(
+                            model=model,
+                            images=images,
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            level_ids=level_ids,
+                            sample_indices=sample_indices,
+                            dataset_samples=train_dataset.samples,
+                            active_level_ids=active_level_ids,
+                        )
+                    else:
+                        raw_loss = clip_contrastive_loss(
+                            model,
+                            selection_images,
+                            input_ids,
+                            attention_mask,
+                            level_ids,
+                            sample_indices,
+                            train_dataset.samples,
+                            selection_loss_weight=current_selection_loss_weight,
+                            hierarchical_consistency_weight=CONFIG["hierarchical_consistency_weight"],
+                        )
+                        loss_parts = {}
                     loss = raw_loss / current_accum_steps
 
                 if scaler.is_enabled():
@@ -1041,6 +1180,8 @@ def train():
                     )
                     writer.add_scalar("perf/data_time", data_time_avg, global_step)
                     writer.add_scalar("perf/step_time", step_time_avg, global_step)
+                    for stat_name, stat_value in loss_parts.items():
+                        writer.add_scalar(stat_name, stat_value.item(), global_step)
                     for stat_name, stat_value in debug_stats.items():
                         writer.add_scalar(f"debug/{stat_name}", stat_value, global_step)
 

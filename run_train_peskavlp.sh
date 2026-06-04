@@ -9,7 +9,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 
 NPROC="${NPROC:-3}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2}"
-RUN_NAME="${RUN_NAME:-same_video_triplet_xpool_adapter_no_warmup_16f_run1}"
+RUN_NAME="${RUN_NAME:-same_video_triplet_peskavlp_8f_run1}"
 EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-100}"
@@ -50,14 +50,12 @@ USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
 REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
 SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
 
-LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
-SELECTION_POOLING="${SELECTION_POOLING:-xpool}"
-LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-1.0,1.0,1.0}"
-TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
-SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-1.0}"
-SELECTION_LOSS_WARMUP_ZERO_EPOCHS="${SELECTION_LOSS_WARMUP_ZERO_EPOCHS:-0}"
-SELECTION_LOSS_WARMUP_RAMP_EPOCHS="${SELECTION_LOSS_WARMUP_RAMP_EPOCHS:-0}"
-HIERARCHICAL_CONSISTENCY_WEIGHT="${HIERARCHICAL_CONSISTENCY_WEIGHT:-0}"
+PESKAVLP_TEMPERATURE="${PESKAVLP_TEMPERATURE:-0.1}"
+PESKAVLP_ALPHA_WEIGHT="${PESKAVLP_ALPHA_WEIGHT:-0.75}"
+PESKAVLP_DTW_BETA="${PESKAVLP_DTW_BETA:-0}"
+PESKAVLP_DTW_RATIO="${PESKAVLP_DTW_RATIO:-0.5}"
+PESKAVLP_DTW_SCALE_FACTOR="${PESKAVLP_DTW_SCALE_FACTOR:-0.01}"
+PESKAVLP_MAX_CANDIDATES="${PESKAVLP_MAX_CANDIDATES:-8}"
 
 RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
 SAVE_PREFIX="${SAVE_PREFIX:-outputs/$RUN_NAME/}"
@@ -80,6 +78,7 @@ cmd=(
     --standalone
     --nproc_per_node="$NPROC"
     train_frozen_vis.py
+    --training_method peskavlp
     --epochs "$EPOCHS"
     --learning_rate "$LEARNING_RATE"
     --weight_decay "$WEIGHT_DECAY"
@@ -111,14 +110,12 @@ cmd=(
     --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE"
     --samples_cache_version "$SAMPLES_CACHE_VERSION"
     --use_swanlab "$USE_SWANLAB"
-    --local_temperature "$LOCAL_TEMPERATURE"
-    --selection_pooling "$SELECTION_POOLING"
-    --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
-    --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
-    --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
-    --selection_loss_warmup_zero_epochs "$SELECTION_LOSS_WARMUP_ZERO_EPOCHS"
-    --selection_loss_warmup_ramp_epochs "$SELECTION_LOSS_WARMUP_RAMP_EPOCHS"
-    --hierarchical_consistency_weight "$HIERARCHICAL_CONSISTENCY_WEIGHT"
+    --peskavlp_temperature "$PESKAVLP_TEMPERATURE"
+    --peskavlp_alpha_weight "$PESKAVLP_ALPHA_WEIGHT"
+    --peskavlp_dtw_beta "$PESKAVLP_DTW_BETA"
+    --peskavlp_dtw_ratio "$PESKAVLP_DTW_RATIO"
+    --peskavlp_dtw_scale_factor "$PESKAVLP_DTW_SCALE_FACTOR"
+    --peskavlp_max_candidates "$PESKAVLP_MAX_CANDIDATES"
 )
 
 if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
