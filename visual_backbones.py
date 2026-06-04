@@ -4,6 +4,7 @@ from pathlib import Path
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torchvision
 
 
@@ -148,31 +149,86 @@ class GSViTM5Backbone(nn.Module):
             if sys.path[0] == str(repo_root):
                 sys.path.pop(0)
 
-        model = EfficientViT_M5(pretrained=False)
-        model.head = nn.Identity()
-        if hasattr(model, "head_dist"):
-            model.head_dist = nn.Identity()
-        model.distillation = False
-
+        base = EfficientViT_M5(pretrained=False)
+        self.encoder = nn.Sequential(*list(base.children())[:-1])
         checkpoint = torch.load(pretrained_weights, map_location="cpu")
-        if isinstance(checkpoint, dict) and "state_dict" in checkpoint:
-            checkpoint = checkpoint["state_dict"]
-        if isinstance(checkpoint, dict) and "model" in checkpoint:
-            checkpoint = checkpoint["model"]
+        self._load_official_gsvit_checkpoint(checkpoint, pretrained_weights)
 
+    @staticmethod
+    def _extract_state_dict(checkpoint):
+        if isinstance(checkpoint, dict):
+            for key in ("state_dict", "model", "net", "network"):
+                value = checkpoint.get(key)
+                if isinstance(value, dict):
+                    return value
+        return checkpoint
+
+    @staticmethod
+    def _normalize_official_encoder_key(key):
+        while key.startswith("module."):
+            key = key[len("module."):]
+        for prefix in ("model.", "visual.", "backbone."):
+            if key.startswith(prefix):
+                key = key[len(prefix):]
+
+        # Official GSViT load_gsvit.py loads into a wrapper whose encoder is a
+        # Sequential EfficientViT_M5 without the classification head.
+        for prefix in ("evit.", "gsvit."):
+            if key.startswith(prefix):
+                key = key[len(prefix):]
+
+        full_to_sequential = {
+            "patch_embed": "0",
+            "blocks1": "1",
+            "blocks2": "2",
+            "blocks3": "3",
+        }
+        first, sep, rest = key.partition(".")
+        if sep and first in full_to_sequential:
+            key = f"{full_to_sequential[first]}.{rest}"
+        return key
+
+    def _load_official_gsvit_checkpoint(self, checkpoint, pretrained_weights):
+        state_dict = self._extract_state_dict(checkpoint)
+        if not isinstance(state_dict, dict):
+            raise RuntimeError(
+                f"GSViT checkpoint must contain a state_dict-like object: {pretrained_weights}"
+            )
+
+        target_state = self.encoder.state_dict()
         cleaned = {}
-        for key, value in checkpoint.items():
-            while key.startswith("module."):
-                key = key[len("module."):]
-            if key.startswith("gsvit."):
-                key = key[len("gsvit."):]
-            if key.startswith("evit."):
-                key = key[len("evit."):]
-            cleaned[key] = value
+        ignored = []
 
-        msg = model.load_state_dict(cleaned, strict=False)
-        print(f"Loaded GSViT visual backbone: {msg}")
-        self.model = model
+        for raw_key, value in state_dict.items():
+            key = self._normalize_official_encoder_key(str(raw_key))
+            if key.startswith(("head.", "head_dist.", "decoder.")):
+                ignored.append(raw_key)
+                continue
+
+            if key in target_state and tuple(value.shape) == tuple(target_state[key].shape):
+                cleaned[key] = value
+            else:
+                ignored.append(raw_key)
+
+        missing = sorted(set(target_state) - set(cleaned))
+        if missing:
+            raise RuntimeError(
+                "GSViT checkpoint does not fully match the official encoder. "
+                f"matched={len(cleaned)}/{len(target_state)} "
+                f"missing_sample={missing[:20]} ignored_sample={ignored[:20]}"
+            )
+
+        self.encoder.load_state_dict(cleaned, strict=True)
+        first_key = next(iter(cleaned))
+        assert torch.equal(
+            self.encoder.state_dict()[first_key].cpu(),
+            cleaned[first_key].cpu(),
+        ), f"GSViT checkpoint not actually loaded for key: {first_key}"
+        print(
+            "Loaded GSViT checkpoint with official encoder path: "
+            f"{os.path.abspath(pretrained_weights)} | matched={len(cleaned)} "
+            f"ignored={len(ignored)}"
+        )
 
     @staticmethod
     def _flip_rgb_to_bgr(x):
@@ -180,7 +236,10 @@ class GSViTM5Backbone(nn.Module):
 
     def forward(self, x):
         x = self._flip_rgb_to_bgr(x)
-        return self.model(x)
+        x = self.encoder(x)
+        if x.ndim == 4:
+            x = F.adaptive_avg_pool2d(x, 1).flatten(1)
+        return x
 
 
 def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
