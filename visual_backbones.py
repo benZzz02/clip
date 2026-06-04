@@ -241,18 +241,15 @@ class GSViTM5Backbone(nn.Module):
             x = F.adaptive_avg_pool2d(x, 1).flatten(1)
         return x
 
-    def _last_encoder_block(self):
-        blocks3 = self.encoder[3]
-        if isinstance(blocks3, nn.Sequential) and len(blocks3) > 0:
-            return blocks3[-1]
-        return blocks3
+    def _last_encoder_stage(self):
+        return self.encoder[3]
 
     def unfreeze_last_stage(self):
-        for p in self._last_encoder_block().parameters():
+        for p in self._last_encoder_stage().parameters():
             p.requires_grad = True
 
     def set_last_stage_train(self):
-        self._last_encoder_block().train()
+        self._last_encoder_stage().train()
 
 
 def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
