@@ -494,6 +494,41 @@ def _collect_debug_stats(model_module, level_ids):
     return stats
 
 
+def _collect_module_grad_stats(module, prefix):
+    stats = {
+        f"{prefix}/trainable_params": 0.0,
+        f"{prefix}/grad_params": 0.0,
+        f"{prefix}/grad_norm": 0.0,
+        f"{prefix}/grad_max_abs": 0.0,
+    }
+
+    grad_sq_sum = 0.0
+    grad_max_abs = 0.0
+    for param in module.parameters():
+        if not param.requires_grad:
+            continue
+
+        stats[f"{prefix}/trainable_params"] += float(param.numel())
+        if param.grad is None:
+            continue
+
+        grad = param.grad.detach().float()
+        stats[f"{prefix}/grad_params"] += float(param.numel())
+        grad_sq_sum += float(torch.sum(grad * grad).item())
+        grad_max_abs = max(grad_max_abs, float(grad.abs().max().item()))
+
+    stats[f"{prefix}/grad_norm"] = math.sqrt(grad_sq_sum)
+    stats[f"{prefix}/grad_max_abs"] = grad_max_abs
+    return stats
+
+
+def _format_trainable_names(module, limit=24):
+    names = [name for name, param in module.named_parameters() if param.requires_grad]
+    if len(names) > limit:
+        return ", ".join(names[:limit]) + f", ... (+{len(names) - limit} more)"
+    return ", ".join(names)
+
+
 def clip_contrastive_loss(
     model,
     selection_images,
@@ -626,6 +661,7 @@ def train():
     LEVEL_BATCH_SIZES = parse_level_batch_sizes(args.level_batch_sizes)
     DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
     PERF_LOG_INTERVAL = int(os.environ.get("PERF_LOG_INTERVAL", DEBUG_LOG_INTERVAL))
+    REQUIRE_VISUAL_GRAD = str2bool(os.environ.get("REQUIRE_VISUAL_GRAD", "false"))
     anchor_same_video_triplets = all(
         LEVEL_BATCH_SIZES.get(level, 0) > 0 for level in ("fine", "mid", "coarse")
     )
@@ -737,6 +773,7 @@ def train():
         print(f"文本adapter可训练: trainable {text_adapter_trainable}/{text_adapter_total}")
         print(f"帧池化模块可训练: trainable {frame_pool_trainable}/{frame_pool_total}")
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
+        print(f"visual trainable parameter names: {_format_trainable_names(model.visual)}")
         print(f"模型总参数量: {total_params:,}")
         print(f"可训练参数量: {trainable_params_num:,}")
         print(f"帧池化模块：{model.frame_pool}")
@@ -1145,6 +1182,24 @@ def train():
 
             if should_update:
                 if scaler.is_enabled():
+                    scaler.unscale_(optimizer)
+
+                state_model = _unwrap_state_io_module(model.module)
+                grad_debug_stats = _collect_module_grad_stats(state_model.visual, "visual")
+                if (
+                    REQUIRE_VISUAL_GRAD
+                    and grad_debug_stats["visual/trainable_params"] > 0
+                    and (
+                        grad_debug_stats["visual/grad_params"] <= 0
+                        or grad_debug_stats["visual/grad_norm"] <= 0
+                    )
+                ):
+                    raise RuntimeError(
+                        "REQUIRE_VISUAL_GRAD=true but the visual backbone received no gradient. "
+                        f"stats={grad_debug_stats}"
+                    )
+
+                if scaler.is_enabled():
                     scaler.step(optimizer)
                     scaler.update()
                 else:
@@ -1167,7 +1222,8 @@ def train():
                 ).item()
                 accum_data_time_sum = 0.0
                 accum_step_time_sum = 0.0
-                debug_stats = _collect_debug_stats(_unwrap_state_io_module(model.module), level_ids)
+                debug_stats = _collect_debug_stats(state_model, level_ids)
+                debug_stats.update(grad_debug_stats)
 
                 if writer is not None:
                     writer.add_scalar("train/loss", loss_avg, global_step)
@@ -1200,6 +1256,8 @@ def train():
                         postfix["conf"] = f"{debug_stats['pair_confidence']:.3f}"
                     if "frame_entropy" in debug_stats:
                         postfix["fH"] = f"{debug_stats['frame_entropy']:.3f}"
+                    if "visual/grad_norm" in debug_stats:
+                        postfix["vG"] = f"{debug_stats['visual/grad_norm']:.2e}"
                 progress_bar.set_postfix(**postfix)
 
                 if should_update and DEBUG_LOG_INTERVAL > 0 and global_step % DEBUG_LOG_INTERVAL == 0:
@@ -1215,6 +1273,15 @@ def train():
                     if debug_parts:
                         print(
                             f"[debug step {global_step}] " + " | ".join(debug_parts),
+                            flush=True,
+                        )
+                    if "visual/grad_norm" in debug_stats:
+                        print(
+                            f"[grad step {global_step}] "
+                            f"visual_grad_norm={debug_stats['visual/grad_norm']:.6e} | "
+                            f"visual_grad_params={debug_stats['visual/grad_params']:.0f}/"
+                            f"{debug_stats['visual/trainable_params']:.0f} | "
+                            f"visual_grad_max={debug_stats['visual/grad_max_abs']:.6e}",
                             flush=True,
                         )
                 if should_update and PERF_LOG_INTERVAL > 0 and global_step % PERF_LOG_INTERVAL == 0:
