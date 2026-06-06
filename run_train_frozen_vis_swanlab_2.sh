@@ -42,6 +42,11 @@
   REBUILD_SAMPLES_CACHE=false
   SAMPLES_CACHE_VERSION="v1"
 
+  ENCODER_LORA_RANK="${ENCODER_LORA_RANK:-0}"
+  ENCODER_LORA_ALPHA="${ENCODER_LORA_ALPHA:-0}"
+  ENCODER_LORA_DROPOUT="${ENCODER_LORA_DROPOUT:-0}"
+  ENCODER_LORA_TARGETS="${ENCODER_LORA_TARGETS:-visual,text}"
+
   export CUDA_VISIBLE_DEVICES=2,3
   export TORCH_DISTRIBUTED_DEBUG=DETAIL
   export TORCH_SHOW_CPP_STACKTRACES=1
@@ -75,4 +80,8 @@
       --use_samples_cache "$USE_SAMPLES_CACHE" \
       --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
       --samples_cache_version "$SAMPLES_CACHE_VERSION" \
-      --use_swanlab "$USE_SWANLAB"
+      --use_swanlab "$USE_SWANLAB" \
+      --encoder_lora_rank "$ENCODER_LORA_RANK" \
+      --encoder_lora_alpha "$ENCODER_LORA_ALPHA" \
+      --encoder_lora_dropout "$ENCODER_LORA_DROPOUT" \
+      --encoder_lora_targets "$ENCODER_LORA_TARGETS"

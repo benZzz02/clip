@@ -3,6 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoConfig, AutoModel
 
+from lora_layers import (
+    count_lora_parameters,
+    inject_lora_modules,
+    mark_lora_trainable,
+    set_lora_modules_train,
+)
 from surgclip.surgclip.models.timesformer.timesformer import Block
 from visual_backbones import build_LemonFM, build_visual_backbone
 
@@ -208,6 +214,10 @@ class VLP(nn.Module):
         local_temperature=0.07,
         selection_pooling="similarity",
         level_frame_temperatures=(0.6, 0.9, 1.2),
+        encoder_lora_rank=0,
+        encoder_lora_alpha=0,
+        encoder_lora_dropout=0.0,
+        encoder_lora_targets="visual,text",
     ):
         super().__init__()
 
@@ -227,6 +237,39 @@ class VLP(nn.Module):
         self.temporal_hidden_dim = int(temporal_hidden_dim)
         self.local_temperature = float(local_temperature)
         self.selection_pooling = str(selection_pooling).lower()
+        self.encoder_lora_rank = int(encoder_lora_rank or 0)
+        self.encoder_lora_alpha = float(encoder_lora_alpha or 0)
+        self.encoder_lora_dropout = float(encoder_lora_dropout or 0.0)
+        self.encoder_lora_targets = {
+            item.strip().lower()
+            for item in str(encoder_lora_targets or "").split(",")
+            if item.strip()
+        }
+        unknown_lora_targets = self.encoder_lora_targets - {"visual", "text", "both", "all"}
+        if unknown_lora_targets:
+            raise ValueError(f"Unknown encoder_lora_targets: {sorted(unknown_lora_targets)}")
+        if "both" in self.encoder_lora_targets or "all" in self.encoder_lora_targets:
+            self.encoder_lora_targets.update({"visual", "text"})
+        self.encoder_lora_summary = {
+            "visual": {"modules": 0, "params": 0},
+            "text": {"modules": 0, "params": 0},
+        }
+
+        if self.encoder_lora_rank > 0:
+            if "visual" in self.encoder_lora_targets:
+                self.encoder_lora_summary["visual"] = inject_lora_modules(
+                    self.visual,
+                    rank=self.encoder_lora_rank,
+                    alpha=self.encoder_lora_alpha,
+                    dropout=self.encoder_lora_dropout,
+                )
+            if "text" in self.encoder_lora_targets:
+                self.encoder_lora_summary["text"] = inject_lora_modules(
+                    self.text.backbone,
+                    rank=self.encoder_lora_rank,
+                    alpha=self.encoder_lora_alpha,
+                    dropout=self.encoder_lora_dropout,
+                )
 
         self.frame_pool = None
         if self.num_frames > 1:
@@ -677,6 +720,10 @@ class VLP(nn.Module):
         for p in self.text.text_projection.parameters():
             p.requires_grad = True
 
+        if self.encoder_lora_rank > 0:
+            mark_lora_trainable(self.visual, True)
+            mark_lora_trainable(self.text.backbone, True)
+
         self.logit_scale.requires_grad = True
 
     def set_frozen_modules_eval(self):
@@ -697,6 +744,9 @@ class VLP(nn.Module):
 
         self.video_adapter.train()
         self.text_adapter.train()
+        if self.encoder_lora_rank > 0:
+            set_lora_modules_train(self.visual, True)
+            set_lora_modules_train(self.text.backbone, True)
 
 def count_parameters(model):
     total = sum(p.numel() for p in model.parameters())
@@ -737,6 +787,24 @@ def print_model_info(model):
     print(f"text adapter params : {sum(p.numel() for p in model.text_adapter.parameters()):,}")
     print(f"video proj params: {sum(p.numel() for p in model.video_projection.parameters()):,}")
     print(f"frame pool params: {frame_pool_params:,}")
+    if getattr(model, "encoder_lora_rank", 0) > 0:
+        visual_lora = model.encoder_lora_summary.get("visual", {})
+        text_lora = model.encoder_lora_summary.get("text", {})
+        print(
+            "encoder LoRA      : "
+            f"rank={model.encoder_lora_rank}, alpha={model.encoder_lora_alpha or 2 * model.encoder_lora_rank}, "
+            f"dropout={model.encoder_lora_dropout}"
+        )
+        print(
+            "visual LoRA       : "
+            f"{visual_lora.get('modules', 0)} modules, "
+            f"{count_lora_parameters(model.visual):,} params"
+        )
+        print(
+            "text LoRA         : "
+            f"{text_lora.get('modules', 0)} modules, "
+            f"{count_lora_parameters(model.text.backbone):,} params"
+        )
     print("=" * 80)
 
 

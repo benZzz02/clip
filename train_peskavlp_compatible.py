@@ -126,6 +126,14 @@ def parse_args():
     parser.add_argument("--peskavlp_dtw_beta", type=float, default=0.0)
     parser.add_argument("--peskavlp_dtw_ratio", type=float, default=0.5)
     parser.add_argument("--peskavlp_dtw_scale_factor", type=float, default=0.01)
+    parser.add_argument("--encoder_lora_rank", type=int, default=int(os.environ.get("ENCODER_LORA_RANK", 0)))
+    parser.add_argument("--encoder_lora_alpha", type=float, default=float(os.environ.get("ENCODER_LORA_ALPHA", 0)))
+    parser.add_argument("--encoder_lora_dropout", type=float, default=float(os.environ.get("ENCODER_LORA_DROPOUT", 0.0)))
+    parser.add_argument(
+        "--encoder_lora_targets",
+        type=str,
+        default=os.environ.get("ENCODER_LORA_TARGETS", "visual,text"),
+    )
 
     return parser.parse_args()
 
@@ -460,6 +468,10 @@ def train():
         local_temperature=args.local_temperature,
         selection_pooling=args.selection_pooling,
         level_frame_temperatures=args.level_frame_temperatures,
+        encoder_lora_rank=args.encoder_lora_rank,
+        encoder_lora_alpha=args.encoder_lora_alpha,
+        encoder_lora_dropout=args.encoder_lora_dropout,
+        encoder_lora_targets=args.encoder_lora_targets,
     ).to(device)
     model.freeze_encoders_train_projections()
     model.set_frozen_modules_eval()
@@ -515,6 +527,24 @@ def train():
             f"coarse every {args.coarse_interval}",
             flush=True,
         )
+        state_model = _unwrap_state_io_module(model.module)
+        if getattr(state_model, "encoder_lora_rank", 0) > 0:
+            visual_lora = state_model.encoder_lora_summary.get("visual", {})
+            text_lora = state_model.encoder_lora_summary.get("text", {})
+            print(
+                "encoder LoRA: "
+                f"rank={state_model.encoder_lora_rank}, "
+                f"alpha={state_model.encoder_lora_alpha or 2 * state_model.encoder_lora_rank}, "
+                f"dropout={state_model.encoder_lora_dropout}, "
+                f"targets={','.join(sorted(state_model.encoder_lora_targets))}",
+                flush=True,
+            )
+            print(
+                "LoRA injected: "
+                f"visual={visual_lora.get('modules', 0)} modules/{visual_lora.get('params', 0):,} params, "
+                f"text={text_lora.get('modules', 0)} modules/{text_lora.get('params', 0):,} params",
+                flush=True,
+            )
 
     if len(loaders["fine"]) == 0:
         raise ValueError(
@@ -611,12 +641,22 @@ def train():
             checkpoint["model_state_dict"],
             source=args.resume_from_checkpoint,
         )
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        optimizer_restored = True
+        try:
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        except ValueError as exc:
+            optimizer_restored = False
+            if rank == 0:
+                print(
+                    "Checkpoint optimizer/scheduler state is incompatible with current trainable "
+                    f"parameters; continuing with fresh optimizer state. reason={exc}",
+                    flush=True,
+                )
         start_epoch = int(checkpoint.get("epoch", 0))
         global_step = int(checkpoint.get("global_step", 0))
         scaler_state_dict = checkpoint.get("scaler_state_dict")
-        if scaler_state_dict is not None and scaler.is_enabled():
+        if optimizer_restored and scaler_state_dict is not None and scaler.is_enabled():
             scaler.load_state_dict(scaler_state_dict)
 
     for epoch in range(start_epoch, args.epochs):

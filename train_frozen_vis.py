@@ -92,13 +92,16 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "video_gate_head.",
     )
 
+    def _is_lora_key(key):
+        return ".lora_" in key or key.startswith("lora_")
+
     disallowed_missing = [
         key for key in msg.missing_keys
-        if not key.startswith(allowed_missing_prefixes)
+        if not key.startswith(allowed_missing_prefixes) and not _is_lora_key(key)
     ]
     disallowed_unexpected = [
         key for key in msg.unexpected_keys
-        if not key.startswith(allowed_unexpected_prefixes)
+        if not key.startswith(allowed_unexpected_prefixes) and not _is_lora_key(key)
     ]
 
     if disallowed_missing or disallowed_unexpected:
@@ -334,6 +337,29 @@ def parse_args():
     parser.add_argument("--peskavlp_dtw_ratio", type=float, default=0.5)
     parser.add_argument("--peskavlp_dtw_scale_factor", type=float, default=0.01)
     parser.add_argument("--peskavlp_max_candidates", type=int, default=8)
+    parser.add_argument(
+        "--encoder_lora_rank",
+        type=int,
+        default=int(os.environ.get("ENCODER_LORA_RANK", 0)),
+        help="Rank for LoRA injected into visual encoder and text backbone. 0 disables LoRA.",
+    )
+    parser.add_argument(
+        "--encoder_lora_alpha",
+        type=float,
+        default=float(os.environ.get("ENCODER_LORA_ALPHA", 0)),
+        help="LoRA alpha. 0 means 2 * encoder_lora_rank.",
+    )
+    parser.add_argument(
+        "--encoder_lora_dropout",
+        type=float,
+        default=float(os.environ.get("ENCODER_LORA_DROPOUT", 0.0)),
+    )
+    parser.add_argument(
+        "--encoder_lora_targets",
+        type=str,
+        default=os.environ.get("ENCODER_LORA_TARGETS", "visual,text"),
+        help="Comma-separated LoRA targets: visual,text or both.",
+    )
 
     return parser.parse_args()
 
@@ -714,6 +740,10 @@ def train():
         "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
         "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
         "peskavlp_max_candidates": args.peskavlp_max_candidates,
+        "encoder_lora_rank": args.encoder_lora_rank,
+        "encoder_lora_alpha": args.encoder_lora_alpha,
+        "encoder_lora_dropout": args.encoder_lora_dropout,
+        "encoder_lora_targets": args.encoder_lora_targets,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
@@ -732,6 +762,10 @@ def train():
         local_temperature=CONFIG["local_temperature"],
         selection_pooling=CONFIG["selection_pooling"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
+        encoder_lora_rank=CONFIG["encoder_lora_rank"],
+        encoder_lora_alpha=CONFIG["encoder_lora_alpha"],
+        encoder_lora_dropout=CONFIG["encoder_lora_dropout"],
+        encoder_lora_targets=CONFIG["encoder_lora_targets"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -774,6 +808,26 @@ def train():
         print(f"帧池化模块可训练: trainable {frame_pool_trainable}/{frame_pool_total}")
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
         print(f"visual trainable parameter names: {_format_trainable_names(model.visual)}")
+        if getattr(model, "encoder_lora_rank", 0) > 0:
+            visual_lora = model.encoder_lora_summary.get("visual", {})
+            text_lora = model.encoder_lora_summary.get("text", {})
+            print(
+                "encoder LoRA: "
+                f"rank={model.encoder_lora_rank}, "
+                f"alpha={model.encoder_lora_alpha or 2 * model.encoder_lora_rank}, "
+                f"dropout={model.encoder_lora_dropout}, "
+                f"targets={','.join(sorted(model.encoder_lora_targets))}"
+            )
+            print(
+                "visual LoRA injected: "
+                f"{visual_lora.get('modules', 0)} modules, "
+                f"{visual_lora.get('params', 0):,} params"
+            )
+            print(
+                "text LoRA injected: "
+                f"{text_lora.get('modules', 0)} modules, "
+                f"{text_lora.get('params', 0):,} params"
+            )
         print(f"模型总参数量: {total_params:,}")
         print(f"可训练参数量: {trainable_params_num:,}")
         print(f"帧池化模块：{model.frame_pool}")
@@ -996,6 +1050,10 @@ def train():
                     "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
                     "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
                     "peskavlp_max_candidates": args.peskavlp_max_candidates,
+                    "encoder_lora_rank": args.encoder_lora_rank,
+                    "encoder_lora_alpha": args.encoder_lora_alpha,
+                    "encoder_lora_dropout": args.encoder_lora_dropout,
+                    "encoder_lora_targets": args.encoder_lora_targets,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,
@@ -1052,13 +1110,23 @@ def train():
             checkpoint["model_state_dict"],
             source=args.resume_from_checkpoint,
         )
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        optimizer_restored = True
+        try:
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        except ValueError as exc:
+            optimizer_restored = False
+            if rank == 0:
+                print(
+                    "Checkpoint optimizer/scheduler state is incompatible with current trainable "
+                    f"parameters; continuing with fresh optimizer state. reason={exc}",
+                    flush=True,
+                )
         start_epoch = checkpoint["epoch"]
         global_step = checkpoint["global_step"]
 
         scaler_state_dict = checkpoint.get("scaler_state_dict")
-        if scaler_state_dict is not None and scaler.is_enabled():
+        if optimizer_restored and scaler_state_dict is not None and scaler.is_enabled():
             scaler.load_state_dict(scaler_state_dict)
 
         if rank == 0:
