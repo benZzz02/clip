@@ -360,6 +360,19 @@ def parse_args():
         default=os.environ.get("ENCODER_LORA_TARGETS", "visual,text"),
         help="Comma-separated LoRA targets: visual,text or both.",
     )
+    parser.add_argument(
+        "--train_encoder_base_layers",
+        type=str2bool,
+        default=(
+            str2bool(os.environ["TRAIN_ENCODER_BASE_LAYERS"])
+            if "TRAIN_ENCODER_BASE_LAYERS" in os.environ
+            else None
+        ),
+        help=(
+            "Whether to train the original unfrozen encoder layers "
+            "(visual last stage and text last two layers). Default is false when LoRA is enabled."
+        ),
+    )
 
     return parser.parse_args()
 
@@ -661,6 +674,8 @@ def compute_hierarchical_consistency_loss(selected_image_features, sample_indice
 
 def train():
     args = parse_args()
+    if args.train_encoder_base_layers is None:
+        args.train_encoder_base_layers = args.encoder_lora_rank <= 0
 
     rank = setup_ddp()
     world_size = dist.get_world_size()
@@ -744,6 +759,7 @@ def train():
         "encoder_lora_alpha": args.encoder_lora_alpha,
         "encoder_lora_dropout": args.encoder_lora_dropout,
         "encoder_lora_targets": args.encoder_lora_targets,
+        "train_encoder_base_layers": args.train_encoder_base_layers,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
@@ -766,6 +782,7 @@ def train():
         encoder_lora_alpha=CONFIG["encoder_lora_alpha"],
         encoder_lora_dropout=CONFIG["encoder_lora_dropout"],
         encoder_lora_targets=CONFIG["encoder_lora_targets"],
+        train_encoder_base_layers=CONFIG["train_encoder_base_layers"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -807,6 +824,7 @@ def train():
         print(f"文本adapter可训练: trainable {text_adapter_trainable}/{text_adapter_total}")
         print(f"帧池化模块可训练: trainable {frame_pool_trainable}/{frame_pool_total}")
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
+        print(f"train_encoder_base_layers: {model.train_encoder_base_layers}")
         print(f"visual trainable parameter names: {_format_trainable_names(model.visual)}")
         if getattr(model, "encoder_lora_rank", 0) > 0:
             visual_lora = model.encoder_lora_summary.get("visual", {})
@@ -1054,6 +1072,7 @@ def train():
                     "encoder_lora_alpha": args.encoder_lora_alpha,
                     "encoder_lora_dropout": args.encoder_lora_dropout,
                     "encoder_lora_targets": args.encoder_lora_targets,
+                    "train_encoder_base_layers": args.train_encoder_base_layers,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,

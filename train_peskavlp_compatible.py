@@ -134,6 +134,15 @@ def parse_args():
         type=str,
         default=os.environ.get("ENCODER_LORA_TARGETS", "visual,text"),
     )
+    parser.add_argument(
+        "--train_encoder_base_layers",
+        type=str2bool,
+        default=(
+            str2bool(os.environ["TRAIN_ENCODER_BASE_LAYERS"])
+            if "TRAIN_ENCODER_BASE_LAYERS" in os.environ
+            else None
+        ),
+    )
 
     return parser.parse_args()
 
@@ -436,6 +445,9 @@ def build_datasets(args, tokenizer):
 
 def train():
     args = parse_args()
+    if args.train_encoder_base_layers is None:
+        args.train_encoder_base_layers = args.encoder_lora_rank <= 0
+
     rank = setup_ddp()
     world_size = dist.get_world_size()
     device = torch.device("cuda", rank)
@@ -472,6 +484,7 @@ def train():
         encoder_lora_alpha=args.encoder_lora_alpha,
         encoder_lora_dropout=args.encoder_lora_dropout,
         encoder_lora_targets=args.encoder_lora_targets,
+        train_encoder_base_layers=args.train_encoder_base_layers,
     ).to(device)
     model.freeze_encoders_train_projections()
     model.set_frozen_modules_eval()
@@ -528,6 +541,7 @@ def train():
             flush=True,
         )
         state_model = _unwrap_state_io_module(model.module)
+        print(f"train_encoder_base_layers={state_model.train_encoder_base_layers}", flush=True)
         if getattr(state_model, "encoder_lora_rank", 0) > 0:
             visual_lora = state_model.encoder_lora_summary.get("visual", {})
             text_lora = state_model.encoder_lora_summary.get("text", {})

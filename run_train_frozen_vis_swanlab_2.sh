@@ -46,6 +46,7 @@
   ENCODER_LORA_ALPHA="${ENCODER_LORA_ALPHA:-16}"
   ENCODER_LORA_DROPOUT="${ENCODER_LORA_DROPOUT:-0.05}"
   ENCODER_LORA_TARGETS="${ENCODER_LORA_TARGETS:-visual,text}"
+  TRAIN_ENCODER_BASE_LAYERS="${TRAIN_ENCODER_BASE_LAYERS:-false}"
 
   export CUDA_VISIBLE_DEVICES=2,3
   export TORCH_DISTRIBUTED_DEBUG=DETAIL
@@ -84,4 +85,5 @@
       --encoder_lora_rank "$ENCODER_LORA_RANK" \
       --encoder_lora_alpha "$ENCODER_LORA_ALPHA" \
       --encoder_lora_dropout "$ENCODER_LORA_DROPOUT" \
-      --encoder_lora_targets "$ENCODER_LORA_TARGETS"
+      --encoder_lora_targets "$ENCODER_LORA_TARGETS" \
+      --train_encoder_base_layers "$TRAIN_ENCODER_BASE_LAYERS"

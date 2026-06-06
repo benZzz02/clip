@@ -218,6 +218,7 @@ class VLP(nn.Module):
         encoder_lora_alpha=0,
         encoder_lora_dropout=0.0,
         encoder_lora_targets="visual,text",
+        train_encoder_base_layers=True,
     ):
         super().__init__()
 
@@ -240,6 +241,7 @@ class VLP(nn.Module):
         self.encoder_lora_rank = int(encoder_lora_rank or 0)
         self.encoder_lora_alpha = float(encoder_lora_alpha or 0)
         self.encoder_lora_dropout = float(encoder_lora_dropout or 0.0)
+        self.train_encoder_base_layers = bool(train_encoder_base_layers)
         self.encoder_lora_targets = {
             item.strip().lower()
             for item in str(encoder_lora_targets or "").split(",")
@@ -250,6 +252,8 @@ class VLP(nn.Module):
             raise ValueError(f"Unknown encoder_lora_targets: {sorted(unknown_lora_targets)}")
         if "both" in self.encoder_lora_targets or "all" in self.encoder_lora_targets:
             self.encoder_lora_targets.update({"visual", "text"})
+            self.encoder_lora_targets.discard("both")
+            self.encoder_lora_targets.discard("all")
         self.encoder_lora_summary = {
             "visual": {"modules": 0, "params": 0},
             "text": {"modules": 0, "params": 0},
@@ -680,19 +684,20 @@ class VLP(nn.Module):
             p.requires_grad = False
 
         # 2. 视觉侧：默认 LemonFM 保持原有最后 stage 微调；新增 backbone 可选择全冻。
-        if hasattr(self.visual, "unfreeze_last_stage"):
-            self.visual.unfreeze_last_stage()
-        elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
-            for p in self.visual.features[7].parameters():
-                p.requires_grad = True
-            if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
-                for p in self.visual.classifier[0].parameters():
+        if self.train_encoder_base_layers:
+            if hasattr(self.visual, "unfreeze_last_stage"):
+                self.visual.unfreeze_last_stage()
+            elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
+                for p in self.visual.features[7].parameters():
                     p.requires_grad = True
+                if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
+                    for p in self.visual.classifier[0].parameters():
+                        p.requires_grad = True
 
         # 3. 文本侧：放开最后两层
-        for layer in self.text.backbone.encoder.layer[-2:]:
-            for p in layer.parameters():
-                p.requires_grad = True
+            for layer in self.text.backbone.encoder.layer[-2:]:
+                for p in layer.parameters():
+                    p.requires_grad = True
 
         # 4. 头部继续训练
         if self.frame_pool is not None:
@@ -732,15 +737,16 @@ class VLP(nn.Module):
         self.text.backbone.eval()
 
         # 再把允许微调的部分切回 train
-        if hasattr(self.visual, "set_last_stage_train"):
-            self.visual.set_last_stage_train()
-        elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
-            self.visual.features[7].train()
-            if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
-                self.visual.classifier[0].train()
+        if self.train_encoder_base_layers:
+            if hasattr(self.visual, "set_last_stage_train"):
+                self.visual.set_last_stage_train()
+            elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
+                self.visual.features[7].train()
+                if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
+                    self.visual.classifier[0].train()
 
-        for layer in self.text.backbone.encoder.layer[-2:]:
-            layer.train()
+            for layer in self.text.backbone.encoder.layer[-2:]:
+                layer.train()
 
         self.video_adapter.train()
         self.text_adapter.train()
@@ -787,6 +793,7 @@ def print_model_info(model):
     print(f"text adapter params : {sum(p.numel() for p in model.text_adapter.parameters()):,}")
     print(f"video proj params: {sum(p.numel() for p in model.video_projection.parameters()):,}")
     print(f"frame pool params: {frame_pool_params:,}")
+    print(f"train encoder base layers: {getattr(model, 'train_encoder_base_layers', True)}")
     if getattr(model, "encoder_lora_rank", 0) > 0:
         visual_lora = model.encoder_lora_summary.get("visual", {})
         text_lora = model.encoder_lora_summary.get("text", {})
