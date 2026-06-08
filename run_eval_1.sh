@@ -4,10 +4,10 @@ set -euo pipefail
 source ~/miniconda3/etc/profile.d/conda.sh
 
 
-CKPT="/data/nfs_data/CLIP/outputs/same_video_triplet_baseline_no_surgical_init_8f_run1/vlp_final.pt"
+CKPT="outputs/same_video_triplet_xpool_adapter_no_warmup_8f_run1/vlp_epoch_50.pt"
 VISION_WEIGHTS="lemonfm.pth"
-TEXT_MODEL="bert-base-uncased"
-OUTPUT_DIR="./eval_5.29_epoch_50"
+TEXT_MODEL="marcobombieri/surgicberta"
+OUTPUT_DIR="./eval_6.4_epoch_50"
 CUDA_DEVICE=0
 
 

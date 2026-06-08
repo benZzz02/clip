@@ -641,6 +641,7 @@ def evaluate_zero_shot(args):
     model = VLP(
         embed_dim=args.embed_dim,
         text_model_name=args.text_model,
+        vision_backbone=args.vision_backbone,
         vision_pretrained_weights=args.vision_weights,
         num_frames=args.num_frames,
         temporal_num_layers=args.temporal_layers,
@@ -685,6 +686,7 @@ def evaluate_zero_shot(args):
             "model_family": "vlp",
             "ckpt": args.ckpt,
             "text_model": args.text_model,
+            "vision_backbone": args.vision_backbone,
             "vision_weights": args.vision_weights,
             "batch_size": args.batch_size,
             "num_workers": args.num_workers,
@@ -712,6 +714,12 @@ def parse_args():
     parser.add_argument("--dataset", type=str, required=True, choices=list(DATASET_CONFIGS.keys()))
     parser.add_argument("--ckpt", type=str, required=True)
     parser.add_argument("--text_model", type=str, default="marcobombieri/surgicberta")
+    parser.add_argument(
+        "--vision_backbone",
+        type=str,
+        default="convnext_lemonfm",
+        choices=["convnext_lemonfm", "gsvit_m5"],
+    )
     parser.add_argument("--vision_weights", type=str, default="lemonfm.pth")
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_workers", type=int, default=4)

@@ -1,89 +1,139 @@
-  #!/usr/bin/env bash
-  set -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
-  source ~/miniconda3/etc/profile.d/conda.sh
-  conda activate vllm
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-  NPROC=2
-  EXP_NAME="convnext_timesformer_head_8f"
+source ~/miniconda3/etc/profile.d/conda.sh
 
-  PER_GPU_BATCH_SIZE=128
-  ACCUM_STEPS=1
-  NUM_WORKERS=4
-  NUM_FRAMES=8
 
-  EPOCHS=50
-  LEARNING_RATE=1e-4
-  WEIGHT_DECAY=0.02
-  ADAM_BETA1=0.9
-  ADAM_BETA2=0.999
+NPROC="${NPROC:-2}"
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-1,3}"
+RUN_NAME="${RUN_NAME:-same_video_triplet_xpool_adapter_no_warmup_8f_run1_gsvit}"
+EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
-  EMBED_DIM=256
-  IMAGE_SIZE=224
-  MAX_LENGTH=256
+PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-128}"
+ACCUM_STEPS="${ACCUM_STEPS:-1}"
+NUM_WORKERS="${NUM_WORKERS:-8}"
+NUM_FRAMES="${NUM_FRAMES:-8}"
 
-  FFMPEG_TIMEOUT=10
-  MAX_RETRY=5
-  ASSUME_RESIZED_VIDEO=true
-  USE_SWANLAB=true
+EPOCHS="${EPOCHS:-50}"
+LEARNING_RATE="${LEARNING_RATE:-1e-4}"
+WEIGHT_DECAY="${WEIGHT_DECAY:-0.02}"
+ADAM_BETA1="${ADAM_BETA1:-0.9}"
+ADAM_BETA2="${ADAM_BETA2:-0.999}"
 
-  TEXT_MODEL_NAME="marcobombieri/surgicberta"
-  VISION_PRETRAINED_WEIGHTS="/mnt/mydisk/CLIP/lemonfm.pth"
-  VIDEO_ROOT_FOLDER="/mnt/mydisk/CLIP/downloaded_video_224_test"
-  MAIN_CSV_PATH="/mnt/mydisk/CLIP/surglavi_level_csv/all_video.csv"
+EMBED_DIM="${EMBED_DIM:-256}"
+IMAGE_SIZE="${IMAGE_SIZE:-224}"
+MAX_LENGTH="${MAX_LENGTH:-256}"
 
-  ANNOTATIONS_ROOT="/mnt/mydisk/CLIP/surglavi_level_csv"
-  ANNOTATION_LEVELS="coarse,mid,fine"
-  LEVEL_MIX="concat"
-  LEVEL_BATCH_SIZES="fine:80,mid:32,coarse:16"
+FFMPEG_TIMEOUT="${FFMPEG_TIMEOUT:-10}"
+MAX_RETRY="${MAX_RETRY:-5}"
+VIDEO_READER_THREADS="${VIDEO_READER_THREADS:-2}"
+VIDEO_READER_CACHE_SIZE="${VIDEO_READER_CACHE_SIZE:-2}"
+ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
+USE_SWANLAB="${USE_SWANLAB:-true}"
 
-  SAMPLES_CACHE_DIR="/mnt/mydisk/CLIP/.cache/pretrain_samples"
-  USE_SAMPLES_CACHE=true
-  REBUILD_SAMPLES_CACHE=false
-  SAMPLES_CACHE_VERSION="v1"
+TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
+VISION_BACKBONE="${VISION_BACKBONE:-gsvit_m5}"
+VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-GSViT.pkl}"
+VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-downloaded_video_224_test}"
+MAIN_CSV_PATH="${MAIN_CSV_PATH:-surglavi_level_csv/all_video.csv}"
 
-  ENCODER_LORA_RANK="${ENCODER_LORA_RANK:-8}"
-  ENCODER_LORA_ALPHA="${ENCODER_LORA_ALPHA:-16}"
-  ENCODER_LORA_DROPOUT="${ENCODER_LORA_DROPOUT:-0.05}"
-  ENCODER_LORA_TARGETS="${ENCODER_LORA_TARGETS:-visual,text}"
-  TRAIN_ENCODER_BASE_LAYERS="${TRAIN_ENCODER_BASE_LAYERS:-false}"
+ANNOTATIONS_ROOT="${ANNOTATIONS_ROOT:-surglavi_level_csv}"
+ANNOTATION_LEVELS="${ANNOTATION_LEVELS:-coarse,mid,fine}"
+LEVEL_MIX="${LEVEL_MIX:-concat}"
+LEVEL_BATCH_SIZES="${LEVEL_BATCH_SIZES:-fine:70,mid:36,coarse:22}"
 
-  export CUDA_VISIBLE_DEVICES=2,3
-  export TORCH_DISTRIBUTED_DEBUG=DETAIL
-  export TORCH_SHOW_CPP_STACKTRACES=1
-  export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
-  export SAVE_PREFIX="outputs/convnext_timesformer_head_8f_run2/"
-  torchrun --standalone --nproc_per_node="$NPROC" train_frozen_vis.py \
-      --epochs "$EPOCHS" \
-      --learning_rate "$LEARNING_RATE" \
-      --weight_decay "$WEIGHT_DECAY" \
-      --adam_beta1 "$ADAM_BETA1" \
-      --adam_beta2 "$ADAM_BETA2" \
-      --per_gpu_batch_size "$PER_GPU_BATCH_SIZE" \
-      --accum_steps "$ACCUM_STEPS" \
-      --num_workers "$NUM_WORKERS" \
-      --embed_dim "$EMBED_DIM" \
-      --image_size "$IMAGE_SIZE" \
-      --max_length "$MAX_LENGTH" \
-      --num_frames "$NUM_FRAMES" \
-      --text_model_name "$TEXT_MODEL_NAME" \
-      --vision_pretrained_weights "$VISION_PRETRAINED_WEIGHTS" \
-      --video_root_folder "$VIDEO_ROOT_FOLDER" \
-      --ffmpeg_timeout "$FFMPEG_TIMEOUT" \
-      --max_retry "$MAX_RETRY" \
-      --assume_resized_video "$ASSUME_RESIZED_VIDEO" \
-      --main_csv_path "$MAIN_CSV_PATH" \
-      --annotations_root "$ANNOTATIONS_ROOT" \
-      --annotation_levels "$ANNOTATION_LEVELS" \
-      --level_mix "$LEVEL_MIX" \
-      --level_batch_sizes "$LEVEL_BATCH_SIZES" \
-      --samples_cache_dir "$SAMPLES_CACHE_DIR" \
-      --use_samples_cache "$USE_SAMPLES_CACHE" \
-      --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE" \
-      --samples_cache_version "$SAMPLES_CACHE_VERSION" \
-      --use_swanlab "$USE_SWANLAB" \
-      --encoder_lora_rank "$ENCODER_LORA_RANK" \
-      --encoder_lora_alpha "$ENCODER_LORA_ALPHA" \
-      --encoder_lora_dropout "$ENCODER_LORA_DROPOUT" \
-      --encoder_lora_targets "$ENCODER_LORA_TARGETS" \
-      --train_encoder_base_layers "$TRAIN_ENCODER_BASE_LAYERS"
+SAMPLES_CACHE_DIR="${SAMPLES_CACHE_DIR:-.cache/pretrain_samples}"
+USE_SAMPLES_CACHE="${USE_SAMPLES_CACHE:-true}"
+REBUILD_SAMPLES_CACHE="${REBUILD_SAMPLES_CACHE:-false}"
+SAMPLES_CACHE_VERSION="${SAMPLES_CACHE_VERSION:-v1}"
+
+LOCAL_TEMPERATURE="${LOCAL_TEMPERATURE:-0.15}"
+SELECTION_POOLING="${SELECTION_POOLING:-xpool}"
+LEVEL_FRAME_TEMPERATURES="${LEVEL_FRAME_TEMPERATURES:-0.6,0.9,1.2}"
+TRAIN_WINDOW_EXPAND_RATIO="${TRAIN_WINDOW_EXPAND_RATIO:-1.5}"
+SELECTION_LOSS_WEIGHT="${SELECTION_LOSS_WEIGHT:-1.0}"
+SELECTION_LOSS_WARMUP_ZERO_EPOCHS="${SELECTION_LOSS_WARMUP_ZERO_EPOCHS:-0}"
+SELECTION_LOSS_WARMUP_RAMP_EPOCHS="${SELECTION_LOSS_WARMUP_RAMP_EPOCHS:-0}"
+HIERARCHICAL_CONSISTENCY_WEIGHT="${HIERARCHICAL_CONSISTENCY_WEIGHT:-0}"
+
+ENCODER_LORA_RANK="${ENCODER_LORA_RANK:-0}"
+ENCODER_LORA_ALPHA="${ENCODER_LORA_ALPHA:-8}"
+ENCODER_LORA_DROPOUT="${ENCODER_LORA_DROPOUT:-0.05}"
+ENCODER_LORA_TARGETS="${ENCODER_LORA_TARGETS:-visual,text}"
+TRAIN_ENCODER_BASE_LAYERS="${TRAIN_ENCODER_BASE_LAYERS:-false}"
+
+RESUME_FROM_CHECKPOINT="${RESUME_FROM_CHECKPOINT:-}"
+SAVE_PREFIX="${SAVE_PREFIX:-outputs/$RUN_NAME/}"
+
+if [[ "$SAVE_PREFIX" == */ ]]; then
+    mkdir -p "$SAVE_PREFIX"
+else
+    mkdir -p "$(dirname "$SAVE_PREFIX")"
+fi
+
+export CUDA_VISIBLE_DEVICES
+export TOKENIZERS_PARALLELISM="${TOKENIZERS_PARALLELISM:-false}"
+export TORCH_DISTRIBUTED_DEBUG="${TORCH_DISTRIBUTED_DEBUG:-DETAIL}"
+export TORCH_SHOW_CPP_STACKTRACES="${TORCH_SHOW_CPP_STACKTRACES:-1}"
+export SWANLAB_EXPERIMENT_NAME="$EXP_NAME"
+export SAVE_PREFIX
+
+cmd=(
+    torchrun
+    --standalone
+    --nproc_per_node="$NPROC"
+    train_frozen_vis.py
+    --epochs "$EPOCHS"
+    --learning_rate "$LEARNING_RATE"
+    --weight_decay "$WEIGHT_DECAY"
+    --adam_beta1 "$ADAM_BETA1"
+    --adam_beta2 "$ADAM_BETA2"
+    --per_gpu_batch_size "$PER_GPU_BATCH_SIZE"
+    --accum_steps "$ACCUM_STEPS"
+    --num_workers "$NUM_WORKERS"
+    --embed_dim "$EMBED_DIM"
+    --image_size "$IMAGE_SIZE"
+    --max_length "$MAX_LENGTH"
+    --num_frames "$NUM_FRAMES"
+    --text_model_name "$TEXT_MODEL_NAME"
+    --vision_backbone "$VISION_BACKBONE"
+    --vision_pretrained_weights "$VISION_PRETRAINED_WEIGHTS"
+    --video_root_folder "$VIDEO_ROOT_FOLDER"
+    --ffmpeg_timeout "$FFMPEG_TIMEOUT"
+    --max_retry "$MAX_RETRY"
+    --video_reader_threads "$VIDEO_READER_THREADS"
+    --video_reader_cache_size "$VIDEO_READER_CACHE_SIZE"
+    --assume_resized_video "$ASSUME_RESIZED_VIDEO"
+    --main_csv_path "$MAIN_CSV_PATH"
+    --annotations_root "$ANNOTATIONS_ROOT"
+    --annotation_levels "$ANNOTATION_LEVELS"
+    --level_mix "$LEVEL_MIX"
+    --level_batch_sizes "$LEVEL_BATCH_SIZES"
+    --samples_cache_dir "$SAMPLES_CACHE_DIR"
+    --use_samples_cache "$USE_SAMPLES_CACHE"
+    --rebuild_samples_cache "$REBUILD_SAMPLES_CACHE"
+    --samples_cache_version "$SAMPLES_CACHE_VERSION"
+    --use_swanlab "$USE_SWANLAB"
+    --local_temperature "$LOCAL_TEMPERATURE"
+    --selection_pooling "$SELECTION_POOLING"
+    --level_frame_temperatures "$LEVEL_FRAME_TEMPERATURES"
+    --train_window_expand_ratio "$TRAIN_WINDOW_EXPAND_RATIO"
+    --selection_loss_weight "$SELECTION_LOSS_WEIGHT"
+    --selection_loss_warmup_zero_epochs "$SELECTION_LOSS_WARMUP_ZERO_EPOCHS"
+    --selection_loss_warmup_ramp_epochs "$SELECTION_LOSS_WARMUP_RAMP_EPOCHS"
+    --hierarchical_consistency_weight "$HIERARCHICAL_CONSISTENCY_WEIGHT"
+    --encoder_lora_rank "$ENCODER_LORA_RANK"
+    --encoder_lora_alpha "$ENCODER_LORA_ALPHA"
+    --encoder_lora_dropout "$ENCODER_LORA_DROPOUT"
+    --encoder_lora_targets "$ENCODER_LORA_TARGETS"
+    --train_encoder_base_layers "$TRAIN_ENCODER_BASE_LAYERS"
+)
+
+if [[ -n "$RESUME_FROM_CHECKPOINT" ]]; then
+    cmd+=(--resume_from_checkpoint "$RESUME_FROM_CHECKPOINT")
+fi
+
+"${cmd[@]}"
