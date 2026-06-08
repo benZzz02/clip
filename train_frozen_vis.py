@@ -788,9 +788,18 @@ def train():
     model.freeze_encoders_train_projections()
     model.set_frozen_modules_eval()
 
+    visual_trainable_for_check = sum(
+        p.numel() for p in model.visual.parameters() if p.requires_grad
+    )
+    if REQUIRE_VISUAL_GRAD and visual_trainable_for_check <= 0:
+        raise RuntimeError(
+            "REQUIRE_VISUAL_GRAD=true but the visual backbone has no trainable parameters. "
+            "Check TRAIN_ENCODER_BASE_LAYERS or ENCODER_LORA_RANK."
+        )
+
     if rank == 0:
         visual_total = sum(p.numel() for p in model.visual.parameters())
-        visual_trainable = sum(p.numel() for p in model.visual.parameters() if p.requires_grad)
+        visual_trainable = visual_trainable_for_check
 
         text_backbone_total = sum(p.numel() for p in model.text.backbone.parameters())
         text_backbone_trainable = sum(p.numel() for p in model.text.backbone.parameters() if p.requires_grad)

@@ -247,7 +247,8 @@ class GSViTM5Backbone(nn.Module):
         return x[:, [2, 1, 0], :, :]
 
     def forward(self, x):
-        x = self._flip_rgb_to_bgr(x)
+        # Our PretrainDataset decodes RGB frames and applies RGB ImageNet normalization.
+        # The official GSViT demo flips channels because it reads frames with cv2 (BGR).
         x = self.encoder(x)
         if x.ndim == 4:
             x = F.adaptive_avg_pool2d(x, 1).flatten(1)
