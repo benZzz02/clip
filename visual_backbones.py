@@ -259,8 +259,12 @@ class GSViTM5Backbone(nn.Module):
         return x[:, [2, 1, 0], :, :]
 
     def forward(self, x):
-        # Our PretrainDataset decodes RGB frames and applies RGB ImageNet normalization.
-        # The official GSViT demo flips channels because it reads frames with cv2 (BGR).
+        # PretrainDataset applies RGB ImageNet normalization, but GSViT was
+        # autoencoder-fine-tuned on BGR frames in [0,1] range without normalization.
+        mean = x.new_tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = x.new_tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        x = x * std + mean
+        x = self._flip_rgb_to_bgr(x)
         return self.model(x)
 
     def unfreeze_last_stage(self):
