@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 
+import timm
 import torch
 import torch.nn as nn
 import torchvision
@@ -275,6 +276,55 @@ class GSViTM5Backbone(nn.Module):
         self.model.train()
 
 
+class EndoSSLViTBackbone(nn.Module):
+    """ViT-L/16 backbone pretrained with MSN on private laparoscopic videos.
+
+    EndoSSL (MICCAI 2023) uses a standard ViT-L/16 architecture with Masked
+    Siamese Networks pretraining on 23.3M frames of private clinical data.
+    This class loads the converted PyTorch weights and follows the same
+    interface as other visual backbones in this module.
+
+    Weights must first be converted from the TF SavedModel format:
+        python convert_endossl_to_torch.py \\
+            --tf_model_dir <google_drive_download>/saved_model_inference \\
+            --output checkpoints/endossl_vitl.pth
+    """
+
+    name = "endossl_vitl"
+    output_dim = 1024  # ViT-L hidden dimension
+
+    def __init__(self, pretrained_weights):
+        super().__init__()
+        if not pretrained_weights or not os.path.isfile(pretrained_weights):
+            raise FileNotFoundError(
+                f"EndoSSL ViT-L checkpoint not found: {pretrained_weights}\n"
+                "Download the ViT-L laparoscopy weights from Google Drive, then run:\n"
+                "  python convert_endossl_to_torch.py --tf_model_dir <dir> --output <out>.pth"
+            )
+
+        self.model = timm.create_model(
+            "vit_large_patch16_224",
+            pretrained=False,
+            num_classes=0,
+            global_pool="token",
+        )
+
+        state_dict = torch.load(pretrained_weights, map_location="cpu")
+        msg = self.model.load_state_dict(state_dict, strict=True)
+        print(f"EndoSSL ViT-L loaded: {msg}")
+
+    def forward(self, x):
+        return self.model(x)
+
+    def unfreeze_last_stage(self):
+        for p in self.model.blocks[-2:].parameters():
+            p.requires_grad = True
+
+    def set_last_stage_train(self):
+        for blk in self.model.blocks[-2:]:
+            blk.train()
+
+
 def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
     name = str(name or "convnext_lemonfm").strip().lower()
     aliases = {
@@ -282,6 +332,9 @@ def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
         "convnext": "convnext_lemonfm",
         "convnext_large": "convnext_lemonfm",
         "gsvit": "gsvit_m5",
+        "endossl": "endossl_vitl",
+        "endossl_vitl": "endossl_vitl",
+        "vitl": "endossl_vitl",
     }
     name = aliases.get(name, name)
 
@@ -289,8 +342,10 @@ def build_visual_backbone(name="convnext_lemonfm", weights="lemonfm.pth"):
         return build_LemonFM(weights)
     if name == "gsvit_m5":
         return GSViTM5Backbone(weights)
+    if name == "endossl_vitl":
+        return EndoSSLViTBackbone(weights)
 
     raise ValueError(
         f"Unknown vision backbone: {name}. "
-        "Expected one of: convnext_lemonfm, gsvit_m5."
+        "Expected one of: convnext_lemonfm, gsvit_m5, endossl_vitl."
     )
