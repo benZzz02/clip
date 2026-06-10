@@ -80,7 +80,7 @@ def parse_args():
         "--vision_backbone",
         type=str,
         default="convnext_lemonfm",
-        choices=["convnext_lemonfm", "gsvit_m5"],
+        choices=["convnext_lemonfm", "gsvit_m5", "vitl", "endossl_vitl", "endossl"],
     )
     parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
 

@@ -182,7 +182,7 @@ def parse_args():
         "--vision_backbone",
         type=str,
         default=os.environ.get("VISION_BACKBONE", "convnext_lemonfm"),
-        choices=["convnext_lemonfm", "gsvit_m5"],
+        choices=["convnext_lemonfm", "gsvit_m5", "vitl", "endossl_vitl", "endossl"],
         help="Visual backbone family. Default preserves the existing LemonFM/ConvNeXt path.",
     )
     parser.add_argument("--vision_pretrained_weights", type=str, default="lemonfm.pth")
