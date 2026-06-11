@@ -314,6 +314,11 @@ class EndoSSLViTBackbone(nn.Module):
         print(f"EndoSSL ViT-L loaded: {msg}")
 
     def forward(self, x):
+        # PretrainDataset applies ImageNet normalization, but EndoSSL
+        # Flax pretraining expects [0,1] RGB input (same as TF pipeline).
+        mean = x.new_tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = x.new_tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        x = x * std + mean
         return self.model(x)
 
     def unfreeze_last_stage(self):
