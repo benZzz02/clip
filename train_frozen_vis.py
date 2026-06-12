@@ -92,16 +92,13 @@ def _load_normalized_state_dict(module, state_dict, source="checkpoint"):
         "video_gate_head.",
     )
 
-    def _is_lora_key(key):
-        return ".lora_" in key or key.startswith("lora_")
-
     disallowed_missing = [
         key for key in msg.missing_keys
-        if not key.startswith(allowed_missing_prefixes) and not _is_lora_key(key)
+        if not key.startswith(allowed_missing_prefixes)
     ]
     disallowed_unexpected = [
         key for key in msg.unexpected_keys
-        if not key.startswith(allowed_unexpected_prefixes) and not _is_lora_key(key)
+        if not key.startswith(allowed_unexpected_prefixes)
     ]
 
     if disallowed_missing or disallowed_unexpected:
@@ -338,29 +335,6 @@ def parse_args():
     parser.add_argument("--peskavlp_dtw_scale_factor", type=float, default=0.01)
     parser.add_argument("--peskavlp_max_candidates", type=int, default=8)
     parser.add_argument(
-        "--encoder_lora_rank",
-        type=int,
-        default=int(os.environ.get("ENCODER_LORA_RANK", 0)),
-        help="Rank for LoRA injected into visual encoder and text backbone. 0 disables LoRA.",
-    )
-    parser.add_argument(
-        "--encoder_lora_alpha",
-        type=float,
-        default=float(os.environ.get("ENCODER_LORA_ALPHA", 0)),
-        help="LoRA alpha. 0 means 2 * encoder_lora_rank.",
-    )
-    parser.add_argument(
-        "--encoder_lora_dropout",
-        type=float,
-        default=float(os.environ.get("ENCODER_LORA_DROPOUT", 0.0)),
-    )
-    parser.add_argument(
-        "--encoder_lora_targets",
-        type=str,
-        default=os.environ.get("ENCODER_LORA_TARGETS", "visual,text"),
-        help="Comma-separated LoRA targets: visual,text or both.",
-    )
-    parser.add_argument(
         "--train_encoder_base_layers",
         type=str2bool,
         default=(
@@ -370,8 +344,21 @@ def parse_args():
         ),
         help=(
             "Whether to train the original unfrozen encoder layers "
-            "(visual last stage and text last two layers). Default is false when LoRA is enabled."
+            "(visual last stage and text last two layers)."
         ),
+    )
+
+    parser.add_argument(
+        "--train_encoder_num_stages",
+        type=int,
+        default=int(os.environ.get("TRAIN_ENCODER_NUM_STAGES", 1)),
+        help="Number of last ConvNeXt feature stages to unfreeze. 0=all stages. Default=1 (only last stage).",
+    )
+    parser.add_argument(
+        "--encoder_gradient_checkpointing",
+        type=str2bool,
+        default=str2bool(os.environ.get("ENCODER_GRADIENT_CHECKPOINTING", "false")),
+        help="Wrap each CNBlock with activation checkpointing + text gradient checkpointing.",
     )
 
     return parser.parse_args()
@@ -675,7 +662,7 @@ def compute_hierarchical_consistency_loss(selected_image_features, sample_indice
 def train():
     args = parse_args()
     if args.train_encoder_base_layers is None:
-        args.train_encoder_base_layers = args.encoder_lora_rank <= 0
+        args.train_encoder_base_layers = True
 
     rank = setup_ddp()
     world_size = dist.get_world_size()
@@ -755,11 +742,9 @@ def train():
         "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
         "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
         "peskavlp_max_candidates": args.peskavlp_max_candidates,
-        "encoder_lora_rank": args.encoder_lora_rank,
-        "encoder_lora_alpha": args.encoder_lora_alpha,
-        "encoder_lora_dropout": args.encoder_lora_dropout,
-        "encoder_lora_targets": args.encoder_lora_targets,
         "train_encoder_base_layers": args.train_encoder_base_layers,
+        "train_encoder_num_stages": args.train_encoder_num_stages,
+        "encoder_gradient_checkpointing": args.encoder_gradient_checkpointing,
         "anchor_same_video_triplets": anchor_same_video_triplets,
     }
 
@@ -778,11 +763,9 @@ def train():
         local_temperature=CONFIG["local_temperature"],
         selection_pooling=CONFIG["selection_pooling"],
         level_frame_temperatures=CONFIG["level_frame_temperatures"],
-        encoder_lora_rank=CONFIG["encoder_lora_rank"],
-        encoder_lora_alpha=CONFIG["encoder_lora_alpha"],
-        encoder_lora_dropout=CONFIG["encoder_lora_dropout"],
-        encoder_lora_targets=CONFIG["encoder_lora_targets"],
         train_encoder_base_layers=CONFIG["train_encoder_base_layers"],
+        train_encoder_num_stages=CONFIG["train_encoder_num_stages"],
+        encoder_gradient_checkpointing=CONFIG["encoder_gradient_checkpointing"],
     ).to(device)
 
     model.freeze_encoders_train_projections()
@@ -794,7 +777,7 @@ def train():
     if REQUIRE_VISUAL_GRAD and visual_trainable_for_check <= 0:
         raise RuntimeError(
             "REQUIRE_VISUAL_GRAD=true but the visual backbone has no trainable parameters. "
-            "Check TRAIN_ENCODER_BASE_LAYERS or ENCODER_LORA_RANK."
+            "Check TRAIN_ENCODER_BASE_LAYERS."
         )
 
     if rank == 0:
@@ -835,26 +818,6 @@ def train():
         print(f"logit_scale requires_grad: {model.logit_scale.requires_grad}")
         print(f"train_encoder_base_layers: {model.train_encoder_base_layers}")
         print(f"visual trainable parameter names: {_format_trainable_names(model.visual)}")
-        if getattr(model, "encoder_lora_rank", 0) > 0:
-            visual_lora = model.encoder_lora_summary.get("visual", {})
-            text_lora = model.encoder_lora_summary.get("text", {})
-            print(
-                "encoder LoRA: "
-                f"rank={model.encoder_lora_rank}, "
-                f"alpha={model.encoder_lora_alpha or 2 * model.encoder_lora_rank}, "
-                f"dropout={model.encoder_lora_dropout}, "
-                f"targets={','.join(sorted(model.encoder_lora_targets))}"
-            )
-            print(
-                "visual LoRA injected: "
-                f"{visual_lora.get('modules', 0)} modules, "
-                f"{visual_lora.get('params', 0):,} params"
-            )
-            print(
-                "text LoRA injected: "
-                f"{text_lora.get('modules', 0)} modules, "
-                f"{text_lora.get('params', 0):,} params"
-            )
         print(f"模型总参数量: {total_params:,}")
         print(f"可训练参数量: {trainable_params_num:,}")
         print(f"帧池化模块：{model.frame_pool}")
@@ -1077,11 +1040,9 @@ def train():
                     "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
                     "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
                     "peskavlp_max_candidates": args.peskavlp_max_candidates,
-                    "encoder_lora_rank": args.encoder_lora_rank,
-                    "encoder_lora_alpha": args.encoder_lora_alpha,
-                    "encoder_lora_dropout": args.encoder_lora_dropout,
-                    "encoder_lora_targets": args.encoder_lora_targets,
                     "train_encoder_base_layers": args.train_encoder_base_layers,
+                    "train_encoder_num_stages": args.train_encoder_num_stages,
+                    "encoder_gradient_checkpointing": args.encoder_gradient_checkpointing,
                     "anchor_same_video_triplets": CONFIG["anchor_same_video_triplets"],
                     "resume_from_checkpoint": args.resume_from_checkpoint,
                     "tb_logdir": log_dir,

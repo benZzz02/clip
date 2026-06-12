@@ -1,16 +1,64 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.checkpoint import checkpoint as torch_checkpoint
 from transformers import AutoConfig, AutoModel
 
-from lora_layers import (
-    count_lora_parameters,
-    inject_lora_modules,
-    mark_lora_trainable,
-    set_lora_modules_train,
-)
 from surgclip.surgclip.models.timesformer.timesformer import Block
 from visual_backbones import build_LemonFM, build_visual_backbone
+
+
+def _checkpoint_block_forward(module):
+    """Wrap a module's forward with activation checkpointing (use_reentrant=False)."""
+    if getattr(module, "_vlp_ckpt_wrapped", False):
+        return
+    original_forward = module.forward
+
+    def ckpt_forward(*args, **kwargs):
+        if not torch.is_grad_enabled():
+            return original_forward(*args, **kwargs)
+        if kwargs:
+            def _run(*a):
+                return original_forward(*a, **kwargs)
+            return torch_checkpoint(_run, *args, use_reentrant=False)
+        return torch_checkpoint(original_forward, *args, use_reentrant=False)
+
+    module.forward = ckpt_forward
+    module._vlp_ckpt_wrapped = True
+
+
+def apply_convnext_gradient_checkpointing(visual, stage_indices=None):
+    """Wrap each CNBlock inside specified ConvNeXt stages with activation checkpointing."""
+    base_model = visual.model if hasattr(visual, "model") else visual
+    if hasattr(base_model, "get_base_model"):
+        base_model = base_model.get_base_model()
+    features = getattr(base_model, "features", None)
+    if features is None:
+        return 0
+    wrapped = 0
+    for i, stage in enumerate(features):
+        if stage_indices is not None and i not in stage_indices:
+            continue
+        for module in stage.modules():
+            if module.__class__.__name__ in {"CNBlock", "Block"}:
+                _checkpoint_block_forward(module)
+                wrapped += 1
+    return wrapped
+
+
+def apply_vit_gradient_checkpointing(visual, num_blocks):
+    """Wrap last num_blocks ViT transformer blocks with activation checkpointing."""
+    base_model = visual.model if hasattr(visual, "model") else visual
+    if hasattr(base_model, "get_base_model"):
+        base_model = base_model.get_base_model()
+    blocks = getattr(base_model, "blocks", None)
+    if blocks is None:
+        return 0
+    wrapped = 0
+    for blk in blocks[-num_blocks:]:
+        _checkpoint_block_forward(blk)
+        wrapped += 1
+    return wrapped
 
 
 class SurgicBERTaTextEncoder(nn.Module):
@@ -214,11 +262,9 @@ class VLP(nn.Module):
         local_temperature=0.07,
         selection_pooling="similarity",
         level_frame_temperatures=(0.6, 0.9, 1.2),
-        encoder_lora_rank=0,
-        encoder_lora_alpha=0,
-        encoder_lora_dropout=0.0,
-        encoder_lora_targets="visual,text",
         train_encoder_base_layers=True,
+        encoder_gradient_checkpointing=False,
+        train_encoder_num_stages=1,
     ):
         super().__init__()
 
@@ -238,42 +284,9 @@ class VLP(nn.Module):
         self.temporal_hidden_dim = int(temporal_hidden_dim)
         self.local_temperature = float(local_temperature)
         self.selection_pooling = str(selection_pooling).lower()
-        self.encoder_lora_rank = int(encoder_lora_rank or 0)
-        self.encoder_lora_alpha = float(encoder_lora_alpha or 0)
-        self.encoder_lora_dropout = float(encoder_lora_dropout or 0.0)
         self.train_encoder_base_layers = bool(train_encoder_base_layers)
-        self.encoder_lora_targets = {
-            item.strip().lower()
-            for item in str(encoder_lora_targets or "").split(",")
-            if item.strip()
-        }
-        unknown_lora_targets = self.encoder_lora_targets - {"visual", "text", "both", "all"}
-        if unknown_lora_targets:
-            raise ValueError(f"Unknown encoder_lora_targets: {sorted(unknown_lora_targets)}")
-        if "both" in self.encoder_lora_targets or "all" in self.encoder_lora_targets:
-            self.encoder_lora_targets.update({"visual", "text"})
-            self.encoder_lora_targets.discard("both")
-            self.encoder_lora_targets.discard("all")
-        self.encoder_lora_summary = {
-            "visual": {"modules": 0, "params": 0},
-            "text": {"modules": 0, "params": 0},
-        }
-
-        if self.encoder_lora_rank > 0:
-            if "visual" in self.encoder_lora_targets:
-                self.encoder_lora_summary["visual"] = inject_lora_modules(
-                    self.visual,
-                    rank=self.encoder_lora_rank,
-                    alpha=self.encoder_lora_alpha,
-                    dropout=self.encoder_lora_dropout,
-                )
-            if "text" in self.encoder_lora_targets:
-                self.encoder_lora_summary["text"] = inject_lora_modules(
-                    self.text.backbone,
-                    rank=self.encoder_lora_rank,
-                    alpha=self.encoder_lora_alpha,
-                    dropout=self.encoder_lora_dropout,
-                )
+        self.encoder_gradient_checkpointing = bool(encoder_gradient_checkpointing)
+        self.train_encoder_num_stages = int(train_encoder_num_stages)
 
         self.frame_pool = None
         if self.num_frames > 1:
@@ -675,6 +688,27 @@ class VLP(nn.Module):
         base_logits = logit_scale * image_features @ text_features.t()
         return base_logits, base_logits.t()
 
+    def _compute_trainable_stage_indices(self):
+        num_features = len(self.visual.model.features)
+        n = int(self.train_encoder_num_stages)
+        if n <= 0:
+            return set(range(num_features))
+        return set(range(max(0, num_features - n), num_features))
+
+    def _enable_text_activation_checkpointing(self):
+        text_backbone = self.text.backbone
+        if hasattr(text_backbone, "gradient_checkpointing_enable"):
+            text_backbone.gradient_checkpointing_enable()
+        elif hasattr(getattr(text_backbone, "base_model", None), "gradient_checkpointing_enable"):
+            text_backbone.base_model.gradient_checkpointing_enable()
+
+        if hasattr(text_backbone, "config") and hasattr(text_backbone.config, "use_cache"):
+            text_backbone.config.use_cache = False
+        elif hasattr(getattr(text_backbone, "base_model", None), "config") and hasattr(
+            text_backbone.base_model.config, "use_cache",
+        ):
+            text_backbone.base_model.config.use_cache = False
+
     def freeze_encoders_train_projections(self):
         # 1. 先全部冻结
         for p in self.visual.parameters():
@@ -683,9 +717,19 @@ class VLP(nn.Module):
         for p in self.text.backbone.parameters():
             p.requires_grad = False
 
-        # 2. 视觉侧：默认 LemonFM 保持原有最后 stage 微调；新增 backbone 可选择全冻。
+        stage_indices = set()
+
+        # 2. 视觉侧：解冻最后 N 个 stage（ConvNeXt）或 block（ViT）
         if self.train_encoder_base_layers:
-            if hasattr(self.visual, "unfreeze_last_stage"):
+            if hasattr(self.visual, "unfreeze_last_n_blocks"):
+                n = int(self.train_encoder_num_stages)
+                if n <= 0:
+                    n = len(self.visual.model.blocks)
+                self.visual.unfreeze_last_n_blocks(n)
+            elif hasattr(self.visual, "unfreeze_stages"):
+                stage_indices = self._compute_trainable_stage_indices()
+                self.visual.unfreeze_stages(stage_indices)
+            elif hasattr(self.visual, "unfreeze_last_stage"):
                 self.visual.unfreeze_last_stage()
             elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
                 for p in self.visual.features[7].parameters():
@@ -694,7 +738,7 @@ class VLP(nn.Module):
                     for p in self.visual.classifier[0].parameters():
                         p.requires_grad = True
 
-        # 3. 文本侧：放开最后两层
+            # 3. 文本侧：放开最后两层
             for layer in self.text.backbone.encoder.layer[-2:]:
                 for p in layer.parameters():
                     p.requires_grad = True
@@ -725,11 +769,16 @@ class VLP(nn.Module):
         for p in self.text.text_projection.parameters():
             p.requires_grad = True
 
-        if self.encoder_lora_rank > 0:
-            mark_lora_trainable(self.visual, True)
-            mark_lora_trainable(self.text.backbone, True)
-
         self.logit_scale.requires_grad = True
+
+        # 5. gradient checkpointing
+        if self.encoder_gradient_checkpointing:
+            if hasattr(self.visual, "unfreeze_last_n_blocks"):
+                n = max(1, int(self.train_encoder_num_stages))
+                apply_vit_gradient_checkpointing(self.visual, n)
+            elif stage_indices and hasattr(self.visual, "model"):
+                apply_convnext_gradient_checkpointing(self.visual, stage_indices)
+            self._enable_text_activation_checkpointing()
 
     def set_frozen_modules_eval(self):
         # 先把整块 frozen 部分设成 eval
@@ -738,7 +787,13 @@ class VLP(nn.Module):
 
         # 再把允许微调的部分切回 train
         if self.train_encoder_base_layers:
-            if hasattr(self.visual, "set_last_stage_train"):
+            if hasattr(self.visual, "set_last_n_blocks_train"):
+                n = max(1, int(self.train_encoder_num_stages))
+                self.visual.set_last_n_blocks_train(n)
+            elif hasattr(self.visual, "set_stages_train"):
+                stage_indices = self._compute_trainable_stage_indices()
+                self.visual.set_stages_train(stage_indices)
+            elif hasattr(self.visual, "set_last_stage_train"):
                 self.visual.set_last_stage_train()
             elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
                 self.visual.features[7].train()
@@ -750,9 +805,6 @@ class VLP(nn.Module):
 
         self.video_adapter.train()
         self.text_adapter.train()
-        if self.encoder_lora_rank > 0:
-            set_lora_modules_train(self.visual, True)
-            set_lora_modules_train(self.text.backbone, True)
 
 def count_parameters(model):
     total = sum(p.numel() for p in model.parameters())
@@ -794,24 +846,6 @@ def print_model_info(model):
     print(f"video proj params: {sum(p.numel() for p in model.video_projection.parameters()):,}")
     print(f"frame pool params: {frame_pool_params:,}")
     print(f"train encoder base layers: {getattr(model, 'train_encoder_base_layers', True)}")
-    if getattr(model, "encoder_lora_rank", 0) > 0:
-        visual_lora = model.encoder_lora_summary.get("visual", {})
-        text_lora = model.encoder_lora_summary.get("text", {})
-        print(
-            "encoder LoRA      : "
-            f"rank={model.encoder_lora_rank}, alpha={model.encoder_lora_alpha or 2 * model.encoder_lora_rank}, "
-            f"dropout={model.encoder_lora_dropout}"
-        )
-        print(
-            "visual LoRA       : "
-            f"{visual_lora.get('modules', 0)} modules, "
-            f"{count_lora_parameters(model.visual):,} params"
-        )
-        print(
-            "text LoRA         : "
-            f"{text_lora.get('modules', 0)} modules, "
-            f"{count_lora_parameters(model.text.backbone):,} params"
-        )
     print("=" * 80)
 
 

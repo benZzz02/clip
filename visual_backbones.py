@@ -131,6 +131,24 @@ class ConvNeXtLemonFMBackbone(nn.Module):
         self.model.features[7].train()
         self.model.classifier[0].train()
 
+    def unfreeze_stages(self, stage_indices):
+        num_features = len(self.model.features)
+        for idx in stage_indices:
+            if 0 <= idx < num_features:
+                for p in self.model.features[idx].parameters():
+                    p.requires_grad = True
+        if num_features - 1 in stage_indices and len(self.model.classifier) > 0:
+            for p in self.model.classifier[0].parameters():
+                p.requires_grad = True
+
+    def set_stages_train(self, stage_indices):
+        num_features = len(self.model.features)
+        for idx in stage_indices:
+            if 0 <= idx < num_features:
+                self.model.features[idx].train()
+        if num_features - 1 in stage_indices and len(self.model.classifier) > 0:
+            self.model.classifier[0].train()
+
 
 class GSViTM5Backbone(nn.Module):
     name = "gsvit_m5"
@@ -327,6 +345,20 @@ class EndoSSLViTBackbone(nn.Module):
 
     def set_last_stage_train(self):
         for blk in self.model.blocks[-2:]:
+            blk.train()
+
+    def unfreeze_last_n_blocks(self, n):
+        num_blocks = len(self.model.blocks)
+        n = max(1, int(n))
+        n = min(n, num_blocks)
+        for p in self.model.blocks[-n:].parameters():
+            p.requires_grad = True
+
+    def set_last_n_blocks_train(self, n):
+        num_blocks = len(self.model.blocks)
+        n = max(1, int(n))
+        n = min(n, num_blocks)
+        for blk in self.model.blocks[-n:]:
             blk.train()
 
 
