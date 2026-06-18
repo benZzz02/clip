@@ -1356,17 +1356,18 @@ def train():
                 f"{last_loss_value if last_loss_value is not None else 'N/A'}"
             )
 
-            checkpoint_data = {
-                "epoch": epoch + 1,
-                "model_state_dict": _export_plain_state_dict_from_ddp(model),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "scheduler_state_dict": scheduler.state_dict(),
-                "global_step": global_step,
-                "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
-            }
-            epoch_ckpt_path = _build_ckpt_path(f"vlp_epoch_{epoch + 1}.pt")
-            torch.save(checkpoint_data, epoch_ckpt_path)
-            print(f"已保存检查点: {epoch_ckpt_path}")
+            if (epoch + 1) % 5 == 0 or (epoch + 1) == CONFIG["epochs"]:
+                checkpoint_data = {
+                    "epoch": epoch + 1,
+                    "model_state_dict": _export_plain_state_dict_from_ddp(model),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "scheduler_state_dict": scheduler.state_dict(),
+                    "global_step": global_step,
+                    "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
+                }
+                epoch_ckpt_path = _build_ckpt_path(f"vlp_epoch_{epoch + 1}.pt")
+                torch.save(checkpoint_data, epoch_ckpt_path)
+                print(f"已保存检查点: {epoch_ckpt_path}")
 
             if writer is not None:
                 writer.flush()
