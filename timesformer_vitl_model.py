@@ -3,25 +3,53 @@ import torch.nn as nn
 
 from model import VLP, ResidualFeatureAdapter
 
+# TimeSformer model configs
+TIMESFORMER_CONFIGS = {
+    "vitb": {"embed_dim": 768, "depth": 12, "num_heads": 12},
+    "vitl": {"embed_dim": 1024, "depth": 24, "num_heads": 16},
+}
+
+
+class _DummyBackbone(nn.Module):
+    """Minimal stub to satisfy VLP.__init__ before we replace self.visual."""
+    def __init__(self, output_dim):
+        super().__init__()
+        self.output_dim = output_dim
+    def forward(self, x):
+        return x
+
 
 class VLPWithTimeSformer(VLP):
-    """VLP variant that replaces the EndoSSL ViT-L + temporal pooling
-    with a SurgCLIP-style TimeSformer (divided space-time attention)
-    initialized from EndoSSL spatial weights."""
+    """VLP variant using SurgCLIP-style TimeSformer (divided space-time attention)
+    as the vision encoder. Supports ViT-B and ViT-L backbones."""
 
     def __init__(self, **kwargs):
-        # Let parent set up text encoder, projections, adapters etc.
-        # using vision_backbone="vitl" so visual_dim is 1024
+        # Determine model size from vision_backbone kwarg
+        backbone = str(kwargs.get("vision_backbone", "vitl")).lower()
+        if backbone in TIMESFORMER_CONFIGS:
+            ts_cfg = TIMESFORMER_CONFIGS[backbone]
+        else:
+            ts_cfg = TIMESFORMER_CONFIGS["vitl"]
+
+        ts_dim = ts_cfg["embed_dim"]
+
+        # Temporarily replace build_visual_backbone to avoid loading heavy weights
+        import visual_backbones as vb_module
+        _orig_build = vb_module.build_visual_backbone
+        vb_module.build_visual_backbone = lambda name, weights: _DummyBackbone(ts_dim)
+
         super().__init__(**kwargs)
 
-        # Replace visual with TimeSformer
-        self._build_timesformer(kwargs.get("num_frames", 8))
+        # Restore original builder
+        vb_module.build_visual_backbone = _orig_build
+
+        # Replace visual with actual TimeSformer
+        self._build_timesformer(ts_cfg, kwargs.get("num_frames", 8))
 
         # TimeSformer already does space-time modeling → no frame_pool
         self.frame_pool = None
 
-        # TimeSformer outputs 1024-dim → recreate heads for this dim
-        ts_dim = 1024
+        # Recreate heads for TimeSformer's output dim
         self.visual_dim = ts_dim
         self.frame_token_dim = ts_dim
 
@@ -31,16 +59,16 @@ class VLPWithTimeSformer(VLP):
         self.frame_local_projection = nn.Linear(ts_dim, embed_dim, bias=False)
         self.selection_frame_key_projection = nn.Linear(ts_dim, embed_dim, bias=False)
 
-    def _build_timesformer(self, num_frames):
+    def _build_timesformer(self, cfg, num_frames):
         from surgclip.surgclip.models.timesformer.timesformer import TimeSformer
 
         self.visual = TimeSformer(
             img_size=224,
             patch_size=16,
             num_classes=0,
-            embed_dim=1024,
-            depth=24,
-            num_heads=16,
+            embed_dim=cfg["embed_dim"],
+            depth=cfg["depth"],
+            num_heads=cfg["num_heads"],
             mlp_ratio=4,
             qkv_bias=True,
             drop_rate=0.0,
@@ -51,24 +79,26 @@ class VLPWithTimeSformer(VLP):
             gradient_checkpointing=self.encoder_gradient_checkpointing,
         )
 
-        # Load EndoSSL spatial weights; temporal params init randomly
+        # Try to load EndoSSL weights if available
         from pathlib import Path
-        ckpt_path = Path(__file__).parent / "endossl_vitl.pth"
+        size_tag = "vitl" if cfg["embed_dim"] == 1024 else "vitb"
+        ckpt_name = f"endossl_{size_tag}.pth"
+        ckpt_path = Path(__file__).parent / ckpt_name
         if ckpt_path.is_file():
             state_dict = torch.load(str(ckpt_path), map_location="cpu", weights_only=True)
             msg = self.visual.load_state_dict(state_dict, strict=False)
-            print(f"[VLPWithTimeSformer] Loaded EndoSSL weights: "
+            print(f"[VLPWithTimeSformer] Loaded {ckpt_name}: "
                   f"{len(state_dict)} spatial keys matched, "
                   f"{len(msg.missing_keys)} temporal keys randomly initialized")
         else:
-            print(f"[VLPWithTimeSformer] WARNING: {ckpt_path} not found, using random init")
+            print(f"[VLPWithTimeSformer] {ckpt_name} not found, using random init")
 
     def _encode_image_tokens(self, image: torch.Tensor):
         # image shape: [B, T, C, H, W] (from PretrainDataset)
         # TimeSformer expects [B, C, T, H, W]
         video = image.permute(0, 2, 1, 3, 4)
 
-        # all_tokens: [B, T, N+1, 1024]; pooled: [B, T, 1024]
+        # all_tokens: [B, T, N+1, D]; pooled: [B, T, D]
         all_tokens, pooled = self.visual(video)
 
         # Global: average per-frame features

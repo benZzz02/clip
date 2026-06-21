@@ -9,7 +9,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 
 NPROC="${NPROC:-2}"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
-RUN_NAME="${RUN_NAME:-same_video_triplet_xpool_adapter_vitl_timesformer_8f_run1}"
+RUN_NAME="${RUN_NAME:-same_video_triplet_xpool_adapter_vitb_timesformer_8f_run1}"
 EXP_NAME="${EXP_NAME:-$RUN_NAME}"
 
 PER_GPU_BATCH_SIZE="${PER_GPU_BATCH_SIZE:-64}"
@@ -35,8 +35,8 @@ ASSUME_RESIZED_VIDEO="${ASSUME_RESIZED_VIDEO:-true}"
 USE_SWANLAB="${USE_SWANLAB:-true}"
 
 TEXT_MODEL_NAME="${TEXT_MODEL_NAME:-marcobombieri/surgicberta}"
-VISION_BACKBONE="${VISION_BACKBONE:-vitl}"
-VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-endossl_vitl.pth}"
+VISION_BACKBONE="${VISION_BACKBONE:-vitb}"
+VISION_PRETRAINED_WEIGHTS="${VISION_PRETRAINED_WEIGHTS:-}"
 VIDEO_ROOT_FOLDER="${VIDEO_ROOT_FOLDER:-/data/surglavi_video/downloaded_video_224_test}"
 MAIN_CSV_PATH="${MAIN_CSV_PATH:-surglavi_level_csv/all_video.csv}"
 
