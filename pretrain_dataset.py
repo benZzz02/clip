@@ -1,5 +1,6 @@
 # pretrain_dataset.py
 
+import os
 import random
 from collections import OrderedDict
 
@@ -55,7 +56,7 @@ class PretrainDataset(Dataset):
         samples_cache_version="v1",
         video_reader_threads=1,
         video_reader_cache_size=16,
-        normalization="imagenet",
+        normalization=None,
     ):
         super().__init__()
 
@@ -88,6 +89,8 @@ class PretrainDataset(Dataset):
         self.video_reader_cache_size = max(0, int(video_reader_cache_size))
         self._video_reader_cache = OrderedDict()
 
+        if normalization is None:
+            normalization = os.environ.get("DATA_NORMALIZATION", "imagenet")
         norm_type = str(normalization).strip().lower()
         if norm_type == "surgclip":
             self.pixel_mean = torch.tensor(
@@ -96,6 +99,9 @@ class PretrainDataset(Dataset):
             self.pixel_std = torch.tensor(
                 [0.5, 0.5, 0.5], dtype=torch.float32
             ).view(1, 3, 1, 1)
+        elif norm_type == "none":
+            self.pixel_mean = None
+            self.pixel_std = None
         else:
             self.pixel_mean = torch.tensor(
                 [0.485, 0.456, 0.406], dtype=torch.float32
@@ -251,7 +257,8 @@ class PretrainDataset(Dataset):
                 align_corners=False,
             )
 
-        frames = (frames - self.pixel_mean) / self.pixel_std
+        if self.pixel_mean is not None:
+            frames = (frames - self.pixel_mean) / self.pixel_std
 
         if self.num_frames == 1:
             return frames[0]
