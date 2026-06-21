@@ -86,7 +86,13 @@ class VLPWithTimeSformer(VLP):
         for p in self.text.backbone.parameters():
             p.requires_grad = False
 
-        # 2. Unfreeze last N blocks (spatial + temporal params)
+        # 2. Temporal params: always trainable (EndoSSL has no temporal weights)
+        for blk in self.visual.model.blocks:
+            for name, p in blk.named_parameters():
+                if 'temporal' in name:
+                    p.requires_grad = True
+
+        # 3. Unfreeze last N blocks (spatial params only)
         if self.train_encoder_base_layers:
             num_blocks = len(self.visual.model.blocks)
             n = int(self.train_encoder_num_stages)
@@ -94,10 +100,11 @@ class VLPWithTimeSformer(VLP):
                 n = num_blocks
             n = min(n, num_blocks)
             for blk in self.visual.model.blocks[-n:]:
-                for p in blk.parameters():
-                    p.requires_grad = True
+                for name, p in blk.named_parameters():
+                    if 'temporal' not in name:
+                        p.requires_grad = True
 
-            # 3. Text: unfreeze last 2 layers
+            # 4. Text: unfreeze last 2 layers
             for layer in self.text.backbone.encoder.layer[-2:]:
                 for p in layer.parameters():
                     p.requires_grad = True
@@ -126,11 +133,18 @@ class VLPWithTimeSformer(VLP):
             self._enable_text_activation_checkpointing()
 
     def set_frozen_modules_eval(self):
-        # Frozen parts to eval mode
+        # Frozen parts to eval mode (spatial only; temporal stays in train)
         self.visual.eval()
         self.text.backbone.eval()
 
-        # Unfrozen blocks back to train
+        # Temporal params: always in train mode
+        for blk in self.visual.model.blocks:
+            blk.temporal_norm1.train()
+            blk.temporal_attn.train()
+            if hasattr(blk, 'temporal_fc'):
+                blk.temporal_fc.train()
+
+        # Unfrozen blocks: full block back to train
         if self.train_encoder_base_layers:
             num_blocks = len(self.visual.model.blocks)
             n = int(self.train_encoder_num_stages)
