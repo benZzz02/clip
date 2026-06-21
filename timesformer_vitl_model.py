@@ -5,6 +5,7 @@ from model import VLP, ResidualFeatureAdapter
 
 # TimeSformer model configs
 TIMESFORMER_CONFIGS = {
+    "vits": {"embed_dim": 384, "depth": 12, "num_heads": 6},
     "vitb": {"embed_dim": 768, "depth": 12, "num_heads": 12},
     "vitl": {"embed_dim": 1024, "depth": 24, "num_heads": 16},
 }
@@ -31,17 +32,18 @@ class VLPWithTimeSformer(VLP):
         else:
             ts_cfg = TIMESFORMER_CONFIGS["vitl"]
 
+        self._backbone_name = backbone
         ts_dim = ts_cfg["embed_dim"]
 
         # Temporarily replace build_visual_backbone to avoid loading heavy weights
-        import visual_backbones as vb_module
-        _orig_build = vb_module.build_visual_backbone
-        vb_module.build_visual_backbone = lambda name, weights: _DummyBackbone(ts_dim)
+        import model as model_module
+        _orig_build = model_module.build_visual_backbone
+        model_module.build_visual_backbone = lambda name, weights: _DummyBackbone(ts_dim)
 
         super().__init__(**kwargs)
 
         # Restore original builder
-        vb_module.build_visual_backbone = _orig_build
+        model_module.build_visual_backbone = _orig_build
 
         # Replace visual with actual TimeSformer
         self._build_timesformer(ts_cfg, kwargs.get("num_frames", 8))
@@ -81,8 +83,7 @@ class VLPWithTimeSformer(VLP):
 
         # Try to load EndoSSL weights if available
         from pathlib import Path
-        size_tag = "vitl" if cfg["embed_dim"] == 1024 else "vitb"
-        ckpt_name = f"endossl_{size_tag}.pth"
+        ckpt_name = f"endossl_{self._backbone_name}.pth"
         ckpt_path = Path(__file__).parent / ckpt_name
         if ckpt_path.is_file():
             state_dict = torch.load(str(ckpt_path), map_location="cpu", weights_only=True)
