@@ -25,13 +25,14 @@ class VLPWithTimeSformer(VLP):
     as the vision encoder. Supports ViT-B and ViT-L backbones."""
 
     def __init__(self, **kwargs):
-        # Determine model size from vision_backbone kwarg
-        backbone = str(kwargs.get("vision_backbone", "vitl")).lower()
-        if backbone in TIMESFORMER_CONFIGS:
-            ts_cfg = TIMESFORMER_CONFIGS[backbone]
-        else:
-            ts_cfg = TIMESFORMER_CONFIGS["vitl"]
-
+        # Determine model size: env var TIMESFORMER_SIZE > vision_backbone kwarg > default
+        import os
+        backbone = os.environ.get("TIMESFORMER_SIZE", "").strip().lower()
+        if not backbone:
+            backbone = str(kwargs.get("vision_backbone", "vitl")).lower()
+        if backbone not in TIMESFORMER_CONFIGS:
+            backbone = "vitl"
+        ts_cfg = TIMESFORMER_CONFIGS[backbone]
         self._backbone_name = backbone
         ts_dim = ts_cfg["embed_dim"]
 

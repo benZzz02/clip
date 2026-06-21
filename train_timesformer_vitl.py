@@ -10,7 +10,8 @@ This wraps train_frozen_vis.py but:
 """
 
 import os
-os.environ["DATA_NORMALIZATION"] = "none"
+os.environ.setdefault("DATA_NORMALIZATION", "none")
+os.environ.setdefault("TIMESFORMER_SIZE", "vitb")
 
 import model as model_module
 from timesformer_vitl_model import VLPWithTimeSformer

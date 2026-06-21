@@ -7,13 +7,13 @@ Usage:
 """
 
 import os
+os.environ.setdefault("DATA_NORMALIZATION", "none")
+os.environ.setdefault("TIMESFORMER_SIZE", "vitb")
+
 import model as model_module
 from timesformer_vitl_model import VLPWithTimeSformer
 
 model_module.VLP = VLPWithTimeSformer
-
-# EndoSSL ViT expects raw [0,1] pixels, not ImageNet-normalized
-os.environ["DATA_NORMALIZATION"] = "none"
 
 # Override eval transform to remove Normalize for EndoSSL ViT
 import zeroshot_evaluate
