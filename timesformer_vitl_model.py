@@ -165,8 +165,9 @@ class VLPWithTimeSformer(VLP):
             self._enable_text_activation_checkpointing()
 
     def set_frozen_modules_eval(self):
-        # Frozen parts to eval mode (spatial only; temporal stays in train)
-        self.visual.eval()
+        # Do NOT call self.visual.eval() — TimeSformer uses LayerNorm (no
+        # BatchNorm) and keeps gradient_checkpointing active via train mode.
+        # Frozen spatial params are controlled via requires_grad, not train mode.
         self.text.backbone.eval()
 
         # Temporal params: always in train mode
@@ -176,7 +177,7 @@ class VLPWithTimeSformer(VLP):
             if hasattr(blk, 'temporal_fc'):
                 blk.temporal_fc.train()
 
-        # Unfrozen blocks: full block back to train
+        # Unfrozen blocks: full block back to train (enables DropPath)
         if self.train_encoder_base_layers:
             num_blocks = len(self.visual.model.blocks)
             n = int(self.train_encoder_num_stages)
