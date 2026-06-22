@@ -47,7 +47,11 @@ class VLPWithTimeSformer(VLP):
         model_module.build_visual_backbone = _orig_build
 
         # Replace visual with actual TimeSformer
-        self._build_timesformer(ts_cfg, kwargs.get("num_frames", 8))
+        self._build_timesformer(
+            ts_cfg,
+            kwargs.get("num_frames", 8),
+            kwargs.get("vision_pretrained_weights", ""),
+        )
 
         # TimeSformer already does space-time modeling → no frame_pool
         self.frame_pool = None
@@ -62,7 +66,7 @@ class VLPWithTimeSformer(VLP):
         self.frame_local_projection = nn.Linear(ts_dim, embed_dim, bias=False)
         self.selection_frame_key_projection = nn.Linear(ts_dim, embed_dim, bias=False)
 
-    def _build_timesformer(self, cfg, num_frames):
+    def _build_timesformer(self, cfg, num_frames, pretrained_weights=""):
         from surgclip.surgclip.models.timesformer.timesformer import TimeSformer
 
         self.visual = TimeSformer(
@@ -82,23 +86,46 @@ class VLPWithTimeSformer(VLP):
             gradient_checkpointing=self.encoder_gradient_checkpointing,
         )
 
-        # Try to load EndoSSL weights if available
+        # Try to load EndoSSL spatial ViT weights if available. TimeSformer wraps
+        # the actual VisionTransformer under `.model`, while EndoSSL checkpoints
+        # are saved with bare ViT keys.
         from pathlib import Path
         ckpt_name = f"endossl_{self._backbone_name}.pth"
-        ckpt_path = Path(__file__).parent / ckpt_name
-        if ckpt_path.is_file():
-            state_dict = torch.load(str(ckpt_path), map_location="cpu", weights_only=True)
-            msg = self.visual.load_state_dict(state_dict, strict=False)
-            print(f"[VLPWithTimeSformer] Loaded {ckpt_name}: "
-                  f"{len(state_dict)} spatial keys matched, "
-                  f"{len(msg.missing_keys)} temporal keys randomly initialized")
+        requested_path = str(pretrained_weights or "").strip()
+        if requested_path:
+            ckpt_path = Path(requested_path).expanduser()
+            if not ckpt_path.is_absolute() and not ckpt_path.is_file():
+                ckpt_path = Path(__file__).parent / requested_path
         else:
-            print(f"[VLPWithTimeSformer] {ckpt_name} not found, using random init")
+            ckpt_path = Path(__file__).parent / ckpt_name
+
+        if ckpt_path.is_file():
+            try:
+                state_dict = torch.load(str(ckpt_path), map_location="cpu", weights_only=True)
+            except TypeError:
+                state_dict = torch.load(str(ckpt_path), map_location="cpu")
+
+            target_state = self.visual.model.state_dict()
+            matched_keys = [
+                key for key, value in state_dict.items()
+                if key in target_state and tuple(value.shape) == tuple(target_state[key].shape)
+            ]
+            msg = self.visual.model.load_state_dict(state_dict, strict=False)
+            print(
+                f"[VLPWithTimeSformer] Loaded {ckpt_path.name}: "
+                f"{len(matched_keys)}/{len(state_dict)} spatial keys matched, "
+                f"{len(msg.missing_keys)} temporal/new keys randomly initialized, "
+                f"{len(msg.unexpected_keys)} unexpected keys"
+            )
+        else:
+            print(f"[VLPWithTimeSformer] {ckpt_path} not found, using random init")
 
     def _encode_image_tokens(self, image: torch.Tensor):
         # image shape: [B, T, C, H, W] (from PretrainDataset)
-        # TimeSformer expects [B, C, T, H, W]
-        video = image.permute(0, 2, 1, 3, 4)
+        # TimeSformer expects [B, C, T, H, W]. PretrainDataset and torchvision
+        # ToTensor produce [0,1] floats; EndoSSL's released TF model consumes
+        # resized raw pixel values, so match that scale before the backbone.
+        video = image.permute(0, 2, 1, 3, 4) * 255.0
 
         # all_tokens: [B, T, N+1, D]; pooled: [B, T, D]
         all_tokens, pooled = self.visual(video)
@@ -172,8 +199,10 @@ class VLPWithTimeSformer(VLP):
 
         # Temporal params: always in train mode
         for blk in self.visual.model.blocks:
-            blk.temporal_norm1.train()
-            blk.temporal_attn.train()
+            if hasattr(blk, 'temporal_norm1'):
+                blk.temporal_norm1.train()
+            if hasattr(blk, 'temporal_attn'):
+                blk.temporal_attn.train()
             if hasattr(blk, 'temporal_fc'):
                 blk.temporal_fc.train()
 
