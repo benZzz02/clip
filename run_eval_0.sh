@@ -4,11 +4,12 @@ set -euo pipefail
 source ~/miniconda3/etc/profile.d/conda.sh
 
 set -u
-CKPT="outputs/same_video_triplet_xpool_adapter_no_warmup_8f_run1/vlp_epoch_50.pt"
+
+CKPT="outputs/same_video_triplet_xpool_adapter_no_warmup_8f_run3/vlp_epoch_30.pt"
 VISION_WEIGHTS="lemonfm.pth"
 TEXT_MODEL="marcobombieri/surgicberta"
-OUTPUT_DIR="./eval_6.4_epoch_50"
-CUDA_DEVICE=1
+OUTPUT_DIR="./eval_6.18_epoch_30"
+CUDA_DEVICE=0
 
 
 EMBED_DIM=256
