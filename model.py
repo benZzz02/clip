@@ -501,18 +501,19 @@ class VLP(nn.Module):
         device = frame_tokens.device
         token_mask = attention_mask.bool()
 
+        # Frame side: shared video_projection (same as main branch)
         frame_tokens = self.video_adapter(frame_tokens)
-        token_hidden = self.text_adapter(token_hidden)
-        frame_local = F.normalize(self.frame_local_projection(frame_tokens), dim=-1)
-        token_local = F.normalize(self.text.project(token_hidden), dim=-1)
-        raw_alignment = torch.matmul(frame_local, token_local.transpose(1, 2))
-        scaled_alignment = raw_alignment / self.local_temperature
+        frame_local = F.normalize(self.video_projection(frame_tokens), dim=-1)
 
-        frame_scores = self._masked_max(
-            scaled_alignment,
-            token_mask.unsqueeze(1),
-            dim=-1,
-        )
+        # Text side: mean pool → shared text.project (same as _encode_text_global)
+        text_mask = token_mask.unsqueeze(-1).to(dtype=dtype)
+        pooled_hidden = (token_hidden * text_mask).sum(dim=1) / text_mask.sum(dim=1).clamp(min=1e-6)
+        pooled_hidden = self.text_adapter(pooled_hidden)
+        text_global = F.normalize(self.text.project(pooled_hidden), dim=-1)
+
+        # Dot product: each frame vs global text
+        raw_scores = torch.einsum("btd,bd->bt", frame_local, text_global)
+
         frame_temps = self._get_level_values(
             level_ids,
             self.level_frame_temperatures,
@@ -522,25 +523,16 @@ class VLP(nn.Module):
             dtype,
         )
         frame_weights = self._normalize_scores(
-            frame_scores,
+            raw_scores,
             temperatures=frame_temps,
         )
 
-        frame_best = self._masked_max(
-            raw_alignment,
-            token_mask.unsqueeze(1),
-            dim=-1,
-        )
-        frame_mean = self._masked_mean(
-            raw_alignment,
-            token_mask.unsqueeze(1),
-            dim=-1,
-        )
-        frame_margin = F.relu(frame_best - frame_mean)
-        confidence = (frame_margin.mean(dim=-1) / 0.35).clamp(
-            min=0.0,
-            max=1.0,
-        )
+        top2 = raw_scores.topk(k=min(2, raw_scores.size(-1)), dim=-1).values
+        if top2.size(-1) == 1:
+            confidence = top2[:, 0]
+        else:
+            confidence = top2[:, 0] - top2[:, 1]
+        confidence = (confidence / 0.25).clamp(min=0.0, max=1.0)
 
         return frame_weights, confidence.detach()
 

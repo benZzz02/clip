@@ -293,6 +293,12 @@ def parse_args():
         help="Expand the annotated training interval by this ratio for train-time soft frame selection",
     )
     parser.add_argument(
+        "--base_loss_weight",
+        type=float,
+        default=1.0,
+        help="Weight for the base (uniform-pooled) contrastive loss",
+    )
+    parser.add_argument(
         "--selection_loss_weight",
         type=float,
         default=0.5,
@@ -309,12 +315,6 @@ def parse_args():
         type=int,
         default=0,
         help="Number of epochs used to linearly ramp selection_loss_weight to its target value",
-    )
-    parser.add_argument(
-        "--hierarchical_consistency_weight",
-        type=float,
-        default=0.1,
-        help="Weight for same-video adjacent-level consistency on selected views",
     )
     parser.add_argument(
         "--training_method",
@@ -563,8 +563,8 @@ def clip_contrastive_loss(
     level_ids,
     sample_indices,
     dataset_samples,
+    base_loss_weight=1.0,
     selection_loss_weight=0.5,
-    hierarchical_consistency_weight=0.1,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
         image=selection_images,
@@ -602,61 +602,13 @@ def clip_contrastive_loss(
         return 0.5 * (loss_i + loss_t)
 
     base_loss = _symmetric_contrastive(image_features, text_features)
-    hierarchical_loss = torch.zeros((), device=device)
     if selected_image_features is None:
         total_loss = base_loss
     else:
         selection_loss = _symmetric_contrastive(selected_image_features, text_features)
-        if hierarchical_consistency_weight > 0:
-            hierarchical_loss = compute_hierarchical_consistency_loss(
-                selected_image_features=selected_image_features,
-                sample_indices=sample_indices,
-                dataset_samples=dataset_samples,
-            )
-        total_loss = (
-            base_loss
-            + selection_loss_weight * selection_loss
-            + hierarchical_consistency_weight * hierarchical_loss
-        )
+        total_loss = base_loss_weight * base_loss + selection_loss_weight * selection_loss
 
     return total_loss
-
-
-def compute_hierarchical_consistency_loss(selected_image_features, sample_indices, dataset_samples):
-    """
-    Lightweight adjacent-level consistency on same-video selected views:
-      fine <-> mid and mid <-> coarse.
-    This preserves the current train-time denoising design while making
-    hierarchy more than a temperature-only prior.
-    """
-    if sample_indices is None:
-        return torch.zeros((), device=selected_image_features.device)
-
-    by_video = {}
-    for batch_pos, sample_idx in enumerate(sample_indices.tolist()):
-        if sample_idx < 0:
-            continue
-        sample = dataset_samples[int(sample_idx)]
-        video_path = sample.get("video_path")
-        level = str(sample.get("level", "")).lower()
-        if not video_path or level not in {"fine", "mid", "coarse"}:
-            continue
-        by_video.setdefault(video_path, {})[level] = batch_pos
-
-    losses = []
-    for level_map in by_video.values():
-        if "fine" in level_map and "mid" in level_map:
-            fine_feat = selected_image_features[level_map["fine"]]
-            mid_feat = selected_image_features[level_map["mid"]]
-            losses.append(1.0 - F.cosine_similarity(fine_feat.unsqueeze(0), mid_feat.unsqueeze(0)).mean())
-        if "mid" in level_map and "coarse" in level_map:
-            mid_feat = selected_image_features[level_map["mid"]]
-            coarse_feat = selected_image_features[level_map["coarse"]]
-            losses.append(1.0 - F.cosine_similarity(mid_feat.unsqueeze(0), coarse_feat.unsqueeze(0)).mean())
-
-    if not losses:
-        return torch.zeros((), device=selected_image_features.device)
-    return torch.stack(losses).mean()
 
 
 def train():
@@ -731,10 +683,10 @@ def train():
         "selection_pooling": args.selection_pooling,
         "level_frame_temperatures": args.level_frame_temperatures,
         "train_window_expand_ratio": args.train_window_expand_ratio,
+        "base_loss_weight": args.base_loss_weight,
         "selection_loss_weight": args.selection_loss_weight,
         "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
         "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
-        "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
         "training_method": args.training_method,
         "peskavlp_temperature": args.peskavlp_temperature,
         "peskavlp_alpha_weight": args.peskavlp_alpha_weight,
@@ -880,7 +832,6 @@ def train():
                 f"zero_epochs={CONFIG['selection_loss_warmup_zero_epochs']}, "
                 f"ramp_epochs={CONFIG['selection_loss_warmup_ramp_epochs']}"
             )
-            print(f"hierarchical_consistency_weight: {CONFIG['hierarchical_consistency_weight']}")
         print(f"anchor_same_video_triplets: {CONFIG['anchor_same_video_triplets']}")
         print(f"samples cache目录: {CONFIG['samples_cache_dir']}")
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
@@ -1029,10 +980,10 @@ def train():
                     "samples_cache_version": args.samples_cache_version,
                     "selection_pooling": args.selection_pooling,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
+                    "base_loss_weight": args.base_loss_weight,
                     "selection_loss_weight": args.selection_loss_weight,
                     "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
                     "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
-                    "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
                     "training_method": args.training_method,
                     "peskavlp_temperature": args.peskavlp_temperature,
                     "peskavlp_alpha_weight": args.peskavlp_alpha_weight,
@@ -1221,8 +1172,8 @@ def train():
                             level_ids,
                             sample_indices,
                             train_dataset.samples,
+                            base_loss_weight=CONFIG["base_loss_weight"],
                             selection_loss_weight=current_selection_loss_weight,
-                            hierarchical_consistency_weight=CONFIG["hierarchical_consistency_weight"],
                         )
                         loss_parts = {}
                     loss = raw_loss / current_accum_steps
