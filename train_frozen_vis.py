@@ -10,7 +10,7 @@ import torch.nn.functional as F
 import torch.distributed as dist
 from torch.utils.data import DataLoader
 from torch.optim import AdamW
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import LambdaLR
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.cuda.amp import GradScaler
 from torch.utils.tensorboard import SummaryWriter
@@ -924,7 +924,9 @@ def train():
 
     updates_per_epoch = math.ceil(num_batches / ACCUM_STEPS)
     total_update_steps = updates_per_epoch * CONFIG["epochs"]
-    scheduler = CosineAnnealingLR(optimizer, T_max=max(1, total_update_steps))
+    def _constant_lr(_):
+        return 1.0
+    scheduler = LambdaLR(optimizer, lr_lambda=_constant_lr)
     peskavlp_loss = None
     if CONFIG["training_method"] == "peskavlp":
         from peskavlp_pretraining import PeskaVLPPretrainingLoss
@@ -1054,7 +1056,7 @@ def train():
         try:
             optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
             scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
-        except ValueError as exc:
+        except (ValueError, KeyError, AttributeError, TypeError) as exc:
             optimizer_restored = False
             if rank == 0:
                 print(
