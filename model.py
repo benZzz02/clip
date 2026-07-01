@@ -680,12 +680,58 @@ class VLP(nn.Module):
         base_logits = logit_scale * image_features @ text_features.t()
         return base_logits, base_logits.t()
 
+    def _get_convnext_visual_parts(self):
+        visual = self.visual
+        base_model = visual.model if hasattr(visual, "model") else visual
+        if hasattr(base_model, "get_base_model"):
+            base_model = base_model.get_base_model()
+
+        features = getattr(base_model, "features", None)
+        classifier = getattr(base_model, "classifier", None)
+        return features, classifier
+
     def _compute_trainable_stage_indices(self):
-        num_features = len(self.visual.model.features)
+        features, _ = self._get_convnext_visual_parts()
+        if features is None:
+            return set()
+
+        num_features = len(features)
         n = int(self.train_encoder_num_stages)
         if n <= 0:
             return set(range(num_features))
         return set(range(max(0, num_features - n), num_features))
+
+    def _unfreeze_convnext_stages(self, stage_indices):
+        features, classifier = self._get_convnext_visual_parts()
+        if features is None:
+            return False
+
+        num_features = len(features)
+        for idx in stage_indices:
+            if 0 <= idx < num_features:
+                for p in features[idx].parameters():
+                    p.requires_grad = True
+
+        if num_features - 1 in stage_indices and classifier is not None and len(classifier) > 0:
+            for p in classifier[0].parameters():
+                p.requires_grad = True
+
+        return True
+
+    def _set_convnext_stages_train(self, stage_indices):
+        features, classifier = self._get_convnext_visual_parts()
+        if features is None:
+            return False
+
+        num_features = len(features)
+        for idx in stage_indices:
+            if 0 <= idx < num_features:
+                features[idx].train()
+
+        if num_features - 1 in stage_indices and classifier is not None and len(classifier) > 0:
+            classifier[0].train()
+
+        return True
 
     def _enable_text_activation_checkpointing(self):
         text_backbone = self.text.backbone
@@ -722,13 +768,13 @@ class VLP(nn.Module):
                 stage_indices = self._compute_trainable_stage_indices()
                 self.visual.unfreeze_stages(stage_indices)
             elif hasattr(self.visual, "unfreeze_last_stage"):
+                features, _ = self._get_convnext_visual_parts()
+                if features is not None:
+                    stage_indices = {len(features) - 1}
                 self.visual.unfreeze_last_stage()
-            elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
-                for p in self.visual.features[7].parameters():
-                    p.requires_grad = True
-                if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
-                    for p in self.visual.classifier[0].parameters():
-                        p.requires_grad = True
+            else:
+                stage_indices = self._compute_trainable_stage_indices()
+                self._unfreeze_convnext_stages(stage_indices)
 
             # 3. 文本侧：放开最后两层
             for layer in self.text.backbone.encoder.layer[-2:]:
@@ -768,7 +814,7 @@ class VLP(nn.Module):
             if hasattr(self.visual, "unfreeze_last_n_blocks"):
                 n = max(1, int(self.train_encoder_num_stages))
                 apply_vit_gradient_checkpointing(self.visual, n)
-            elif stage_indices and hasattr(self.visual, "model"):
+            elif stage_indices:
                 apply_convnext_gradient_checkpointing(self.visual, stage_indices)
             self._enable_text_activation_checkpointing()
 
@@ -787,10 +833,9 @@ class VLP(nn.Module):
                 self.visual.set_stages_train(stage_indices)
             elif hasattr(self.visual, "set_last_stage_train"):
                 self.visual.set_last_stage_train()
-            elif hasattr(self.visual, "features") and len(self.visual.features) > 7:
-                self.visual.features[7].train()
-                if hasattr(self.visual, "classifier") and len(self.visual.classifier) > 0:
-                    self.visual.classifier[0].train()
+            else:
+                stage_indices = self._compute_trainable_stage_indices()
+                self._set_convnext_stages_train(stage_indices)
 
             for layer in self.text.backbone.encoder.layer[-2:]:
                 layer.train()

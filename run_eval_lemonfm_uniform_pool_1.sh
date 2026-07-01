@@ -6,11 +6,10 @@ cd "$SCRIPT_DIR"
 
 source ~/miniconda3/etc/profile.d/conda.sh
 
-
-CKPT="${CKPT:-outputs/same_video_triplet_xpool_adapter_lemonfm_uniform_8f_run2/vlp_epoch_50.pt}"
+CKPT="${CKPT:-outputs/same_video_triplet_similarity_adapter_lemonfm_uniform_8f_stages2_run1/vlp_epoch_50.pt}"
 VISION_WEIGHTS="${VISION_WEIGHTS:-lemonfm.pth}"
 TEXT_MODEL="${TEXT_MODEL:-marcobombieri/surgicberta}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_lemonfm_uniform_epoch_50_run2}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_lemonfm_uniform_similarity_epoch_50_stages2_run1}"
 CUDA_DEVICE="${CUDA_DEVICE:-1}"
 
 EMBED_DIM="${EMBED_DIM:-256}"
