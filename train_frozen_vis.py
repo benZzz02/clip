@@ -382,7 +382,7 @@ def parse_args():
         "--selection_loss_weight",
         type=float,
         default=0.5,
-        help="Weight for the train-time expanded-window selection contrastive loss",
+        help="Legacy current-method weight for the train-time expanded-window selection contrastive loss",
     )
     parser.add_argument(
         "--selection_loss_warmup_zero_epochs",
@@ -399,10 +399,11 @@ def parse_args():
     parser.add_argument(
         "--training_method",
         type=str,
-        default=os.environ.get("TRAINING_METHOD", "current"),
-        choices=["current", "peskavlp", "original_timestamp"],
+        default=os.environ.get("TRAINING_METHOD", "tfnc"),
+        choices=["current", "tfnc", "peskavlp", "original_timestamp"],
         help=(
             "Pretraining objective to use with the local VLP model and PretrainDataset. "
+            "tfnc samples a fixed-budget expanded window and applies temporal false-negative correction. "
             "original_timestamp uses only original annotation start/end timestamps "
             "with the base CLIP contrastive loss. "
             "peskavlp uses PeskaVLP losses on original annotation windows: "
@@ -416,6 +417,12 @@ def parse_args():
     parser.add_argument("--peskavlp_dtw_ratio", type=float, default=0.5)
     parser.add_argument("--peskavlp_dtw_scale_factor", type=float, default=0.01)
     parser.add_argument("--peskavlp_max_candidates", type=int, default=8)
+    parser.add_argument(
+        "--hierarchical_consistency_weight",
+        type=float,
+        default=0.0,
+        help="Compatibility flag for older launchers; unused by current objectives.",
+    )
     parser.add_argument(
         "--train_encoder_base_layers",
         type=str2bool,
@@ -525,6 +532,43 @@ def collate_fn_expanded_frames_only(batch):
             )
         _, selection_images, input_ids, attention_mask, level_ids, sample_indices = item
         compact_batch.append((selection_images, input_ids, attention_mask, level_ids, sample_indices))
+
+    if not compact_batch:
+        return None
+
+    return torch.utils.data.dataloader.default_collate(compact_batch)
+
+
+def collate_fn_tfnc(batch):
+    compact_batch = []
+    for item in batch:
+        if item is None:
+            continue
+        if len(item) != 7:
+            raise ValueError(
+                "Expected dataset items as "
+                "(images, inside_mask, outside_mask, input_ids, attention_mask, level_ids, sample_indices)."
+            )
+        (
+            images,
+            inside_mask,
+            outside_mask,
+            input_ids,
+            attention_mask,
+            level_ids,
+            sample_indices,
+        ) = item
+        compact_batch.append(
+            (
+                images,
+                inside_mask,
+                outside_mask,
+                input_ids,
+                attention_mask,
+                level_ids,
+                sample_indices,
+            )
+        )
 
     if not compact_batch:
         return None
@@ -717,6 +761,84 @@ def clip_contrastive_loss(
     return total_loss
 
 
+def temporal_false_negative_contrastive_loss(
+    model,
+    images,
+    inside_mask,
+    outside_mask,
+    input_ids,
+    attention_mask,
+    level_ids,
+):
+    anchor_features, frame_features, text_features = model.module.encode_tfnc_pair(
+        image=images,
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        inside_mask=inside_mask,
+        level_ids=level_ids,
+    )
+
+    rank = dist.get_rank()
+    batch_size = anchor_features.size(0)
+    device = anchor_features.device
+    logit_scale = model.module.logit_scale.exp()
+    labels = torch.arange(batch_size, device=device) + rank * batch_size
+
+    gathered_anchor = concat_all_gather(anchor_features.detach())
+    gathered_text = concat_all_gather(text_features.detach())
+    gathered_anchor[rank] = anchor_features
+    gathered_text[rank] = text_features
+
+    all_anchor_features = torch.cat(gathered_anchor, dim=0)
+    all_text_features = torch.cat(gathered_text, dim=0)
+
+    logits_per_image = logit_scale * anchor_features @ all_text_features.t()
+    loss_i = F.cross_entropy(logits_per_image, labels)
+
+    anchor_logits = logit_scale * text_features @ all_anchor_features.t()
+    pos_logits = anchor_logits.gather(1, labels.view(-1, 1)).squeeze(1)
+
+    inside_mask = inside_mask.to(device=device, dtype=torch.bool)
+    outside_mask = outside_mask.to(device=device, dtype=torch.bool)
+    frame_logits = logit_scale * torch.einsum(
+        "bd,btd->bt",
+        text_features,
+        frame_features,
+    )
+
+    inside_float = inside_mask.to(dtype=frame_logits.dtype)
+    inside_count = inside_float.sum(dim=1).clamp(min=1.0)
+    inside_baseline = (frame_logits * inside_float).sum(dim=1) / inside_count
+
+    false_negative_prob = torch.sigmoid(
+        frame_logits - inside_baseline.unsqueeze(1)
+    ).detach()
+    outside_weight = (1.0 - false_negative_prob) * outside_mask.to(dtype=frame_logits.dtype)
+
+    weighted_outside_logits = frame_logits + outside_weight.clamp(min=1e-6).log()
+    weighted_outside_logits = weighted_outside_logits.masked_fill(~outside_mask, -1e4)
+
+    corrected_denominator = torch.logsumexp(
+        torch.cat([anchor_logits, weighted_outside_logits], dim=1),
+        dim=1,
+    )
+    loss_t = (corrected_denominator - pos_logits).mean()
+    total_loss = 0.5 * (loss_i + loss_t)
+
+    outside_count = outside_mask.to(dtype=frame_logits.dtype).sum().clamp(min=1.0)
+    loss_parts = {
+        "train/tfnc_i2t_loss": loss_i.detach(),
+        "train/tfnc_t2v_loss": loss_t.detach(),
+        "debug/tfnc_false_negative_prob": (
+            false_negative_prob * outside_mask.to(dtype=frame_logits.dtype)
+        ).sum().detach() / outside_count,
+        "debug/tfnc_outside_negative_weight": outside_weight.sum().detach() / outside_count,
+        "debug/tfnc_inside_frames": inside_count.detach().float().mean(),
+        "debug/tfnc_outside_frames": outside_mask.float().sum(dim=1).detach().mean(),
+    }
+    return total_loss, loss_parts
+
+
 def train():
     args = parse_args()
     if args.train_encoder_base_layers is None:
@@ -809,6 +931,7 @@ def train():
         "peskavlp_dtw_ratio": args.peskavlp_dtw_ratio,
         "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
         "peskavlp_max_candidates": args.peskavlp_max_candidates,
+        "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
         "train_encoder_base_layers": args.train_encoder_base_layers,
         "train_encoder_num_stages": args.train_encoder_num_stages,
         "encoder_gradient_checkpointing": args.encoder_gradient_checkpointing,
@@ -946,6 +1069,12 @@ def train():
                 "Original timestamp mode uses original annotation windows only; "
                 "expanded-window reselect and selection loss are disabled."
             )
+        elif CONFIG["training_method"] == "tfnc":
+            print(
+                "TFNC mode samples fixed-budget expanded windows and uses "
+                "inside/outside masks for false-negative-aware InfoNCE."
+            )
+            print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
         else:
             print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
             print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
@@ -981,6 +1110,7 @@ def train():
         return_level_id=True,
         return_sample_index=True,
         return_expanded_frames=(CONFIG["training_method"] == "current"),
+        return_temporal_masks=(CONFIG["training_method"] == "tfnc"),
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -1022,9 +1152,13 @@ def train():
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
         collate_fn=(
-            collate_fn_expanded_frames_only
-            if CONFIG["training_method"] == "current"
-            else collate_fn_single_view_with_meta
+            collate_fn_tfnc
+            if CONFIG["training_method"] == "tfnc"
+            else (
+                collate_fn_expanded_frames_only
+                if CONFIG["training_method"] == "current"
+                else collate_fn_single_view_with_meta
+            )
         ),
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
@@ -1204,12 +1338,15 @@ def train():
     for epoch in range(start_epoch, CONFIG["epochs"]):
         train_sampler.set_epoch(epoch)
         _unwrap_state_io_module(model.module).set_frozen_modules_eval()
-        current_selection_loss_weight = get_selection_loss_weight_for_epoch(
-            CONFIG["selection_loss_weight"],
-            epoch,
-            zero_epochs=CONFIG["selection_loss_warmup_zero_epochs"],
-            ramp_epochs=CONFIG["selection_loss_warmup_ramp_epochs"],
-        )
+        if CONFIG["training_method"] == "tfnc":
+            current_selection_loss_weight = 0.0
+        else:
+            current_selection_loss_weight = get_selection_loss_weight_for_epoch(
+                CONFIG["selection_loss_weight"],
+                epoch,
+                zero_epochs=CONFIG["selection_loss_warmup_zero_epochs"],
+                ramp_epochs=CONFIG["selection_loss_warmup_ramp_epochs"],
+            )
 
         if rank == 0:
             active_level_ids = (
@@ -1225,6 +1362,12 @@ def train():
             elif CONFIG["training_method"] == "original_timestamp":
                 print(
                     f"Epoch {epoch + 1}: original timestamp CLIP loss only",
+                    flush=True,
+                )
+            elif CONFIG["training_method"] == "tfnc":
+                print(
+                    f"Epoch {epoch + 1}: TFNC corrected InfoNCE "
+                    f"(expand_ratio={CONFIG['train_window_expand_ratio']})",
                     flush=True,
                 )
             else:
@@ -1268,9 +1411,25 @@ def train():
                 continue
 
             step_start = time.perf_counter()
+            inside_mask = None
+            outside_mask = None
             if CONFIG["training_method"] in {"peskavlp", "original_timestamp"}:
                 images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
                 images = images_cpu.to(device, non_blocking=True)
+                selection_images = None
+            elif CONFIG["training_method"] == "tfnc":
+                (
+                    images_cpu,
+                    inside_mask,
+                    outside_mask,
+                    input_ids,
+                    attention_mask,
+                    level_ids,
+                    sample_indices,
+                ) = batch
+                images = images_cpu.to(device, non_blocking=True)
+                inside_mask = inside_mask.to(device, non_blocking=True)
+                outside_mask = outside_mask.to(device, non_blocking=True)
                 selection_images = None
             else:
                 selection_images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
@@ -1314,6 +1473,16 @@ def train():
                             selection_loss_weight=0.0,
                         )
                         loss_parts = {}
+                    elif CONFIG["training_method"] == "tfnc":
+                        raw_loss, loss_parts = temporal_false_negative_contrastive_loss(
+                            model=model,
+                            images=images,
+                            inside_mask=inside_mask,
+                            outside_mask=outside_mask,
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            level_ids=level_ids,
+                        )
                     else:
                         raw_loss = clip_contrastive_loss(
                             model,
@@ -1407,10 +1576,13 @@ def train():
                 postfix = {
                     "loss": f"{raw_loss.item():.4f}",
                     "lr": f"{scheduler.get_last_lr()[0]:.2e}",
-                    "sel_w": f"{current_selection_loss_weight:.2g}",
                     "data": f"{data_time:.2f}s",
                     "step": f"{step_time:.2f}s",
                 }
+                if CONFIG["training_method"] == "current":
+                    postfix["sel_w"] = f"{current_selection_loss_weight:.2g}"
+                elif CONFIG["training_method"] == "tfnc" and "debug/tfnc_outside_negative_weight" in loss_parts:
+                    postfix["out_w"] = f"{loss_parts['debug/tfnc_outside_negative_weight'].item():.3f}"
                 if should_update:
                     if "pair_confidence" in debug_stats:
                         postfix["conf"] = f"{debug_stats['pair_confidence']:.3f}"
@@ -1451,6 +1623,10 @@ def train():
                     )
 
             del input_ids, attention_mask, level_ids, sample_indices
+            if inside_mask is not None:
+                del inside_mask
+            if outside_mask is not None:
+                del outside_mask
             batch_fetch_start = time.perf_counter()
 
         if rank == 0:

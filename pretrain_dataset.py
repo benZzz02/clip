@@ -49,6 +49,7 @@ class PretrainDataset(Dataset):
         return_level_id=False,
         return_sample_index=False,
         return_expanded_frames=False,
+        return_temporal_masks=False,
         expanded_window_ratio=2.0,
         samples_cache_dir=".cache/pretrain_samples",
         use_samples_cache=True,
@@ -69,6 +70,7 @@ class PretrainDataset(Dataset):
         self.return_level_id = bool(return_level_id)
         self.return_sample_index = bool(return_sample_index)
         self.return_expanded_frames = bool(return_expanded_frames)
+        self.return_temporal_masks = bool(return_temporal_masks)
         self.expanded_window_ratio = max(1.0, float(expanded_window_ratio))
 
         self.tokenizer = tokenizer
@@ -264,7 +266,34 @@ class PretrainDataset(Dataset):
             return frames[0]
         return frames
 
-    def _try_get_images(self, video_path, text_start_time, text_end_time, expand_ratio=1.0):
+    def _build_temporal_masks(self, timestamps, text_start_time, text_end_time):
+        start_time = float(text_start_time)
+        end_time = float(text_end_time)
+        if end_time < start_time:
+            start_time, end_time = end_time, start_time
+
+        inside = [
+            start_time <= float(ts) <= end_time
+            for ts in timestamps
+        ]
+        inside_mask = torch.tensor(inside, dtype=torch.bool)
+        outside_mask = ~inside_mask
+
+        if not inside_mask.any():
+            center_idx = len(timestamps) // 2
+            inside_mask[center_idx] = True
+            outside_mask[center_idx] = False
+
+        return inside_mask, outside_mask
+
+    def _try_get_images(
+        self,
+        video_path,
+        text_start_time,
+        text_end_time,
+        expand_ratio=1.0,
+        return_temporal_masks=False,
+    ):
         try:
             vr = self._get_video_reader(video_path)
         except Exception as e:
@@ -282,6 +311,8 @@ class PretrainDataset(Dataset):
                 fps = 30.0
 
             video_duration = max(num_video_frames - 1, 0) / fps
+            original_start_time = text_start_time
+            original_end_time = text_end_time
 
             if float(expand_ratio) > 1.0:
                 text_start_time, text_end_time = self._expand_window(
@@ -307,7 +338,15 @@ class PretrainDataset(Dataset):
                 return None
 
             frames_np = vr.get_batch(frame_indices).asnumpy()
-            return self._postprocess_frames(frames_np)
+            images = self._postprocess_frames(frames_np)
+            if return_temporal_masks:
+                inside_mask, outside_mask = self._build_temporal_masks(
+                    timestamps,
+                    original_start_time,
+                    original_end_time,
+                )
+                return images, inside_mask, outside_mask
+            return images
 
         except Exception as e:
             print(f"[decord decode failed] {video_path} | {e}")
@@ -325,13 +364,36 @@ class PretrainDataset(Dataset):
         attention_mask = tokenized_text["attention_mask"].squeeze(0)
         return input_ids, attention_mask
 
-    def _build_return_value(self, item, images, expanded_images):
+    def _build_return_value(
+        self,
+        item,
+        images,
+        expanded_images,
+        inside_mask=None,
+        outside_mask=None,
+    ):
         input_ids, attention_mask = self._build_text(item["caption"])
         level_id = self.LEVEL_TO_ID.get(str(item.get("level", "mid")).lower(), 1)
         sample_index = int(item.get("_sample_index", -1))
 
         if self.return_expanded_frames:
             expanded_images = images if expanded_images is None else expanded_images
+
+        if self.return_temporal_masks:
+            if inside_mask is None or outside_mask is None:
+                raise ValueError("Temporal mask mode requires inside_mask and outside_mask.")
+            values = [
+                images,
+                inside_mask,
+                outside_mask,
+                input_ids,
+                attention_mask,
+            ]
+            if self.return_level_id:
+                values.append(torch.tensor(level_id, dtype=torch.long))
+            if self.return_sample_index:
+                values.append(torch.tensor(sample_index, dtype=torch.long))
+            return tuple(values)
 
         if self.return_level_id:
             if self.return_expanded_frames:
@@ -373,7 +435,21 @@ class PretrainDataset(Dataset):
             item["_sample_index"] = idx
 
             expanded_images = None
-            if self.return_expanded_frames:
+            inside_mask = None
+            outside_mask = None
+            if self.return_temporal_masks:
+                temporal_result = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=self.expanded_window_ratio,
+                    return_temporal_masks=True,
+                )
+                if temporal_result is None:
+                    images = None
+                else:
+                    images, inside_mask, outside_mask = temporal_result
+            elif self.return_expanded_frames:
                 expanded_images = self._try_get_images(
                     item["video_path"],
                     item["start_time"],
@@ -399,7 +475,13 @@ class PretrainDataset(Dataset):
                 )
 
             if images is not None:
-                return self._build_return_value(item, images, expanded_images)
+                return self._build_return_value(
+                    item,
+                    images,
+                    expanded_images,
+                    inside_mask=inside_mask,
+                    outside_mask=outside_mask,
+                )
 
             last_error = (
                 f"video={item['video_path']}, "
@@ -413,7 +495,21 @@ class PretrainDataset(Dataset):
             item["_sample_index"] = idx
 
             expanded_images = None
-            if self.return_expanded_frames:
+            inside_mask = None
+            outside_mask = None
+            if self.return_temporal_masks:
+                temporal_result = self._try_get_images(
+                    item["video_path"],
+                    item["start_time"],
+                    item["end_time"],
+                    expand_ratio=self.expanded_window_ratio,
+                    return_temporal_masks=True,
+                )
+                if temporal_result is None:
+                    images = None
+                else:
+                    images, inside_mask, outside_mask = temporal_result
+            elif self.return_expanded_frames:
                 expanded_images = self._try_get_images(
                     item["video_path"],
                     item["start_time"],
@@ -439,7 +535,13 @@ class PretrainDataset(Dataset):
                 )
 
             if images is not None:
-                return self._build_return_value(item, images, expanded_images)
+                return self._build_return_value(
+                    item,
+                    images,
+                    expanded_images,
+                    inside_mask=inside_mask,
+                    outside_mask=outside_mask,
+                )
 
             retry_count += 1
             if retry_count % 100 == 0:

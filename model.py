@@ -480,22 +480,38 @@ class VLP(nn.Module):
 
         return video_global_hidden, frame_tokens
 
-    def _compute_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+    def _compute_frame_selection_weights(
+        self,
+        frame_tokens,
+        token_hidden,
+        attention_mask,
+        level_ids=None,
+        frame_mask=None,
+    ):
         if self.selection_pooling == "xpool":
             return self._compute_xpool_frame_selection_weights(
                 frame_tokens=frame_tokens,
                 token_hidden=token_hidden,
                 attention_mask=attention_mask,
                 level_ids=level_ids,
+                frame_mask=frame_mask,
             )
         return self._compute_similarity_frame_selection_weights(
             frame_tokens=frame_tokens,
             token_hidden=token_hidden,
             attention_mask=attention_mask,
             level_ids=level_ids,
+            frame_mask=frame_mask,
         )
 
-    def _compute_similarity_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+    def _compute_similarity_frame_selection_weights(
+        self,
+        frame_tokens,
+        token_hidden,
+        attention_mask,
+        level_ids=None,
+        frame_mask=None,
+    ):
         batch_size = frame_tokens.size(0)
         dtype = frame_tokens.dtype
         device = frame_tokens.device
@@ -524,10 +540,17 @@ class VLP(nn.Module):
         )
         frame_weights = self._normalize_scores(
             raw_scores,
+            mask=frame_mask,
             temperatures=frame_temps,
         )
 
-        top2 = raw_scores.topk(k=min(2, raw_scores.size(-1)), dim=-1).values
+        confidence_scores = raw_scores
+        if frame_mask is not None:
+            confidence_scores = confidence_scores.masked_fill(
+                ~frame_mask.to(device=device, dtype=torch.bool),
+                -1e4,
+            )
+        top2 = confidence_scores.topk(k=min(2, confidence_scores.size(-1)), dim=-1).values
         if top2.size(-1) == 1:
             confidence = top2[:, 0]
         else:
@@ -536,7 +559,14 @@ class VLP(nn.Module):
 
         return frame_weights, confidence.detach()
 
-    def _compute_xpool_frame_selection_weights(self, frame_tokens, token_hidden, attention_mask, level_ids=None):
+    def _compute_xpool_frame_selection_weights(
+        self,
+        frame_tokens,
+        token_hidden,
+        attention_mask,
+        level_ids=None,
+        frame_mask=None,
+    ):
         batch_size = frame_tokens.size(0)
         dtype = frame_tokens.dtype
         device = frame_tokens.device
@@ -561,10 +591,17 @@ class VLP(nn.Module):
         )
         frame_weights = self._normalize_scores(
             raw_scores,
+            mask=frame_mask,
             temperatures=frame_temps,
         )
 
-        top2 = raw_scores.topk(k=min(2, raw_scores.size(-1)), dim=-1).values
+        confidence_scores = raw_scores
+        if frame_mask is not None:
+            confidence_scores = confidence_scores.masked_fill(
+                ~frame_mask.to(device=device, dtype=torch.bool),
+                -1e4,
+            )
+        top2 = confidence_scores.topk(k=min(2, confidence_scores.size(-1)), dim=-1).values
         if top2.size(-1) == 1:
             confidence = top2[:, 0]
         else:
@@ -581,10 +618,56 @@ class VLP(nn.Module):
         selected_hidden = torch.sum(frame_weights.unsqueeze(-1) * frame_tokens, dim=1)
         return F.normalize(self.video_projection(selected_hidden), dim=-1)
 
+    def _project_frame_tokens(self, frame_tokens):
+        frame_tokens = self.video_adapter(frame_tokens)
+        return F.normalize(self.video_projection(frame_tokens), dim=-1)
+
     def _encode_text_global(self, text_global_hidden):
         self.last_text_gate = None
         text_global_hidden = self.text_adapter(text_global_hidden)
         return F.normalize(self.text.project(text_global_hidden), dim=-1)
+
+    def encode_tfnc_pair(
+        self,
+        image,
+        input_ids,
+        attention_mask,
+        inside_mask,
+        level_ids=None,
+    ):
+        video_global_hidden, frame_tokens = self._encode_image_tokens(image)
+        _, token_hidden, text_global_hidden = self.text(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            return_hidden=True,
+        )
+        text_features = self._encode_text_global(text_global_hidden)
+
+        inside_mask = inside_mask.to(device=frame_tokens.device, dtype=torch.bool)
+        frame_weights, pair_confidence = self._compute_frame_selection_weights(
+            frame_tokens=frame_tokens,
+            token_hidden=token_hidden,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+            frame_mask=inside_mask,
+        )
+        anchor_features = self._project_selected_video(frame_tokens, frame_weights)
+        frame_features = self._project_frame_tokens(frame_tokens)
+
+        frame_entropy = self._normalized_entropy(frame_weights, mask=inside_mask)
+        self.last_frame_weights = frame_weights.detach()
+        self.last_pair_confidence = pair_confidence.detach()
+        self.last_frame_entropy = frame_entropy.detach()
+        self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+        self.last_token_weights = None
+        self.last_pair_weights = None
+        self.last_entropy_regularization = None
+        self.last_distill_regularization = None
+        self.last_token_entropy = None
+        self.last_token_peak = None
+        self.last_video_gate = None
+
+        return anchor_features, frame_features, text_features
 
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
         source_image = selection_image if (self.training and selection_image is not None) else image
