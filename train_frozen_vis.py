@@ -50,6 +50,80 @@ def concat_all_gather(tensor: torch.Tensor):
     return gathered
 
 
+def _move_to_device_non_blocking(value, device):
+    if torch.is_tensor(value):
+        return value.to(device, non_blocking=True)
+    if isinstance(value, tuple):
+        return tuple(_move_to_device_non_blocking(v, device) for v in value)
+    if isinstance(value, list):
+        return [_move_to_device_non_blocking(v, device) for v in value]
+    if isinstance(value, dict):
+        return {k: _move_to_device_non_blocking(v, device) for k, v in value.items()}
+    return value
+
+
+def _record_tensor_stream(value, stream):
+    if torch.is_tensor(value):
+        value.record_stream(stream)
+    elif isinstance(value, (tuple, list)):
+        for item in value:
+            _record_tensor_stream(item, stream)
+    elif isinstance(value, dict):
+        for item in value.values():
+            _record_tensor_stream(item, stream)
+
+
+def _move_training_batch_to_device(batch, device):
+    if batch is None:
+        return None
+    if isinstance(batch, tuple) and len(batch) >= 2:
+        return tuple(
+            [_move_to_device_non_blocking(item, device) for item in batch[:-1]]
+            + [batch[-1]]
+        )
+    if isinstance(batch, list) and len(batch) >= 2:
+        return [
+            *[_move_to_device_non_blocking(item, device) for item in batch[:-1]],
+            batch[-1],
+        ]
+    return _move_to_device_non_blocking(batch, device)
+
+
+class CUDAPrefetcher:
+    def __init__(self, iterable, device):
+        self.iterator = iter(iterable)
+        self.device = device
+        self.stream = torch.cuda.Stream(device=device)
+        self.next_batch = None
+        self.exhausted = False
+        self._preload()
+
+    def _preload(self):
+        try:
+            batch = next(self.iterator)
+        except StopIteration:
+            self.next_batch = None
+            self.exhausted = True
+            return
+
+        with torch.cuda.stream(self.stream):
+            self.next_batch = _move_training_batch_to_device(batch, self.device)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.exhausted and self.next_batch is None:
+            raise StopIteration
+
+        current_stream = torch.cuda.current_stream(self.device)
+        current_stream.wait_stream(self.stream)
+        batch = self.next_batch
+        _record_tensor_stream(batch, current_stream)
+        self._preload()
+        return batch
+
+
 def _unwrap_state_io_module(module):
     while hasattr(module, "_orig_mod"):
         module = module._orig_mod
@@ -272,6 +346,12 @@ def parse_args():
         type=str2bool,
         default=os.environ.get("USE_SWANLAB", "1") == "1",
     )
+    parser.add_argument(
+        "--cuda_prefetch",
+        type=str2bool,
+        default=str2bool(os.environ.get("CUDA_PREFETCH", "false")),
+        help="Use a CUDA stream to prefetch the next CPU DataLoader batch onto the current GPU.",
+    )
     parser.add_argument("--local_temperature", type=float, default=0.07)
     parser.add_argument(
         "--selection_pooling",
@@ -320,9 +400,11 @@ def parse_args():
         "--training_method",
         type=str,
         default=os.environ.get("TRAINING_METHOD", "current"),
-        choices=["current", "peskavlp"],
+        choices=["current", "peskavlp", "original_timestamp"],
         help=(
             "Pretraining objective to use with the local VLP model and PretrainDataset. "
+            "original_timestamp uses only original annotation start/end timestamps "
+            "with the base CLIP contrastive loss. "
             "peskavlp uses PeskaVLP losses on original annotation windows: "
             "SSL_VL_Loss_new for fine/action, hier_infonce for mid/keystep, "
             "and hier_infonce_dtw for coarse/abstract."
@@ -359,6 +441,16 @@ def parse_args():
         type=str2bool,
         default=str2bool(os.environ.get("ENCODER_GRADIENT_CHECKPOINTING", "false")),
         help="Wrap each CNBlock with activation checkpointing + text gradient checkpointing.",
+    )
+    parser.add_argument(
+        "--anchor_same_video_triplets",
+        type=str2bool,
+        default=None,
+        help=(
+            "Force same-video fine/mid/coarse triplet anchors in the batch sampler. "
+            "Default auto-enables this for non-original_timestamp methods when all "
+            "three levels have positive batch sizes; original_timestamp defaults to false."
+        ),
     )
 
     return parser.parse_args()
@@ -456,6 +548,19 @@ def collate_fn_single_view_with_meta(batch):
         return None
 
     return torch.utils.data.dataloader.default_collate(compact_batch)
+
+
+def freeze_selection_only_parameters(model):
+    for name in (
+        "frame_local_projection",
+        "selection_text_query_projection",
+        "selection_frame_key_projection",
+    ):
+        module = getattr(model, name, None)
+        if module is None:
+            continue
+        for param in module.parameters():
+            param.requires_grad = False
 
 
 LEVEL_NAME_BY_ID = {
@@ -557,17 +662,18 @@ def _format_trainable_names(module, limit=24):
 
 def clip_contrastive_loss(
     model,
-    selection_images,
+    images,
     input_ids,
     attention_mask,
     level_ids,
     sample_indices,
     dataset_samples,
+    selection_images=None,
     base_loss_weight=1.0,
     selection_loss_weight=0.5,
 ):
     image_features, selected_image_features, text_features = model.module.encode_training_pair(
-        image=selection_images,
+        image=images,
         input_ids=input_ids,
         attention_mask=attention_mask,
         level_ids=level_ids,
@@ -642,9 +748,17 @@ def train():
     DEBUG_LOG_INTERVAL = int(os.environ.get("DEBUG_LOG_INTERVAL", 20))
     PERF_LOG_INTERVAL = int(os.environ.get("PERF_LOG_INTERVAL", DEBUG_LOG_INTERVAL))
     REQUIRE_VISUAL_GRAD = str2bool(os.environ.get("REQUIRE_VISUAL_GRAD", "false"))
-    anchor_same_video_triplets = all(
+    auto_anchor_same_video_triplets = all(
         LEVEL_BATCH_SIZES.get(level, 0) > 0 for level in ("fine", "mid", "coarse")
     )
+    if args.anchor_same_video_triplets is None:
+        anchor_same_video_triplets = (
+            False
+            if args.training_method == "original_timestamp"
+            else auto_anchor_same_video_triplets
+        )
+    else:
+        anchor_same_video_triplets = args.anchor_same_video_triplets
 
     if sum(LEVEL_BATCH_SIZES.values()) != PER_GPU_BATCH_SIZE:
         raise ValueError(
@@ -679,6 +793,7 @@ def train():
         "use_samples_cache": args.use_samples_cache,
         "rebuild_samples_cache": args.rebuild_samples_cache,
         "samples_cache_version": args.samples_cache_version,
+        "cuda_prefetch": args.cuda_prefetch,
         "local_temperature": args.local_temperature,
         "selection_pooling": args.selection_pooling,
         "level_frame_temperatures": args.level_frame_temperatures,
@@ -721,6 +836,8 @@ def train():
     ).to(device)
 
     model.freeze_encoders_train_projections()
+    if CONFIG["training_method"] == "original_timestamp":
+        freeze_selection_only_parameters(model)
     model.set_frozen_modules_eval()
 
     visual_trainable_for_check = sum(
@@ -824,6 +941,11 @@ def train():
                 f"dtw_scale={CONFIG['peskavlp_dtw_scale_factor']}, "
                 f"max_candidates={CONFIG['peskavlp_max_candidates']}"
             )
+        elif CONFIG["training_method"] == "original_timestamp":
+            print(
+                "Original timestamp mode uses original annotation windows only; "
+                "expanded-window reselect and selection loss are disabled."
+            )
         else:
             print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
             print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
@@ -837,6 +959,7 @@ def train():
         print(f"use_samples_cache: {CONFIG['use_samples_cache']}")
         print(f"rebuild_samples_cache: {CONFIG['rebuild_samples_cache']}")
         print(f"samples_cache_version: {CONFIG['samples_cache_version']}")
+        print(f"cuda_prefetch: {CONFIG['cuda_prefetch']}")
         print(f"video_reader_threads: {CONFIG['video_reader_threads']}")
         print(f"video_reader_cache_size: {CONFIG['video_reader_cache_size']}")
 
@@ -857,7 +980,7 @@ def train():
         num_frames=CONFIG["num_frames"],
         return_level_id=True,
         return_sample_index=True,
-        return_expanded_frames=(CONFIG["training_method"] != "peskavlp"),
+        return_expanded_frames=(CONFIG["training_method"] == "current"),
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -899,9 +1022,9 @@ def train():
         num_workers=CONFIG["num_workers"],
         pin_memory=True,
         collate_fn=(
-            collate_fn_single_view_with_meta
-            if CONFIG["training_method"] == "peskavlp"
-            else collate_fn_expanded_frames_only
+            collate_fn_expanded_frames_only
+            if CONFIG["training_method"] == "current"
+            else collate_fn_single_view_with_meta
         ),
         persistent_workers=(CONFIG["num_workers"] > 0),
         prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
@@ -980,6 +1103,7 @@ def train():
                     "use_samples_cache": args.use_samples_cache,
                     "rebuild_samples_cache": args.rebuild_samples_cache,
                     "samples_cache_version": args.samples_cache_version,
+                    "cuda_prefetch": args.cuda_prefetch,
                     "selection_pooling": args.selection_pooling,
                     "train_window_expand_ratio": args.train_window_expand_ratio,
                     "base_loss_weight": args.base_loss_weight,
@@ -1098,6 +1222,11 @@ def train():
                     f"Epoch {epoch + 1}: PeskaVLP active_levels={format_level_ids(active_level_ids)}",
                     flush=True,
                 )
+            elif CONFIG["training_method"] == "original_timestamp":
+                print(
+                    f"Epoch {epoch + 1}: original timestamp CLIP loss only",
+                    flush=True,
+                )
             else:
                 print(
                     f"Epoch {epoch + 1}: selection_loss_weight="
@@ -1112,8 +1241,14 @@ def train():
                 else None
             )
 
+        epoch_loader = (
+            CUDAPrefetcher(train_loader, device)
+            if CONFIG["cuda_prefetch"]
+            else train_loader
+        )
         progress_bar = tqdm(
-            train_loader,
+            epoch_loader,
+            total=num_batches,
             desc=f"Epoch {epoch + 1}/{CONFIG['epochs']} [GPU {rank}]",
             position=rank,
             disable=(rank != 0),
@@ -1133,7 +1268,7 @@ def train():
                 continue
 
             step_start = time.perf_counter()
-            if CONFIG["training_method"] == "peskavlp":
+            if CONFIG["training_method"] in {"peskavlp", "original_timestamp"}:
                 images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
                 images = images_cpu.to(device, non_blocking=True)
                 selection_images = None
@@ -1165,6 +1300,20 @@ def train():
                             dataset_samples=train_dataset.samples,
                             active_level_ids=active_level_ids,
                         )
+                    elif CONFIG["training_method"] == "original_timestamp":
+                        raw_loss = clip_contrastive_loss(
+                            model,
+                            images,
+                            input_ids,
+                            attention_mask,
+                            level_ids,
+                            sample_indices,
+                            train_dataset.samples,
+                            selection_images=None,
+                            base_loss_weight=1.0,
+                            selection_loss_weight=0.0,
+                        )
+                        loss_parts = {}
                     else:
                         raw_loss = clip_contrastive_loss(
                             model,
@@ -1174,6 +1323,7 @@ def train():
                             level_ids,
                             sample_indices,
                             train_dataset.samples,
+                            selection_images=selection_images,
                             base_loss_weight=CONFIG["base_loss_weight"],
                             selection_loss_weight=current_selection_loss_weight,
                         )
