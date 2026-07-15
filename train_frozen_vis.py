@@ -2,6 +2,8 @@ import os
 import math
 import argparse
 import contextlib
+import inspect
+import subprocess
 import time
 from collections import Counter
 
@@ -122,6 +124,113 @@ class CUDAPrefetcher:
         _record_tensor_stream(batch, current_stream)
         self._preload()
         return batch
+
+
+def _env_value(name, fallback_name=None):
+    value = os.environ.get(name, "").strip()
+    if value:
+        return value
+    if fallback_name is None:
+        return ""
+    return os.environ.get(fallback_name, "").strip()
+
+
+def _parse_cpu_affinity(spec):
+    cpus = set()
+    for part in str(spec).split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if "-" in part:
+            start_text, end_text = part.split("-", 1)
+            start = int(start_text)
+            end = int(end_text)
+            if end < start:
+                start, end = end, start
+            cpus.update(range(start, end + 1))
+        else:
+            cpus.add(int(part))
+    return sorted(cpus)
+
+
+def _set_decode_worker_ionice(class_value, level_value):
+    cmd = ["ionice", "-c", str(class_value)]
+    if level_value:
+        cmd.extend(["-n", str(level_value)])
+    cmd.extend(["-p", str(os.getpid())])
+    subprocess.run(
+        cmd,
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def configure_decode_worker(worker_id):
+    applied = []
+
+    thread_limit = _env_value("DECODE_CPU_THREAD_LIMIT")
+    if thread_limit:
+        try:
+            limit = max(1, int(thread_limit))
+            for env_name in (
+                "OMP_NUM_THREADS",
+                "MKL_NUM_THREADS",
+                "OPENBLAS_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS",
+                "VECLIB_MAXIMUM_THREADS",
+                "OPENCV_FOR_THREADS_NUM",
+            ):
+                os.environ[env_name] = str(limit)
+            try:
+                torch.set_num_threads(limit)
+            except RuntimeError:
+                pass
+            try:
+                torch.set_num_interop_threads(1)
+            except RuntimeError:
+                pass
+            applied.append(f"threads={limit}")
+        except ValueError:
+            if worker_id == 0:
+                print("[decode worker config] invalid thread limit; continuing", flush=True)
+
+    cpu_affinity = _env_value("DECODE_CPU_AFFINITY")
+    if cpu_affinity and hasattr(os, "sched_setaffinity"):
+        try:
+            cpus = _parse_cpu_affinity(cpu_affinity)
+            os.sched_setaffinity(0, cpus)
+            applied.append(f"affinity={cpu_affinity}")
+        except (ValueError, OSError):
+            if worker_id == 0:
+                print("[decode worker config] affinity setup failed; continuing", flush=True)
+
+    nice_level = _env_value("DECODE_NICE_LEVEL")
+    if nice_level and hasattr(os, "setpriority"):
+        try:
+            target_nice = int(nice_level)
+            current_nice = os.getpriority(os.PRIO_PROCESS, 0)
+            if target_nice != current_nice:
+                os.setpriority(os.PRIO_PROCESS, 0, target_nice)
+            applied.append(f"nice={target_nice}")
+        except (ValueError, OSError):
+            if worker_id == 0:
+                print("[decode worker config] nice setup failed; continuing", flush=True)
+
+    ionice_class = _env_value("DECODE_IONICE_CLASS")
+    if ionice_class:
+        ionice_level = _env_value("DECODE_IONICE_LEVEL")
+        try:
+            _set_decode_worker_ionice(ionice_class, ionice_level)
+            applied.append(
+                f"ionice={ionice_class}" + (f":{ionice_level}" if ionice_level else "")
+            )
+        except (FileNotFoundError, PermissionError, subprocess.CalledProcessError):
+            if worker_id == 0:
+                print("[decode worker config] ionice setup failed; continuing", flush=True)
+
+    if worker_id == 0 and applied:
+        print("[decode worker config] " + ", ".join(applied), flush=True)
 
 
 def _unwrap_state_io_module(module):
@@ -400,10 +509,14 @@ def parse_args():
         "--training_method",
         type=str,
         default=os.environ.get("TRAINING_METHOD", "tfnc"),
-        choices=["current", "tfnc", "peskavlp", "original_timestamp"],
+        choices=["current", "tfnc", "tfnc_v2", "peskavlp", "original_timestamp"],
         help=(
             "Pretraining objective to use with the local VLP model and PretrainDataset. "
             "tfnc samples a fixed-budget expanded window and applies temporal false-negative correction. "
+            "tfnc_v2 trains one XPool debiased contrastive objective: the original "
+            "inside window is only used as the outside-frame baseline, and outside "
+            "frames enter the text-to-video denominator as a false-negative-aware "
+            "correction. "
             "original_timestamp uses only original annotation start/end timestamps "
             "with the base CLIP contrastive loss. "
             "peskavlp uses PeskaVLP losses on original annotation windows: "
@@ -422,6 +535,30 @@ def parse_args():
         type=float,
         default=0.0,
         help="Compatibility flag for older launchers; unused by current objectives.",
+    )
+    parser.add_argument(
+        "--tfnc_v2_xpool_loss_weight",
+        type=float,
+        default=float(os.environ.get("TFNC_V2_XPOOL_LOSS_WEIGHT", 1.0)),
+        help="TFNC-v2 weight for inside-window XPool contrastive loss.",
+    )
+    parser.add_argument(
+        "--tfnc_v2_inside_uniform_loss_weight",
+        type=float,
+        default=float(os.environ.get("TFNC_V2_INSIDE_UNIFORM_LOSS_WEIGHT", 0.0)),
+        help="Deprecated compatibility flag; TFNC-v2 no longer uses an inside-uniform auxiliary loss.",
+    )
+    parser.add_argument(
+        "--tfnc_v2_outside_loss_weight",
+        type=float,
+        default=float(os.environ.get("TFNC_V2_OUTSIDE_LOSS_WEIGHT", 0.0)),
+        help="Deprecated compatibility flag; TFNC-v2 folds outside correction into the main denominator.",
+    )
+    parser.add_argument(
+        "--tfnc_v2_outside_denominator_weight",
+        type=float,
+        default=float(os.environ.get("TFNC_V2_OUTSIDE_DENOMINATOR_WEIGHT", 1.0)),
+        help="TFNC-v2 multiplier for the outside-frame correction inside the text-to-video denominator.",
     )
     parser.add_argument(
         "--train_encoder_base_layers",
@@ -816,7 +953,10 @@ def temporal_false_negative_contrastive_loss(
     outside_weight = (1.0 - false_negative_prob) * outside_mask.to(dtype=frame_logits.dtype)
 
     weighted_outside_logits = frame_logits + outside_weight.clamp(min=1e-6).log()
-    weighted_outside_logits = weighted_outside_logits.masked_fill(~outside_mask, -1e4)
+    weighted_outside_logits = weighted_outside_logits.masked_fill(
+        (~outside_mask) | (outside_weight <= 0),
+        -1e4,
+    )
 
     corrected_denominator = torch.logsumexp(
         torch.cat([anchor_logits, weighted_outside_logits], dim=1),
@@ -833,6 +973,100 @@ def temporal_false_negative_contrastive_loss(
             false_negative_prob * outside_mask.to(dtype=frame_logits.dtype)
         ).sum().detach() / outside_count,
         "debug/tfnc_outside_negative_weight": outside_weight.sum().detach() / outside_count,
+        "debug/tfnc_inside_frames": inside_count.detach().float().mean(),
+        "debug/tfnc_outside_frames": outside_mask.float().sum(dim=1).detach().mean(),
+    }
+    return total_loss, loss_parts
+
+
+def temporal_false_negative_contrastive_v2_loss(
+    model,
+    images,
+    inside_mask,
+    outside_mask,
+    input_ids,
+    attention_mask,
+    level_ids,
+    xpool_loss_weight=1.0,
+    outside_denominator_weight=1.0,
+):
+    xpool_features, frame_features, text_features = model.module.encode_tfnc_v2_pair(
+        image=images,
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        inside_mask=inside_mask,
+        level_ids=level_ids,
+    )
+
+    rank = dist.get_rank()
+    batch_size = xpool_features.size(0)
+    device = xpool_features.device
+    logit_scale = model.module.logit_scale.exp()
+    labels = torch.arange(batch_size, device=device) + rank * batch_size
+
+    def _gather_features(image_feats, text_feats):
+        gathered_image = concat_all_gather(image_feats.detach())
+        gathered_text = concat_all_gather(text_feats.detach())
+
+        gathered_image[rank] = image_feats
+        gathered_text[rank] = text_feats
+
+        return torch.cat(gathered_image, dim=0), torch.cat(gathered_text, dim=0)
+
+    all_xpool_features, all_text_features = _gather_features(xpool_features, text_features)
+    logits_per_image = logit_scale * xpool_features @ all_text_features.t()
+    loss_i = F.cross_entropy(logits_per_image, labels)
+
+    anchor_logits = logit_scale * text_features @ all_xpool_features.t()
+    pos_logits = anchor_logits.gather(1, labels.view(-1, 1)).squeeze(1)
+
+    inside_mask = inside_mask.to(device=device, dtype=torch.bool)
+    outside_mask = outside_mask.to(device=device, dtype=torch.bool)
+    frame_logits = logit_scale * torch.einsum(
+        "bd,btd->bt",
+        text_features,
+        frame_features,
+    )
+
+    inside_float = inside_mask.to(dtype=frame_logits.dtype)
+    inside_count = inside_float.sum(dim=1).clamp(min=1.0)
+    inside_baseline = (frame_logits * inside_float).sum(dim=1) / inside_count
+
+    false_negative_prob = torch.sigmoid(
+        frame_logits - inside_baseline.unsqueeze(1)
+    ).detach()
+    outside_weight = (1.0 - false_negative_prob) * outside_mask.to(dtype=frame_logits.dtype)
+    outside_weight = outside_weight * float(outside_denominator_weight)
+
+    weighted_outside_logits = frame_logits + outside_weight.clamp(min=1e-6).log()
+    weighted_outside_logits = weighted_outside_logits.masked_fill(
+        (~outside_mask) | (outside_weight <= 0),
+        -1e4,
+    )
+
+    corrected_denominator = torch.logsumexp(
+        torch.cat([anchor_logits, weighted_outside_logits], dim=1),
+        dim=1,
+    )
+    loss_t = (corrected_denominator - pos_logits).mean()
+    xpool_debiased_loss = 0.5 * (loss_i + loss_t)
+
+    total_loss = float(xpool_loss_weight) * xpool_debiased_loss
+
+    outside_count = outside_mask.to(dtype=frame_logits.dtype).sum().clamp(min=1.0)
+    loss_parts = {
+        "train/tfnc_v2_xpool_debiased_loss": xpool_debiased_loss.detach(),
+        "train/tfnc_v2_xpool_i2t_loss": loss_i.detach(),
+        "train/tfnc_v2_xpool_t2v_debiased_loss": loss_t.detach(),
+        "debug/tfnc_false_negative_prob": (
+            false_negative_prob * outside_mask.to(dtype=frame_logits.dtype)
+        ).sum().detach() / outside_count,
+        "debug/tfnc_outside_negative_weight": outside_weight.sum().detach() / outside_count,
+        "debug/tfnc_v2_outside_denominator_weight": torch.as_tensor(
+            float(outside_denominator_weight),
+            device=device,
+            dtype=frame_logits.dtype,
+        ),
         "debug/tfnc_inside_frames": inside_count.detach().float().mean(),
         "debug/tfnc_outside_frames": outside_mask.float().sum(dim=1).detach().mean(),
     }
@@ -905,6 +1139,13 @@ def train():
         "max_retry": args.max_retry,
         "video_reader_threads": args.video_reader_threads,
         "video_reader_cache_size": args.video_reader_cache_size,
+        "dataloader_in_order": str2bool(os.environ.get("DATALOADER_IN_ORDER", "true")),
+        "dataloader_prefetch_factor": int(os.environ.get("DATALOADER_PREFETCH_FACTOR", 2)),
+        "decode_cpu_thread_limit": _env_value("DECODE_CPU_THREAD_LIMIT"),
+        "decode_cpu_affinity": _env_value("DECODE_CPU_AFFINITY"),
+        "decode_nice_level": _env_value("DECODE_NICE_LEVEL"),
+        "decode_ionice_class": _env_value("DECODE_IONICE_CLASS"),
+        "decode_ionice_level": _env_value("DECODE_IONICE_LEVEL"),
         "assume_resized_video": args.assume_resized_video,
         "num_frames": args.num_frames,
         "annotations_root": args.annotations_root,
@@ -932,6 +1173,8 @@ def train():
         "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
         "peskavlp_max_candidates": args.peskavlp_max_candidates,
         "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
+        "tfnc_v2_xpool_loss_weight": args.tfnc_v2_xpool_loss_weight,
+        "tfnc_v2_outside_denominator_weight": args.tfnc_v2_outside_denominator_weight,
         "train_encoder_base_layers": args.train_encoder_base_layers,
         "train_encoder_num_stages": args.train_encoder_num_stages,
         "encoder_gradient_checkpointing": args.encoder_gradient_checkpointing,
@@ -1069,12 +1312,20 @@ def train():
                 "Original timestamp mode uses original annotation windows only; "
                 "expanded-window reselect and selection loss are disabled."
             )
-        elif CONFIG["training_method"] == "tfnc":
+        elif CONFIG["training_method"] in {"tfnc", "tfnc_v2"}:
             print(
                 "TFNC mode samples fixed-budget expanded windows and uses "
                 "inside/outside masks for false-negative-aware InfoNCE."
             )
             print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
+            if CONFIG["training_method"] == "tfnc_v2":
+                print(
+                    "TFNC-v2 objective: XPool debiased InfoNCE; original window is "
+                    "used only as the outside baseline. "
+                    f"xpool_weight={CONFIG['tfnc_v2_xpool_loss_weight']}, "
+                    "outside_denominator_weight="
+                    f"{CONFIG['tfnc_v2_outside_denominator_weight']}"
+                )
         else:
             print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
             print(f"selection_loss_weight target: {CONFIG['selection_loss_weight']}")
@@ -1091,6 +1342,20 @@ def train():
         print(f"cuda_prefetch: {CONFIG['cuda_prefetch']}")
         print(f"video_reader_threads: {CONFIG['video_reader_threads']}")
         print(f"video_reader_cache_size: {CONFIG['video_reader_cache_size']}")
+        print(f"dataloader_in_order: {CONFIG['dataloader_in_order']}")
+        print(f"dataloader_prefetch_factor: {CONFIG['dataloader_prefetch_factor']}")
+        print(
+            "decode worker CPU policy: "
+            f"threads={CONFIG['decode_cpu_thread_limit'] or '<unset>'}, "
+            f"affinity={CONFIG['decode_cpu_affinity'] or '<none>'}, "
+            f"nice={CONFIG['decode_nice_level'] or '<none>'}, "
+            f"ionice={CONFIG['decode_ionice_class'] or '<none>'}"
+            + (
+                f":{CONFIG['decode_ionice_level']}"
+                if CONFIG["decode_ionice_level"]
+                else ""
+            )
+        )
 
     train_dataset = PretrainDataset(
         main_csv_path=MAIN_CSV_PATH,
@@ -1110,7 +1375,7 @@ def train():
         return_level_id=True,
         return_sample_index=True,
         return_expanded_frames=(CONFIG["training_method"] == "current"),
-        return_temporal_masks=(CONFIG["training_method"] == "tfnc"),
+        return_temporal_masks=(CONFIG["training_method"] in {"tfnc", "tfnc_v2"}),
         expanded_window_ratio=CONFIG["train_window_expand_ratio"],
         samples_cache_dir=CONFIG["samples_cache_dir"],
         use_samples_cache=CONFIG["use_samples_cache"],
@@ -1146,23 +1411,32 @@ def train():
         drop_last=True,
     )
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_sampler=train_sampler,
-        num_workers=CONFIG["num_workers"],
-        pin_memory=True,
-        collate_fn=(
+    train_loader_kwargs = {
+        "dataset": train_dataset,
+        "batch_sampler": train_sampler,
+        "num_workers": CONFIG["num_workers"],
+        "pin_memory": True,
+        "collate_fn": (
             collate_fn_tfnc
-            if CONFIG["training_method"] == "tfnc"
+            if CONFIG["training_method"] in {"tfnc", "tfnc_v2"}
             else (
                 collate_fn_expanded_frames_only
                 if CONFIG["training_method"] == "current"
                 else collate_fn_single_view_with_meta
             )
         ),
-        persistent_workers=(CONFIG["num_workers"] > 0),
-        prefetch_factor=2 if CONFIG["num_workers"] > 0 else None,
-    )
+        "worker_init_fn": configure_decode_worker if CONFIG["num_workers"] > 0 else None,
+        "persistent_workers": (CONFIG["num_workers"] > 0),
+        "prefetch_factor": (
+            CONFIG["dataloader_prefetch_factor"]
+            if CONFIG["num_workers"] > 0
+            else None
+        ),
+    }
+    if "in_order" in inspect.signature(DataLoader).parameters:
+        train_loader_kwargs["in_order"] = CONFIG["dataloader_in_order"]
+
+    train_loader = DataLoader(**train_loader_kwargs)
 
     num_batches = len(train_loader)
     if num_batches == 0:
@@ -1245,6 +1519,8 @@ def train():
                     "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
                     "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
                     "training_method": args.training_method,
+                    "tfnc_v2_xpool_loss_weight": args.tfnc_v2_xpool_loss_weight,
+                    "tfnc_v2_outside_denominator_weight": args.tfnc_v2_outside_denominator_weight,
                     "peskavlp_temperature": args.peskavlp_temperature,
                     "peskavlp_alpha_weight": args.peskavlp_alpha_weight,
                     "peskavlp_dtw_beta": args.peskavlp_dtw_beta,
@@ -1338,7 +1614,7 @@ def train():
     for epoch in range(start_epoch, CONFIG["epochs"]):
         train_sampler.set_epoch(epoch)
         _unwrap_state_io_module(model.module).set_frozen_modules_eval()
-        if CONFIG["training_method"] == "tfnc":
+        if CONFIG["training_method"] in {"tfnc", "tfnc_v2"}:
             current_selection_loss_weight = 0.0
         else:
             current_selection_loss_weight = get_selection_loss_weight_for_epoch(
@@ -1368,6 +1644,15 @@ def train():
                 print(
                     f"Epoch {epoch + 1}: TFNC corrected InfoNCE "
                     f"(expand_ratio={CONFIG['train_window_expand_ratio']})",
+                    flush=True,
+                )
+            elif CONFIG["training_method"] == "tfnc_v2":
+                print(
+                    f"Epoch {epoch + 1}: TFNC-v2 XPool debiased InfoNCE "
+                    f"(expand_ratio={CONFIG['train_window_expand_ratio']}, "
+                    f"xpool_weight={CONFIG['tfnc_v2_xpool_loss_weight']}, "
+                    "outside_denominator_weight="
+                    f"{CONFIG['tfnc_v2_outside_denominator_weight']})",
                     flush=True,
                 )
             else:
@@ -1417,7 +1702,7 @@ def train():
                 images_cpu, input_ids, attention_mask, level_ids, sample_indices = batch
                 images = images_cpu.to(device, non_blocking=True)
                 selection_images = None
-            elif CONFIG["training_method"] == "tfnc":
+            elif CONFIG["training_method"] in {"tfnc", "tfnc_v2"}:
                 (
                     images_cpu,
                     inside_mask,
@@ -1482,6 +1767,20 @@ def train():
                             input_ids=input_ids,
                             attention_mask=attention_mask,
                             level_ids=level_ids,
+                        )
+                    elif CONFIG["training_method"] == "tfnc_v2":
+                        raw_loss, loss_parts = temporal_false_negative_contrastive_v2_loss(
+                            model=model,
+                            images=images,
+                            inside_mask=inside_mask,
+                            outside_mask=outside_mask,
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            level_ids=level_ids,
+                            xpool_loss_weight=CONFIG["tfnc_v2_xpool_loss_weight"],
+                            outside_denominator_weight=CONFIG[
+                                "tfnc_v2_outside_denominator_weight"
+                            ],
                         )
                     else:
                         raw_loss = clip_contrastive_loss(
@@ -1581,7 +1880,10 @@ def train():
                 }
                 if CONFIG["training_method"] == "current":
                     postfix["sel_w"] = f"{current_selection_loss_weight:.2g}"
-                elif CONFIG["training_method"] == "tfnc" and "debug/tfnc_outside_negative_weight" in loss_parts:
+                elif (
+                    CONFIG["training_method"] in {"tfnc", "tfnc_v2"}
+                    and "debug/tfnc_outside_negative_weight" in loss_parts
+                ):
                     postfix["out_w"] = f"{loss_parts['debug/tfnc_outside_negative_weight'].item():.3f}"
                 if should_update:
                     if "pair_confidence" in debug_stats:
@@ -1643,6 +1945,7 @@ def train():
                     "scheduler_state_dict": scheduler.state_dict(),
                     "global_step": global_step,
                     "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
+                    "config": CONFIG,
                 }
                 epoch_ckpt_path = _build_ckpt_path(f"vlp_epoch_{epoch + 1}.pt")
                 torch.save(checkpoint_data, epoch_ckpt_path)
@@ -1660,6 +1963,7 @@ def train():
             "scheduler_state_dict": scheduler.state_dict(),
             "global_step": global_step,
             "scaler_state_dict": scaler.state_dict() if scaler.is_enabled() else None,
+            "config": CONFIG,
         }
         final_ckpt_path = _build_ckpt_path("vlp_final.pt")
         torch.save(final_checkpoint_data, final_ckpt_path)

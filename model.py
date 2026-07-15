@@ -669,6 +669,49 @@ class VLP(nn.Module):
 
         return anchor_features, frame_features, text_features
 
+    def encode_tfnc_v2_pair(
+        self,
+        image,
+        input_ids,
+        attention_mask,
+        inside_mask,
+        level_ids=None,
+    ):
+        _, frame_tokens = self._encode_image_tokens(image)
+        _, token_hidden, text_global_hidden = self.text(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            return_hidden=True,
+        )
+        text_features = self._encode_text_global(text_global_hidden)
+
+        inside_mask = inside_mask.to(device=frame_tokens.device, dtype=torch.bool)
+        frame_weights, pair_confidence = self._compute_frame_selection_weights(
+            frame_tokens=frame_tokens,
+            token_hidden=token_hidden,
+            attention_mask=attention_mask,
+            level_ids=level_ids,
+            frame_mask=inside_mask,
+        )
+        xpool_features = self._project_selected_video(frame_tokens, frame_weights)
+
+        frame_features = self._project_frame_tokens(frame_tokens)
+
+        frame_entropy = self._normalized_entropy(frame_weights, mask=inside_mask)
+        self.last_frame_weights = frame_weights.detach()
+        self.last_pair_confidence = pair_confidence.detach()
+        self.last_frame_entropy = frame_entropy.detach()
+        self.last_frame_peak = frame_weights.max(dim=-1).values.detach()
+        self.last_token_weights = None
+        self.last_pair_weights = None
+        self.last_entropy_regularization = None
+        self.last_distill_regularization = None
+        self.last_token_entropy = None
+        self.last_token_peak = None
+        self.last_video_gate = None
+
+        return xpool_features, frame_features, text_features
+
     def encode_training_pair(self, image, input_ids, attention_mask, level_ids=None, selection_image=None):
         source_image = selection_image if (self.training and selection_image is not None) else image
         if source_image is None:

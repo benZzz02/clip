@@ -33,6 +33,9 @@ FRAME_STRIDE="${FRAME_STRIDE:-1}"
 TEMPORAL_LAYERS="${TEMPORAL_LAYERS:-2}"
 TEMPORAL_HEADS="${TEMPORAL_HEADS:-12}"
 TEMPORAL_DROPOUT="${TEMPORAL_DROPOUT:-0.1}"
+SELECTION_POOLING="${SELECTION_POOLING:-similarity}"
+EVAL_POOLING="${EVAL_POOLING:-global}"
+XPOOL_TEXT_CHUNK_SIZE="${XPOOL_TEXT_CHUNK_SIZE:-64}"
 
 DATASETS=(
     cholec80_instrument
@@ -60,6 +63,9 @@ echo "  CKPT=$CKPT"
 echo "  CUDA_DEVICE=$CUDA_DEVICE"
 echo "  NUM_FRAMES=$NUM_FRAMES"
 echo "  OUTPUT_DIR=$OUTPUT_DIR"
+echo "  SELECTION_POOLING=$SELECTION_POOLING"
+echo "  EVAL_POOLING=$EVAL_POOLING"
+echo "  XPOOL_TEXT_CHUNK_SIZE=$XPOOL_TEXT_CHUNK_SIZE"
 echo "  DATASETS=${DATASETS[*]}"
 
 for ds in "${DATASETS[@]}"; do
@@ -79,6 +85,9 @@ for ds in "${DATASETS[@]}"; do
         --temporal_layers "$TEMPORAL_LAYERS"
         --temporal_heads "$TEMPORAL_HEADS"
         --temporal_dropout "$TEMPORAL_DROPOUT"
+        --selection_pooling "$SELECTION_POOLING"
+        --eval_pooling "$EVAL_POOLING"
+        --xpool_text_chunk_size "$XPOOL_TEXT_CHUNK_SIZE"
         --output_dir "$OUTPUT_DIR"
     )
 

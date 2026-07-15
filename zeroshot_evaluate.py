@@ -20,7 +20,7 @@ from downstream_datasets import SurgLaViSingleFrameDataset, SurgLaViClipDataset
 
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-DATA_ROOT = os.path.dirname(PROJECT_ROOT)
+DATA_ROOT = os.environ.get("SURGLAVI_DATA_ROOT", "/home/zhangnuohua/nfs_data")
 
 
 DATASET_CONFIGS = {
@@ -309,8 +309,18 @@ def build_dataloader(dataset_name, batch_size, num_workers, num_frames=1, frame_
     return data_loader, cfg
 
 
-def extract_text_feats(texts, model, tokenizer, device, max_length=256, text_bs=256):
+def extract_text_feats(
+    texts,
+    model,
+    tokenizer,
+    device,
+    max_length=256,
+    text_bs=256,
+    return_hidden=False,
+):
     text_feats = []
+    token_hidden_chunks = []
+    attention_mask_chunks = []
 
     with torch.no_grad():
         for i in range(0, len(texts), text_bs):
@@ -324,11 +334,90 @@ def extract_text_feats(texts, model, tokenizer, device, max_length=256, text_bs=
             )
             tokenized = {k: v.to(device) for k, v in tokenized.items()}
 
-            feats = model.encode_text(tokenized["input_ids"], tokenized["attention_mask"])
+            if return_hidden:
+                _, token_hidden, text_global_hidden = model.text(
+                    input_ids=tokenized["input_ids"],
+                    attention_mask=tokenized["attention_mask"],
+                    return_hidden=True,
+                )
+                feats = model._encode_text_global(text_global_hidden)
+                token_hidden_chunks.append(token_hidden)
+                attention_mask_chunks.append(tokenized["attention_mask"])
+            else:
+                feats = model.encode_text(tokenized["input_ids"], tokenized["attention_mask"])
             feats = F.normalize(feats, dim=-1)
             text_feats.append(feats)
 
-    return F.normalize(torch.cat(text_feats, dim=0), dim=-1)
+    text_feats = F.normalize(torch.cat(text_feats, dim=0), dim=-1)
+    if return_hidden:
+        return (
+            text_feats,
+            torch.cat(token_hidden_chunks, dim=0),
+            torch.cat(attention_mask_chunks, dim=0),
+        )
+    return text_feats
+
+
+def compute_xpool_logits(
+    model,
+    text_feats,
+    text_token_hidden,
+    text_attention_mask,
+    images=None,
+    frame_tokens=None,
+    text_chunk_size=64,
+):
+    if frame_tokens is None:
+        if images is None:
+            raise ValueError("compute_xpool_logits requires images or precomputed frame_tokens.")
+        _, frame_tokens = model._encode_image_tokens(images)
+    batch_size = frame_tokens.size(0)
+    logits_chunks = []
+
+    for start in range(0, text_feats.size(0), text_chunk_size):
+        end = min(start + text_chunk_size, text_feats.size(0))
+        num_texts = end - start
+
+        repeated_frames = (
+            frame_tokens.unsqueeze(1)
+            .expand(batch_size, num_texts, -1, -1)
+            .reshape(batch_size * num_texts, frame_tokens.size(1), frame_tokens.size(2))
+        )
+        repeated_token_hidden = (
+            text_token_hidden[start:end]
+            .unsqueeze(0)
+            .expand(batch_size, num_texts, -1, -1)
+            .reshape(
+                batch_size * num_texts,
+                text_token_hidden.size(1),
+                text_token_hidden.size(2),
+            )
+        )
+        repeated_attention_mask = (
+            text_attention_mask[start:end]
+            .unsqueeze(0)
+            .expand(batch_size, num_texts, -1)
+            .reshape(batch_size * num_texts, text_attention_mask.size(1))
+        )
+
+        frame_weights, _ = model._compute_frame_selection_weights(
+            frame_tokens=repeated_frames,
+            token_hidden=repeated_token_hidden,
+            attention_mask=repeated_attention_mask,
+        )
+        selected_features = model._project_selected_video(
+            repeated_frames,
+            frame_weights,
+        ).reshape(batch_size, num_texts, -1)
+
+        logits = torch.einsum(
+            "btd,td->bt",
+            selected_features,
+            text_feats[start:end],
+        )
+        logits_chunks.append(logits)
+
+    return model.logit_scale.exp() * torch.cat(logits_chunks, dim=1)
 
 
 def format_results(results, preds, labels, video_idxs, frame_idxs):
@@ -371,7 +460,18 @@ def _check_batch_shape(images, expected_num_frames):
             )
 
 
-def inference(data_loader, model, device, text_feats, output_csv, expected_num_frames=1):
+def inference(
+    data_loader,
+    model,
+    device,
+    text_feats,
+    output_csv,
+    expected_num_frames=1,
+    eval_pooling="global",
+    text_token_hidden=None,
+    text_attention_mask=None,
+    xpool_text_chunk_size=64,
+):
     results = []
 
     with torch.no_grad():
@@ -379,10 +479,20 @@ def inference(data_loader, model, device, text_feats, output_csv, expected_num_f
             _check_batch_shape(images, expected_num_frames)
             images = images.to(device, non_blocking=True)
 
-            image_features = model.encode_image(images)
-            image_features = F.normalize(image_features, dim=-1)
-
-            logits = model.logit_scale.exp() * (image_features @ text_feats.t())
+            if eval_pooling == "xpool":
+                _, frame_tokens = model._encode_image_tokens(images)
+                logits = compute_xpool_logits(
+                    model=model,
+                    text_feats=text_feats,
+                    text_token_hidden=text_token_hidden,
+                    text_attention_mask=text_attention_mask,
+                    frame_tokens=frame_tokens,
+                    text_chunk_size=xpool_text_chunk_size,
+                )
+            else:
+                image_features = model.encode_image(images)
+                image_features = F.normalize(image_features, dim=-1)
+                logits = model.logit_scale.exp() * (image_features @ text_feats.t())
             results = format_results(results, logits, labels, video_idxs, frame_idxs)
 
     results_df = pd.DataFrame(results)
@@ -398,6 +508,10 @@ def inference_triplet(
     output_dir,
     dataset_name,
     expected_num_frames=1,
+    eval_pooling="global",
+    task_text_token_hidden=None,
+    task_text_attention_mask=None,
+    xpool_text_chunk_size=64,
 ):
     results = {task: [] for task in task_text_feats}
     results_df = {}
@@ -407,11 +521,26 @@ def inference_triplet(
             _check_batch_shape(images, expected_num_frames)
             images = images.to(device, non_blocking=True)
 
-            image_features = model.encode_image(images)
-            image_features = F.normalize(image_features, dim=-1)
+            if eval_pooling == "xpool":
+                _, frame_tokens = model._encode_image_tokens(images)
+                image_features = None
+            else:
+                frame_tokens = None
+                image_features = model.encode_image(images)
+                image_features = F.normalize(image_features, dim=-1)
 
             for task, text_feats in task_text_feats.items():
-                logits = model.logit_scale.exp() * (image_features @ text_feats.t())
+                if eval_pooling == "xpool":
+                    logits = compute_xpool_logits(
+                        model=model,
+                        text_feats=text_feats,
+                        text_token_hidden=task_text_token_hidden[task],
+                        text_attention_mask=task_text_attention_mask[task],
+                        frame_tokens=frame_tokens,
+                        text_chunk_size=xpool_text_chunk_size,
+                    )
+                else:
+                    logits = model.logit_scale.exp() * (image_features @ text_feats.t())
                 results[task] = format_results(results[task], logits, labels[task], video_idxs, frame_idxs)
 
     for task, rows in results.items():
@@ -571,9 +700,29 @@ class TripletEvaluator:
         return results
 
 
-def evaluation(model, data_loader, tokenizer, device, output_dir, expected_num_frames=1):
+def evaluation(
+    model,
+    data_loader,
+    tokenizer,
+    device,
+    output_dir,
+    expected_num_frames=1,
+    eval_pooling="global",
+    xpool_text_chunk_size=64,
+):
     prompts = data_loader.dataset.prompts
-    text_feats = extract_text_feats(prompts, model, tokenizer, device)
+    if eval_pooling == "xpool":
+        text_feats, text_token_hidden, text_attention_mask = extract_text_feats(
+            prompts,
+            model,
+            tokenizer,
+            device,
+            return_hidden=True,
+        )
+    else:
+        text_feats = extract_text_feats(prompts, model, tokenizer, device)
+        text_token_hidden = None
+        text_attention_mask = None
     output_csv = os.path.join(output_dir, f"predictions_{data_loader.dataset.name}.csv")
     return inference(
         data_loader,
@@ -582,14 +731,40 @@ def evaluation(model, data_loader, tokenizer, device, output_dir, expected_num_f
         text_feats,
         output_csv,
         expected_num_frames=expected_num_frames,
+        eval_pooling=eval_pooling,
+        text_token_hidden=text_token_hidden,
+        text_attention_mask=text_attention_mask,
+        xpool_text_chunk_size=xpool_text_chunk_size,
     )
 
 
-def evaluation_triplet(model, data_loader, tokenizer, device, output_dir, expected_num_frames=1):
-    task_text_feats = {
-        task_name: extract_text_feats(prompts, model, tokenizer, device)
-        for task_name, prompts in data_loader.dataset.prompts.items()
-    }
+def evaluation_triplet(
+    model,
+    data_loader,
+    tokenizer,
+    device,
+    output_dir,
+    expected_num_frames=1,
+    eval_pooling="global",
+    xpool_text_chunk_size=64,
+):
+    task_text_feats = {}
+    task_text_token_hidden = {}
+    task_text_attention_mask = {}
+    for task_name, prompts in data_loader.dataset.prompts.items():
+        if eval_pooling == "xpool":
+            text_feats, token_hidden, attention_mask = extract_text_feats(
+                prompts,
+                model,
+                tokenizer,
+                device,
+                return_hidden=True,
+            )
+            task_text_feats[task_name] = text_feats
+            task_text_token_hidden[task_name] = token_hidden
+            task_text_attention_mask[task_name] = attention_mask
+        else:
+            task_text_feats[task_name] = extract_text_feats(prompts, model, tokenizer, device)
     return inference_triplet(
         data_loader=data_loader,
         model=model,
@@ -598,10 +773,24 @@ def evaluation_triplet(model, data_loader, tokenizer, device, output_dir, expect
         output_dir=output_dir,
         dataset_name=data_loader.dataset.name,
         expected_num_frames=expected_num_frames,
+        eval_pooling=eval_pooling,
+        task_text_token_hidden=task_text_token_hidden,
+        task_text_attention_mask=task_text_attention_mask,
+        xpool_text_chunk_size=xpool_text_chunk_size,
     )
 
 
-def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix="", expected_num_frames=1):
+def evaluation_wrapper(
+    model,
+    data_loader,
+    tokenizer,
+    device,
+    output_dir,
+    prefix="",
+    expected_num_frames=1,
+    eval_pooling="global",
+    xpool_text_chunk_size=64,
+):
     task = data_loader.dataset.task
 
     if task == "triplet":
@@ -612,6 +801,8 @@ def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix
             device=device,
             output_dir=output_dir,
             expected_num_frames=expected_num_frames,
+            eval_pooling=eval_pooling,
+            xpool_text_chunk_size=xpool_text_chunk_size,
         )
         evaluator = TripletEvaluator(prefix=prefix)
     else:
@@ -622,6 +813,8 @@ def evaluation_wrapper(model, data_loader, tokenizer, device, output_dir, prefix
             device=device,
             output_dir=output_dir,
             expected_num_frames=expected_num_frames,
+            eval_pooling=eval_pooling,
+            xpool_text_chunk_size=xpool_text_chunk_size,
         )
 
         if task in ["phases", "steps", "actions"]:
@@ -647,6 +840,7 @@ def evaluate_zero_shot(args):
         temporal_num_layers=args.temporal_layers,
         temporal_num_heads=args.temporal_heads,
         temporal_dropout=args.temporal_dropout,
+        selection_pooling=args.selection_pooling,
     ).to(device)
 
     model = load_model_checkpoint(model, args.ckpt, device)
@@ -671,6 +865,8 @@ def evaluate_zero_shot(args):
         output_dir=args.output_dir,
         prefix=args.dataset,
         expected_num_frames=args.num_frames,
+        eval_pooling=args.eval_pooling,
+        xpool_text_chunk_size=args.xpool_text_chunk_size,
     )
 
     result_path = os.path.join(args.output_dir, f"results_{args.dataset}.json")
@@ -696,6 +892,9 @@ def evaluate_zero_shot(args):
             "temporal_layers": args.temporal_layers,
             "temporal_heads": args.temporal_heads,
             "temporal_dropout": args.temporal_dropout,
+            "selection_pooling": args.selection_pooling,
+            "eval_pooling": args.eval_pooling,
+            "xpool_text_chunk_size": args.xpool_text_chunk_size,
             "output_dir": args.output_dir,
             "result_json": result_path,
         },
@@ -730,6 +929,20 @@ def parse_args():
     parser.add_argument("--temporal_layers", type=int, default=2)
     parser.add_argument("--temporal_heads", type=int, default=12)
     parser.add_argument("--temporal_dropout", type=float, default=0.1)
+    parser.add_argument(
+        "--selection_pooling",
+        type=str,
+        default="similarity",
+        choices=["similarity", "xpool"],
+    )
+    parser.add_argument(
+        "--eval_pooling",
+        type=str,
+        default="global",
+        choices=["global", "xpool"],
+        help="Use normal encode_image scoring or text-conditioned XPool scoring.",
+    )
+    parser.add_argument("--xpool_text_chunk_size", type=int, default=64)
     parser.add_argument("--sota_file", type=str, default=None)
     return parser.parse_args()
 
