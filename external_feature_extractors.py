@@ -224,6 +224,11 @@ class SurgVLPVisionFeatureExtractor(nn.Module):
             raise ValueError(f"Unexpected image tensor shape: {tuple(images.shape)}")
         return F.normalize(features, dim=-1)
 
+    def encode_probe_features(self, images: torch.Tensor, probe_feature: str = "projected") -> torch.Tensor:
+        # SurgVLP/HecVL expose a single visual embedding from the official
+        # backbone. Treat it as the probe feature for all representation modes.
+        return self.encode_image(images)
+
 
 class SurgCLIPBetaVisionFeatureExtractor(nn.Module):
     """Vision-only adapter for SurgLaVi/SurgCLIP-beta checkpoints."""
@@ -293,7 +298,7 @@ class SurgCLIPBetaVisionFeatureExtractor(nn.Module):
             f"unexpected={len(msg.unexpected_keys)}"
         )
 
-    def encode_image(self, images: torch.Tensor) -> torch.Tensor:
+    def _encode_pooled_vision(self, images: torch.Tensor) -> torch.Tensor:
         if images.ndim == 4:
             images = images.unsqueeze(1)
         if images.ndim != 5:
@@ -307,4 +312,22 @@ class SurgCLIPBetaVisionFeatureExtractor(nn.Module):
         elif pooled.ndim != 2:
             raise ValueError(f"Expected pooled vision features to be 2D or 3D, got {tuple(pooled.shape)}")
 
+        return pooled
+
+    def encode_image(self, images: torch.Tensor) -> torch.Tensor:
+        pooled = self._encode_pooled_vision(images)
         return F.normalize(self.vision_proj(pooled), dim=-1)
+
+    def encode_probe_features(self, images: torch.Tensor, probe_feature: str = "projected") -> torch.Tensor:
+        pooled = self._encode_pooled_vision(images)
+        backbone = F.normalize(pooled, dim=-1)
+        projected = F.normalize(self.vision_proj(pooled), dim=-1)
+
+        probe_feature = str(probe_feature or "projected").lower()
+        if probe_feature == "backbone":
+            return backbone
+        if probe_feature == "concat":
+            return F.normalize(torch.cat([backbone, projected], dim=-1), dim=-1)
+        if probe_feature == "projected":
+            return projected
+        raise ValueError(f"Unsupported probe_feature: {probe_feature}")

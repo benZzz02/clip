@@ -41,9 +41,12 @@ CLS shots `1,2,4,8,16`, and video shots `0.1,0.5,1.0`. To match SurgLaVi's
 32-frame temporal context while respecting SurgAlign's 8-frame temporal module,
 the script defaults to `CONTEXT_NUM_FRAMES=32`, `NUM_FRAMES=8`, and
 `CONTEXT_STRIDE=8`: each 32-frame context is encoded as four 8-frame chunks and
-the chunk embeddings are mean-pooled before training the linear head. The
-classifier batch size is set to 256. `ENCODE_BATCH_SIZE` defaults to 16 only to
-reduce memory pressure during frozen-feature extraction.
+the chunk embeddings are mean-pooled before training the linear head. The script
+also defaults to `PROBE_FEATURE=concat`, concatenating the normalized backbone
+embedding with the normalized projection embedding, following SurgLaVi's
+linear-probing feature construction. The classifier batch size is set to 256.
+`ENCODE_BATCH_SIZE` defaults to 16 only to reduce memory pressure during
+frozen-feature extraction.
 
 For offline runs, pass local checkpoints:
 

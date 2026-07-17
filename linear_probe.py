@@ -370,6 +370,7 @@ def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
             str(args.external_config),
             str(args.external_cache_dir),
             str(args.surgclip_model_name),
+            str(args.probe_feature),
             str(args.text_model),
             str(args.embed_dim),
             str(args.num_frames),
@@ -407,24 +408,42 @@ def context_window_starts(total_frames, encoder_frames, context_stride):
     return starts
 
 
-def encode_base_features(model, images, feature_mode):
-    feature_mode = canonical_feature_mode(feature_mode)
+def encode_vlp_probe_features(model, images, probe_feature):
+    probe_feature = str(probe_feature or "projected").lower()
+    video_global_hidden, _ = model._encode_image_tokens(images)
+    backbone = F.normalize(video_global_hidden, dim=-1)
+    projected = model._project_video_global(video_global_hidden)
+
+    if probe_feature == "backbone":
+        return backbone
+    if probe_feature == "concat":
+        return F.normalize(torch.cat([backbone, projected], dim=-1), dim=-1)
+    if probe_feature == "projected":
+        return projected
+    raise ValueError(f"Unsupported probe_feature: {probe_feature}")
+
+
+def encode_base_features(model, images, args):
+    feature_mode = canonical_feature_mode(args.feature_mode)
+    probe_feature = str(args.probe_feature or "projected").lower()
     if feature_mode == "raw_visual":
         return encode_raw_visual(model, images)
     if is_external_feature_mode(feature_mode):
+        if hasattr(model, "encode_probe_features"):
+            return model.encode_probe_features(images, probe_feature=probe_feature)
         return model.encode_image(images)
-    return F.normalize(model.encode_image(images), dim=-1)
+    return encode_vlp_probe_features(model, images, probe_feature)
 
 
 def encode_context_features(model, images, args):
     feature_mode = canonical_feature_mode(args.feature_mode)
     if images.ndim != 5:
-        return encode_base_features(model, images, feature_mode)
+        return encode_base_features(model, images, args)
 
     total_frames = images.shape[1]
     encoder_frames = max(1, int(args.num_frames))
     if total_frames <= encoder_frames:
-        return encode_base_features(model, images, feature_mode)
+        return encode_base_features(model, images, args)
 
     if args.context_pooling != "mean":
         raise ValueError(f"Unsupported context_pooling: {args.context_pooling}")
@@ -432,7 +451,7 @@ def encode_context_features(model, images, args):
     chunk_features = []
     for start in context_window_starts(total_frames, encoder_frames, get_context_stride(args)):
         chunk = images[:, start : start + encoder_frames]
-        chunk_features.append(encode_base_features(model, chunk, feature_mode))
+        chunk_features.append(encode_base_features(model, chunk, args))
 
     features = torch.stack(chunk_features, dim=0).mean(dim=0)
     return F.normalize(features, dim=-1)
@@ -736,6 +755,7 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
         "context_num_frames": get_context_num_frames(args),
         "context_stride": get_context_stride(args),
         "context_pooling": args.context_pooling,
+        "probe_feature": args.probe_feature,
         "frame_stride": args.frame_stride,
         "embed_dim": args.embed_dim,
         "vision_weights": args.vision_weights,
@@ -906,6 +926,16 @@ def parse_args():
         type=str,
         default="SurgCLIP-B",
         help="SurgCLIP package model name for --feature_mode=surgclip_beta.",
+    )
+    parser.add_argument(
+        "--probe_feature",
+        type=str,
+        default="projected",
+        choices=["projected", "backbone", "concat"],
+        help=(
+            "Feature representation for the linear head. "
+            "SurgLaVi linear probing concatenates backbone and projection embeddings."
+        ),
     )
     parser.add_argument("--embed_dim", type=int, default=256)
     parser.add_argument("--num_frames", type=int, default=8)
