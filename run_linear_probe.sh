@@ -14,7 +14,11 @@ CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-3}"
 export CUDA_VISIBLE_DEVICES
 
 FEATURE_MODE="${FEATURE_MODE:-vlp}"
-CKPT="${CKPT:-/mnt/mydisk/CLIP/outputs/same_video_triplet_xpool_adapter_warmup_16f_run1/vlp_epoch_32.pt}"
+DEFAULT_VLP_CKPT="${DEFAULT_VLP_CKPT:-/mnt/mydisk/CLIP/outputs/same_video_triplet_xpool_adapter_warmup_16f_run1/vlp_epoch_32.pt}"
+CKPT="${CKPT:-}"
+if [[ "$FEATURE_MODE" == "vlp" || "$FEATURE_MODE" == "surgalign" ]]; then
+  CKPT="${CKPT:-$DEFAULT_VLP_CKPT}"
+fi
 RUN_NAME="${RUN_NAME:-linear_probe}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-linear_probe_outputs/$RUN_NAME}"
 CACHE_DIR="${CACHE_DIR:-$OUTPUT_ROOT/cache}"
@@ -23,6 +27,9 @@ ANNO_ROOT="${ANNO_ROOT:-anno_downstream}"
 DATA_ROOT="${DATA_ROOT:-/mnt/mydisk}"
 VISION_WEIGHTS="${VISION_WEIGHTS:-lemonfm.pth}"
 TEXT_MODEL="${TEXT_MODEL:-marcobombieri/surgicberta}"
+EXTERNAL_CONFIG="${EXTERNAL_CONFIG:-}"
+EXTERNAL_CACHE_DIR="${EXTERNAL_CACHE_DIR:-}"
+SURGCLIP_MODEL_NAME="${SURGCLIP_MODEL_NAME:-SurgCLIP-B}"
 
 DATASETS="${DATASETS:-cholec80_phase,cholec80_instrument,grasp_phase,grasp_step,grasp_instrument,heichole_phase,heichole_instrument}"
 SHOT_MODE="${SHOT_MODE:-ratio}"
@@ -42,7 +49,7 @@ PROBE_BATCH_SIZE="${PROBE_BATCH_SIZE:-4096}"
 NUM_WORKERS="${NUM_WORKERS:-4}"
 AMP="${AMP:-true}"
 
-if [[ "$FEATURE_MODE" == "vlp" && -z "$CKPT" ]]; then
+if [[ ( "$FEATURE_MODE" == "vlp" || "$FEATURE_MODE" == "surgalign" ) && -z "$CKPT" ]]; then
   echo "CKPT is required when FEATURE_MODE=vlp" >&2
   exit 1
 fi
@@ -71,6 +78,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       --data_root "$DATA_ROOT"
       --output_dir "$out_dir"
       --cache_dir "$CACHE_DIR"
+      --surgclip_model_name "$SURGCLIP_MODEL_NAME"
       --shot_mode "$SHOT_MODE"
       --shot_ratio "$shot"
       --seeds "$SEEDS"
@@ -87,11 +95,17 @@ for dataset in "${DATASET_ARR[@]}"; do
       --num_workers "$NUM_WORKERS"
     )
 
+    if [[ -n "$EXTERNAL_CONFIG" ]]; then
+      cmd+=(--external_config "$EXTERNAL_CONFIG")
+    fi
+    if [[ -n "$EXTERNAL_CACHE_DIR" ]]; then
+      cmd+=(--external_cache_dir "$EXTERNAL_CACHE_DIR")
+    fi
     if [[ "$SHOT_MODE" == "cls" ]]; then
       cmd+=(--shots_per_class "$shot")
     fi
 
-    if [[ "$FEATURE_MODE" == "vlp" ]]; then
+    if [[ -n "$CKPT" ]]; then
       cmd+=(--ckpt "$CKPT")
     fi
     if [[ "$AMP" == "true" ]]; then

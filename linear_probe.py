@@ -18,6 +18,13 @@ from tqdm import tqdm
 
 from downstream_datasets import SurgLaViClipDataset, SurgLaViSingleFrameDataset
 from eval_report_utils import export_evaluation_reports, flatten_metrics
+from external_feature_extractors import (
+    EXTERNAL_FEATURE_MODES,
+    build_external_feature_model,
+    build_external_transform,
+    canonical_feature_mode,
+    is_external_feature_mode,
+)
 from model import VLP
 from visual_backbones import build_visual_backbone
 from zeroshot_evaluate import ToolPresenceEvaluator, WorkflowEvaluator, to_builtin
@@ -230,10 +237,14 @@ def build_dataset(task_spec: ProbeTaskSpec, split_spec: SplitSpec, transform, nu
     return dataset_cls(**kwargs)
 
 
-def build_transform(image_size):
+def build_transform(args):
+    feature_mode = canonical_feature_mode(args.feature_mode)
+    if is_external_feature_mode(feature_mode):
+        return build_external_transform(feature_mode, args.image_size)
+
     return transforms.Compose(
         [
-            transforms.Resize((image_size, image_size)),
+            transforms.Resize((args.image_size, args.image_size)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
@@ -293,9 +304,13 @@ def load_vlp_checkpoint(model, ckpt_path, device, strict=False):
 
 
 def build_feature_model(args, device):
-    if args.feature_mode == "raw_visual":
+    feature_mode = canonical_feature_mode(args.feature_mode)
+    if feature_mode == "raw_visual":
         model = build_visual_backbone(args.vision_backbone, args.vision_weights).to(device)
         return model.eval(), model.output_dim
+
+    if is_external_feature_mode(feature_mode):
+        return build_external_feature_model(args, device)
 
     model = VLP(
         embed_dim=args.embed_dim,
@@ -324,21 +339,28 @@ def encode_raw_visual(model, images):
 
 
 def encode_features(model, images, feature_mode):
+    feature_mode = canonical_feature_mode(feature_mode)
     if feature_mode == "raw_visual":
         return encode_raw_visual(model, images)
+    if is_external_feature_mode(feature_mode):
+        return model.encode_image(images)
     return F.normalize(model.encode_image(images), dim=-1)
 
 
 def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
-    ckpt_id = file_fingerprint(args.ckpt) if args.feature_mode == "vlp" else ""
+    feature_mode = canonical_feature_mode(args.feature_mode)
+    ckpt_id = file_fingerprint(args.ckpt) if args.ckpt else ""
     vision_id = file_fingerprint(args.vision_weights)
     payload = "|".join(
         [
             dataset_name,
             split_name,
-            args.feature_mode,
+            feature_mode,
             str(ckpt_id),
             str(vision_id),
+            str(args.external_config),
+            str(args.external_cache_dir),
+            str(args.surgclip_model_name),
             str(args.text_model),
             str(args.embed_dim),
             str(args.num_frames),
@@ -352,7 +374,7 @@ def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
         ]
     )
     digest = hashlib.sha1(payload.encode("utf-8")).hexdigest()[:12]
-    return f"{dataset_name}_{split_name}_{args.feature_mode}_nf{args.num_frames}_s{args.frame_stride}_{digest}.pt"
+    return f"{dataset_name}_{split_name}_{feature_mode}_nf{args.num_frames}_s{args.frame_stride}_{digest}.pt"
 
 
 def extract_features(model, data_loader, device, args):
@@ -638,7 +660,7 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
     metadata = {
         "dataset": args.dataset,
         "model_family": f"linear_probe_{args.feature_mode}",
-        "ckpt": args.ckpt if args.ckpt else args.vision_weights,
+        "ckpt": args.ckpt if args.ckpt else ("official-auto" if is_external_feature_mode(args.feature_mode) else args.vision_weights),
         "feature_mode": args.feature_mode,
         "shot_mode": args.shot_mode,
         "shot_ratio": args.shot_ratio,
@@ -655,6 +677,9 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
         "vision_weights": args.vision_weights,
         "text_model": args.text_model,
         "result_json": result_path,
+        "external_config": args.external_config,
+        "external_cache_dir": args.external_cache_dir,
+        "surgclip_model_name": args.surgclip_model_name,
     }
     report_paths = export_evaluation_reports(
         results=to_builtin(results),
@@ -694,6 +719,7 @@ def aggregate_seed_summaries(seed_rows, output_dir):
 
 
 def run(args):
+    args.feature_mode = canonical_feature_mode(args.feature_mode)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     os.makedirs(args.output_dir, exist_ok=True)
 
@@ -702,7 +728,7 @@ def run(args):
         raise KeyError(f"Unknown dataset: {args.dataset}. Available: {sorted(task_specs)}")
     task_spec = task_specs[args.dataset]
 
-    transform = build_transform(args.image_size)
+    transform = build_transform(args)
     train_dataset = build_dataset(task_spec, task_spec.train, transform, args.num_frames, args.frame_stride)
     test_dataset = build_dataset(task_spec, task_spec.test, transform, args.num_frames, args.frame_stride)
     train_dataset.name = args.dataset
@@ -760,7 +786,27 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Few/full-shot linear probing for frozen surgical VLP features")
     parser.add_argument("--dataset", type=str, required=True)
     parser.add_argument("--ckpt", type=str, default="")
-    parser.add_argument("--feature_mode", type=str, default="vlp", choices=["vlp", "raw_visual"])
+    parser.add_argument(
+        "--feature_mode",
+        type=str,
+        default="vlp",
+        choices=[
+            "vlp",
+            "surgalign",
+            "raw_visual",
+            "surgvlp",
+            "hecvl",
+            "peskavlp",
+            "surgclip_beta",
+            "surgclip-beta",
+            "surgclip",
+        ],
+        help=(
+            "Feature encoder to freeze for probing. "
+            "vlp/surgalign uses the local SurgAlign checkpoint; "
+            f"external SOTA modes: {', '.join(sorted(EXTERNAL_FEATURE_MODES))}."
+        ),
+    )
     parser.add_argument("--text_model", type=str, default="marcobombieri/surgicberta")
     parser.add_argument(
         "--vision_backbone",
@@ -773,6 +819,24 @@ def parse_args():
     parser.add_argument("--data_root", type=str, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--output_dir", type=str, default="./linear_probe_outputs")
     parser.add_argument("--cache_dir", type=str, default=None)
+    parser.add_argument(
+        "--external_config",
+        type=str,
+        default="",
+        help="Optional config path for SurgVLP/HecVL/PeskaVLP feature extractors.",
+    )
+    parser.add_argument(
+        "--external_cache_dir",
+        type=str,
+        default="",
+        help="Optional cache dir for official external-model weights downloaded by their adapters.",
+    )
+    parser.add_argument(
+        "--surgclip_model_name",
+        type=str,
+        default="SurgCLIP-B",
+        help="SurgCLIP package model name for --feature_mode=surgclip_beta.",
+    )
     parser.add_argument("--embed_dim", type=int, default=256)
     parser.add_argument("--num_frames", type=int, default=8)
     parser.add_argument("--frame_stride", type=int, default=1)
