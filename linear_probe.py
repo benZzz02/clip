@@ -347,10 +347,19 @@ def encode_features(model, images, feature_mode):
     return F.normalize(model.encode_image(images), dim=-1)
 
 
+def get_context_num_frames(args):
+    return int(args.context_num_frames) if args.context_num_frames else int(args.num_frames)
+
+
+def get_context_stride(args):
+    return int(args.context_stride) if args.context_stride else int(args.num_frames)
+
+
 def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
     feature_mode = canonical_feature_mode(args.feature_mode)
     ckpt_id = file_fingerprint(args.ckpt) if args.ckpt else ""
     vision_id = file_fingerprint(args.vision_weights)
+    context_num_frames = get_context_num_frames(args)
     payload = "|".join(
         [
             dataset_name,
@@ -364,6 +373,9 @@ def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
             str(args.text_model),
             str(args.embed_dim),
             str(args.num_frames),
+            str(context_num_frames),
+            str(get_context_stride(args)),
+            str(args.context_pooling),
             str(args.frame_stride),
             str(args.temporal_layers),
             str(args.temporal_heads),
@@ -374,7 +386,56 @@ def cache_key(args, dataset_name, split_name, split_spec: SplitSpec):
         ]
     )
     digest = hashlib.sha1(payload.encode("utf-8")).hexdigest()[:12]
-    return f"{dataset_name}_{split_name}_{feature_mode}_nf{args.num_frames}_s{args.frame_stride}_{digest}.pt"
+    return (
+        f"{dataset_name}_{split_name}_{feature_mode}_nf{args.num_frames}"
+        f"_ctx{context_num_frames}_s{args.frame_stride}_{digest}.pt"
+    )
+
+
+def context_window_starts(total_frames, encoder_frames, context_stride):
+    total_frames = int(total_frames)
+    encoder_frames = max(1, int(encoder_frames))
+    if total_frames <= encoder_frames:
+        return [0]
+
+    stride = int(context_stride) if context_stride else encoder_frames
+    stride = max(1, stride)
+    last_start = total_frames - encoder_frames
+    starts = list(range(0, last_start + 1, stride))
+    if starts[-1] != last_start:
+        starts.append(last_start)
+    return starts
+
+
+def encode_base_features(model, images, feature_mode):
+    feature_mode = canonical_feature_mode(feature_mode)
+    if feature_mode == "raw_visual":
+        return encode_raw_visual(model, images)
+    if is_external_feature_mode(feature_mode):
+        return model.encode_image(images)
+    return F.normalize(model.encode_image(images), dim=-1)
+
+
+def encode_context_features(model, images, args):
+    feature_mode = canonical_feature_mode(args.feature_mode)
+    if images.ndim != 5:
+        return encode_base_features(model, images, feature_mode)
+
+    total_frames = images.shape[1]
+    encoder_frames = max(1, int(args.num_frames))
+    if total_frames <= encoder_frames:
+        return encode_base_features(model, images, feature_mode)
+
+    if args.context_pooling != "mean":
+        raise ValueError(f"Unsupported context_pooling: {args.context_pooling}")
+
+    chunk_features = []
+    for start in context_window_starts(total_frames, encoder_frames, get_context_stride(args)):
+        chunk = images[:, start : start + encoder_frames]
+        chunk_features.append(encode_base_features(model, chunk, feature_mode))
+
+    features = torch.stack(chunk_features, dim=0).mean(dim=0)
+    return F.normalize(features, dim=-1)
 
 
 def extract_features(model, data_loader, device, args):
@@ -392,7 +453,7 @@ def extract_features(model, data_loader, device, args):
                 else nullcontext()
             )
             with amp_context:
-                features = encode_features(model, images, args.feature_mode)
+                features = encode_context_features(model, images, args)
             all_features.append(features.float().cpu())
             all_labels.append(labels.cpu())
             all_video_idxs.append(video_idxs.cpu())
@@ -672,6 +733,9 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
         "probe_optimizer": args.probe_optimizer,
         "momentum": args.momentum,
         "num_frames": args.num_frames,
+        "context_num_frames": get_context_num_frames(args),
+        "context_stride": get_context_stride(args),
+        "context_pooling": args.context_pooling,
         "frame_stride": args.frame_stride,
         "embed_dim": args.embed_dim,
         "vision_weights": args.vision_weights,
@@ -729,8 +793,9 @@ def run(args):
     task_spec = task_specs[args.dataset]
 
     transform = build_transform(args)
-    train_dataset = build_dataset(task_spec, task_spec.train, transform, args.num_frames, args.frame_stride)
-    test_dataset = build_dataset(task_spec, task_spec.test, transform, args.num_frames, args.frame_stride)
+    context_num_frames = get_context_num_frames(args)
+    train_dataset = build_dataset(task_spec, task_spec.train, transform, context_num_frames, args.frame_stride)
+    test_dataset = build_dataset(task_spec, task_spec.test, transform, context_num_frames, args.frame_stride)
     train_dataset.name = args.dataset
     test_dataset.name = args.dataset
 
@@ -739,6 +804,11 @@ def run(args):
     print(f"Train examples: {len(train_dataset)}")
     print(f"Test examples: {len(test_dataset)}")
     print(f"Classes: {len(train_dataset.categories)}")
+    print(
+        f"Frame context: context_num_frames={context_num_frames} "
+        f"encoder_num_frames={args.num_frames} context_stride={get_context_stride(args)} "
+        f"context_pooling={args.context_pooling}"
+    )
 
     model, _ = build_feature_model(args, device)
     for param in model.parameters():
@@ -839,6 +909,29 @@ def parse_args():
     )
     parser.add_argument("--embed_dim", type=int, default=256)
     parser.add_argument("--num_frames", type=int, default=8)
+    parser.add_argument(
+        "--context_num_frames",
+        type=int,
+        default=None,
+        help=(
+            "Temporal context window sampled from the downstream video. "
+            "Defaults to --num_frames. If larger than --num_frames, features "
+            "are extracted from --num_frames chunks and pooled."
+        ),
+    )
+    parser.add_argument(
+        "--context_stride",
+        type=int,
+        default=None,
+        help="Stride between encoder chunks inside a larger context window. Defaults to --num_frames.",
+    )
+    parser.add_argument(
+        "--context_pooling",
+        type=str,
+        default="mean",
+        choices=["mean"],
+        help="Pooling used to aggregate chunk embeddings inside --context_num_frames.",
+    )
     parser.add_argument("--frame_stride", type=int, default=1)
     parser.add_argument("--temporal_layers", type=int, default=2)
     parser.add_argument("--temporal_heads", type=int, default=12)

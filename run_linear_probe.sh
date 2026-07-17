@@ -37,6 +37,9 @@ SHOTS="${SHOTS:-0.1,1.0}"
 SEEDS="${SEEDS:-0,1,2}"
 
 NUM_FRAMES="${NUM_FRAMES:-8}"
+CONTEXT_NUM_FRAMES="${CONTEXT_NUM_FRAMES:-}"
+CONTEXT_STRIDE="${CONTEXT_STRIDE:-}"
+CONTEXT_POOLING="${CONTEXT_POOLING:-mean}"
 FRAME_STRIDE="${FRAME_STRIDE:-1}"
 EMBED_DIM="${EMBED_DIM:-256}"
 EPOCHS="${EPOCHS:-50}"
@@ -83,6 +86,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       --shot_ratio "$shot"
       --seeds "$SEEDS"
       --num_frames "$NUM_FRAMES"
+      --context_pooling "$CONTEXT_POOLING"
       --frame_stride "$FRAME_STRIDE"
       --embed_dim "$EMBED_DIM"
       --epochs "$EPOCHS"
@@ -100,6 +104,12 @@ for dataset in "${DATASET_ARR[@]}"; do
     fi
     if [[ -n "$EXTERNAL_CACHE_DIR" ]]; then
       cmd+=(--external_cache_dir "$EXTERNAL_CACHE_DIR")
+    fi
+    if [[ -n "$CONTEXT_NUM_FRAMES" ]]; then
+      cmd+=(--context_num_frames "$CONTEXT_NUM_FRAMES")
+    fi
+    if [[ -n "$CONTEXT_STRIDE" ]]; then
+      cmd+=(--context_stride "$CONTEXT_STRIDE")
     fi
     if [[ "$SHOT_MODE" == "cls" ]]; then
       cmd+=(--shots_per_class "$shot")

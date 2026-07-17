@@ -37,11 +37,13 @@ SURGALIGN_CKPT=/path/to/vlp_epoch.pt bash ./run_linear_probe_surglavi_protocol.s
 ```
 
 This uses `cholec80_phase,autolaparo_phase,grasp_phase,grasp_step`, five seeds,
-CLS shots `1,2,4,8,16`, and video shots `0.1,0.5,1.0`. SurgAlign checkpoints in
-this repository use an 8-frame temporal module, so the script defaults to
-`NUM_FRAMES=8`. Set `NUM_FRAMES=32` only for encoders/checkpoints that support
-that input length. The classifier batch size is set to 256. `ENCODE_BATCH_SIZE`
-defaults to 16 only to reduce memory pressure during frozen-feature extraction.
+CLS shots `1,2,4,8,16`, and video shots `0.1,0.5,1.0`. To match SurgLaVi's
+32-frame temporal context while respecting SurgAlign's 8-frame temporal module,
+the script defaults to `CONTEXT_NUM_FRAMES=32`, `NUM_FRAMES=8`, and
+`CONTEXT_STRIDE=8`: each 32-frame context is encoded as four 8-frame chunks and
+the chunk embeddings are mean-pooled before training the linear head. The
+classifier batch size is set to 256. `ENCODE_BATCH_SIZE` defaults to 16 only to
+reduce memory pressure during frozen-feature extraction.
 
 For offline runs, pass local checkpoints:
 
