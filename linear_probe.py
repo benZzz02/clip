@@ -27,7 +27,12 @@ from external_feature_extractors import (
 )
 from model import VLP
 from visual_backbones import build_visual_backbone
-from zeroshot_evaluate import ToolPresenceEvaluator, WorkflowEvaluator, to_builtin
+from zeroshot_evaluate import (
+    ToolPresenceEvaluator,
+    WorkflowEvaluator,
+    convert_to_2d_array,
+    to_builtin,
+)
 
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -856,6 +861,183 @@ def predict_dataframe(head, pack, task, device, batch_size):
     return pd.DataFrame(rows)
 
 
+def _safe_divide(numerator, denominator):
+    numerator = np.asarray(numerator, dtype=np.float64)
+    denominator = np.asarray(denominator, dtype=np.float64)
+    return np.divide(
+        numerator,
+        denominator,
+        out=np.zeros_like(numerator, dtype=np.float64),
+        where=denominator != 0,
+    )
+
+
+def _nanmean_or_zero(values):
+    values = np.asarray(values, dtype=np.float64)
+    valid = ~np.isnan(values)
+    if not np.any(valid):
+        return 0.0
+    return float(np.mean(values[valid]))
+
+
+STANDARD_METRIC_KEYS = ("Accuracy", "Precision", "Recall", "F1", "Jaccard")
+
+
+def _zero_standard_metrics():
+    return {key: 0.0 for key in STANDARD_METRIC_KEYS}
+
+
+def _prefix_standard_metrics(metrics, prefix):
+    return {f"{prefix}_{key}": value for key, value in metrics.items()}
+
+
+def _average_standard_metrics(metrics):
+    if not metrics:
+        return _zero_standard_metrics()
+    return {
+        key: float(np.mean([metric[key] for metric in metrics]))
+        for key in STANDARD_METRIC_KEYS
+    }
+
+
+def _single_label_metrics_from_arrays(preds, labels, num_classes):
+    if len(labels) == 0:
+        return _zero_standard_metrics()
+
+    accuracy = float(np.mean(preds == labels))
+    precision_per_class = []
+    recall_per_class = []
+    f1_per_class = []
+    jaccard_per_class = []
+
+    for class_idx in range(num_classes):
+        true_count = np.sum(labels == class_idx)
+        if true_count == 0:
+            precision_per_class.append(np.nan)
+            recall_per_class.append(np.nan)
+            f1_per_class.append(np.nan)
+            jaccard_per_class.append(np.nan)
+            continue
+
+        true_positive = np.sum((preds == class_idx) & (labels == class_idx))
+        false_positive = np.sum((preds == class_idx) & (labels != class_idx))
+        false_negative = np.sum((preds != class_idx) & (labels == class_idx))
+
+        precision_denominator = true_positive + false_positive
+        precision_per_class.append(
+            np.nan if precision_denominator == 0 else true_positive / precision_denominator
+        )
+        recall_per_class.append(true_positive / (true_positive + false_negative))
+        f1_per_class.append(
+            _safe_divide(
+                2 * true_positive,
+                2 * true_positive + false_positive + false_negative,
+            ).item()
+        )
+        jaccard_per_class.append(
+            _safe_divide(
+                true_positive,
+                true_positive + false_positive + false_negative,
+            ).item()
+        )
+
+    return {
+        "Accuracy": accuracy,
+        "Precision": _nanmean_or_zero(precision_per_class),
+        "Recall": _nanmean_or_zero(recall_per_class),
+        "F1": _nanmean_or_zero(f1_per_class),
+        "Jaccard": _nanmean_or_zero(jaccard_per_class),
+    }
+
+
+def _multilabel_metrics_from_arrays(preds, labels):
+    if len(labels) == 0:
+        return _zero_standard_metrics()
+
+    accuracy = float(np.mean(np.all(preds == labels, axis=1)))
+    true_positive = np.sum((preds == 1) & (labels == 1), axis=0)
+    false_positive = np.sum((preds == 1) & (labels == 0), axis=0)
+    false_negative = np.sum((preds == 0) & (labels == 1), axis=0)
+
+    precision = float(np.mean(_safe_divide(true_positive, true_positive + false_positive)))
+    recall = float(np.mean(_safe_divide(true_positive, true_positive + false_negative)))
+    f1 = float(
+        np.mean(
+            _safe_divide(
+                2 * true_positive,
+                2 * true_positive + false_positive + false_negative,
+            )
+        )
+    )
+    jaccard = float(
+        np.mean(_safe_divide(true_positive, true_positive + false_positive + false_negative))
+    )
+    return {
+        "Accuracy": accuracy,
+        "Precision": precision,
+        "Recall": recall,
+        "F1": f1,
+        "Jaccard": jaccard,
+    }
+
+
+def _standard_single_label_metrics(predictions_df, num_classes):
+    logits = convert_to_2d_array(predictions_df["prediction"].values)
+    labels = np.asarray(predictions_df["ground_truth"].values, dtype=np.int64)
+    preds = logits.argmax(axis=1)
+    overall = _single_label_metrics_from_arrays(preds, labels, num_classes)
+
+    video_metrics = []
+    for _, video_df in predictions_df.groupby("video_idx"):
+        video_logits = convert_to_2d_array(video_df["prediction"].values)
+        video_labels = np.asarray(video_df["ground_truth"].values, dtype=np.int64)
+        video_metrics.append(
+            _single_label_metrics_from_arrays(
+                video_logits.argmax(axis=1),
+                video_labels,
+                num_classes,
+            )
+        )
+
+    video_average = _average_standard_metrics(video_metrics)
+    metrics = dict(video_average)
+    metrics.update(_prefix_standard_metrics(overall, "overall"))
+    metrics.update(_prefix_standard_metrics(video_average, "video_avg"))
+    return metrics
+
+
+def _standard_multilabel_metrics(predictions_df):
+    logits = convert_to_2d_array(predictions_df["prediction"].values)
+    labels = convert_to_2d_array(predictions_df["ground_truth"].values).astype(np.int64)
+    preds = (logits >= 0).astype(np.int64)
+    overall = _multilabel_metrics_from_arrays(preds, labels)
+
+    video_metrics = []
+    for _, video_df in predictions_df.groupby("video_idx"):
+        video_logits = convert_to_2d_array(video_df["prediction"].values)
+        video_labels = convert_to_2d_array(video_df["ground_truth"].values).astype(np.int64)
+        video_metrics.append(
+            _multilabel_metrics_from_arrays(
+                (video_logits >= 0).astype(np.int64),
+                video_labels,
+            )
+        )
+
+    video_average = _average_standard_metrics(video_metrics)
+    metrics = dict(overall)
+    metrics.update(_prefix_standard_metrics(overall, "overall"))
+    metrics.update(_prefix_standard_metrics(video_average, "video_avg"))
+    return metrics
+
+
+def compute_standard_metrics(predictions_df, task, num_classes):
+    if task in {"phases", "steps", "actions"}:
+        return _standard_single_label_metrics(predictions_df, num_classes)
+    if task == "instruments":
+        return _standard_multilabel_metrics(predictions_df)
+    raise ValueError(f"Unsupported probing task: {task}")
+
+
 def evaluate_predictions(predictions_df, categories, task, dataset_name):
     if task in {"phases", "steps", "actions"}:
         evaluator = WorkflowEvaluator(phases=categories, prefix=dataset_name)
@@ -863,7 +1045,15 @@ def evaluate_predictions(predictions_df, categories, task, dataset_name):
         evaluator = ToolPresenceEvaluator(tools=categories, prefix=dataset_name)
     else:
         raise ValueError(f"Unsupported probing task: {task}")
-    return evaluator.evaluate(predictions_df)
+    results = evaluator.evaluate(predictions_df)
+    results[dataset_name].update(
+        compute_standard_metrics(
+            predictions_df=predictions_df,
+            task=task,
+            num_classes=len(categories),
+        )
+    )
+    return results
 
 
 def write_seed_outputs(results, predictions_df, selected_indices, output_dir, args, seed):
