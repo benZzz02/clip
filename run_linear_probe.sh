@@ -46,8 +46,14 @@ EMBED_DIM="${EMBED_DIM:-256}"
 EPOCHS="${EPOCHS:-50}"
 LR="${LR:-1e-3}"
 WEIGHT_DECAY="${WEIGHT_DECAY:-0.0}"
+PROBE_SOLVER="${PROBE_SOLVER:-torch}"
 PROBE_OPTIMIZER="${PROBE_OPTIMIZER:-adamw}"
 MOMENTUM="${MOMENTUM:-0.9}"
+PROBE_STANDARDIZE="${PROBE_STANDARDIZE:-true}"
+SKLEARN_C="${SKLEARN_C:-1.0}"
+SKLEARN_MAX_ITER="${SKLEARN_MAX_ITER:-5000}"
+SKLEARN_SOLVER="${SKLEARN_SOLVER:-lbfgs}"
+SKLEARN_CLASS_WEIGHT="${SKLEARN_CLASS_WEIGHT:-none}"
 ENCODE_BATCH_SIZE="${ENCODE_BATCH_SIZE:-128}"
 PROBE_BATCH_SIZE="${PROBE_BATCH_SIZE:-4096}"
 NUM_WORKERS="${NUM_WORKERS:-4}"
@@ -87,6 +93,7 @@ for dataset in "${DATASET_ARR[@]}"; do
       --shot_mode "$SHOT_MODE"
       --shot_ratio "$shot"
       --seeds "$SEEDS"
+      --probe_solver "$PROBE_SOLVER"
       --num_frames "$NUM_FRAMES"
       --context_pooling "$CONTEXT_POOLING"
       --frame_stride "$FRAME_STRIDE"
@@ -96,6 +103,10 @@ for dataset in "${DATASET_ARR[@]}"; do
       --weight_decay "$WEIGHT_DECAY"
       --probe_optimizer "$PROBE_OPTIMIZER"
       --momentum "$MOMENTUM"
+      --sklearn_c "$SKLEARN_C"
+      --sklearn_max_iter "$SKLEARN_MAX_ITER"
+      --sklearn_solver "$SKLEARN_SOLVER"
+      --sklearn_class_weight "$SKLEARN_CLASS_WEIGHT"
       --encode_batch_size "$ENCODE_BATCH_SIZE"
       --probe_batch_size "$PROBE_BATCH_SIZE"
       --num_workers "$NUM_WORKERS"
@@ -122,6 +133,11 @@ for dataset in "${DATASET_ARR[@]}"; do
     fi
     if [[ "$AMP" == "true" ]]; then
       cmd+=(--amp)
+    fi
+    if [[ "$PROBE_STANDARDIZE" == "true" ]]; then
+      cmd+=(--probe_standardize)
+    else
+      cmd+=(--no_probe_standardize)
     fi
 
     echo "Running linear probe: dataset=$dataset shot=$shot shot_mode=$SHOT_MODE seeds=$SEEDS feature_mode=$FEATURE_MODE"

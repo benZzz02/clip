@@ -486,13 +486,21 @@ def extract_features(model, data_loader, device, args):
     }
 
 
+def feature_cache_path(args, dataset_name, split_name, split_spec: SplitSpec, cache_dir):
+    return os.path.join(cache_dir, cache_key(args, dataset_name, split_name, split_spec))
+
+
+def load_cached_features(cache_path, split_name):
+    print(f"Loading cached {split_name} features: {cache_path}")
+    return safe_torch_load(cache_path, map_location="cpu")
+
+
 def load_or_extract_features(model, dataset, split_spec, split_name, args, device, cache_dir):
     os.makedirs(cache_dir, exist_ok=True)
-    cache_path = os.path.join(cache_dir, cache_key(args, args.dataset, split_name, split_spec))
+    cache_path = feature_cache_path(args, args.dataset, split_name, split_spec, cache_dir)
 
     if not args.no_cache and os.path.exists(cache_path):
-        print(f"Loading cached {split_name} features: {cache_path}")
-        return safe_torch_load(cache_path, map_location="cpu")
+        return load_cached_features(cache_path, split_name)
 
     loader = DataLoader(
         dataset,
@@ -626,19 +634,124 @@ def sample_probe_indices(train_pack, task, args, seed, num_classes):
     raise ValueError(f"Unsupported shot_mode: {args.shot_mode}")
 
 
-def train_linear_head(train_pack, task, num_classes, args, seed, device):
-    set_seed(seed)
+class SklearnProbeHead:
+    def __init__(self, estimator, scaler, task, num_classes):
+        self.estimator = estimator
+        self.scaler = scaler
+        self.task = task
+        self.num_classes = int(num_classes)
 
-    features = train_pack["features"]
-    labels = train_pack["labels"]
-    selected_indices = sample_probe_indices(train_pack, task, args, seed, num_classes)
-    features = features[selected_indices]
-    labels = labels[selected_indices]
+    def _transform(self, features):
+        x = features.float().cpu().numpy()
+        if self.scaler is not None:
+            x = self.scaler.transform(x)
+        return x
 
+    def predict_logits(self, features):
+        x = self._transform(features)
+
+        if self.task == "instruments":
+            if hasattr(self.estimator, "decision_function"):
+                scores = self.estimator.decision_function(x)
+            else:
+                scores = self.estimator.predict_proba(x)
+                if isinstance(scores, list):
+                    scores = np.stack([score[:, 1] for score in scores], axis=1)
+            return torch.from_numpy(np.asarray(scores, dtype=np.float32))
+
+        if hasattr(self.estimator, "decision_function"):
+            scores = self.estimator.decision_function(x)
+        else:
+            scores = self.estimator.predict_proba(x)
+
+        scores = np.asarray(scores, dtype=np.float32)
+        classes = np.asarray(self.estimator.classes_, dtype=np.int64)
+
+        if scores.ndim == 1:
+            if len(classes) == 1:
+                full_scores = np.full((scores.shape[0], self.num_classes), -1e6, dtype=np.float32)
+                full_scores[:, int(classes[0])] = 0.0
+                return torch.from_numpy(full_scores)
+
+            binary_scores = np.stack([-scores, scores], axis=1)
+            full_scores = np.full((scores.shape[0], self.num_classes), -1e6, dtype=np.float32)
+            for col, class_idx in enumerate(classes):
+                full_scores[:, int(class_idx)] = binary_scores[:, col]
+            return torch.from_numpy(full_scores)
+
+        full_scores = np.full((scores.shape[0], self.num_classes), -1e6, dtype=np.float32)
+        for col, class_idx in enumerate(classes):
+            full_scores[:, int(class_idx)] = scores[:, col]
+        return torch.from_numpy(full_scores)
+
+
+class ConstantProbeHead:
+    def __init__(self, class_idx, num_classes):
+        self.class_idx = int(class_idx)
+        self.num_classes = int(num_classes)
+
+    def predict_logits(self, features):
+        logits = torch.full((features.shape[0], self.num_classes), -1e6, dtype=torch.float32)
+        logits[:, self.class_idx] = 0.0
+        return logits
+
+
+def _sklearn_class_weight(value):
+    value = str(value or "").strip().lower()
+    if not value or value == "none":
+        return None
+    if value == "balanced":
+        return "balanced"
+    raise ValueError(f"Unsupported sklearn_class_weight: {value}")
+
+
+def train_sklearn_linear_head(features, labels, task, num_classes, args, seed):
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.multiclass import OneVsRestClassifier
+    from sklearn.preprocessing import StandardScaler
+
+    x_train = features.float().cpu().numpy()
+    scaler = None
+    if args.probe_standardize:
+        scaler = StandardScaler()
+        x_train = scaler.fit_transform(x_train)
+
+    class_weight = _sklearn_class_weight(args.sklearn_class_weight)
+    logreg_kwargs = {
+        "C": float(args.sklearn_c),
+        "max_iter": int(args.sklearn_max_iter),
+        "solver": args.sklearn_solver,
+        "class_weight": class_weight,
+        "random_state": int(seed),
+        "verbose": int(args.sklearn_verbose),
+    }
+
+    if task == "instruments":
+        y_train = labels.float().cpu().numpy()
+        estimator = OneVsRestClassifier(LogisticRegression(**logreg_kwargs))
+    else:
+        y_train = labels.long().cpu().numpy()
+        unique_labels = np.unique(y_train)
+        if len(unique_labels) == 1:
+            print(
+                "Only one class is present in the selected probe samples; "
+                "using a constant classifier."
+            )
+            return ConstantProbeHead(unique_labels[0], num_classes)
+        estimator = LogisticRegression(**logreg_kwargs)
+
+    estimator.fit(x_train, y_train)
     print(
-        f"Training linear probe with {len(selected_indices)}/{len(train_pack['features'])} "
-        f"samples (shot_mode={args.shot_mode})"
+        "Trained sklearn LogisticRegression "
+        f"(C={args.sklearn_c}, max_iter={args.sklearn_max_iter}, "
+        f"solver={args.sklearn_solver}, standardize={args.probe_standardize}, "
+        f"class_weight={class_weight})"
     )
+    return SklearnProbeHead(estimator, scaler, task, num_classes)
+
+
+def train_torch_linear_head(features, labels, task, num_classes, args, seed, device):
+    set_seed(seed)
 
     head = nn.Linear(features.shape[-1], num_classes).to(device)
     if args.probe_optimizer == "sgd":
@@ -684,7 +797,31 @@ def train_linear_head(train_pack, task, num_classes, args, seed, device):
         if (epoch + 1) % args.log_every == 0 or epoch == 0 or epoch + 1 == args.epochs:
             print(f"epoch {epoch + 1}/{args.epochs} loss={total_loss / max(total_seen, 1):.6f}")
 
-    return head.eval(), selected_indices
+    return head.eval()
+
+
+def train_linear_head(train_pack, task, num_classes, args, seed, device):
+    set_seed(seed)
+
+    features = train_pack["features"]
+    labels = train_pack["labels"]
+    selected_indices = sample_probe_indices(train_pack, task, args, seed, num_classes)
+    features = features[selected_indices]
+    labels = labels[selected_indices]
+
+    print(
+        f"Training linear probe with {len(selected_indices)}/{len(train_pack['features'])} "
+        f"samples (shot_mode={args.shot_mode}, solver={args.probe_solver})"
+    )
+
+    if args.probe_solver == "sklearn_logreg":
+        head = train_sklearn_linear_head(features, labels, task, num_classes, args, seed)
+    elif args.probe_solver == "torch":
+        head = train_torch_linear_head(features, labels, task, num_classes, args, seed, device)
+    else:
+        raise ValueError(f"Unsupported probe_solver: {args.probe_solver}")
+
+    return head, selected_indices
 
 
 def predict_dataframe(head, pack, task, device, batch_size):
@@ -697,7 +834,10 @@ def predict_dataframe(head, pack, task, device, batch_size):
     with torch.no_grad():
         for start in range(0, features.shape[0], batch_size):
             end = min(start + batch_size, features.shape[0])
-            logits = head(features[start:end].to(device)).float().cpu()
+            if hasattr(head, "predict_logits"):
+                logits = head.predict_logits(features[start:end]).float().cpu()
+            else:
+                logits = head(features[start:end].to(device)).float().cpu()
             for offset, pred in enumerate(logits):
                 idx = start + offset
                 label = labels[idx]
@@ -746,11 +886,17 @@ def write_seed_outputs(results, predictions_df, selected_indices, output_dir, ar
         "shot_ratio": args.shot_ratio,
         "shots_per_class": args.shots_per_class,
         "seed": seed,
+        "probe_solver": args.probe_solver,
         "epochs": args.epochs,
         "lr": args.lr,
         "weight_decay": args.weight_decay,
         "probe_optimizer": args.probe_optimizer,
         "momentum": args.momentum,
+        "probe_standardize": args.probe_standardize,
+        "sklearn_c": args.sklearn_c,
+        "sklearn_max_iter": args.sklearn_max_iter,
+        "sklearn_solver": args.sklearn_solver,
+        "sklearn_class_weight": args.sklearn_class_weight,
         "num_frames": args.num_frames,
         "context_num_frames": get_context_num_frames(args),
         "context_stride": get_context_stride(args),
@@ -830,13 +976,27 @@ def run(args):
         f"context_pooling={args.context_pooling}"
     )
 
-    model, _ = build_feature_model(args, device)
-    for param in model.parameters():
-        param.requires_grad = False
-
     cache_dir = args.cache_dir or os.path.join(args.output_dir, "cache")
-    train_pack = load_or_extract_features(model, train_dataset, task_spec.train, "train", args, device, cache_dir)
-    test_pack = load_or_extract_features(model, test_dataset, task_spec.test, "test", args, device, cache_dir)
+    train_cache_path = feature_cache_path(args, args.dataset, "train", task_spec.train, cache_dir)
+    test_cache_path = feature_cache_path(args, args.dataset, "test", task_spec.test, cache_dir)
+    if (
+        not args.no_cache
+        and os.path.exists(train_cache_path)
+        and os.path.exists(test_cache_path)
+    ):
+        train_pack = load_cached_features(train_cache_path, "train")
+        test_pack = load_cached_features(test_cache_path, "test")
+    else:
+        model, _ = build_feature_model(args, device)
+        for param in model.parameters():
+            param.requires_grad = False
+
+        train_pack = load_or_extract_features(
+            model, train_dataset, task_spec.train, "train", args, device, cache_dir
+        )
+        test_pack = load_or_extract_features(
+            model, test_dataset, task_spec.test, "test", args, device, cache_dir
+        )
 
     seeds = parse_seeds(args.seeds)
     seed_rows = []
@@ -986,11 +1146,38 @@ def parse_args():
         help="Number of labeled frames per class for --shot_mode=cls. Defaults to round(--shot_ratio).",
     )
     parser.add_argument("--seeds", type=str, default="0")
+    parser.add_argument(
+        "--probe_solver",
+        type=str,
+        default="torch",
+        choices=["torch", "sklearn_logreg"],
+        help=(
+            "Linear probe solver. 'torch' keeps the legacy SGD/AdamW head; "
+            "'sklearn_logreg' fits a standard logistic-regression probe on frozen features."
+        ),
+    )
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight_decay", type=float, default=0.0)
     parser.add_argument("--probe_optimizer", type=str, default="adamw", choices=["adamw", "sgd"])
     parser.add_argument("--momentum", type=float, default=0.9)
+    parser.add_argument(
+        "--probe_standardize",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Standardize cached features before sklearn logistic regression.",
+    )
+    parser.add_argument("--sklearn_c", type=float, default=1.0)
+    parser.add_argument("--sklearn_max_iter", type=int, default=5000)
+    parser.add_argument("--sklearn_solver", type=str, default="lbfgs")
+    parser.add_argument(
+        "--sklearn_class_weight",
+        type=str,
+        default="none",
+        choices=["none", "balanced"],
+        help="Class weighting for sklearn LogisticRegression.",
+    )
+    parser.add_argument("--sklearn_verbose", type=int, default=0)
     parser.add_argument("--encode_batch_size", type=int, default=32)
     parser.add_argument("--probe_batch_size", type=int, default=4096)
     parser.add_argument("--num_workers", type=int, default=4)
