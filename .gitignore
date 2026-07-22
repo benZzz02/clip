@@ -1,4 +1,8 @@
 lemonfm.pth
+*.pth
+*.pt
+*.ckpt
+*.safetensors
 vlp_ckpt.pth
 vlp_epoch_*.pt
 ckpt*
@@ -13,6 +17,11 @@ auto
 cholec80_peska
 CholecT50
 outputs
+runs/
+swanlog/
+checkpoints/
+weights/
+*.tfevents.*
 .cache
 __pycache__/
 *.pyc
