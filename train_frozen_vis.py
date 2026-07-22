@@ -561,6 +561,15 @@ def parse_args():
         help="TFNC-v2 multiplier for the outside-frame correction inside the text-to-video denominator.",
     )
     parser.add_argument(
+        "--tfnc_uniform_outside_weight",
+        type=str2bool,
+        default=str2bool(os.environ.get("TFNC_UNIFORM_OUTSIDE_WEIGHT", "false")),
+        help=(
+            "TFNC-v1 ablation flag that gives every outside frame weight 1, "
+            "disabling false-negative attenuation."
+        ),
+    )
+    parser.add_argument(
         "--train_encoder_base_layers",
         type=str2bool,
         default=(
@@ -898,6 +907,17 @@ def clip_contrastive_loss(
     return total_loss
 
 
+def _compute_tfnc_outside_weight(
+    false_negative_prob,
+    outside_mask,
+    uniform_outside_weight=False,
+):
+    outside_float = outside_mask.to(dtype=false_negative_prob.dtype)
+    if uniform_outside_weight:
+        return outside_float
+    return (1.0 - false_negative_prob) * outside_float
+
+
 def temporal_false_negative_contrastive_loss(
     model,
     images,
@@ -906,6 +926,7 @@ def temporal_false_negative_contrastive_loss(
     input_ids,
     attention_mask,
     level_ids,
+    uniform_outside_weight=False,
 ):
     anchor_features, frame_features, text_features = model.module.encode_tfnc_pair(
         image=images,
@@ -950,7 +971,11 @@ def temporal_false_negative_contrastive_loss(
     false_negative_prob = torch.sigmoid(
         frame_logits - inside_baseline.unsqueeze(1)
     ).detach()
-    outside_weight = (1.0 - false_negative_prob) * outside_mask.to(dtype=frame_logits.dtype)
+    outside_weight = _compute_tfnc_outside_weight(
+        false_negative_prob=false_negative_prob,
+        outside_mask=outside_mask,
+        uniform_outside_weight=uniform_outside_weight,
+    )
 
     weighted_outside_logits = frame_logits + outside_weight.clamp(min=1e-6).log()
     weighted_outside_logits = weighted_outside_logits.masked_fill(
@@ -973,6 +998,11 @@ def temporal_false_negative_contrastive_loss(
             false_negative_prob * outside_mask.to(dtype=frame_logits.dtype)
         ).sum().detach() / outside_count,
         "debug/tfnc_outside_negative_weight": outside_weight.sum().detach() / outside_count,
+        "debug/tfnc_uniform_outside_weight": torch.as_tensor(
+            float(uniform_outside_weight),
+            device=device,
+            dtype=frame_logits.dtype,
+        ),
         "debug/tfnc_inside_frames": inside_count.detach().float().mean(),
         "debug/tfnc_outside_frames": outside_mask.float().sum(dim=1).detach().mean(),
     }
@@ -1173,6 +1203,7 @@ def train():
         "peskavlp_dtw_scale_factor": args.peskavlp_dtw_scale_factor,
         "peskavlp_max_candidates": args.peskavlp_max_candidates,
         "hierarchical_consistency_weight": args.hierarchical_consistency_weight,
+        "tfnc_uniform_outside_weight": args.tfnc_uniform_outside_weight,
         "tfnc_v2_xpool_loss_weight": args.tfnc_v2_xpool_loss_weight,
         "tfnc_v2_outside_denominator_weight": args.tfnc_v2_outside_denominator_weight,
         "train_encoder_base_layers": args.train_encoder_base_layers,
@@ -1318,7 +1349,12 @@ def train():
                 "inside/outside masks for false-negative-aware InfoNCE."
             )
             print(f"train_window_expand_ratio: {CONFIG['train_window_expand_ratio']}")
-            if CONFIG["training_method"] == "tfnc_v2":
+            if CONFIG["training_method"] == "tfnc":
+                print(
+                    "TFNC-v1 outside weighting: uniform_outside_weight="
+                    f"{CONFIG['tfnc_uniform_outside_weight']}"
+                )
+            elif CONFIG["training_method"] == "tfnc_v2":
                 print(
                     "TFNC-v2 objective: XPool debiased InfoNCE; original window is "
                     "used only as the outside baseline. "
@@ -1519,6 +1555,7 @@ def train():
                     "selection_loss_warmup_zero_epochs": args.selection_loss_warmup_zero_epochs,
                     "selection_loss_warmup_ramp_epochs": args.selection_loss_warmup_ramp_epochs,
                     "training_method": args.training_method,
+                    "tfnc_uniform_outside_weight": args.tfnc_uniform_outside_weight,
                     "tfnc_v2_xpool_loss_weight": args.tfnc_v2_xpool_loss_weight,
                     "tfnc_v2_outside_denominator_weight": args.tfnc_v2_outside_denominator_weight,
                     "peskavlp_temperature": args.peskavlp_temperature,
@@ -1643,7 +1680,9 @@ def train():
             elif CONFIG["training_method"] == "tfnc":
                 print(
                     f"Epoch {epoch + 1}: TFNC corrected InfoNCE "
-                    f"(expand_ratio={CONFIG['train_window_expand_ratio']})",
+                    f"(expand_ratio={CONFIG['train_window_expand_ratio']}, "
+                    "uniform_outside_weight="
+                    f"{CONFIG['tfnc_uniform_outside_weight']})",
                     flush=True,
                 )
             elif CONFIG["training_method"] == "tfnc_v2":
@@ -1767,6 +1806,9 @@ def train():
                             input_ids=input_ids,
                             attention_mask=attention_mask,
                             level_ids=level_ids,
+                            uniform_outside_weight=CONFIG[
+                                "tfnc_uniform_outside_weight"
+                            ],
                         )
                     elif CONFIG["training_method"] == "tfnc_v2":
                         raw_loss, loss_parts = temporal_false_negative_contrastive_v2_loss(
